@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.astro/
+.vercel/
+coverage/
+build/
+DerivedData/
+*.o
+*.log
+.DS_Store
+output/
+.playwright-cli/

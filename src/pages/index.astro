@@ -1,0 +1,149 @@
+---
+import { projects } from "@/data/projects";
+import { siteContent } from "@/data/siteContent";
+import "@/styles/global.css";
+
+const navItems = [
+  { label: "Projects", href: "#projects" },
+  { label: "Services", href: "#services" },
+  { label: "About", href: "#about" },
+  { label: "Contact", href: "#contact" },
+];
+
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content={siteContent.metaDescription}
+    />
+    <title>Johannes Grof</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Johannes Grof home">
+        <span class="brand-mark">jg</span>
+        <span>Johannes Grof</span>
+      </a>
+      <nav aria-label="Primary navigation">
+        {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero section-shell" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow">{siteContent.hero.eyebrow}</p>
+          <h1 id="hero-title">{siteContent.hero.title}</h1>
+          <p class="hero-text">{siteContent.hero.body}</p>
+          <div class="hero-actions">
+            <a class="button primary" href="#projects">{siteContent.hero.primaryAction}</a>
+            <a class="button secondary" href="#services">{siteContent.hero.secondaryAction}</a>
+          </div>
+        </div>
+
+        <aside class="terminal-card" aria-label="Developer profile tree">
+          <div class="terminal-bar">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <pre><code><span class="path">/home/johannes_grof/</span>
+├─ <span class="folder">my_links/</span>
+│  ├─ <span class="link">github</span>
+│  └─ <span class="link">linkedin</span>
+├─ <span class="folder">projects/</span>
+│  ├─ OpenClaw-Discord-Voice
+│  ├─ ClawDash
+│  ├─ TypeBot
+│  ├─ Digi2PDF
+│  └─ SlamX
+├─ <span class="folder">services/</span>
+│  └─ coming-soon
+└─ <span class="folder">contact/</span>
+   └─ jx_grxf</code></pre>
+        </aside>
+      </section>
+
+      <section id="projects" class="section-shell">
+        <div class="section-heading">
+          <p class="eyebrow">selected work</p>
+          <h2>Projects</h2>
+        </div>
+        <div class="project-grid">
+          {
+            projects.map((project) =>
+              project.href ? (
+                <a class="project-card" href={project.href} target="_blank" rel="noreferrer">
+                  <div class="card-topline">
+                    <h3>{project.name}</h3>
+                    <span class={`status ${project.status}`}>{project.status}</span>
+                  </div>
+                  <p>{project.description}</p>
+                  <ul>
+                    {project.stack.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                    <li>{project.visibility}</li>
+                  </ul>
+                </a>
+              ) : (
+                <article class="project-card private-card">
+                  <div class="card-topline">
+                    <h3>{project.name}</h3>
+                    <span class={`status ${project.status}`}>{project.status}</span>
+                  </div>
+                  <p>{project.description}</p>
+                  <ul>
+                    {project.stack.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                    <li>private</li>
+                  </ul>
+                </article>
+              )
+            )
+          }
+        </div>
+      </section>
+
+      <section id="services" class="services-band">
+        <div class="section-shell services-layout">
+          <div>
+            <p class="eyebrow">{siteContent.services.eyebrow}</p>
+            <h2>{siteContent.services.title}</h2>
+            <p>{siteContent.services.body}</p>
+          </div>
+          <ul class="service-list">
+            {siteContent.services.items.map((service) => <li>{service}</li>)}
+          </ul>
+        </div>
+      </section>
+
+      <section id="about" class="section-shell split-section">
+        <div>
+          <p class="eyebrow">{siteContent.about.eyebrow}</p>
+          <h2>{siteContent.about.title}</h2>
+        </div>
+        <p>{siteContent.about.body}</p>
+      </section>
+
+      <section id="contact" class="section-shell contact-section">
+        <div>
+          <p class="eyebrow">{siteContent.contact.eyebrow}</p>
+          <h2>{siteContent.contact.title}</h2>
+        </div>
+        <div class="contact-links">
+          <a href="https://github.com/jx-grxf" target="_blank" rel="noreferrer">GitHub</a>
+          <a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
+          <a href="mailto:contact@johannesgrof.me">Email</a>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
