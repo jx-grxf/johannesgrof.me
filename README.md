@@ -4,7 +4,7 @@
 
 Personal website and project portfolio for Johannes Grof.
 
-![Astro](https://img.shields.io/badge/Astro-5.x-ff5d01?style=flat-square)
+![Astro](https://img.shields.io/badge/Astro-6.x-ff5d01?style=flat-square)
 ![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?style=flat-square)
 ![License](https://img.shields.io/badge/license-private-lightgrey?style=flat-square)
 

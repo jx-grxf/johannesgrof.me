@@ -1,28 +1,27 @@
 export const siteContent = {
   metaDescription:
-    "Johannes Grof is a student developer from Austria building macOS tools, automation workflows, bots, and web projects.",
+    "Johannes Grof is a student at HTL Kaindorf in Austria who builds macOS apps, AI automations, and small developer tools.",
   hero: {
     eyebrow: "student developer / austria",
     title: "Building useful tools before the idea gets boring.",
-    body: "I build macOS utilities, Discord automation, web dashboards, document workflows, and small products that turn messy technical problems into something usable.",
+    body: "I'm a student at HTL Kaindorf in Austria. I enjoy building macOS apps, AI automations, and small apps or CLI tools that turn annoying technical problems into something fun and usable. I also work confidently with tools like OpenClaw, Claude Code, and Codex.",
     primaryAction: "View projects",
     secondaryAction: "Future services",
+    githubAction: "GitHub",
   },
   services: {
     eyebrow: "soon",
     title: "Services",
-    body: "The service side is intentionally not overpromised yet. The first public version should show taste, technical range, and trust. Offers can become concrete once the site has a strong base.",
     items: [
-      "Small websites and portfolio systems",
-      "Discord bots and automation workflows",
-      "macOS utilities and developer tools",
-      "PDF, Office, and file-processing pipelines",
+      "AI automation (OpenClaw, Hermes Agent, Claude Code, Codex)",
+      "Websites",
+      "Small automation apps",
     ],
   },
   about: {
     eyebrow: "about",
-    title: "Student, builder, systems thinker.",
-    body: "I am Johannes Grof, a student developer from Austria. I like tools that feel direct: small CLIs, native macOS apps, automation systems, Discord integrations, and web interfaces that expose real state instead of hiding it behind marketing copy.",
+    title: "Student, builder, fast learner.",
+    body: "I live in Austria and am a first-year student at HTBLA Kaindorf. I love programming, especially when a project solves a real problem or makes a technical workflow easier. I know my way around AI tools like Codex and OpenClaw, keep up with new technology, and adapt quickly when the tools or requirements change.",
   },
   contact: {
     eyebrow: "contact",

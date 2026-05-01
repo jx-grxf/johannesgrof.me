@@ -162,6 +162,7 @@ h3 {
 .button {
   display: inline-flex;
   align-items: center;
+  gap: 9px;
   justify-content: center;
   min-height: 44px;
   border-radius: 8px;
@@ -185,6 +186,11 @@ h3 {
   border: 1px solid rgb(255 255 255 / 14%);
   background: rgb(255 255 255 / 6%);
   color: var(--text);
+}
+
+.icon-button svg {
+  width: 18px;
+  height: 18px;
 }
 
 .terminal-card {
@@ -281,12 +287,17 @@ pre {
 }
 
 .status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid rgb(255 255 255 / 12%);
   border-radius: 999px;
   padding: 4px 8px;
   font-family: "SFMono-Regular", Consolas, monospace;
   font-size: 0.68rem;
   font-weight: 800;
+  line-height: 1.1;
+  white-space: nowrap;
 }
 
 .status.active {
@@ -303,6 +314,10 @@ pre {
 
 .status.archived {
   color: var(--subtle);
+}
+
+.status.coming-soon {
+  color: var(--orange);
 }
 
 .project-card p,
@@ -331,6 +346,58 @@ pre {
   font-size: 0.82rem;
 }
 
+.coming-soon-group {
+  margin-top: 28px;
+  border-top: 1px solid rgb(255 255 255 / 9%);
+  padding-top: 22px;
+}
+
+.coming-soon-group h3 {
+  margin-bottom: 14px;
+  color: var(--orange);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.9rem;
+  text-transform: lowercase;
+}
+
+.upcoming-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 14px;
+}
+
+.upcoming-project {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 14px;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 8px;
+  padding: 18px;
+  background: rgb(255 255 255 / 4%);
+}
+
+.upcoming-project h4 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+}
+
+.upcoming-project p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.upcoming-project .status {
+  align-self: start;
+  justify-self: end;
+  width: max-content;
+  max-width: 100%;
+  height: auto;
+  min-height: 0;
+  margin-top: 2px;
+}
+
 .services-band {
   margin: 88px 0;
   border-block: 1px solid rgb(255 255 255 / 9%);
@@ -340,7 +407,7 @@ pre {
 .services-layout,
 .split-section,
 .contact-section {
-  grid-template-columns: 0.72fr 1fr;
+  grid-template-columns: 0.55fr 1fr;
   padding: 74px 0;
 }
 
@@ -403,6 +470,11 @@ pre {
   }
 
   .project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .upcoming-list,
+  .upcoming-project {
     grid-template-columns: 1fr;
   }
 
