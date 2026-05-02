@@ -10,3 +10,4 @@ DerivedData/
 *.o
 output/
 .playwright-cli/
+.codexignore
