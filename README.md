@@ -4,45 +4,23 @@
 
 Personal website and project portfolio for Johannes Grof.
 
-![Astro](https://img.shields.io/badge/Astro-6.x-ff5d01?style=flat-square)
-![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?style=flat-square)
-![License](https://img.shields.io/badge/license-private-lightgrey?style=flat-square)
+[![Astro](https://img.shields.io/badge/Astro-6.x-ff5d01?style=flat-square&logo=astro&logoColor=white)](https://astro.build)
+[![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
+[![Vercel](https://img.shields.io/badge/deployed%20on-Vercel-000000?style=flat-square&logo=vercel&logoColor=white)](https://vercel.com)
+[![Website](https://img.shields.io/badge/website-johannesgrof.me-111111?style=flat-square)](https://johannesgrof.me)
+[![License](https://img.shields.io/badge/license-all%20rights%20reserved-lightgrey?style=flat-square)](#license)
+
+[Website](https://johannesgrof.me) · [GitHub](https://github.com/jx-grxf)
 
 </div>
 
-## Contents
+## Overview
 
-- [Highlights](#highlights)
-- [Why This Exists](#why-this-exists)
-- [Current Workflow](#current-workflow)
-- [Tech Stack](#tech-stack)
-- [Requirements](#requirements)
-- [Quick Start](#quick-start)
-- [Usage](#usage)
-- [Development](#development)
-- [Roadmap](#roadmap)
-- [License](#license)
+This repository contains the source for my personal portfolio website. It is built as a small, fast Astro site with a focused project showcase, future services section, and static deployment on Vercel.
 
-## Highlights
+## Stack
 
-| Feature | Description |
-| --- | --- |
-| Personal identity | Introduces Johannes as a student developer from Austria. |
-| Project showcase | Presents active and experimental software projects. |
-| Services preview | Leaves room for future client services without overpromising. |
-| Static-first deployment | Fast, simple deployment through Vercel. |
-
-## Why This Exists
-
-This site is the public home for Johannes Grof: projects, technical focus areas, and future services.
-
-## Current Workflow
-
-Changes are developed on feature branches, reviewed through GitHub, and deployed through Vercel.
-
-## Tech Stack
-
-| Layer | Tool |
+| Part | Technology |
 | --- | --- |
 | Framework | Astro |
 | Language | TypeScript |
@@ -50,36 +28,47 @@ Changes are developed on feature branches, reviewed through GitHub, and deployed
 | Deployment | Vercel |
 | DNS | Cloudflare |
 
-## Requirements
+## Getting Started
+
+Requirements:
 
 - Node.js 22 or newer
 - npm 10 or newer
 
-## Quick Start
+Install dependencies and start the local dev server:
 
 ```bash
 npm install
 npm run dev
 ```
 
-## Usage
+## Scripts
 
-Open the local development URL printed by Astro.
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Starts the Astro dev server. |
+| `npm run check` | Runs Astro and TypeScript diagnostics. |
+| `npm run build` | Checks and builds the production site. |
+| `npm run preview` | Previews the production build locally. |
 
-## Development
+## Project Structure
+
+```text
+src/
+  data/       Site copy and project data
+  pages/      Astro pages
+  styles/     Global styling
+public/       Static assets, redirects, robots, sitemap
+```
+
+## Deployment
+
+The site is deployed with Vercel. Production builds use:
 
 ```bash
-npm run check
 npm run build
 ```
 
-## Roadmap
-
-- Add project detail pages.
-- Add screenshots and case studies.
-- Add a contact workflow for services.
-- Add analytics after the first public release.
-
 ## License
 
-Private project. All rights reserved.
+All rights reserved. The source is public for transparency, but reuse is not licensed without permission.
