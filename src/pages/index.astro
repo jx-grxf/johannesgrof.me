@@ -2,6 +2,7 @@
 import { featuredProjects, upcomingProjects } from "@/data/projects";
 import { siteContent } from "@/data/siteContent";
 import "@/styles/global.css";
+import SpeedInsights from "@vercel/speed-insights/astro";
 
 const navItems = [
   { label: "Projects", href: "#projects" },
@@ -172,5 +173,6 @@ const statusClass = (status: string) => status.replaceAll(" ", "-");
         </div>
       </section>
     </main>
+    <SpeedInsights />
   </body>
 </html>
