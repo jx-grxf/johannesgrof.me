@@ -106,7 +106,8 @@ nav a:hover {
 nav a:focus-visible,
 .button:focus-visible,
 .project-card:focus-visible,
-.contact-links a:focus-visible {
+.contact-links a:focus-visible,
+.terminal-link:focus-visible {
   outline: 2px solid rgb(77 241 210 / 70%);
   outline-offset: 3px;
 }
@@ -279,6 +280,21 @@ pre {
 
 .link {
   color: var(--blue);
+}
+
+.terminal-link {
+  border-radius: 4px;
+  transition:
+    color 160ms ease,
+    text-shadow 160ms ease;
+}
+
+.terminal-link:hover {
+  color: var(--cyan);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  text-shadow: 0 0 14px rgb(77 241 210 / 28%);
 }
 
 .section-heading {
