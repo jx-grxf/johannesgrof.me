@@ -2,7 +2,7 @@
 
 # johannesgrof.me
 
-Personal website and project portfolio for Johannes Grof.
+Personal website and project portfolio.
 
 [![Astro](https://img.shields.io/badge/Astro-6.x-ff5d01?style=flat-square&logo=astro&logoColor=white)](https://astro.build)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
@@ -16,7 +16,7 @@ Personal website and project portfolio for Johannes Grof.
 
 ## Overview
 
-This repository contains the source for my personal portfolio website. It is built as a small, fast Astro site with a focused project showcase, future services section, and static deployment on Vercel.
+This repository contains the source for my personal portfolio website. It is built as a small, fast Astro site with a focused project showcase, future services section, and static deployment on Vercel, using Cloudflare as DNS.
 
 ## Stack
 
@@ -71,4 +71,4 @@ npm run build
 
 ## License
 
-All rights reserved. The source is public for transparency, but reuse is not licensed without permission.
+All rights reserved. The source is public for transparency and to understand the frontend/backend, but reuse is not licensed without permission.
