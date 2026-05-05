@@ -4,8 +4,19 @@ export interface ShowcaseImage {
   src: string;
   fallbackSrc?: string;
   alt: string;
-  caption: string;
   fit?: "cover" | "contain";
+}
+
+export interface ProjectCommand {
+  label: string;
+  command: string;
+}
+
+export interface ProjectDownload {
+  label: string;
+  href: string;
+  detail: string;
+  kind: "macos" | "windows" | "release";
 }
 
 export interface Project {
@@ -17,8 +28,9 @@ export interface Project {
   stack: string[];
   repo: `jx-grxf/${string}`;
   githubUrl: string;
-  installCommand: string;
-  sourceCommand: string;
+  releaseUrl: string;
+  download?: ProjectDownload;
+  commands: ProjectCommand[];
   fallbackVersion: string;
   highlights: string[];
   showcase: ShowcaseImage[];
@@ -44,8 +56,21 @@ export const featuredProjects: Project[] = [
     stack: ["TypeScript", "Discord", "Voice"],
     repo: "jx-grxf/OpenClaw-Discord-Voice",
     githubUrl: "https://github.com/jx-grxf/OpenClaw-Discord-Voice",
-    installCommand: "git clone https://github.com/jx-grxf/OpenClaw-Discord-Voice.git",
-    sourceCommand: "gh repo clone jx-grxf/OpenClaw-Discord-Voice",
+    releaseUrl: "https://github.com/jx-grxf/OpenClaw-Discord-Voice/releases/tag/v1.0.4",
+    commands: [
+      {
+        label: "source without GitHub CLI",
+        command: "git clone https://github.com/jx-grxf/OpenClaw-Discord-Voice.git",
+      },
+      {
+        label: "source with GitHub CLI",
+        command: "gh repo clone jx-grxf/OpenClaw-Discord-Voice",
+      },
+      {
+        label: "latest release",
+        command: "open https://github.com/jx-grxf/OpenClaw-Discord-Voice/releases/tag/v1.0.4",
+      },
+    ],
     fallbackVersion: "v1.0.4",
     highlights: [
       "Bridges Discord voice events into a local OpenClaw workflow.",
@@ -57,7 +82,6 @@ export const featuredProjects: Project[] = [
         src: "/projects/openclaw-discord-voice/pipeline.webp",
         fallbackSrc: "/projects/openclaw-discord-voice/pipeline.png",
         alt: "Pipeline diagram for OpenClaw Discord Voice",
-        caption: "Discord voice event pipeline from bridge to local runtime.",
         fit: "contain",
       },
     ],
@@ -73,8 +97,21 @@ export const featuredProjects: Project[] = [
     stack: ["TypeScript", "macOS", "Word"],
     repo: "jx-grxf/DocxToPDF",
     githubUrl: "https://github.com/jx-grxf/DocxToPDF",
-    installCommand: "gh repo clone jx-grxf/DocxToPDF && cd DocxToPDF && npm install",
-    sourceCommand: "git clone https://github.com/jx-grxf/DocxToPDF.git",
+    releaseUrl: "https://github.com/jx-grxf/DocxToPDF/releases/tag/v0.1.0",
+    commands: [
+      {
+        label: "source without GitHub CLI",
+        command: "git clone https://github.com/jx-grxf/DocxToPDF.git && cd DocxToPDF && npm install",
+      },
+      {
+        label: "source with GitHub CLI",
+        command: "gh repo clone jx-grxf/DocxToPDF && cd DocxToPDF && npm install",
+      },
+      {
+        label: "latest release",
+        command: "open https://github.com/jx-grxf/DocxToPDF/releases/tag/v0.1.0",
+      },
+    ],
     fallbackVersion: "v0.1.0",
     highlights: [
       "Uses Microsoft Word as the export engine for document fidelity.",
@@ -86,7 +123,6 @@ export const featuredProjects: Project[] = [
         src: "/projects/docxtopdf/hero.webp",
         fallbackSrc: "/projects/docxtopdf/hero.png",
         alt: "DocxToPDF terminal export flow",
-        caption: "Word-backed export flow with OCR and overwrite controls.",
         fit: "contain",
       },
     ],
@@ -102,8 +138,27 @@ export const featuredProjects: Project[] = [
     stack: ["TypeScript", "UPnP", "DLNA"],
     repo: "jx-grxf/Caruso-Reborn",
     githubUrl: "https://github.com/jx-grxf/Caruso-Reborn",
-    installCommand: "gh repo clone jx-grxf/Caruso-Reborn && cd Caruso-Reborn && npm install",
-    sourceCommand: "git clone https://github.com/jx-grxf/Caruso-Reborn.git",
+    releaseUrl: "https://github.com/jx-grxf/Caruso-Reborn/releases/tag/v0.2.1",
+    download: {
+      label: " Download DMG",
+      href: "https://github.com/jx-grxf/Caruso-Reborn/releases/download/v0.2.1/Caruso.Reborn.Beta-0.2.1-arm64.dmg",
+      detail: "macOS arm64 beta build from GitHub Releases",
+      kind: "macos",
+    },
+    commands: [
+      {
+        label: "source without GitHub CLI",
+        command: "git clone https://github.com/jx-grxf/Caruso-Reborn.git && cd Caruso-Reborn && npm install",
+      },
+      {
+        label: "source with GitHub CLI",
+        command: "gh repo clone jx-grxf/Caruso-Reborn && cd Caruso-Reborn && npm install",
+      },
+      {
+        label: "download release with GitHub CLI",
+        command: "gh release download v0.2.1 -R jx-grxf/Caruso-Reborn -p '*.dmg'",
+      },
+    ],
     fallbackVersion: "v0.2.1",
     highlights: [
       "Publishes a browsable station list for compatible Caruso devices.",
@@ -115,7 +170,6 @@ export const featuredProjects: Project[] = [
         src: "/projects/caruso-reborn/hero.webp",
         fallbackSrc: "/projects/caruso-reborn/hero.png",
         alt: "Caruso Reborn dashboard",
-        caption: "Live renderer status, server controls, and station list.",
         fit: "cover",
       },
     ],
@@ -131,8 +185,21 @@ export const featuredProjects: Project[] = [
     stack: ["TypeScript", "Ink", "AI"],
     repo: "jx-grxf/PatchPilot",
     githubUrl: "https://github.com/jx-grxf/PatchPilot",
-    installCommand: "gh repo clone jx-grxf/PatchPilot && cd PatchPilot && npm install",
-    sourceCommand: "git clone https://github.com/jx-grxf/PatchPilot.git",
+    releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v0.1.1-beta",
+    commands: [
+      {
+        label: "source without GitHub CLI",
+        command: "git clone https://github.com/jx-grxf/PatchPilot.git && cd PatchPilot && npm install",
+      },
+      {
+        label: "source with GitHub CLI",
+        command: "gh repo clone jx-grxf/PatchPilot && cd PatchPilot && npm install",
+      },
+      {
+        label: "latest release",
+        command: "open https://github.com/jx-grxf/PatchPilot/releases/tag/v0.1.1-beta",
+      },
+    ],
     fallbackVersion: "v0.1.1-beta",
     highlights: [
       "Shows provider, model, session, token, cache, and cost telemetry.",
@@ -144,7 +211,6 @@ export const featuredProjects: Project[] = [
         src: "/projects/patchpilot/hero.webp",
         fallbackSrc: "/projects/patchpilot/hero.png",
         alt: "PatchPilot TUI session",
-        caption: "Agent session view with telemetry, transcript, and prompt.",
         fit: "contain",
       },
     ],
@@ -160,8 +226,27 @@ export const featuredProjects: Project[] = [
     stack: ["Python", "Selenium", "OCR"],
     repo: "jx-grxf/Digi2PDF",
     githubUrl: "https://github.com/jx-grxf/Digi2PDF",
-    installCommand: "gh repo clone jx-grxf/Digi2PDF && cd Digi2PDF",
-    sourceCommand: "git clone https://github.com/jx-grxf/Digi2PDF.git",
+    releaseUrl: "https://github.com/jx-grxf/Digi2PDF/releases/tag/v0.2.0",
+    download: {
+      label: "Download EXE",
+      href: "https://github.com/jx-grxf/Digi2PDF/releases/download/v0.2.0/digi2pdf.exe",
+      detail: "Windows executable from GitHub Releases",
+      kind: "windows",
+    },
+    commands: [
+      {
+        label: "source without GitHub CLI",
+        command: "git clone https://github.com/jx-grxf/Digi2PDF.git && cd Digi2PDF",
+      },
+      {
+        label: "source with GitHub CLI",
+        command: "gh repo clone jx-grxf/Digi2PDF && cd Digi2PDF",
+      },
+      {
+        label: "download release with GitHub CLI",
+        command: "gh release download v0.2.0 -R jx-grxf/Digi2PDF -p '*.exe'",
+      },
+    ],
     fallbackVersion: "v0.2.0",
     highlights: [
       "Combines browser automation, capture, Pillow, Tesseract, and OCRmyPDF.",
@@ -173,7 +258,6 @@ export const featuredProjects: Project[] = [
         src: "/projects/digi2pdf/hero.webp",
         fallbackSrc: "/projects/digi2pdf/hero.png",
         alt: "Digi2PDF terminal workflow",
-        caption: "Terminal-guided ebook selection, OCR setup, and capture flow.",
         fit: "contain",
       },
     ],
@@ -189,8 +273,27 @@ export const featuredProjects: Project[] = [
     stack: ["Swift", "macOS", "Sensors"],
     repo: "jx-grxf/SlamX",
     githubUrl: "https://github.com/jx-grxf/SlamX",
-    installCommand: "gh release download v0.3.4 -R jx-grxf/SlamX",
-    sourceCommand: "git clone https://github.com/jx-grxf/SlamX.git",
+    releaseUrl: "https://github.com/jx-grxf/SlamX/releases/tag/v0.3.4",
+    download: {
+      label: " Download DMG",
+      href: "https://github.com/jx-grxf/SlamX/releases/download/v0.3.4/SlamX-0.3.4.dmg",
+      detail: "macOS DMG from GitHub Releases",
+      kind: "macos",
+    },
+    commands: [
+      {
+        label: "source without GitHub CLI",
+        command: "git clone https://github.com/jx-grxf/SlamX.git",
+      },
+      {
+        label: "source with GitHub CLI",
+        command: "gh repo clone jx-grxf/SlamX",
+      },
+      {
+        label: "download release with GitHub CLI",
+        command: "gh release download v0.3.4 -R jx-grxf/SlamX -p '*.dmg'",
+      },
+    ],
     fallbackVersion: "v0.3.4",
     highlights: [
       "Reads Apple SPU accelerometer reports through local HID access.",
@@ -202,21 +305,18 @@ export const featuredProjects: Project[] = [
         src: "/projects/slamx/monitor-dash.webp",
         fallbackSrc: "/projects/slamx/monitor-dash.jpeg",
         alt: "SlamX live dashboard",
-        caption: "Live sensor dashboard with impact and sample telemetry.",
         fit: "contain",
       },
       {
         src: "/projects/slamx/monitor-calibration.webp",
         fallbackSrc: "/projects/slamx/monitor-calibration.jpeg",
         alt: "SlamX calibration view",
-        caption: "Calibration and threshold tuning for supported MacBooks.",
         fit: "contain",
       },
       {
         src: "/projects/slamx/monitor-slamx.webp",
         fallbackSrc: "/projects/slamx/monitor-slamx.jpeg",
         alt: "SlamX onboarding view",
-        caption: "Sensor availability and onboarding checks.",
         fit: "contain",
       },
     ],

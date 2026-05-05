@@ -38,7 +38,7 @@ const gitHubHeaders = () => {
 export async function getProjectGitHubInfo(project: Project): Promise<ProjectGitHubInfo> {
   const fallback: ProjectGitHubInfo = {
     version: project.fallbackVersion,
-    releaseUrl: `${project.githubUrl}/releases`,
+    releaseUrl: project.releaseUrl,
     stars: 0,
     forks: 0,
     language: project.stack[0] ?? "Code",

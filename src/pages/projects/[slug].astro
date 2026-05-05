@@ -63,6 +63,12 @@ const formatDate = (date: string) => {
           <p class="project-tagline">{project.tagline}</p>
           <p class="project-description">{project.description}</p>
           <div class="project-actions">
+            {project.download && (
+              <a class={`button download-button ${project.download.kind}`} href={project.download.href} target="_blank" rel="noreferrer">
+                <span>{project.download.label}</span>
+                <small>{project.download.detail}</small>
+              </a>
+            )}
             <a class="button primary" href={project.githubUrl} target="_blank" rel="noreferrer">Open source</a>
             <a class="button secondary" href={github.releaseUrl} target="_blank" rel="noreferrer">Latest release</a>
           </div>
@@ -99,20 +105,17 @@ const formatDate = (date: string) => {
           {heroImage.fallbackSrc && <source srcset={heroImage.src} type="image/webp" />}
           <img class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} loading="eager" decoding="async" />
         </picture>
-        <p>{heroImage.caption}</p>
       </section>
 
       <section class="project-detail-grid" aria-label={`${project.name} details`}>
         <div class="command-panel">
-          <h2>Run it</h2>
-          <div class="command-block">
-            <span>install</span>
-            <code>{project.installCommand}</code>
-          </div>
-          <div class="command-block">
-            <span>source</span>
-            <code>{project.sourceCommand}</code>
-          </div>
+          <h2>Source and releases</h2>
+          {project.commands.map((command) => (
+            <div class="command-block">
+              <span>{command.label}</span>
+              <code>{command.command}</code>
+            </div>
+          ))}
         </div>
 
         <div class="highlights-panel">
@@ -131,7 +134,6 @@ const formatDate = (date: string) => {
                 {image.fallbackSrc && <source srcset={image.src} type="image/webp" />}
                 <img class={`showcase-image ${image.fit ?? "cover"}`} src={image.fallbackSrc ?? image.src} alt={image.alt} loading="lazy" decoding="async" />
               </picture>
-              <figcaption>{image.caption}</figcaption>
             </figure>
           ))}
         </section>

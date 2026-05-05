@@ -217,6 +217,29 @@ h3 {
   color: var(--text);
 }
 
+.download-button {
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 56px;
+  border: 1px solid rgb(77 241 210 / 28%);
+  background: linear-gradient(135deg, var(--cyan), #8df6e5);
+  box-shadow: 0 16px 34px rgb(77 241 210 / 20%);
+  color: #071311;
+}
+
+.download-button.windows {
+  border-color: rgb(95 183 255 / 32%);
+  background: linear-gradient(135deg, var(--blue), #96d2ff);
+  box-shadow: 0 16px 34px rgb(95 183 255 / 18%);
+}
+
+.download-button small {
+  color: rgb(7 19 17 / 72%);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
 .icon-button svg {
   width: 18px;
   height: 18px;
@@ -690,16 +713,6 @@ pre {
   aspect-ratio: 16 / 9;
   object-fit: contain;
   padding: clamp(8px, 1.6vw, 18px);
-}
-
-.project-showcase p,
-.showcase-gallery figcaption {
-  margin: 0;
-  border-top: 1px solid rgb(255 255 255 / 9%);
-  padding: 13px 16px;
-  color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.45;
 }
 
 .project-detail-grid {
