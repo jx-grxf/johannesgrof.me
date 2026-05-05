@@ -1,5 +1,6 @@
 ---
 import SpeedInsights from "@vercel/speed-insights/astro";
+import type { ProjectReleaseDownload } from "@/data/github";
 import { getProjectGitHubInfo } from "@/data/github";
 import { featuredProjects, statusClass } from "@/data/projects";
 import "@/styles/global.css";
@@ -14,6 +15,10 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const github = await getProjectGitHubInfo(project);
 const [heroImage, ...galleryImages] = project.showcase;
+const downloads = [github.downloadGroup?.stable, ...(github.downloadGroup?.prereleases ?? [])].filter(
+  (download): download is ProjectReleaseDownload => Boolean(download)
+);
+const hasMultipleDownloads = downloads.length > 1;
 
 const formatDate = (date: string) => {
   if (!date) {
@@ -63,11 +68,34 @@ const formatDate = (date: string) => {
           <p class="project-tagline">{project.tagline}</p>
           <p class="project-description">{project.description}</p>
           <div class="project-actions">
-            {project.download && (
-              <a class={`button download-button ${project.download.kind}`} href={project.download.href} target="_blank" rel="noreferrer">
-                <span>{project.download.label}</span>
-                <small>{project.download.detail}</small>
-              </a>
+            {github.downloadGroup && (
+              hasMultipleDownloads ? (
+                <details class="download-menu">
+                  <summary class={`button download-button ${github.downloadGroup.stable?.kind ?? github.downloadGroup.prereleases[0]?.kind ?? "release"}`}>
+                    <span>Download</span>
+                    <small>Stable and pre-release builds</small>
+                  </summary>
+                  <div class="download-options">
+                    {github.downloadGroup.stable && (
+                      <a href={github.downloadGroup.stable.assetUrl} target="_blank" rel="noreferrer">
+                        <strong>Stable {github.downloadGroup.stable.tag}</strong>
+                        <span>{github.downloadGroup.stable.label} · {github.downloadGroup.stable.detail}</span>
+                      </a>
+                    )}
+                    {github.downloadGroup.prereleases.map((download) => (
+                      <a href={download.assetUrl} target="_blank" rel="noreferrer">
+                        <strong>Pre-release {download.tag}</strong>
+                        <span>{download.label} · {download.detail}</span>
+                      </a>
+                    ))}
+                  </div>
+                </details>
+              ) : (
+                <a class={`button download-button ${downloads[0]?.kind ?? "release"}`} href={downloads[0]?.assetUrl} target="_blank" rel="noreferrer">
+                  <span>{downloads[0]?.label}</span>
+                  <small>{downloads[0]?.detail}</small>
+                </a>
+              )
             )}
             <a class="button primary" href={project.githubUrl} target="_blank" rel="noreferrer">Open source</a>
             <a class="button secondary" href={github.releaseUrl} target="_blank" rel="noreferrer">Latest release</a>
@@ -110,7 +138,7 @@ const formatDate = (date: string) => {
       <section class="project-detail-grid" aria-label={`${project.name} details`}>
         <div class="command-panel">
           <h2>Source and releases</h2>
-          {project.commands.map((command) => (
+          {github.commands.map((command) => (
             <div class="command-block">
               <span>{command.label}</span>
               <code>{command.command}</code>
