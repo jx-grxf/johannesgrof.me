@@ -1,0 +1,142 @@
+---
+import SpeedInsights from "@vercel/speed-insights/astro";
+import { getProjectGitHubInfo } from "@/data/github";
+import { featuredProjects, statusClass } from "@/data/projects";
+import "@/styles/global.css";
+
+export async function getStaticPaths() {
+  return featuredProjects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const github = await getProjectGitHubInfo(project);
+const [heroImage, ...galleryImages] = project.showcase;
+
+const formatDate = (date: string) => {
+  if (!date) {
+    return "recent";
+  }
+
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(date));
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={`${project.name}: ${project.tagline}`} />
+    <title>{project.name} · Johannes Grof</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="/" aria-label="Johannes Grof home">
+        <span class="brand-mark">jg</span>
+        <span>Johannes Grof</span>
+      </a>
+      <nav aria-label="Project navigation">
+        <a href="/#projects">Projects</a>
+        <a href={project.githubUrl} target="_blank" rel="noreferrer">GitHub</a>
+        <a href={github.releaseUrl} target="_blank" rel="noreferrer">Release</a>
+      </nav>
+    </header>
+
+    <main class="project-detail section-shell">
+      <a class="back-link" href="/#projects">Back to projects</a>
+
+      <section class="project-detail-hero" aria-labelledby="project-title">
+        <div class="project-detail-copy">
+          <div class="project-kicker">
+            <span class={`status ${statusClass(project.status)}`}>{project.status}</span>
+            <span>{github.version}</span>
+          </div>
+          <h1 id="project-title">{project.name}</h1>
+          <p class="project-tagline">{project.tagline}</p>
+          <p class="project-description">{project.description}</p>
+          <div class="project-actions">
+            <a class="button primary" href={project.githubUrl} target="_blank" rel="noreferrer">Open source</a>
+            <a class="button secondary" href={github.releaseUrl} target="_blank" rel="noreferrer">Latest release</a>
+          </div>
+        </div>
+
+        <aside class="project-meta-panel" aria-label={`${project.name} GitHub summary`}>
+          <dl class="project-meta-grid">
+            <div>
+              <dt>Version</dt>
+              <dd>{github.version}</dd>
+            </div>
+            <div>
+              <dt>Language</dt>
+              <dd>{github.language}</dd>
+            </div>
+            <div>
+              <dt>Stars</dt>
+              <dd>{github.stars}</dd>
+            </div>
+            <div>
+              <dt>Forks</dt>
+              <dd>{github.forks}</dd>
+            </div>
+            <div>
+              <dt>Updated</dt>
+              <dd>{formatDate(github.updatedAt)}</dd>
+            </div>
+          </dl>
+        </aside>
+      </section>
+
+      <section class="project-showcase" aria-label={`${project.name} showcase`}>
+        <picture>
+          {heroImage.fallbackSrc && <source srcset={heroImage.src} type="image/webp" />}
+          <img class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} loading="eager" decoding="async" />
+        </picture>
+        <p>{heroImage.caption}</p>
+      </section>
+
+      <section class="project-detail-grid" aria-label={`${project.name} details`}>
+        <div class="command-panel">
+          <h2>Run it</h2>
+          <div class="command-block">
+            <span>install</span>
+            <code>{project.installCommand}</code>
+          </div>
+          <div class="command-block">
+            <span>source</span>
+            <code>{project.sourceCommand}</code>
+          </div>
+        </div>
+
+        <div class="highlights-panel">
+          <h2>Highlights</h2>
+          <ul>
+            {project.highlights.map((highlight) => <li>{highlight}</li>)}
+          </ul>
+        </div>
+      </section>
+
+      {galleryImages.length > 0 && (
+        <section class="showcase-gallery" aria-label={`${project.name} gallery`}>
+          {galleryImages.map((image) => (
+            <figure>
+              <picture>
+                {image.fallbackSrc && <source srcset={image.src} type="image/webp" />}
+                <img class={`showcase-image ${image.fit ?? "cover"}`} src={image.fallbackSrc ?? image.src} alt={image.alt} loading="lazy" decoding="async" />
+              </picture>
+              <figcaption>{image.caption}</figcaption>
+            </figure>
+          ))}
+        </section>
+      )}
+    </main>
+    <SpeedInsights />
+  </body>
+</html>
