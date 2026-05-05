@@ -11,3 +11,4 @@ DerivedData/
 output/
 .playwright-cli/
 .codexignore
+.vercel
