@@ -93,7 +93,7 @@ export const featuredProjects: Project[] = [
     status: "active",
     tagline: "Batch DOCX to PDF conversion through Microsoft Word.",
     description:
-      "A calm macOS TUI that searches DOCX files, lets you select them with the keyboard, and exports PDFs through Word's native renderer.",
+      "A macOS TUI that searches DOCX files, lets you select them with the keyboard, and exports PDFs through Word's native renderer.",
     stack: ["TypeScript", "macOS", "Word"],
     repo: "jx-grxf/DocxToPDF",
     githubUrl: "https://github.com/jx-grxf/DocxToPDF",
@@ -204,7 +204,7 @@ export const featuredProjects: Project[] = [
     highlights: [
       "Shows provider, model, session, token, cache, and cost telemetry.",
       "Keeps transcript and session context visible while working in the terminal.",
-      "Supports local-first workflows while still allowing cloud providers.",
+      "Supports local-first workflows with ollama while still allowing cloud providers.",
     ],
     showcase: [
       {
@@ -269,7 +269,7 @@ export const featuredProjects: Project[] = [
     status: "beta",
     tagline: "Sensor-only MacBook impact detection with sound feedback.",
     description:
-      "A native macOS utility that reads Apple SPU accelerometer data, detects sharp impact spikes, and plays local sound feedback with visible calibration.",
+      "A fun macOS utility that reads Apple SPU accelerometer data, detects sharp impact spikes, and plays local sound feedback with visible calibration.",
     stack: ["Swift", "macOS", "Sensors"],
     repo: "jx-grxf/SlamX",
     githubUrl: "https://github.com/jx-grxf/SlamX",
@@ -299,6 +299,7 @@ export const featuredProjects: Project[] = [
       "Reads Apple SPU accelerometer reports through local HID access.",
       "Provides live telemetry, calibration, threshold tuning, and sound selection.",
       "Does not use microphone access or audio-based fallback detection.",
+      "Don't slam your Mac to hard (;",
     ],
     showcase: [
       {
