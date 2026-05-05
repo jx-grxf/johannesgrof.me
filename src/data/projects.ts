@@ -140,7 +140,7 @@ export const featuredProjects: Project[] = [
     githubUrl: "https://github.com/jx-grxf/Caruso-Reborn",
     releaseUrl: "https://github.com/jx-grxf/Caruso-Reborn/releases/tag/v0.2.1",
     download: {
-      label: " Download DMG",
+      label: "Download DMG",
       href: "https://github.com/jx-grxf/Caruso-Reborn/releases/download/v0.2.1/Caruso.Reborn.Beta-0.2.1-arm64.dmg",
       detail: "macOS arm64 beta build from GitHub Releases",
       kind: "macos",
@@ -275,7 +275,7 @@ export const featuredProjects: Project[] = [
     githubUrl: "https://github.com/jx-grxf/SlamX",
     releaseUrl: "https://github.com/jx-grxf/SlamX/releases/tag/v0.3.4",
     download: {
-      label: " Download DMG",
+      label: "Download DMG",
       href: "https://github.com/jx-grxf/SlamX/releases/download/v0.3.4/SlamX-0.3.4.dmg",
       detail: "macOS DMG from GitHub Releases",
       kind: "macos",
