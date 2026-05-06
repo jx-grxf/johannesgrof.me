@@ -13,7 +13,7 @@
   --green: #91d87b;
   --shadow: 0 18px 42px rgb(0 0 0 / 30%);
   --glass: linear-gradient(180deg, rgb(255 255 255 / 8%), rgb(255 255 255 / 3%));
-  --glass-strong: linear-gradient(180deg, rgb(34 37 41 / 88%), rgb(18 20 23 / 82%));
+  --glass-strong: linear-gradient(180deg, rgb(34 37 41 / 97%), rgb(18 20 23 / 96%));
   --glass-line: rgb(255 255 255 / 11%);
   --glass-highlight: inset 0 1px 0 rgb(255 255 255 / 12%);
   --smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -263,18 +263,18 @@ h3 {
 }
 
 .download-menu {
+  position: relative;
+  z-index: 40;
   display: grid;
   width: min(310px, 100%);
   align-content: start;
 }
 
-.download-menu summary {
+.download-menu .download-button {
   cursor: pointer;
-  list-style: none;
-}
-
-.download-menu summary::-webkit-details-marker {
-  display: none;
+  appearance: none;
+  font: inherit;
+  text-align: left;
 }
 
 .download-button span {
@@ -310,11 +310,13 @@ h3 {
 }
 
 .download-options {
-  z-index: 30;
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 60;
   display: grid;
-  width: 100%;
+  width: min(360px, calc(100vw - 32px));
   gap: 8px;
-  margin-top: 10px;
   border: 1px solid var(--glass-line);
   border-radius: 8px;
   padding: 8px;
@@ -323,8 +325,22 @@ h3 {
     var(--glass-highlight),
     0 20px 44px rgb(0 0 0 / 34%);
   backdrop-filter: blur(22px) saturate(1.35);
-  transform-origin: top left;
-  animation: dropdown-in 220ms var(--smooth) both;
+  opacity: 0;
+  transform: translateY(-8px) scale(0.985);
+  transform-origin: top center;
+  transition:
+    opacity 180ms ease,
+    transform 220ms var(--smooth),
+    visibility 180ms ease;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.download-menu[data-open="true"] .download-options {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  visibility: visible;
+  pointer-events: auto;
 }
 
 .download-options a {
@@ -782,6 +798,8 @@ pre {
 }
 
 .project-detail-hero {
+  position: relative;
+  z-index: 30;
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(250px, 310px);
   gap: 18px;
@@ -823,6 +841,8 @@ pre {
 }
 
 .project-detail-copy {
+  position: relative;
+  z-index: 20;
   padding: clamp(24px, 3.4vw, 38px);
 }
 
@@ -956,6 +976,8 @@ pre {
 }
 
 .project-showcase {
+  position: relative;
+  z-index: 1;
   overflow: hidden;
   margin-top: 18px;
   background:
@@ -1143,18 +1165,6 @@ pre {
   }
 }
 
-@keyframes dropdown-in {
-  from {
-    opacity: 0;
-    transform: translateY(-4px) scale(0.995);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1237,6 +1247,10 @@ pre {
 
   .project-actions > .button,
   .download-menu {
+    width: 100%;
+  }
+
+  .download-options {
     width: 100%;
   }
 
