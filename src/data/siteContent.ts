@@ -28,7 +28,7 @@ export const siteContent = {
     ],
   },
   services: {
-    eyebrow: "small projects",
+    eyebrow: "services",
     title: "What I can help with.",
     items: [
       "Websites.",
