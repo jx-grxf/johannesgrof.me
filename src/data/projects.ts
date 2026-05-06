@@ -193,8 +193,8 @@ export const featuredProjects: Project[] = [
     stack: ["Python", "Selenium", "OCR"],
     repo: "jx-grxf/Digi2PDF",
     githubUrl: "https://github.com/jx-grxf/Digi2PDF",
-    releaseUrl: "https://github.com/jx-grxf/Digi2PDF/releases/tag/v0.2.0",
-    fallbackVersion: "v0.2.0",
+    releaseUrl: "https://github.com/jx-grxf/Digi2PDF/releases/tag/v0.2.1",
+    fallbackVersion: "v0.2.1",
     highlights: [
       "Combines browser automation, capture, Pillow, Tesseract, and OCRmyPDF.",
       "Makes private-use confirmation explicit before export.",
