@@ -73,18 +73,20 @@ const formatDate = (date: string) => {
                 <details class="download-menu">
                   <summary class={`button download-button ${github.downloadGroup.stable?.kind ?? github.downloadGroup.prereleases[0]?.kind ?? "release"}`}>
                     <span>Download</span>
-                    <small>Stable and pre-release builds</small>
+                    <small>Choose release asset</small>
                   </summary>
                   <div class="download-options">
                     {github.downloadGroup.stable && (
                       <a href={github.downloadGroup.stable.assetUrl} target="_blank" rel="noreferrer">
-                        <strong>Stable {github.downloadGroup.stable.tag}</strong>
+                        <span class="download-option-meta">Stable</span>
+                        <strong>{github.downloadGroup.stable.tag}</strong>
                         <span>{github.downloadGroup.stable.label} · {github.downloadGroup.stable.detail}</span>
                       </a>
                     )}
                     {github.downloadGroup.prereleases.map((download) => (
                       <a href={download.assetUrl} target="_blank" rel="noreferrer">
-                        <strong>Pre-release {download.tag}</strong>
+                        <span class="download-option-meta">Pre-release</span>
+                        <strong>{download.tag}</strong>
                         <span>{download.label} · {download.detail}</span>
                       </a>
                     ))}
@@ -97,7 +99,7 @@ const formatDate = (date: string) => {
                 </a>
               )
             )}
-            <a class="button primary" href={project.githubUrl} target="_blank" rel="noreferrer">Open source</a>
+            <a class="button secondary" href={project.githubUrl} target="_blank" rel="noreferrer">Open source</a>
             <a class="button secondary" href={github.releaseUrl} target="_blank" rel="noreferrer">Latest release</a>
           </div>
         </div>
@@ -133,6 +135,25 @@ const formatDate = (date: string) => {
           {heroImage.fallbackSrc && <source srcset={heroImage.src} type="image/webp" />}
           <img class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} loading="eager" decoding="async" />
         </picture>
+      </section>
+
+      <section class="case-study-panel" aria-label={`${project.name} case study`}>
+        <article>
+          <span>Problem</span>
+          <p>{project.caseStudy.problem}</p>
+        </article>
+        <article>
+          <span>What I built</span>
+          <p>{project.caseStudy.built}</p>
+        </article>
+        <article>
+          <span>Result</span>
+          <p>{project.caseStudy.result}</p>
+        </article>
+        <article>
+          <span>Audience</span>
+          <p>{project.audience}</p>
+        </article>
       </section>
 
       <section class="project-detail-grid" aria-label={`${project.name} details`}>
