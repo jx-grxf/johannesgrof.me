@@ -23,7 +23,7 @@ export const siteContent = {
       },
       {
         title: "Practical build work",
-        items: ["Small websites", "Document workflows", "GitHub releases", "Debugging real device/app problems"],
+        items: ["Small websites", "Document workflows", "GitHub", "Debugging real device/app problems"],
       },
     ],
   },
@@ -31,9 +31,10 @@ export const siteContent = {
     eyebrow: "small projects",
     title: "What I can help with.",
     items: [
-      "Simple websites for people, clubs, or local projects.",
+      "Websites.",
       "Small automation tools for repetitive browser, document, or desktop workflows.",
-      "macOS and CLI prototypes when an existing app feels too heavy.",
+      "macOS and CLI tools",
+      "Automation with OpenClaw, Hermes Agent, Codex etc..."
     ],
   },
   about: {
