@@ -4,18 +4,37 @@ export const siteContent = {
   hero: {
     eyebrow: "student developer / austria",
     title: "Building useful tools before the idea gets boring.",
-    body: "I'm a student at HTL Kaindorf in Austria. I enjoy building macOS apps, AI automations, and small apps or CLI tools that turn annoying technical problems into something fun and usable. I also work confidently with tools like OpenClaw, Claude Code, and Codex.",
+    body: "I'm a student at HTL Kaindorf in Austria. I enjoy building macOS apps, automations, and small apps or CLI tools that turn annoying technical problems into something fun and usable.",
     primaryAction: "View projects",
-    secondaryAction: "Future services",
+    secondaryAction: "Skills",
     githubAction: "GitHub",
   },
+  skills: {
+    eyebrow: "skills",
+    title: "Tools and areas I work with.",
+    groups: [
+      {
+        title: "Languages and apps",
+        items: ["TypeScript", "Swift", "Python", "Astro", "macOS utilities", "CLI tools"],
+      },
+      {
+        title: "Automation and AI workflow",
+        items: ["Codex", "Claude Code", "OpenClaw", "Browser automation", "Local-first agent tooling"],
+      },
+      {
+        title: "Practical build work",
+        items: ["Small websites", "Document workflows", "GitHub", "Debugging real device/app problems"],
+      },
+    ],
+  },
   services: {
-    eyebrow: "soon",
-    title: "Services",
+    eyebrow: "small projects",
+    title: "What I can help with.",
     items: [
-      "AI automation (OpenClaw, Hermes Agent, Claude Code, Codex)",
-      "Websites",
-      "Small automation apps",
+      "Websites.",
+      "Small automation tools for repetitive browser, document, or desktop workflows.",
+      "macOS and CLI tools",
+      "Automation with OpenClaw, Hermes Agent, Codex etc..."
     ],
   },
   about: {

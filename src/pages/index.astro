@@ -6,7 +6,8 @@ import SpeedInsights from "@vercel/speed-insights/astro";
 
 const navItems = [
   { label: "Projects", href: "#projects" },
-  { label: "Services", href: "#services" },
+  { label: "Skills", href: "#skills" },
+  { label: "Small projects", href: "#services" },
   { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" },
 ];
@@ -77,8 +78,12 @@ const navItems = [
 │     └─ <span class="folder">coming-soon/</span>
 │        ├─ TypeBot
 │        └─ StackBar
-├─ <span class="folder">services/</span>
-│  └─ coming-soon
+├─ <a class="folder terminal-link" href="#skills">skills/</a>
+│  ├─ TypeScript
+│  ├─ Swift
+│  └─ Codex
+├─ <a class="folder terminal-link" href="#services">small-projects/</a>
+│  └─ websites-and-tools
 └─ <span class="folder">contact/</span>
    └─ jx_grxf</code></pre>
         </aside>
@@ -99,6 +104,8 @@ const navItems = [
                     <span class={`status ${statusClass(project.status)}`}>{project.status}</span>
                   </div>
                   <p>{project.description}</p>
+                  <p class="project-audience">{project.audience}</p>
+                  <p class="project-result">{project.result}</p>
                   <ul>
                     {project.stack.map((item) => (
                       <li>{item}</li>
@@ -112,6 +119,8 @@ const navItems = [
                     <span class={`status ${statusClass(project.status)}`}>{project.status}</span>
                   </div>
                   <p>{project.description}</p>
+                  <p class="project-audience">{project.audience}</p>
+                  <p class="project-result">{project.result}</p>
                   <ul>
                     {project.stack.map((item) => (
                       <li>{item}</li>
@@ -140,6 +149,27 @@ const navItems = [
         </div>
       </section>
 
+      <section id="skills" class="section-shell skills-section reveal">
+        <div class="section-heading">
+          <p class="eyebrow">{siteContent.skills.eyebrow}</p>
+          <h2>{siteContent.skills.title}</h2>
+        </div>
+        <div class="skills-grid">
+          {
+            siteContent.skills.groups.map((group, index) => (
+              <article class="skill-group" style={`--reveal-delay: ${index * 70}ms`}>
+                <h3>{group.title}</h3>
+                <ul>
+                  {group.items.map((item) => (
+                    <li>{item}</li>
+                  ))}
+                </ul>
+              </article>
+            ))
+          }
+        </div>
+      </section>
+
       <section id="services" class="services-band">
         <div class="section-shell services-layout reveal">
           <div>
@@ -164,6 +194,7 @@ const navItems = [
         <div>
           <p class="eyebrow">{siteContent.contact.eyebrow}</p>
           <h2>{siteContent.contact.title}</h2>
+          <p class="contact-note">For small project questions, message me on LinkedIn or GitHub.</p>
         </div>
         <div class="contact-links">
           <a href="https://github.com/jx-grxf" target="_blank" rel="noreferrer">GitHub</a>

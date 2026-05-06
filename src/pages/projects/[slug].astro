@@ -19,6 +19,7 @@ const downloads = [github.downloadGroup?.stable, ...(github.downloadGroup?.prere
   (download): download is ProjectReleaseDownload => Boolean(download)
 );
 const hasMultipleDownloads = downloads.length > 1;
+const downloadMenuId = `${project.slug}-download-menu`;
 
 const formatDate = (date: string) => {
   if (!date) {
@@ -70,26 +71,34 @@ const formatDate = (date: string) => {
           <div class="project-actions">
             {github.downloadGroup && (
               hasMultipleDownloads ? (
-                <details class="download-menu">
-                  <summary class={`button download-button ${github.downloadGroup.stable?.kind ?? github.downloadGroup.prereleases[0]?.kind ?? "release"}`}>
+                <div class="download-menu" data-download-menu>
+                  <button
+                    class={`button download-button ${github.downloadGroup.stable?.kind ?? github.downloadGroup.prereleases[0]?.kind ?? "release"}`}
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls={downloadMenuId}
+                    data-download-trigger
+                  >
                     <span>Download</span>
-                    <small>Stable and pre-release builds</small>
-                  </summary>
-                  <div class="download-options">
+                    <small>Choose release asset</small>
+                  </button>
+                  <div id={downloadMenuId} class="download-options" aria-hidden="true" data-download-options>
                     {github.downloadGroup.stable && (
                       <a href={github.downloadGroup.stable.assetUrl} target="_blank" rel="noreferrer">
-                        <strong>Stable {github.downloadGroup.stable.tag}</strong>
+                        <span class="download-option-meta">Stable</span>
+                        <strong>{github.downloadGroup.stable.tag}</strong>
                         <span>{github.downloadGroup.stable.label} · {github.downloadGroup.stable.detail}</span>
                       </a>
                     )}
                     {github.downloadGroup.prereleases.map((download) => (
                       <a href={download.assetUrl} target="_blank" rel="noreferrer">
-                        <strong>Pre-release {download.tag}</strong>
+                        <span class="download-option-meta">Pre-release</span>
+                        <strong>{download.tag}</strong>
                         <span>{download.label} · {download.detail}</span>
                       </a>
                     ))}
                   </div>
-                </details>
+                </div>
               ) : (
                 <a class={`button download-button ${downloads[0]?.kind ?? "release"}`} href={downloads[0]?.assetUrl} target="_blank" rel="noreferrer">
                   <span>{downloads[0]?.label}</span>
@@ -97,7 +106,7 @@ const formatDate = (date: string) => {
                 </a>
               )
             )}
-            <a class="button primary" href={project.githubUrl} target="_blank" rel="noreferrer">Open source</a>
+            <a class="button secondary" href={project.githubUrl} target="_blank" rel="noreferrer">Open source</a>
             <a class="button secondary" href={github.releaseUrl} target="_blank" rel="noreferrer">Latest release</a>
           </div>
         </div>
@@ -135,6 +144,25 @@ const formatDate = (date: string) => {
         </picture>
       </section>
 
+      <section class="case-study-panel" aria-label={`${project.name} case study`}>
+        <article>
+          <span>Problem</span>
+          <p>{project.caseStudy.problem}</p>
+        </article>
+        <article>
+          <span>What I built</span>
+          <p>{project.caseStudy.built}</p>
+        </article>
+        <article>
+          <span>Result</span>
+          <p>{project.caseStudy.result}</p>
+        </article>
+        <article>
+          <span>Audience</span>
+          <p>{project.audience}</p>
+        </article>
+      </section>
+
       <section class="project-detail-grid" aria-label={`${project.name} details`}>
         <div class="command-panel">
           <h2>Source and releases</h2>
@@ -167,6 +195,61 @@ const formatDate = (date: string) => {
         </section>
       )}
     </main>
+    <script>
+      const downloadMenus = document.querySelectorAll<HTMLElement>("[data-download-menu]");
+
+      const closeDownloadMenu = (menu: HTMLElement) => {
+        const trigger = menu.querySelector("[data-download-trigger]");
+        const options = menu.querySelector("[data-download-options]");
+
+        menu.dataset.open = "false";
+        trigger?.setAttribute("aria-expanded", "false");
+        options?.setAttribute("aria-hidden", "true");
+      };
+
+      downloadMenus.forEach((menu) => {
+        const trigger = menu.querySelector("[data-download-trigger]");
+        const options = menu.querySelector("[data-download-options]");
+
+        menu.dataset.open = "false";
+
+        trigger?.addEventListener("click", () => {
+          const willOpen = menu.dataset.open !== "true";
+
+          downloadMenus.forEach((item) => {
+            if (item !== menu) {
+              closeDownloadMenu(item);
+            }
+          });
+
+          menu.dataset.open = String(willOpen);
+          trigger.setAttribute("aria-expanded", String(willOpen));
+          options?.setAttribute("aria-hidden", String(!willOpen));
+        });
+      });
+
+      document.addEventListener("click", (event) => {
+        const target = event.target;
+
+        if (!(target instanceof Node)) {
+          return;
+        }
+
+        downloadMenus.forEach((menu) => {
+          if (!menu.contains(target)) {
+            closeDownloadMenu(menu);
+          }
+        });
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape") {
+          return;
+        }
+
+        downloadMenus.forEach(closeDownloadMenu);
+      });
+    </script>
     <SpeedInsights />
   </body>
 </html>

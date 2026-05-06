@@ -16,7 +16,7 @@ Personal website and project portfolio.
 
 ## Overview
 
-This repository contains the source for my personal portfolio website. It is built as a small, fast Astro site with a focused project showcase, future services section, and static deployment on Vercel, using Cloudflare as DNS.
+This repository contains the source for my personal portfolio website. It is built as a small, fast Astro site with a focused project showcase, skills section, contact surface, and static deployment on Vercel, using Cloudflare as DNS.
 
 ## Stack
 
