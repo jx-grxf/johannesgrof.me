@@ -33,7 +33,7 @@ const navItems = [
         <span>Johannes Grof</span>
       </a>
       <nav aria-label="Primary navigation">
-        {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
+        {navItems.map((item) => <a href={item.href} data-dino-trigger={item.href === "#contact" ? "true" : undefined}>{item.label}</a>)}
       </nav>
     </header>
 
@@ -192,13 +192,32 @@ const navItems = [
 
       <section id="contact" class="section-shell contact-section reveal">
         <div>
-          <p class="eyebrow">{siteContent.contact.eyebrow}</p>
+          <p class="eyebrow contact-easter-trigger" data-dino-trigger role="button" tabindex="0" aria-label="Unlock portfolio easter egg">{siteContent.contact.eyebrow}</p>
           <h2>{siteContent.contact.title}</h2>
           <p class="contact-note">For small project questions, message me on LinkedIn or GitHub.</p>
         </div>
         <div class="contact-links">
           <a href="https://github.com/jx-grxf" target="_blank" rel="noreferrer">GitHub</a>
           <a href="https://www.linkedin.com/in/johannes-grof/" target="_blank" rel="noreferrer">LinkedIn</a>
+        </div>
+      </section>
+      <section class="section-shell dino-easter-egg" aria-labelledby="dino-title" hidden>
+        <div class="dino-game-card">
+          <div class="dino-game-topline">
+            <div>
+              <p class="eyebrow">easter egg unlocked</p>
+              <h2 id="dino-title">Chrome Dino</h2>
+            </div>
+            <div class="dino-stats" aria-live="polite">
+              <span>score <strong data-dino-score>0</strong></span>
+              <span>best <strong data-dino-best>0</strong></span>
+            </div>
+          </div>
+          <button class="dino-stage" type="button" data-dino-stage aria-label="Play Chrome Dino. Press space, arrow up, tap, or click to jump.">
+            <canvas id="dino-canvas" width="900" height="240"></canvas>
+            <span class="dino-help" data-dino-help>press space or tap to jump</span>
+          </button>
+          <button class="button secondary dino-restart" type="button" data-dino-restart>Restart</button>
         </div>
       </section>
     </main>
@@ -229,6 +248,9 @@ const navItems = [
 
         revealElements.forEach((element) => revealObserver.observe(element));
       }
+    </script>
+    <script>
+      import "@/scripts/dinoGame";
     </script>
     <SpeedInsights />
   </body>
