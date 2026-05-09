@@ -1,5 +1,6 @@
 ---
-import { featuredProjects, statusClass, upcomingProjects } from "@/data/projects";
+import BaseHead from "@/components/BaseHead.astro";
+import { featuredShowcaseProjects, publicProjects, standardProjects, statusClass, upcomingProjects } from "@/data/projects";
 import { siteContent } from "@/data/siteContent";
 import "@/styles/global.css";
 import SpeedInsights from "@vercel/speed-insights/astro";
@@ -12,19 +13,48 @@ const navItems = [
   { label: "Contact", href: "#contact" },
 ];
 
+const escapeHtml = (value: string) =>
+  value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+
+const terminalProjectRows = publicProjects
+  .map((project, index) => {
+    const branch = index === publicProjects.length - 1 ? "└" : "├";
+    return `│  ${branch}─ <a class="terminal-link" href="/projects/${project.slug}/">${escapeHtml(project.name)}</a>`;
+  })
+  .join("\n");
+const terminalUpcomingRows = upcomingProjects
+  .map((project, index) => {
+    const branch = index === upcomingProjects.length - 1 ? "└" : "├";
+    return `│        ${branch}─ ${escapeHtml(project.name)}`;
+  })
+  .join("\n");
+const terminalTreeHtml = `<span class="path">/home/johannes_grof/</span>
+├─ <span class="folder">my_links/</span>
+│  ├─ <a class="link terminal-link" href="https://github.com/jx-grxf" target="_blank" rel="noreferrer" aria-label="Open GitHub profile">github</a>
+│  └─ <a class="link terminal-link" href="https://www.linkedin.com/in/johannes-grof/" target="_blank" rel="noreferrer" aria-label="Open LinkedIn profile">linkedin</a>
+├─ <a class="folder terminal-link" href="#projects">projects/</a>
+${terminalProjectRows}
+│     └─ <span class="folder">coming-soon/</span>
+${terminalUpcomingRows}
+├─ <a class="folder terminal-link" href="#skills">skills/</a>
+│  ├─ TypeScript
+│  ├─ Swift
+│  └─ Codex
+├─ <a class="folder terminal-link" href="#services">services/</a>
+│  └─ websites-and-tools
+└─ <span class="folder">contact/</span>
+   └─ jx_grxf`;
+
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content={siteContent.metaDescription}
-    />
-    <title>Johannes Grof</title>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <BaseHead title="Johannes Grof" description={siteContent.metaDescription} canonicalPath="/" />
   </head>
   <body>
     <header class="site-header">
@@ -64,41 +94,52 @@ const navItems = [
             <span></span>
             <span></span>
           </div>
-          <pre><code><span class="path">/home/johannes_grof/</span>
-├─ <span class="folder">my_links/</span>
-│  ├─ <a class="link terminal-link" href="https://github.com/jx-grxf" target="_blank" rel="noreferrer" aria-label="Open GitHub profile">github</a>
-│  └─ <a class="link terminal-link" href="https://www.linkedin.com/in/johannes-grof/" target="_blank" rel="noreferrer" aria-label="Open LinkedIn profile">linkedin</a>
-├─ <a class="folder terminal-link" href="#projects">projects/</a>
-│  ├─ <a class="terminal-link" href="/projects/openclaw-discord-voice/">OpenClaw-Discord-Voice</a>
-│  ├─ <a class="terminal-link" href="/projects/docxtopdf/">DocxToPDF</a>
-│  ├─ <a class="terminal-link" href="/projects/caruso-reborn/">Caruso-Reborn</a>
-│  ├─ <a class="terminal-link" href="/projects/patchpilot/">PatchPilot</a>
-│  ├─ <a class="terminal-link" href="/projects/digi2pdf/">Digi2PDF</a>
-│  └─ <a class="terminal-link" href="/projects/slamx/">SlamX</a>
-│     └─ <span class="folder">coming-soon/</span>
-│        ├─ TypeBot
-│        └─ StackBar
-├─ <a class="folder terminal-link" href="#skills">skills/</a>
-│  ├─ TypeScript
-│  ├─ Swift
-│  └─ Codex
-├─ <a class="folder terminal-link" href="#services">services/</a>
-│  └─ websites-and-tools
-└─ <span class="folder">contact/</span>
-   └─ jx_grxf</code></pre>
+          <pre><code set:html={terminalTreeHtml}></code></pre>
         </aside>
       </section>
 
       <section id="projects" class="section-shell">
         <div class="section-heading reveal">
           <p class="eyebrow">selected work</p>
+          <h2>Featured Projects</h2>
+        </div>
+        <div class="featured-project-grid">
+          {
+            featuredShowcaseProjects.map((project, index) => {
+              const heroImage = project.showcase[0];
+
+              return (
+                <a class="project-card featured-project-card reveal" style={`--reveal-delay: ${index * 80}ms`} href={`/projects/${project.slug}/`}>
+                  <div class="featured-card-media">
+                    <img src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
+                  </div>
+                  <div class="featured-card-body">
+                    <div class="card-topline">
+                      <h3>{project.name}</h3>
+                      <span class={`status ${statusClass(project.status)}`}>{project.status}</span>
+                    </div>
+                    <p>{project.description}</p>
+                    <p class="project-result">{project.result}</p>
+                    <ul>
+                      {project.stack.map((item) => (
+                        <li>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </a>
+              );
+            })
+          }
+        </div>
+
+        <div class="section-heading project-subheading reveal">
+          <p class="eyebrow">more projects</p>
           <h2>Projects</h2>
         </div>
         <div class="project-grid">
           {
-            featuredProjects.map((project, index) =>
-              project.visibility === "public" ? (
-                <a class="project-card reveal" style={`--reveal-delay: ${index * 70}ms`} href={`/projects/${project.slug}/`}>
+            standardProjects.map((project, index) => (
+              <a class="project-card reveal" style={`--reveal-delay: ${index * 70}ms`} href={`/projects/${project.slug}/`}>
                   <div class="card-topline">
                     <h3>{project.name}</h3>
                     <span class={`status ${statusClass(project.status)}`}>{project.status}</span>
@@ -112,23 +153,7 @@ const navItems = [
                     ))}
                   </ul>
                 </a>
-              ) : (
-                <article class="project-card private-card reveal" style={`--reveal-delay: ${index * 70}ms`}>
-                  <div class="card-topline">
-                    <h3>{project.name}</h3>
-                    <span class={`status ${statusClass(project.status)}`}>{project.status}</span>
-                  </div>
-                  <p>{project.description}</p>
-                  <p class="project-audience">{project.audience}</p>
-                  <p class="project-result">{project.result}</p>
-                  <ul>
-                    {project.stack.map((item) => (
-                      <li>{item}</li>
-                    ))}
-                  </ul>
-                </article>
-              )
-            )
+            ))
           }
         </div>
         <div class="coming-soon-group reveal" aria-labelledby="coming-soon-title">
@@ -201,19 +226,22 @@ const navItems = [
           <a href="https://www.linkedin.com/in/johannes-grof/" target="_blank" rel="noreferrer">LinkedIn</a>
         </div>
       </section>
+      <button class="easter-hint" type="button" data-easter-hint hidden>
+        Have you found the easter egg yet?
+      </button>
       <section class="section-shell dino-easter-egg" aria-labelledby="dino-title" hidden>
         <div class="dino-game-card">
           <div class="dino-game-topline">
             <div>
               <p class="eyebrow">easter egg unlocked</p>
-              <h2 id="dino-title">Chrome Dino</h2>
+              <h2 id="dino-title">Dino Game</h2>
             </div>
             <div class="dino-stats" aria-live="polite">
               <span>score <strong data-dino-score>0</strong></span>
               <span>best <strong data-dino-best>0</strong></span>
             </div>
           </div>
-          <button class="dino-stage" type="button" data-dino-stage aria-label="Play Chrome Dino. Press space, arrow up, tap, or click to jump.">
+          <button class="dino-stage" type="button" data-dino-stage aria-label="Play Dino Game. Press space, arrow up, tap, or click to jump.">
             <canvas id="dino-canvas" width="900" height="240"></canvas>
             <span class="dino-help" data-dino-help>press space or tap to jump</span>
           </button>

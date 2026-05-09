@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://johannesgrof.me/sitemap.xml
+Sitemap: https://www.johannesgrof.me/sitemap.xml

@@ -31,10 +31,10 @@ export const siteContent = {
     eyebrow: "services",
     title: "What I can help with.",
     items: [
-      "Websites.",
+      "Focused portfolio and project websites.",
       "Small automation tools for repetitive browser, document, or desktop workflows.",
-      "macOS and CLI tools",
-      "Automation with OpenClaw, Hermes Agent, Codex etc..."
+      "macOS utilities and CLI tools.",
+      "AI-assisted workflows with Codex, OpenClaw, and related agent tooling.",
     ],
   },
   about: {

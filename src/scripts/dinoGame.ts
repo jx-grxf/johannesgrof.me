@@ -7,6 +7,11 @@ type DinoObstacle = {
 
 const triggerClicksRequired = 3;
 const bestScoreStorageKey = "jg-dino-best";
+const baseSpeed = 3.45;
+const scoreRate = 0.011;
+const speedGrowth = 0.009;
+const gravity = 0.48;
+const jumpVelocity = -11.4;
 
 const triggers = document.querySelectorAll<HTMLElement>("[data-dino-trigger]");
 const gameShell = document.querySelector<HTMLElement>(".dino-easter-egg");
@@ -16,6 +21,7 @@ const dinoCanvas = document.querySelector<HTMLCanvasElement>("#dino-canvas");
 const scoreOutput = document.querySelector<HTMLElement>("[data-dino-score]");
 const bestOutput = document.querySelector<HTMLElement>("[data-dino-best]");
 const helpOutput = document.querySelector<HTMLElement>("[data-dino-help]");
+const hintButton = document.querySelector<HTMLButtonElement>("[data-easter-hint]");
 
 if (
   triggers.length > 0 &&
@@ -57,7 +63,7 @@ if (
     obstacleTimer: 0,
     score: 0,
     best: Number(localStorage.getItem(bestScoreStorageKey) ?? "0"),
-    speed: 4.6,
+    speed: baseSpeed,
     width: 900,
     height: 240,
     groundY: 196,
@@ -65,8 +71,77 @@ if (
   };
 
   let contactClicks = 0;
+  let hasCelebratedScore = false;
+  let hasShownContactHint = false;
+  let contactHintTimeout: number | undefined;
 
   bestLabel.textContent = String(game.best);
+
+  const hideHint = () => {
+    if (!hintButton) {
+      return;
+    }
+
+    hintButton.classList.remove("is-visible");
+    window.setTimeout(() => {
+      hintButton.hidden = true;
+    }, 220);
+  };
+
+  const isContactVisible = () => {
+    const contact = document.querySelector("#contact");
+
+    if (!contact) {
+      return false;
+    }
+
+    const bounds = contact.getBoundingClientRect();
+    return bounds.top < window.innerHeight * 0.82 && bounds.bottom > 0;
+  };
+
+  const positionHintAtContact = () => {
+    if (!hintButton) {
+      return;
+    }
+
+    const trigger = document.querySelector<HTMLElement>(".contact-easter-trigger");
+    const bounds = trigger?.getBoundingClientRect();
+
+    if (!bounds) {
+      return;
+    }
+
+    const width = Math.min(330, window.innerWidth - 32);
+    const left = Math.min(Math.max(16, bounds.left), window.innerWidth - width - 16);
+    const top = Math.max(16, bounds.top - 70);
+
+    hintButton.style.setProperty("--hint-left", `${left}px`);
+    hintButton.style.setProperty("--hint-top", `${top}px`);
+  };
+
+  const showContactHint = () => {
+    if (!hintButton || gameShell.classList.contains("is-unlocked") || hasShownContactHint) {
+      return;
+    }
+
+    hasShownContactHint = true;
+    hintButton.textContent = "Still not found? Click Contact 3 times.";
+    hintButton.dataset.hintVariant = "contact";
+    positionHintAtContact();
+    hintButton.hidden = false;
+    requestAnimationFrame(() => hintButton.classList.add("is-visible"));
+  };
+
+  const scheduleContactHint = (delay = 2600) => {
+    if (contactHintTimeout || hasShownContactHint || gameShell.classList.contains("is-unlocked")) {
+      return;
+    }
+
+    contactHintTimeout = window.setTimeout(() => {
+      contactHintTimeout = undefined;
+      showContactHint();
+    }, delay);
+  };
 
   const drawDino = () => {
     if (!ctx) {
@@ -142,16 +217,17 @@ if (
       width: tall ? 18 : 26,
       height: tall ? 46 : 31,
     });
-    game.obstacleTimer = Math.max(570, 1120 - game.score * 1.6) + Math.random() * 360;
+    game.obstacleTimer = Math.max(760, 1420 - game.score * 0.85) + Math.random() * 460;
   };
 
   const resetGame = () => {
     game.active = true;
     game.ended = false;
+    hasCelebratedScore = false;
     game.lastTime = performance.now();
     game.obstacleTimer = 900;
     game.score = 0;
-    game.speed = 4.6;
+    game.speed = baseSpeed;
     game.obstacles = [];
     dino.y = game.groundY - dino.size;
     dino.velocity = 0;
@@ -164,9 +240,11 @@ if (
   const unlockGame = () => {
     gameShell.hidden = false;
     gameShell.classList.add("is-unlocked");
+    hideHint();
     requestAnimationFrame(() => {
       resizeGame();
       gameShell.scrollIntoView({ behavior: "smooth", block: "center" });
+      gameStage.focus({ preventScroll: true });
 
       if (!game.active) {
         resetGame();
@@ -185,7 +263,7 @@ if (
     }
 
     if (dino.grounded) {
-      dino.velocity = -12.5;
+      dino.velocity = jumpVelocity;
       dino.grounded = false;
       helpLabel.textContent = "jump";
     }
@@ -198,6 +276,26 @@ if (
     localStorage.setItem(bestScoreStorageKey, String(game.best));
     bestLabel.textContent = String(game.best);
     helpLabel.textContent = "game over - tap restart";
+  };
+
+  const launchConfetti = () => {
+    const layer = document.createElement("div");
+    layer.className = "confetti-layer";
+    layer.setAttribute("aria-hidden", "true");
+
+    for (let index = 0; index < 90; index += 1) {
+      const piece = document.createElement("span");
+      piece.style.setProperty("--x", `${Math.random() * 100}vw`);
+      piece.style.setProperty("--delay", `${Math.random() * 240}ms`);
+      piece.style.setProperty("--duration", `${1250 + Math.random() * 1100}ms`);
+      piece.style.setProperty("--drift", `${Math.random() * 220 - 110}px`);
+      piece.style.setProperty("--spin", `${Math.random() * 720 - 360}deg`);
+      piece.style.setProperty("--color-index", String(index % 5));
+      layer.append(piece);
+    }
+
+    document.body.append(layer);
+    window.setTimeout(() => layer.remove(), 2600);
   };
 
   const collides = (obstacle: DinoObstacle) => {
@@ -218,15 +316,15 @@ if (
 
     const delta = Math.min(time - game.lastTime, 32);
     game.lastTime = time;
-    game.score += delta * 0.014;
-    game.speed = 4.6 + game.score * 0.018;
+    game.score += delta * scoreRate;
+    game.speed = baseSpeed + game.score * speedGrowth;
     game.obstacleTimer -= delta;
 
     if (game.obstacleTimer <= 0) {
       spawnObstacle();
     }
 
-    dino.velocity += 0.58;
+    dino.velocity += gravity;
     dino.y += dino.velocity;
 
     if (dino.y >= game.groundY - dino.size) {
@@ -247,6 +345,12 @@ if (
     }
 
     scoreLabel.textContent = String(Math.floor(game.score));
+
+    if (!hasCelebratedScore && game.score >= 500) {
+      hasCelebratedScore = true;
+      launchConfetti();
+    }
+
     drawGame();
     requestAnimationFrame(tickGame);
   }
@@ -269,10 +373,48 @@ if (
     });
   });
 
+  window.setTimeout(() => {
+    if (gameShell.classList.contains("is-unlocked") || !hintButton || hasShownContactHint) {
+      return;
+    }
+
+    hintButton.textContent = "Have you found the easter egg yet?";
+    hintButton.dataset.hintVariant = "intro";
+    hintButton.hidden = false;
+    requestAnimationFrame(() => hintButton.classList.add("is-visible"));
+  }, 5200);
+
+  hintButton?.addEventListener("click", () => {
+    hideHint();
+    scheduleContactHint();
+
+    document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+
+  window.addEventListener("scroll", () => {
+    if (isContactVisible()) {
+      scheduleContactHint(1200);
+    }
+  });
+
+  window.addEventListener("resize", positionHintAtContact);
+
   gameStage.addEventListener("click", jump);
   restartButton.addEventListener("click", resetGame);
   window.addEventListener("resize", resizeGame);
   window.addEventListener("keydown", (event) => {
+    if (!gameShell.classList.contains("is-unlocked")) {
+      return;
+    }
+
+    const activeElement = document.activeElement;
+    const isInsideGame =
+      activeElement instanceof Node && (gameShell.contains(activeElement) || activeElement === document.body);
+
+    if (!isInsideGame) {
+      return;
+    }
+
     if (event.code === "Space" || event.code === "ArrowUp") {
       event.preventDefault();
       jump();

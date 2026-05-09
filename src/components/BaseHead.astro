@@ -1,0 +1,39 @@
+---
+import { defaultSocialImage, toCanonicalUrl } from "@/data/siteMetadata";
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath?: string;
+  image?: string;
+  type?: "website" | "article";
+}
+
+const {
+  title,
+  description,
+  canonicalPath = Astro.url.pathname,
+  image = defaultSocialImage,
+  type = "website",
+} = Astro.props;
+
+const canonicalUrl = toCanonicalUrl(canonicalPath);
+const imageUrl = toCanonicalUrl(image);
+---
+
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="description" content={description} />
+<title>{title}</title>
+<link rel="canonical" href={canonicalUrl} />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content="Johannes Grof" />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:image" content={imageUrl} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={imageUrl} />
