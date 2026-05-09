@@ -1,10 +1,10 @@
 export const siteContent = {
   metaDescription:
-    "Johannes Grof is a student at HTL Kaindorf in Austria who builds macOS apps, AI automations, and small developer tools.",
+    "Johannes Grof is an Austrian student developer building macOS apps, automation tools, and practical developer workflows.",
   hero: {
     eyebrow: "student developer / austria",
-    title: "Building useful tools before the idea gets boring.",
-    body: "I'm a student at HTL Kaindorf in Austria. I enjoy building macOS apps, automations, and small apps or CLI tools that turn annoying technical problems into something fun and usable.",
+    title: "I build practical apps, automations, and developer tools.",
+    body: "I'm a student at HTL Kaindorf in Austria, focused on macOS utilities, workflow automation, and small developer tools that make annoying technical problems easier to use.",
     primaryAction: "View projects",
     secondaryAction: "Skills",
     githubAction: "GitHub",
@@ -31,10 +31,10 @@ export const siteContent = {
     eyebrow: "services",
     title: "What I can help with.",
     items: [
-      "Websites.",
+      "Focused portfolio and project websites.",
       "Small automation tools for repetitive browser, document, or desktop workflows.",
-      "macOS and CLI tools",
-      "Automation with OpenClaw, Hermes Agent, Codex etc..."
+      "macOS utilities and CLI tools.",
+      "AI-assisted workflows with Codex, OpenClaw, and related agent tooling.",
     ],
   },
   about: {

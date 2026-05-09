@@ -273,6 +273,18 @@ if (
   restartButton.addEventListener("click", resetGame);
   window.addEventListener("resize", resizeGame);
   window.addEventListener("keydown", (event) => {
+    if (!gameShell.classList.contains("is-unlocked")) {
+      return;
+    }
+
+    const activeElement = document.activeElement;
+    const isInsideGame =
+      activeElement instanceof Node && (gameShell.contains(activeElement) || activeElement === document.body);
+
+    if (!isInsideGame) {
+      return;
+    }
+
     if (event.code === "Space" || event.code === "ArrowUp") {
       event.preventDefault();
       jump();

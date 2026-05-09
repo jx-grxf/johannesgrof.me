@@ -49,9 +49,9 @@ export const featuredProjects: Project[] = [
     audience: "For local-agent experiments that need Discord voice input without hiding the runtime.",
     result: "Turns Discord voice events into an inspectable local OpenClaw workflow.",
     caseStudy: {
-      problem: "Sometimes you just want to talk to your OpenClaw agent, and whats better than talking to it on Disocrd?",
+      problem: "Local OpenClaw sessions can be hard to use naturally when voice input and runtime state live in separate tools.",
       built: "I built a TypeScript bridge around explicit status output, session control, and a visible voice pipeline.",
-      result: "Talk to your agent with native OpenClaw integration on Sessions, Tool-Calling, Memory and more. Let your agent talk via Piper, Say or Elevenlabs.",
+      result: "Discord voice events become a visible OpenClaw workflow with session control, tool-calling context, memory support, and optional speech output.",
     },
     stack: ["TypeScript", "Discord", "Voice"],
     repo: "jx-grxf/OpenClaw-Discord-Voice",
@@ -60,7 +60,7 @@ export const featuredProjects: Project[] = [
     fallbackVersion: "v1.0.4",
     highlights: [
       "Bridges Discord voice events into a local OpenClaw workflow.",
-      "Keeps the runtime path explicit instead of hiding it behind a black-box bot, no action is hidden.",
+      "Keeps the runtime path explicit instead of hiding it behind a black-box bot.",
       "Designed around status output, session control, and maintainable TypeScript.",
     ],
     showcase: [
@@ -96,7 +96,7 @@ export const featuredProjects: Project[] = [
       "Uses Microsoft Word as the export engine for document fidelity.",
       "Supports batch conversion in a single Word session where possible.",
       "Optional OCR layer support keeps generated PDFs searchable.",
-      "Convert docx to PDF in lightspeed",
+      "Removes the repeated open-export-close loop from DOCX to PDF work.",
     ],
     showcase: [
       {
