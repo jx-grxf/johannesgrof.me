@@ -7,6 +7,11 @@ type DinoObstacle = {
 
 const triggerClicksRequired = 3;
 const bestScoreStorageKey = "jg-dino-best";
+const baseSpeed = 3.45;
+const scoreRate = 0.011;
+const speedGrowth = 0.009;
+const gravity = 0.48;
+const jumpVelocity = -11.4;
 
 const triggers = document.querySelectorAll<HTMLElement>("[data-dino-trigger]");
 const gameShell = document.querySelector<HTMLElement>(".dino-easter-egg");
@@ -58,7 +63,7 @@ if (
     obstacleTimer: 0,
     score: 0,
     best: Number(localStorage.getItem(bestScoreStorageKey) ?? "0"),
-    speed: 4.6,
+    speed: baseSpeed,
     width: 900,
     height: 240,
     groundY: 196,
@@ -144,7 +149,7 @@ if (
       width: tall ? 18 : 26,
       height: tall ? 46 : 31,
     });
-    game.obstacleTimer = Math.max(570, 1120 - game.score * 1.6) + Math.random() * 360;
+    game.obstacleTimer = Math.max(760, 1420 - game.score * 0.85) + Math.random() * 460;
   };
 
   const resetGame = () => {
@@ -154,7 +159,7 @@ if (
     game.lastTime = performance.now();
     game.obstacleTimer = 900;
     game.score = 0;
-    game.speed = 4.6;
+    game.speed = baseSpeed;
     game.obstacles = [];
     dino.y = game.groundY - dino.size;
     dino.velocity = 0;
@@ -190,7 +195,7 @@ if (
     }
 
     if (dino.grounded) {
-      dino.velocity = -12.5;
+      dino.velocity = jumpVelocity;
       dino.grounded = false;
       helpLabel.textContent = "jump";
     }
@@ -243,15 +248,15 @@ if (
 
     const delta = Math.min(time - game.lastTime, 32);
     game.lastTime = time;
-    game.score += delta * 0.014;
-    game.speed = 4.6 + game.score * 0.018;
+    game.score += delta * scoreRate;
+    game.speed = baseSpeed + game.score * speedGrowth;
     game.obstacleTimer -= delta;
 
     if (game.obstacleTimer <= 0) {
       spawnObstacle();
     }
 
-    dino.velocity += 0.58;
+    dino.velocity += gravity;
     dino.y += dino.velocity;
 
     if (dino.y >= game.groundY - dino.size) {

@@ -1,10 +1,10 @@
 export const siteContent = {
   metaDescription:
-    "Johannes Grof is an Austrian student developer building macOS apps, automation tools, and practical developer workflows.",
+    "Johannes Grof is a student at HTL Kaindorf in Austria who builds macOS apps, AI automations, and small developer tools.",
   hero: {
     eyebrow: "student developer / austria",
-    title: "I build practical apps, automations, and developer tools.",
-    body: "I'm a student at HTL Kaindorf in Austria, focused on macOS utilities, workflow automation, and small developer tools that make annoying technical problems easier to use.",
+    title: "Building useful tools before the idea gets boring.",
+    body: "I'm a student at HTL Kaindorf in Austria. I enjoy building macOS apps, automations, and small apps or CLI tools that turn annoying technical problems into something fun and usable.",
     primaryAction: "View projects",
     secondaryAction: "Skills",
     githubAction: "GitHub",

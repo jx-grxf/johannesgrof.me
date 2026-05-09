@@ -13,9 +13,6 @@ const navItems = [
   { label: "Contact", href: "#contact" },
 ];
 
-const terminalProjects = featuredProjects.filter((project) => project.visibility === "public");
-const terminalUpcoming = upcomingProjects.map((project) => project.name);
-
 ---
 
 <!doctype html>
@@ -65,15 +62,16 @@ const terminalUpcoming = upcomingProjects.map((project) => project.name);
 ├─ <span class="folder">my_links/</span>
 │  ├─ <a class="link terminal-link" href="https://github.com/jx-grxf" target="_blank" rel="noreferrer" aria-label="Open GitHub profile">github</a>
 │  └─ <a class="link terminal-link" href="https://www.linkedin.com/in/johannes-grof/" target="_blank" rel="noreferrer" aria-label="Open LinkedIn profile">linkedin</a>
-├─ <a class="folder terminal-link" href="#projects">projects/</a>{terminalProjects.map((project, index) => (
-  <>
-    {`\n│  ${index === terminalProjects.length - 1 ? "└" : "├"}─ `}
-    <a class="terminal-link" href={`/projects/${project.slug}/`}>{project.name}</a>
-  </>
-))}
-│     └─ <span class="folder">coming-soon/</span>{terminalUpcoming.map((name, index) => (
-  <>{`\n│        ${index === terminalUpcoming.length - 1 ? "└" : "├"}─ ${name}`}</>
-))}
+├─ <a class="folder terminal-link" href="#projects">projects/</a>
+│  ├─ <a class="terminal-link" href="/projects/openclaw-discord-voice/">OpenClaw-Discord-Voice</a>
+│  ├─ <a class="terminal-link" href="/projects/docxtopdf/">DocxToPDF</a>
+│  ├─ <a class="terminal-link" href="/projects/caruso-reborn/">Caruso-Reborn</a>
+│  ├─ <a class="terminal-link" href="/projects/patchpilot/">PatchPilot</a>
+│  ├─ <a class="terminal-link" href="/projects/digi2pdf/">Digi2PDF</a>
+│  └─ <a class="terminal-link" href="/projects/slamx/">SlamX</a>
+│     └─ <span class="folder">coming-soon/</span>
+│        ├─ TypeBot
+│        └─ StackBar
 ├─ <a class="folder terminal-link" href="#skills">skills/</a>
 │  ├─ TypeScript
 │  ├─ Swift
