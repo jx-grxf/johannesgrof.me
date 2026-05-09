@@ -1,4 +1,4 @@
-export type ProjectStatus = "active" | "beta" | "experimental" | "coming soon";
+export type ProjectStatus = "active" | "beta" | "experimental" | "preview" | "coming soon";
 
 export interface ShowcaseImage {
   src: string;
@@ -21,10 +21,17 @@ export interface Project {
     result: string;
   };
   stack: string[];
+  featuredTier: "featured" | "project";
   repo: `jx-grxf/${string}`;
   githubUrl: string;
   releaseUrl: string;
   fallbackVersion: string;
+  fallbackDownload?: {
+    assetName: string;
+    assetUrl: string;
+    size: number;
+    kind: "macos" | "windows" | "archive";
+  };
   highlights: string[];
   showcase: ShowcaseImage[];
   visibility: "public" | "private" | "planned";
@@ -40,6 +47,46 @@ export interface UpcomingProject {
 
 export const featuredProjects: Project[] = [
   {
+    name: "MacDev",
+    slug: "macdev",
+    status: "preview",
+    tagline: "Native macOS menu bar control for local development projects.",
+    description:
+      "A Swift menu bar app that keeps local project actions close: open folders, jump into tools, and manage development workflows without hunting through windows.",
+    audience: "For Mac developers who want a lightweight control surface for daily project work.",
+    result: "Turns recurring local development actions into a fast menu bar workflow.",
+    caseStudy: {
+      problem: "Local development work often spreads across Finder, Terminal, editors, and browser tabs.",
+      built: "I built a native Swift menu bar app with project-focused shortcuts and a small desktop-first workflow surface.",
+      result: "MacDev keeps the most common project actions one click away while staying out of the main workspace.",
+    },
+    stack: ["Swift", "macOS", "Menu Bar"],
+    featuredTier: "featured",
+    repo: "jx-grxf/MacDev",
+    githubUrl: "https://github.com/jx-grxf/MacDev",
+    releaseUrl: "https://github.com/jx-grxf/MacDev/releases/tag/v0.1.3",
+    fallbackVersion: "v0.1.3",
+    fallbackDownload: {
+      assetName: "MacDev-0.1.3.dmg",
+      assetUrl: "https://github.com/jx-grxf/MacDev/releases/download/v0.1.3/MacDev-0.1.3.dmg",
+      size: 487258,
+      kind: "macos",
+    },
+    highlights: [
+      "Runs as a native macOS menu bar utility.",
+      "Keeps project actions and local workflow shortcuts close at hand.",
+      "Ships as a signed release-ready DMG asset on GitHub Releases.",
+    ],
+    showcase: [
+      {
+        src: "/projects/macdev/app-icon.png",
+        alt: "MacDev app icon",
+        fit: "contain",
+      },
+    ],
+    visibility: "public",
+  },
+  {
     name: "OpenClaw-Discord-Voice",
     slug: "openclaw-discord-voice",
     status: "active",
@@ -54,6 +101,7 @@ export const featuredProjects: Project[] = [
       result: "Discord voice events become a visible OpenClaw workflow with session control, tool-calling context, memory support, and optional speech output.",
     },
     stack: ["TypeScript", "Discord", "Voice"],
+    featuredTier: "project",
     repo: "jx-grxf/OpenClaw-Discord-Voice",
     githubUrl: "https://github.com/jx-grxf/OpenClaw-Discord-Voice",
     releaseUrl: "https://github.com/jx-grxf/OpenClaw-Discord-Voice/releases/tag/v1.0.4",
@@ -88,6 +136,7 @@ export const featuredProjects: Project[] = [
       result: "The workflow keeps document fidelity high while removing the repeated open-export-close loop.",
     },
     stack: ["TypeScript", "macOS", "Word"],
+    featuredTier: "project",
     repo: "jx-grxf/DocxToPDF",
     githubUrl: "https://github.com/jx-grxf/DocxToPDF",
     releaseUrl: "https://github.com/jx-grxf/DocxToPDF/releases/tag/v0.1.0",
@@ -123,6 +172,7 @@ export const featuredProjects: Project[] = [
       result: "The device becomes usable again without replacing the hardware.",
     },
     stack: ["TypeScript", "UPnP", "DLNA"],
+    featuredTier: "featured",
     repo: "jx-grxf/Caruso-Reborn",
     githubUrl: "https://github.com/jx-grxf/Caruso-Reborn",
     releaseUrl: "https://github.com/jx-grxf/Caruso-Reborn/releases/tag/v0.2.1",
@@ -157,6 +207,7 @@ export const featuredProjects: Project[] = [
       result: "The run becomes easier to understand while the repository context stays close.",
     },
     stack: ["TypeScript", "Ink", "AI"],
+    featuredTier: "project",
     repo: "jx-grxf/PatchPilot",
     githubUrl: "https://github.com/jx-grxf/PatchPilot",
     releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v0.1.1-beta",
@@ -191,6 +242,7 @@ export const featuredProjects: Project[] = [
       result: "The output is easier to search and archive while the tool keeps the user in control.",
     },
     stack: ["Python", "Selenium", "OCR"],
+    featuredTier: "project",
     repo: "jx-grxf/Digi2PDF",
     githubUrl: "https://github.com/jx-grxf/Digi2PDF",
     releaseUrl: "https://github.com/jx-grxf/Digi2PDF/releases/tag/v0.2.1",
@@ -225,6 +277,7 @@ export const featuredProjects: Project[] = [
       result: "It is a fun experiment, but also proof that the app reads actual device telemetry.",
     },
     stack: ["Swift", "macOS", "Sensors"],
+    featuredTier: "featured",
     repo: "jx-grxf/SlamX",
     githubUrl: "https://github.com/jx-grxf/SlamX",
     releaseUrl: "https://github.com/jx-grxf/SlamX/releases/tag/v0.3.4",
@@ -267,16 +320,17 @@ export const upcomingProjects: UpcomingProject[] = [
     stack: ["TypeScript", "CLI", "Automation"],
     visibility: "private",
   },
-  {
-    name: "StackBar",
-    status: "coming soon",
-    description:
-      "A planned macOS menu bar app for keeping local dev servers, logs, and runtime actions close at hand.",
-    stack: ["Swift", "macOS", "Menu Bar"],
-    visibility: "planned",
-  },
 ];
 
 export const projectsBySlug = new Map(featuredProjects.map((project) => [project.slug, project]));
+
+const orderedProjects = (slugs: string[]) =>
+  slugs.map((slug) => projectsBySlug.get(slug)).filter((project): project is Project => Boolean(project));
+
+export const featuredShowcaseProjects = orderedProjects(["macdev", "caruso-reborn", "slamx"]);
+
+export const standardProjects = orderedProjects(["openclaw-discord-voice", "patchpilot", "digi2pdf", "docxtopdf"]);
+
+export const publicProjects = [...featuredShowcaseProjects, ...standardProjects];
 
 export const statusClass = (status: string) => status.replaceAll(" ", "-");

@@ -1,13 +1,11 @@
-import { featuredProjects } from "@/data/projects";
+import { publicProjects } from "@/data/projects";
 import { toCanonicalUrl } from "@/data/siteMetadata";
 
 const today = new Date().toISOString().slice(0, 10);
 
 const urls = [
   { path: "/", priority: "1.0" },
-  ...featuredProjects
-    .filter((project) => project.visibility === "public")
-    .map((project) => ({ path: `/projects/${project.slug}/`, priority: "0.8" })),
+  ...publicProjects.map((project) => ({ path: `/projects/${project.slug}/`, priority: "0.8" })),
 ];
 
 export function GET() {

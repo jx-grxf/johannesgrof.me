@@ -206,6 +206,45 @@ const toDownload = (release: GitHubRelease, asset: GitHubAsset): ProjectReleaseD
   };
 };
 
+const buildFallbackDownloadGroup = (project: Project): ProjectReleaseGroup | undefined => {
+  if (!project.fallbackDownload) {
+    return undefined;
+  }
+
+  const download: ProjectReleaseDownload = {
+    tag: project.fallbackVersion,
+    name: project.fallbackVersion,
+    url: project.releaseUrl,
+    assetName: project.fallbackDownload.assetName,
+    assetUrl: project.fallbackDownload.assetUrl,
+    label: labelForAsset(project.fallbackDownload.assetName, project.fallbackDownload.kind),
+    detail: formatBytes(project.fallbackDownload.size),
+    kind: project.fallbackDownload.kind,
+    prerelease: false,
+  };
+
+  return {
+    versionBase: extractVersionBase(project.fallbackVersion),
+    stable: download,
+    prereleases: [],
+  };
+};
+
+const buildFallbackInfo = (project: Project): ProjectGitHubInfo => {
+  const downloadGroup = buildFallbackDownloadGroup(project);
+
+  return {
+    version: project.fallbackVersion,
+    releaseUrl: project.releaseUrl,
+    stars: 0,
+    forks: 0,
+    language: project.stack[0] ?? "Code",
+    updatedAt: "",
+    downloadGroup,
+    commands: buildCommands(project, project.releaseUrl, downloadGroup),
+  };
+};
+
 const buildDownloadGroup = (releases: GitHubRelease[]): ProjectReleaseGroup | undefined => {
   const releaseDownloads = releases
     .map((release) => {
@@ -263,15 +302,7 @@ const buildCommands = (project: Project, releaseUrl: string, downloadGroup?: Pro
 };
 
 export async function getProjectGitHubInfo(project: Project): Promise<ProjectGitHubInfo> {
-  const fallback: ProjectGitHubInfo = {
-    version: project.fallbackVersion,
-    releaseUrl: project.releaseUrl,
-    stars: 0,
-    forks: 0,
-    language: project.stack[0] ?? "Code",
-    updatedAt: "",
-    commands: buildCommands(project, project.releaseUrl),
-  };
+  const fallback = buildFallbackInfo(project);
 
   try {
     const [repo, releases] = await Promise.all([

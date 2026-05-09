@@ -1,6 +1,6 @@
 ---
 import BaseHead from "@/components/BaseHead.astro";
-import { featuredProjects, statusClass, upcomingProjects } from "@/data/projects";
+import { featuredShowcaseProjects, publicProjects, standardProjects, statusClass, upcomingProjects } from "@/data/projects";
 import { siteContent } from "@/data/siteContent";
 import "@/styles/global.css";
 import SpeedInsights from "@vercel/speed-insights/astro";
@@ -12,6 +12,42 @@ const navItems = [
   { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" },
 ];
+
+const escapeHtml = (value: string) =>
+  value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;");
+
+const terminalProjectRows = publicProjects
+  .map((project, index) => {
+    const branch = index === publicProjects.length - 1 ? "└" : "├";
+    return `│  ${branch}─ <a class="terminal-link" href="/projects/${project.slug}/">${escapeHtml(project.name)}</a>`;
+  })
+  .join("\n");
+const terminalUpcomingRows = upcomingProjects
+  .map((project, index) => {
+    const branch = index === upcomingProjects.length - 1 ? "└" : "├";
+    return `│        ${branch}─ ${escapeHtml(project.name)}`;
+  })
+  .join("\n");
+const terminalTreeHtml = `<span class="path">/home/johannes_grof/</span>
+├─ <span class="folder">my_links/</span>
+│  ├─ <a class="link terminal-link" href="https://github.com/jx-grxf" target="_blank" rel="noreferrer" aria-label="Open GitHub profile">github</a>
+│  └─ <a class="link terminal-link" href="https://www.linkedin.com/in/johannes-grof/" target="_blank" rel="noreferrer" aria-label="Open LinkedIn profile">linkedin</a>
+├─ <a class="folder terminal-link" href="#projects">projects/</a>
+${terminalProjectRows}
+│     └─ <span class="folder">coming-soon/</span>
+${terminalUpcomingRows}
+├─ <a class="folder terminal-link" href="#skills">skills/</a>
+│  ├─ TypeScript
+│  ├─ Swift
+│  └─ Codex
+├─ <a class="folder terminal-link" href="#services">services/</a>
+│  └─ websites-and-tools
+└─ <span class="folder">contact/</span>
+   └─ jx_grxf`;
 
 ---
 
@@ -58,41 +94,52 @@ const navItems = [
             <span></span>
             <span></span>
           </div>
-          <pre><code><span class="path">/home/johannes_grof/</span>
-├─ <span class="folder">my_links/</span>
-│  ├─ <a class="link terminal-link" href="https://github.com/jx-grxf" target="_blank" rel="noreferrer" aria-label="Open GitHub profile">github</a>
-│  └─ <a class="link terminal-link" href="https://www.linkedin.com/in/johannes-grof/" target="_blank" rel="noreferrer" aria-label="Open LinkedIn profile">linkedin</a>
-├─ <a class="folder terminal-link" href="#projects">projects/</a>
-│  ├─ <a class="terminal-link" href="/projects/openclaw-discord-voice/">OpenClaw-Discord-Voice</a>
-│  ├─ <a class="terminal-link" href="/projects/docxtopdf/">DocxToPDF</a>
-│  ├─ <a class="terminal-link" href="/projects/caruso-reborn/">Caruso-Reborn</a>
-│  ├─ <a class="terminal-link" href="/projects/patchpilot/">PatchPilot</a>
-│  ├─ <a class="terminal-link" href="/projects/digi2pdf/">Digi2PDF</a>
-│  └─ <a class="terminal-link" href="/projects/slamx/">SlamX</a>
-│     └─ <span class="folder">coming-soon/</span>
-│        ├─ TypeBot
-│        └─ StackBar
-├─ <a class="folder terminal-link" href="#skills">skills/</a>
-│  ├─ TypeScript
-│  ├─ Swift
-│  └─ Codex
-├─ <a class="folder terminal-link" href="#services">services/</a>
-│  └─ websites-and-tools
-└─ <span class="folder">contact/</span>
-   └─ jx_grxf</code></pre>
+          <pre><code set:html={terminalTreeHtml}></code></pre>
         </aside>
       </section>
 
       <section id="projects" class="section-shell">
         <div class="section-heading reveal">
           <p class="eyebrow">selected work</p>
+          <h2>Featured Projects</h2>
+        </div>
+        <div class="featured-project-grid">
+          {
+            featuredShowcaseProjects.map((project, index) => {
+              const heroImage = project.showcase[0];
+
+              return (
+                <a class="project-card featured-project-card reveal" style={`--reveal-delay: ${index * 80}ms`} href={`/projects/${project.slug}/`}>
+                  <div class="featured-card-media">
+                    <img src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
+                  </div>
+                  <div class="featured-card-body">
+                    <div class="card-topline">
+                      <h3>{project.name}</h3>
+                      <span class={`status ${statusClass(project.status)}`}>{project.status}</span>
+                    </div>
+                    <p>{project.description}</p>
+                    <p class="project-result">{project.result}</p>
+                    <ul>
+                      {project.stack.map((item) => (
+                        <li>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </a>
+              );
+            })
+          }
+        </div>
+
+        <div class="section-heading project-subheading reveal">
+          <p class="eyebrow">more projects</p>
           <h2>Projects</h2>
         </div>
         <div class="project-grid">
           {
-            featuredProjects.map((project, index) =>
-              project.visibility === "public" ? (
-                <a class="project-card reveal" style={`--reveal-delay: ${index * 70}ms`} href={`/projects/${project.slug}/`}>
+            standardProjects.map((project, index) => (
+              <a class="project-card reveal" style={`--reveal-delay: ${index * 70}ms`} href={`/projects/${project.slug}/`}>
                   <div class="card-topline">
                     <h3>{project.name}</h3>
                     <span class={`status ${statusClass(project.status)}`}>{project.status}</span>
@@ -106,23 +153,7 @@ const navItems = [
                     ))}
                   </ul>
                 </a>
-              ) : (
-                <article class="project-card private-card reveal" style={`--reveal-delay: ${index * 70}ms`}>
-                  <div class="card-topline">
-                    <h3>{project.name}</h3>
-                    <span class={`status ${statusClass(project.status)}`}>{project.status}</span>
-                  </div>
-                  <p>{project.description}</p>
-                  <p class="project-audience">{project.audience}</p>
-                  <p class="project-result">{project.result}</p>
-                  <ul>
-                    {project.stack.map((item) => (
-                      <li>{item}</li>
-                    ))}
-                  </ul>
-                </article>
-              )
-            )
+            ))
           }
         </div>
         <div class="coming-soon-group reveal" aria-labelledby="coming-soon-title">
