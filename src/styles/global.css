@@ -776,6 +776,58 @@ pre {
   cursor: pointer;
 }
 
+.easter-hint {
+  position: fixed;
+  right: max(16px, calc((100vw - 1120px) / 2));
+  bottom: 22px;
+  z-index: 80;
+  max-width: min(310px, calc(100vw - 32px));
+  border: 1px solid rgb(77 241 210 / 28%);
+  border-radius: 8px;
+  padding: 13px 15px;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 10%), rgb(255 255 255 / 4%)),
+    rgb(20 21 23 / 94%);
+  box-shadow:
+    var(--glass-highlight),
+    0 20px 42px rgb(0 0 0 / 32%);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 800;
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  transition:
+    opacity 220ms ease,
+    transform 260ms var(--smooth),
+    border-color 180ms ease;
+  cursor: pointer;
+  appearance: none;
+}
+
+.easter-hint::before {
+  position: absolute;
+  right: 22px;
+  bottom: -7px;
+  width: 12px;
+  height: 12px;
+  border-right: 1px solid rgb(77 241 210 / 28%);
+  border-bottom: 1px solid rgb(77 241 210 / 28%);
+  background: rgb(20 21 23 / 94%);
+  content: "";
+  transform: rotate(45deg);
+}
+
+.easter-hint.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.easter-hint:hover,
+.easter-hint:focus-visible {
+  border-color: rgb(77 241 210 / 48%);
+}
+
 .dino-easter-egg {
   padding-bottom: 78px;
 }
@@ -873,6 +925,41 @@ pre {
   cursor: pointer;
   appearance: none;
   font: inherit;
+}
+
+.confetti-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.confetti-layer span {
+  position: absolute;
+  top: -18px;
+  left: var(--x);
+  width: 9px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--cyan);
+  animation: confetti-fall var(--duration) var(--delay) cubic-bezier(0.18, 0.72, 0.25, 1) forwards;
+}
+
+.confetti-layer span[style*="--color-index: 1"] {
+  background: var(--blue);
+}
+
+.confetti-layer span[style*="--color-index: 2"] {
+  background: var(--orange);
+}
+
+.confetti-layer span[style*="--color-index: 3"] {
+  background: var(--green);
+}
+
+.confetti-layer span[style*="--color-index: 4"] {
+  background: #f4f2ed;
 }
 
 .project-detail {
@@ -1269,6 +1356,22 @@ pre {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes confetti-fall {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, -20px, 0) rotate(0deg);
+  }
+
+  10% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate3d(var(--drift), 110vh, 0) rotate(var(--spin));
   }
 }
 

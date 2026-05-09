@@ -16,6 +16,7 @@ const dinoCanvas = document.querySelector<HTMLCanvasElement>("#dino-canvas");
 const scoreOutput = document.querySelector<HTMLElement>("[data-dino-score]");
 const bestOutput = document.querySelector<HTMLElement>("[data-dino-best]");
 const helpOutput = document.querySelector<HTMLElement>("[data-dino-help]");
+const hintButton = document.querySelector<HTMLButtonElement>("[data-easter-hint]");
 
 if (
   triggers.length > 0 &&
@@ -65,6 +66,7 @@ if (
   };
 
   let contactClicks = 0;
+  let hasCelebratedScore = false;
 
   bestLabel.textContent = String(game.best);
 
@@ -148,6 +150,7 @@ if (
   const resetGame = () => {
     game.active = true;
     game.ended = false;
+    hasCelebratedScore = false;
     game.lastTime = performance.now();
     game.obstacleTimer = 900;
     game.score = 0;
@@ -164,6 +167,8 @@ if (
   const unlockGame = () => {
     gameShell.hidden = false;
     gameShell.classList.add("is-unlocked");
+    hintButton?.classList.remove("is-visible");
+    hintButton?.setAttribute("hidden", "");
     requestAnimationFrame(() => {
       resizeGame();
       gameShell.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -198,6 +203,26 @@ if (
     localStorage.setItem(bestScoreStorageKey, String(game.best));
     bestLabel.textContent = String(game.best);
     helpLabel.textContent = "game over - tap restart";
+  };
+
+  const launchConfetti = () => {
+    const layer = document.createElement("div");
+    layer.className = "confetti-layer";
+    layer.setAttribute("aria-hidden", "true");
+
+    for (let index = 0; index < 90; index += 1) {
+      const piece = document.createElement("span");
+      piece.style.setProperty("--x", `${Math.random() * 100}vw`);
+      piece.style.setProperty("--delay", `${Math.random() * 240}ms`);
+      piece.style.setProperty("--duration", `${1250 + Math.random() * 1100}ms`);
+      piece.style.setProperty("--drift", `${Math.random() * 220 - 110}px`);
+      piece.style.setProperty("--spin", `${Math.random() * 720 - 360}deg`);
+      piece.style.setProperty("--color-index", String(index % 5));
+      layer.append(piece);
+    }
+
+    document.body.append(layer);
+    window.setTimeout(() => layer.remove(), 2600);
   };
 
   const collides = (obstacle: DinoObstacle) => {
@@ -247,6 +272,12 @@ if (
     }
 
     scoreLabel.textContent = String(Math.floor(game.score));
+
+    if (!hasCelebratedScore && game.score >= 500) {
+      hasCelebratedScore = true;
+      launchConfetti();
+    }
+
     drawGame();
     requestAnimationFrame(tickGame);
   }
@@ -267,6 +298,24 @@ if (
         registerTriggerClick();
       }
     });
+  });
+
+  window.setTimeout(() => {
+    if (gameShell.classList.contains("is-unlocked") || !hintButton) {
+      return;
+    }
+
+    hintButton.hidden = false;
+    requestAnimationFrame(() => hintButton.classList.add("is-visible"));
+  }, 5200);
+
+  hintButton?.addEventListener("click", () => {
+    hintButton.classList.remove("is-visible");
+    window.setTimeout(() => {
+      hintButton.hidden = true;
+    }, 220);
+
+    document.querySelector("#contact")?.scrollIntoView({ behavior: "smooth", block: "center" });
   });
 
   gameStage.addEventListener("click", jump);

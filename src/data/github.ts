@@ -23,6 +23,10 @@ interface GitHubRepo {
   pushed_at: string;
 }
 
+interface GitHubFetchOptions {
+  warnOnFailure?: boolean;
+}
+
 export interface ProjectReleaseDownload {
   tag: string;
   name: string;
@@ -67,6 +71,9 @@ const gitHubHeaders = () => {
   };
 };
 
+const requestTimeoutMs = 8000;
+const warnedFallbacks = new Set<string>();
+
 const normalizeRepoName = (repo: Project["repo"]) => repo.split("/")[1] ?? repo;
 
 const extractVersionBase = (value: string) => {
@@ -74,7 +81,9 @@ const extractVersionBase = (value: string) => {
   return match?.[0] ?? value.toLowerCase();
 };
 
-const isSourceArchive = (assetName: string) => /(?:source|src)[-.].*\.(?:zip|tar\.gz)$/i.test(assetName);
+const isSourceArchive = (assetName: string) => /(?:source|src)[-.].*\.(?:zip|tar\.gz|tgz)$/i.test(assetName);
+
+const isDownloadArchive = (assetName: string) => /\.(?:zip|tar\.gz|tgz)$/i.test(assetName) && !isSourceArchive(assetName);
 
 const classifyAsset = (assetName: string): ProjectReleaseDownload["kind"] | null => {
   if (/\.dmg$/i.test(assetName)) {
@@ -85,7 +94,7 @@ const classifyAsset = (assetName: string): ProjectReleaseDownload["kind"] | null
     return "windows";
   }
 
-  if (/\.(?:zip|tar\.gz)$/i.test(assetName) && !isSourceArchive(assetName)) {
+  if (isDownloadArchive(assetName)) {
     return "archive";
   }
 
@@ -101,7 +110,7 @@ const getAssetPriority = (asset: GitHubAsset) => {
     return 1;
   }
 
-  if (/\.(?:zip|tar\.gz)$/i.test(asset.name) && !isSourceArchive(asset.name)) {
+  if (isDownloadArchive(asset.name)) {
     return 2;
   }
 
@@ -131,8 +140,50 @@ const labelForAsset = (assetName: string, kind: ProjectReleaseDownload["kind"]) 
     return "Download EXE";
   }
 
-  const extension = assetName.match(/\.(tar\.gz|zip)$/i)?.[1]?.toUpperCase() ?? "Asset";
+  const extension = assetName.match(/\.(tar\.gz|tgz|zip)$/i)?.[1]?.toUpperCase() ?? "Asset";
   return `Download ${extension}`;
+};
+
+const warnFallback = (project: Project, reason: string) => {
+  const key = `${project.repo}:${reason}`;
+
+  if (warnedFallbacks.has(key)) {
+    return;
+  }
+
+  warnedFallbacks.add(key);
+  console.warn(`[github] using fallback data for ${project.repo}: ${reason}`);
+};
+
+const fetchGitHubJson = async <T>(url: string, project: Project, options: GitHubFetchOptions = {}): Promise<T | undefined> => {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), requestTimeoutMs);
+
+  try {
+    const response = await fetch(url, {
+      headers: gitHubHeaders(),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      if (options.warnOnFailure) {
+        warnFallback(project, `${response.status} ${response.statusText} from ${url}`);
+      }
+
+      return undefined;
+    }
+
+    return (await response.json()) as T;
+  } catch (error) {
+    if (options.warnOnFailure) {
+      const reason = error instanceof Error ? error.message : "unknown fetch error";
+      warnFallback(project, reason);
+    }
+
+    return undefined;
+  } finally {
+    clearTimeout(timeout);
+  }
 };
 
 const toDownload = (release: GitHubRelease, asset: GitHubAsset): ProjectReleaseDownload | undefined => {
@@ -223,20 +274,21 @@ export async function getProjectGitHubInfo(project: Project): Promise<ProjectGit
   };
 
   try {
-    const [repoResponse, releaseResponse] = await Promise.all([
-      fetch(`https://api.github.com/repos/${project.repo}`, { headers: gitHubHeaders() }),
-      fetch(`https://api.github.com/repos/${project.repo}/releases`, { headers: gitHubHeaders() }),
+    const [repo, releases] = await Promise.all([
+      fetchGitHubJson<GitHubRepo>(`https://api.github.com/repos/${project.repo}`, project, { warnOnFailure: true }),
+      fetchGitHubJson<GitHubRelease[]>(`https://api.github.com/repos/${project.repo}/releases?per_page=10`, project, {
+        warnOnFailure: true,
+      }),
     ]);
 
-    if (!repoResponse.ok) {
+    if (!repo) {
       return fallback;
     }
 
-    const repo = (await repoResponse.json()) as GitHubRepo;
-    const releases = releaseResponse.ok ? ((await releaseResponse.json()) as GitHubRelease[]) : [];
-    const release = releases.find((item) => !item.prerelease) ?? releases[0];
+    const releaseList = releases ?? [];
+    const release = releaseList.find((item) => !item.prerelease) ?? releaseList[0];
     const releaseUrl = release?.html_url ?? fallback.releaseUrl;
-    const downloadGroup = buildDownloadGroup(releases);
+    const downloadGroup = buildDownloadGroup(releaseList);
 
     return {
       version: release?.tag_name ?? fallback.version,
@@ -248,7 +300,9 @@ export async function getProjectGitHubInfo(project: Project): Promise<ProjectGit
       downloadGroup,
       commands: buildCommands(project, releaseUrl, downloadGroup),
     };
-  } catch {
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : "unknown GitHub data error";
+    warnFallback(project, reason);
     return fallback;
   }
 }

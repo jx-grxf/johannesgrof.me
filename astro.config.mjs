@@ -2,7 +2,7 @@ import { defineConfig } from "astro/config";
 import vercel from "@astrojs/vercel";
 
 export default defineConfig({
-  site: "https://johannesgrof.me",
+  site: "https://www.johannesgrof.me",
   devToolbar: {
     enabled: false,
   },
