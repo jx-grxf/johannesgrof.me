@@ -545,6 +545,7 @@ pre {
 }
 
 .featured-card-media {
+  position: relative;
   display: grid;
   min-height: 176px;
   place-items: center;
@@ -555,7 +556,7 @@ pre {
     rgb(255 255 255 / 4%);
 }
 
-.featured-card-media img {
+.featured-card-image {
   width: min(100%, 260px);
   height: 154px;
   object-fit: contain;
@@ -565,9 +566,21 @@ pre {
     transform 260ms var(--smooth);
 }
 
-.featured-project-card:hover .featured-card-media img {
+.featured-project-card:hover .featured-card-image {
   filter: drop-shadow(0 22px 34px rgb(0 0 0 / 34%));
   transform: translateY(-3px) scale(1.02);
+}
+
+.featured-card-logo {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  width: 66px;
+  height: 66px;
+  border: 1px solid rgb(255 255 255 / 16%);
+  border-radius: 24%;
+  background: rgb(3 8 18 / 28%);
+  box-shadow: 0 14px 26px rgb(0 0 0 / 28%);
 }
 
 .featured-card-body {
@@ -1130,6 +1143,14 @@ pre {
   padding: clamp(24px, 3.4vw, 38px);
 }
 
+.project-detail-logo {
+  width: clamp(78px, 10vw, 116px);
+  height: clamp(78px, 10vw, 116px);
+  margin-bottom: 18px;
+  border-radius: 24%;
+  box-shadow: 0 18px 36px rgb(0 76 187 / 26%);
+}
+
 .project-kicker {
   display: flex;
   flex-wrap: wrap;
@@ -1533,8 +1554,13 @@ pre {
     min-height: 142px;
   }
 
-  .featured-card-media img {
+  .featured-card-image {
     height: 118px;
+  }
+
+  .featured-card-logo {
+    width: 54px;
+    height: 54px;
   }
 
   .skills-grid,
