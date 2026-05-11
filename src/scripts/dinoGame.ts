@@ -99,26 +99,6 @@ if (
     return bounds.top < window.innerHeight * 0.82 && bounds.bottom > 0;
   };
 
-  const positionHintAtContact = () => {
-    if (!hintButton) {
-      return;
-    }
-
-    const trigger = document.querySelector<HTMLElement>(".contact-easter-trigger");
-    const bounds = trigger?.getBoundingClientRect();
-
-    if (!bounds) {
-      return;
-    }
-
-    const width = Math.min(330, window.innerWidth - 32);
-    const left = Math.min(Math.max(16, bounds.left), window.innerWidth - width - 16);
-    const top = Math.max(16, bounds.top - 70);
-
-    hintButton.style.setProperty("--hint-left", `${left}px`);
-    hintButton.style.setProperty("--hint-top", `${top}px`);
-  };
-
   const showContactHint = () => {
     if (!hintButton || gameShell.classList.contains("is-unlocked") || hasShownContactHint) {
       return;
@@ -127,12 +107,11 @@ if (
     hasShownContactHint = true;
     hintButton.textContent = "Still not found? Click Contact 3 times.";
     hintButton.dataset.hintVariant = "contact";
-    positionHintAtContact();
     hintButton.hidden = false;
     requestAnimationFrame(() => hintButton.classList.add("is-visible"));
   };
 
-  const scheduleContactHint = (delay = 2600) => {
+  const scheduleContactHint = (delay = 4200) => {
     if (contactHintTimeout || hasShownContactHint || gameShell.classList.contains("is-unlocked")) {
       return;
     }
@@ -393,11 +372,9 @@ if (
 
   window.addEventListener("scroll", () => {
     if (isContactVisible()) {
-      scheduleContactHint(1200);
+      scheduleContactHint(3200);
     }
   });
-
-  window.addEventListener("resize", positionHintAtContact);
 
   gameStage.addEventListener("click", jump);
   restartButton.addEventListener("click", resetGame);
