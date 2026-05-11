@@ -111,7 +111,8 @@ ${terminalUpcomingRows}
               return (
                 <a class="project-card featured-project-card reveal" style={`--reveal-delay: ${index * 80}ms`} href={`/projects/${project.slug}/`}>
                   <div class="featured-card-media">
-                    <img src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
+                    <img class="featured-card-image" src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
+                    {project.logo && <img class="featured-card-logo" src={project.logo.src} alt="" aria-hidden="true" loading="lazy" decoding="async" />}
                   </div>
                   <div class="featured-card-body">
                     <div class="card-topline">

@@ -11,6 +11,7 @@ export interface Project {
   name: string;
   slug: string;
   status: ProjectStatus;
+  logo?: ShowcaseImage;
   tagline: string;
   description: string;
   audience: string;
@@ -161,6 +162,11 @@ export const featuredProjects: Project[] = [
     name: "Caruso-Reborn",
     slug: "caruso-reborn",
     status: "active",
+    logo: {
+      src: "/projects/caruso-reborn/logo.svg",
+      alt: "Caruso Reborn app icon",
+      fit: "contain",
+    },
     tagline: "Modern radio playback for first-generation T+A Caruso systems.",
     description:
       "A local radio and playback bridge that makes old Caruso systems usable again with browsable stations, renderer status, and server controls.",

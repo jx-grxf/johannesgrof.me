@@ -64,6 +64,7 @@ const formatDate = (date: string) => {
 
       <section class="project-detail-hero" aria-labelledby="project-title">
         <div class="project-detail-copy">
+          {project.logo && <img class="project-detail-logo" src={project.logo.src} alt="" aria-hidden="true" loading="eager" decoding="async" />}
           <div class="project-kicker">
             <span class={`status ${statusClass(project.status)}`}>{project.status}</span>
             <span>{github.version}</span>
