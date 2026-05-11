@@ -272,6 +272,11 @@ export const featuredProjects: Project[] = [
     name: "SlamX",
     slug: "slamx",
     status: "beta",
+    logo: {
+      src: "/projects/slamx/logo.png",
+      alt: "SlamX app icon",
+      fit: "contain",
+    },
     tagline: "Sensor-only MacBook impact detection with sound feedback.",
     description:
       "A fun macOS utility that reads Apple SPU accelerometer data, detects sharp impact spikes, and plays local sound feedback with visible calibration.",
