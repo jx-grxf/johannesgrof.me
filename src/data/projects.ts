@@ -163,7 +163,7 @@ export const featuredProjects: Project[] = [
     slug: "caruso-reborn",
     status: "active",
     logo: {
-      src: "/projects/caruso-reborn/logo.svg",
+      src: "/projects/caruso-reborn/logo.png",
       alt: "Caruso Reborn app icon",
       fit: "contain",
     },
