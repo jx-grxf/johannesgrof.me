@@ -70,12 +70,12 @@ export const featuredProjects: Project[] = [
     featuredTier: "featured",
     repo: "jx-grxf/MacDev",
     githubUrl: "https://github.com/jx-grxf/MacDev",
-    releaseUrl: "https://github.com/jx-grxf/MacDev/releases/tag/v0.1.3",
-    fallbackVersion: "v0.1.3",
+    releaseUrl: "https://github.com/jx-grxf/MacDev/releases/tag/v0.1.4",
+    fallbackVersion: "v0.1.4",
     fallbackDownload: {
-      assetName: "MacDev-0.1.3.dmg",
-      assetUrl: "https://github.com/jx-grxf/MacDev/releases/download/v0.1.3/MacDev-0.1.3.dmg",
-      size: 487258,
+      assetName: "MacDev-0.1.4.dmg",
+      assetUrl: "https://github.com/jx-grxf/MacDev/releases/download/v0.1.4/MacDev-0.1.4.dmg",
+      size: 523367,
       kind: "macos",
     },
     highlights: [
