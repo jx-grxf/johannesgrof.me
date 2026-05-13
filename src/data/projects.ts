@@ -33,6 +33,12 @@ export interface Project {
     size: number;
     kind: "macos" | "windows" | "archive";
   };
+  fallbackDownloads?: {
+    assetName: string;
+    assetUrl: string;
+    size: number;
+    kind: "macos" | "windows" | "archive";
+  }[];
   highlights: string[];
   showcase: ShowcaseImage[];
   visibility: "public" | "private" | "planned";
@@ -257,12 +263,27 @@ export const featuredProjects: Project[] = [
     featuredTier: "project",
     repo: "jx-grxf/Digi2PDF",
     githubUrl: "https://github.com/jx-grxf/Digi2PDF",
-    releaseUrl: "https://github.com/jx-grxf/Digi2PDF/releases/tag/v0.2.1",
-    fallbackVersion: "v0.2.1",
+    releaseUrl: "https://github.com/jx-grxf/Digi2PDF/releases/tag/v0.3.1",
+    fallbackVersion: "v0.3.1",
+    fallbackDownloads: [
+      {
+        assetName: "Digi2PDF-v0.3.1-macos-arm64.dmg",
+        assetUrl: "https://github.com/jx-grxf/Digi2PDF/releases/download/v0.3.1/Digi2PDF-v0.3.1-macos-arm64.dmg",
+        size: 0,
+        kind: "macos",
+      },
+      {
+        assetName: "digi2pdf-v0.3.1-windows-x64.exe",
+        assetUrl: "https://github.com/jx-grxf/Digi2PDF/releases/download/v0.3.1/digi2pdf-v0.3.1-windows-x64.exe",
+        size: 0,
+        kind: "windows",
+      },
+    ],
     highlights: [
-      "Combines browser automation, capture, Pillow, Tesseract, and OCRmyPDF.",
+      "Offers ready-to-download macOS DMG and Windows EXE release assets.",
+      "Runs multi-book exports with recommended parallel Chrome sessions when a saved login is available.",
       "Makes private-use confirmation explicit before export.",
-      "Keeps OCR quality and delay controls visible in the terminal flow.",
+      "Keeps OCR, delay, and failure recovery controls visible in the terminal flow.",
     ],
     showcase: [
       {

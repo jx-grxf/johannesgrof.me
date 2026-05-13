@@ -16,11 +16,23 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 const github = await getProjectGitHubInfo(project);
 const [heroImage, ...galleryImages] = project.showcase;
-const downloads = [github.downloadGroup?.stable, ...(github.downloadGroup?.prereleases ?? [])].filter(
+const stableDownloads = github.downloadGroup?.stableDownloads ?? (github.downloadGroup?.stable ? [github.downloadGroup.stable] : []);
+const downloads = [...stableDownloads, ...(github.downloadGroup?.prereleases ?? [])].filter(
   (download): download is ProjectReleaseDownload => Boolean(download)
 );
 const hasMultipleDownloads = downloads.length > 1;
 const downloadMenuId = `${project.slug}-download-menu`;
+const platformLabel = (download: ProjectReleaseDownload) => {
+  if (download.kind === "macos") {
+    return "Mac";
+  }
+
+  if (download.kind === "windows") {
+    return "Windows";
+  }
+
+  return "Asset";
+};
 
 const formatDate = (date: string) => {
   if (!date) {
@@ -77,28 +89,28 @@ const formatDate = (date: string) => {
               hasMultipleDownloads ? (
                 <div class="download-menu" data-download-menu>
                   <button
-                    class={`button download-button ${github.downloadGroup.stable?.kind ?? github.downloadGroup.prereleases[0]?.kind ?? "release"}`}
+                    class={`button download-button ${downloads[0]?.kind ?? "release"}`}
                     type="button"
                     aria-expanded="false"
                     aria-controls={downloadMenuId}
                     data-download-trigger
                   >
                     <span>Download</span>
-                    <small>Choose release asset</small>
+                    <small>Mac or Windows</small>
                   </button>
                   <div id={downloadMenuId} class="download-options" aria-hidden="true" data-download-options>
-                    {github.downloadGroup.stable && (
-                      <a href={github.downloadGroup.stable.assetUrl} target="_blank" rel="noreferrer">
-                        <span class="download-option-meta">Stable</span>
-                        <strong>{github.downloadGroup.stable.tag}</strong>
-                        <span>{github.downloadGroup.stable.label} · {github.downloadGroup.stable.detail}</span>
+                    {stableDownloads.map((download) => (
+                      <a href={download.assetUrl} target="_blank" rel="noreferrer">
+                        <span class="download-option-meta">Stable · {platformLabel(download)}</span>
+                        <strong>{download.label}</strong>
+                        <span>{download.tag} · {download.detail}</span>
                       </a>
-                    )}
+                    ))}
                     {github.downloadGroup.prereleases.map((download) => (
                       <a href={download.assetUrl} target="_blank" rel="noreferrer">
-                        <span class="download-option-meta">Pre-release</span>
-                        <strong>{download.tag}</strong>
-                        <span>{download.label} · {download.detail}</span>
+                        <span class="download-option-meta">Pre-release · {platformLabel(download)}</span>
+                        <strong>{download.label}</strong>
+                        <span>{download.tag} · {download.detail}</span>
                       </a>
                     ))}
                   </div>

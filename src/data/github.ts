@@ -42,6 +42,7 @@ export interface ProjectReleaseDownload {
 export interface ProjectReleaseGroup {
   versionBase: string;
   stable?: ProjectReleaseDownload;
+  stableDownloads: ProjectReleaseDownload[];
   prereleases: ProjectReleaseDownload[];
 }
 
@@ -85,12 +86,17 @@ const isSourceArchive = (assetName: string) => /(?:source|src)[-.].*\.(?:zip|tar
 
 const isDownloadArchive = (assetName: string) => /\.(?:zip|tar\.gz|tgz)$/i.test(assetName) && !isSourceArchive(assetName);
 
+const isMacAppArchive = (assetName: string) => /\.app\.zip$/i.test(assetName);
+
+const isMacArchive = (assetName: string) =>
+  isDownloadArchive(assetName) && /(?:^|[-_.])(?:macos|darwin|osx)(?:[-_.]|$)/i.test(assetName);
+
 const classifyAsset = (assetName: string): ProjectReleaseDownload["kind"] | null => {
-  if (/\.dmg$/i.test(assetName)) {
+  if (/\.(?:dmg|pkg)$/i.test(assetName) || isMacAppArchive(assetName) || isMacArchive(assetName)) {
     return "macos";
   }
 
-  if (/\.exe$/i.test(assetName)) {
+  if (/\.(?:exe|msi|msix)$/i.test(assetName)) {
     return "windows";
   }
 
@@ -106,21 +112,24 @@ const getAssetPriority = (asset: GitHubAsset) => {
     return 0;
   }
 
-  if (/\.exe$/i.test(asset.name)) {
+  if (isMacAppArchive(asset.name) || isMacArchive(asset.name)) {
     return 1;
   }
 
-  if (isDownloadArchive(asset.name)) {
+  if (/\.pkg$/i.test(asset.name)) {
     return 2;
+  }
+
+  if (/\.(?:exe|msi|msix)$/i.test(asset.name)) {
+    return 3;
+  }
+
+  if (isDownloadArchive(asset.name)) {
+    return 4;
   }
 
   return 99;
 };
-
-const findBestDownloadAsset = (release: GitHubRelease) =>
-  release.assets
-    .filter((asset) => classifyAsset(asset.name) !== null)
-    .sort((a, b) => getAssetPriority(a) - getAssetPriority(b) || a.name.localeCompare(b.name))[0];
 
 const formatBytes = (bytes: number) => {
   if (!bytes) {
@@ -133,11 +142,11 @@ const formatBytes = (bytes: number) => {
 
 const labelForAsset = (assetName: string, kind: ProjectReleaseDownload["kind"]) => {
   if (kind === "macos") {
-    return "Download DMG";
+    return "Download for Mac";
   }
 
   if (kind === "windows") {
-    return "Download EXE";
+    return "Download for Windows";
   }
 
   const extension = assetName.match(/\.(tar\.gz|tgz|zip)$/i)?.[1]?.toUpperCase() ?? "Asset";
@@ -207,25 +216,30 @@ const toDownload = (release: GitHubRelease, asset: GitHubAsset): ProjectReleaseD
 };
 
 const buildFallbackDownloadGroup = (project: Project): ProjectReleaseGroup | undefined => {
-  if (!project.fallbackDownload) {
+  const fallbackDownloads = project.fallbackDownloads ?? (project.fallbackDownload ? [project.fallbackDownload] : []);
+
+  if (fallbackDownloads.length === 0) {
     return undefined;
   }
 
-  const download: ProjectReleaseDownload = {
-    tag: project.fallbackVersion,
-    name: project.fallbackVersion,
-    url: project.releaseUrl,
-    assetName: project.fallbackDownload.assetName,
-    assetUrl: project.fallbackDownload.assetUrl,
-    label: labelForAsset(project.fallbackDownload.assetName, project.fallbackDownload.kind),
-    detail: formatBytes(project.fallbackDownload.size),
-    kind: project.fallbackDownload.kind,
-    prerelease: false,
-  };
+  const downloads: ProjectReleaseDownload[] = fallbackDownloads
+    .map((fallbackDownload) => ({
+      tag: project.fallbackVersion,
+      name: project.fallbackVersion,
+      url: project.releaseUrl,
+      assetName: fallbackDownload.assetName,
+      assetUrl: fallbackDownload.assetUrl,
+      label: labelForAsset(fallbackDownload.assetName, fallbackDownload.kind),
+      detail: formatBytes(fallbackDownload.size),
+      kind: fallbackDownload.kind,
+      prerelease: false,
+    }))
+    .sort((a, b) => getAssetPriority({ name: a.assetName, browser_download_url: a.assetUrl, size: 0 }) - getAssetPriority({ name: b.assetName, browser_download_url: b.assetUrl, size: 0 }) || a.assetName.localeCompare(b.assetName));
 
   return {
     versionBase: extractVersionBase(project.fallbackVersion),
-    stable: download,
+    stable: downloads[0],
+    stableDownloads: downloads,
     prereleases: [],
   };
 };
@@ -245,29 +259,36 @@ const buildFallbackInfo = (project: Project): ProjectGitHubInfo => {
   };
 };
 
+const getReleaseDownloads = (release: GitHubRelease) =>
+  release.assets
+    .map((asset) => toDownload(release, asset))
+    .filter((download): download is ProjectReleaseDownload => Boolean(download))
+    .sort((a, b) => getAssetPriority({ name: a.assetName, browser_download_url: a.assetUrl, size: 0 }) - getAssetPriority({ name: b.assetName, browser_download_url: b.assetUrl, size: 0 }) || a.assetName.localeCompare(b.assetName));
+
 const buildDownloadGroup = (releases: GitHubRelease[]): ProjectReleaseGroup | undefined => {
   const releaseDownloads = releases
-    .map((release) => {
-      const asset = findBestDownloadAsset(release);
-      return asset ? toDownload(release, asset) : undefined;
-    })
-    .filter((download): download is ProjectReleaseDownload => Boolean(download));
+    .flatMap((release) => getReleaseDownloads(release));
 
   const stable = releaseDownloads.find((download) => !download.prerelease);
-  const primary = stable ?? releaseDownloads[0];
+  const prerelease = releaseDownloads.find((download) => download.prerelease);
+  const primary = stable ?? prerelease ?? releaseDownloads[0];
 
   if (!primary) {
     return undefined;
   }
 
   const versionBase = extractVersionBase(primary.tag);
+  const stableDownloads = releaseDownloads.filter(
+    (download) => !download.prerelease && download.tag === primary.tag
+  );
   const prereleases = releaseDownloads.filter(
-    (download) => download.prerelease && extractVersionBase(download.tag) === versionBase
+    (download) => download.prerelease && download.tag === prerelease?.tag
   );
 
   return {
     versionBase,
-    stable,
+    stable: stableDownloads[0] ?? stable,
+    stableDownloads,
     prereleases,
   };
 };
@@ -289,11 +310,13 @@ const buildCommands = (project: Project, releaseUrl: string, downloadGroup?: Pro
     },
   ];
 
-  const download = downloadGroup?.stable ?? downloadGroup?.prereleases[0];
+  const downloads = downloadGroup?.stableDownloads.length
+    ? downloadGroup.stableDownloads
+    : downloadGroup?.prereleases.slice(0, 1) ?? [];
 
-  if (download) {
+  for (const download of downloads) {
     commands.push({
-      label: `download ${download.prerelease ? "pre-release" : "stable"} with GitHub CLI`,
+      label: `download ${download.prerelease ? "pre-release" : "stable"} ${download.kind} with GitHub CLI`,
       command: `gh release download ${download.tag} -R ${project.repo} -p '${download.assetName}'`,
     });
   }
