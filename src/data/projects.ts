@@ -27,6 +27,7 @@ export interface Project {
   githubUrl: string;
   releaseUrl: string;
   fallbackVersion: string;
+  npmPackage?: string;
   fallbackDownload?: {
     assetName: string;
     assetUrl: string;
@@ -216,24 +217,25 @@ export const featuredProjects: Project[] = [
     status: "experimental",
     tagline: "Local-first coding-agent TUI with observable runs.",
     description:
-      "A provider-aware terminal interface for guided patching, visible telemetry, and local or cloud model workflows without losing the repo context.",
-    audience: "For developers who want coding-agent runs to stay visible, local-aware, and easier to control.",
-    result: "Shows model, session, token, cache, and cost state directly in the terminal.",
+      "An early provider-aware terminal interface for visible agent sessions, patch review, and local or cloud model experiments without losing the repo context.",
+    audience: "For developers who want coding-agent experiments to stay visible, local-aware, and easier to inspect.",
+    result: "Shows model, session, token, cache, and cost state in the terminal when providers expose that metadata.",
     caseStudy: {
       problem: "Agent runs can feel like a black box when context, model choice, token use, and cost are hidden from the developer.",
-      built: "I built an Ink-based TUI around guided patching, provider metadata, transcript panes, and local/cloud model switching.",
-      result: "The run becomes easier to understand while the repository context stays close.",
+      built: "I built an Ink-based TUI around session logs, approval-aware patch review, provider metadata, transcript panes, and local/cloud model selection.",
+      result: "The run becomes easier to inspect while the repository context stays close.",
     },
     stack: ["TypeScript", "Ink", "AI"],
     featuredTier: "project",
     repo: "jx-grxf/PatchPilot",
     githubUrl: "https://github.com/jx-grxf/PatchPilot",
-    releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v0.1.1-beta",
-    fallbackVersion: "v0.1.1-beta",
+    releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v0.3.0",
+    fallbackVersion: "v0.3.0",
+    npmPackage: "@jx-grxf/patchpilot",
     highlights: [
-      "Shows provider, model, session, token, cache, and cost telemetry.",
+      "Shows provider, model, session, token, cache, and cost telemetry when available.",
       "Keeps transcript and session context visible while working in the terminal.",
-      "Supports local-first workflows with ollama while still allowing cloud providers.",
+      "Supports local-first workflows with Ollama alongside cloud-provider experiments.",
     ],
     showcase: [
       {
