@@ -295,7 +295,22 @@ const buildDownloadGroup = (releases: GitHubRelease[]): ProjectReleaseGroup | un
 
 const buildCommands = (project: Project, releaseUrl: string, downloadGroup?: ProjectReleaseGroup): ProjectCommand[] => {
   const repoName = normalizeRepoName(project.repo);
-  const commands: ProjectCommand[] = [
+  const commands: ProjectCommand[] = [];
+
+  if (project.npmPackage) {
+    commands.push(
+      {
+        label: "install CLI with npm",
+        command: `npm install -g ${project.npmPackage}`,
+      },
+      {
+        label: "update CLI with npm",
+        command: `npm update -g ${project.npmPackage}`,
+      }
+    );
+  }
+
+  commands.push(
     {
       label: "source without GitHub CLI",
       command: `git clone https://github.com/${project.repo}.git && cd ${repoName}`,
@@ -308,7 +323,7 @@ const buildCommands = (project: Project, releaseUrl: string, downloadGroup?: Pro
       label: "latest release",
       command: `open ${releaseUrl}`,
     },
-  ];
+  );
 
   const downloads = downloadGroup?.stableDownloads.length
     ? downloadGroup.stableDownloads
