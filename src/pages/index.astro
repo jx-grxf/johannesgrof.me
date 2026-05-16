@@ -2,6 +2,7 @@
 import BaseHead from "@/components/BaseHead.astro";
 import { featuredShowcaseProjects, publicProjects, standardProjects, statusClass, upcomingProjects } from "@/data/projects";
 import { siteContent } from "@/data/siteContent";
+import { toCanonicalUrl } from "@/data/siteMetadata";
 import "@/styles/global.css";
 import SpeedInsights from "@vercel/speed-insights/astro";
 
@@ -49,12 +50,32 @@ ${terminalUpcomingRows}
 └─ <span class="folder">contact/</span>
    └─ jx_grxf`;
 
+const profileSchema = {
+  "@context": "https://schema.org",
+  "@type": "ProfilePage",
+  name: "Johannes Grof",
+  url: toCanonicalUrl("/"),
+  description: siteContent.metaDescription,
+  mainEntity: {
+    "@type": "Person",
+    name: "Johannes Grof",
+    url: toCanonicalUrl("/"),
+    sameAs: ["https://github.com/jx-grxf", "https://www.linkedin.com/in/johannes-grof/"],
+    affiliation: {
+      "@type": "EducationalOrganization",
+      name: "HTBLA Kaindorf",
+    },
+    knowsAbout: ["TypeScript", "Swift", "Python", "Astro", "macOS apps", "AI automation", "developer tools"],
+  },
+};
+
 ---
 
 <!doctype html>
 <html lang="en">
   <head>
-    <BaseHead title="Johannes Grof" description={siteContent.metaDescription} canonicalPath="/" />
+    <BaseHead title="Johannes Grof - Student Developer in Austria" description={siteContent.metaDescription} canonicalPath="/" />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(profileSchema)} />
   </head>
   <body>
     <header class="site-header">
@@ -111,7 +132,10 @@ ${terminalUpcomingRows}
               return (
                 <a class="project-card featured-project-card reveal" style={`--reveal-delay: ${index * 80}ms`} href={`/projects/${project.slug}/`}>
                   <div class="featured-card-media">
-                    <img class="featured-card-image" src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
+                    <picture>
+                      {heroImage.fallbackSrc && <source srcset={heroImage.src} type="image/webp" />}
+                      <img class="featured-card-image" src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
+                    </picture>
                     {project.logo && <img class="featured-card-logo" src={project.logo.src} alt="" aria-hidden="true" loading="lazy" decoding="async" />}
                   </div>
                   <div class="featured-card-body">

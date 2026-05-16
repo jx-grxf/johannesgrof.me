@@ -556,6 +556,12 @@ pre {
     rgb(255 255 255 / 4%);
 }
 
+.featured-card-media picture {
+  display: grid;
+  width: 100%;
+  place-items: center;
+}
+
 .featured-card-image {
   width: min(100%, 260px);
   height: 154px;
