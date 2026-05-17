@@ -1114,6 +1114,7 @@ pre {
 .project-meta-panel,
 .project-showcase,
 .case-study-panel,
+.release-panel,
 .command-panel,
 .highlights-panel,
 .showcase-gallery figure {
@@ -1134,6 +1135,7 @@ pre {
 .project-meta-panel:hover,
 .project-showcase:hover,
 .case-study-panel:hover,
+.release-panel:hover,
 .command-panel:hover,
 .highlights-panel:hover,
 .showcase-gallery figure:hover {
@@ -1199,6 +1201,47 @@ pre {
   gap: 12px;
   align-items: flex-start;
   margin-top: 24px;
+}
+
+.install-button {
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 56px;
+  min-width: min(310px, 100%);
+  border: 1px solid rgb(77 241 210 / 34%);
+  background:
+    linear-gradient(180deg, rgb(77 241 210 / 94%), rgb(77 241 210 / 80%)),
+    rgb(77 241 210 / 72%);
+  box-shadow:
+    var(--glass-highlight),
+    0 16px 34px rgb(77 241 210 / 18%);
+  color: #071311;
+}
+
+.install-button span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.install-button span::before {
+  display: inline-grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border: 2px solid currentColor;
+  border-radius: 6px;
+  content: "$";
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.86rem;
+  line-height: 1;
+}
+
+.install-button small {
+  color: rgb(7 19 17 / 72%);
+  font-size: 0.72rem;
+  font-weight: 800;
+  line-height: 1.2;
 }
 
 .project-meta-panel {
@@ -1284,6 +1327,57 @@ pre {
   margin: 0;
   color: var(--muted);
   line-height: 1.6;
+}
+
+.release-panel {
+  display: grid;
+  grid-template-columns: minmax(180px, 0.35fr) minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+  margin-top: 18px;
+  padding: 22px;
+  animation: detail-in 590ms var(--smooth) 130ms both;
+}
+
+.release-panel span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--cyan);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.release-panel h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+}
+
+.release-panel ul {
+  display: grid;
+  gap: 11px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.release-panel li {
+  position: relative;
+  padding-left: 20px;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.release-panel li::before {
+  position: absolute;
+  top: 0.65em;
+  left: 0;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--orange);
+  content: "";
 }
 
 .project-showcase {
@@ -1516,6 +1610,7 @@ pre {
   .hero,
   .project-detail-hero,
   .project-detail-grid,
+  .release-panel,
   .section-heading,
   .services-layout,
   .split-section,

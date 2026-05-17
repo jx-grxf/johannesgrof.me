@@ -41,6 +41,7 @@ export interface Project {
     kind: "macos" | "windows" | "archive";
   }[];
   highlights: string[];
+  releaseHighlights?: string[];
   showcase: ShowcaseImage[];
   visibility: "public" | "private" | "planned";
 }
@@ -214,28 +215,33 @@ export const featuredProjects: Project[] = [
   {
     name: "PatchPilot",
     slug: "patchpilot",
-    status: "experimental",
-    tagline: "Local-first coding-agent TUI with observable runs.",
+    status: "preview",
+    tagline: "Permissioned coding-agent TUI for local and cloud model runs.",
     description:
-      "An early provider-aware terminal interface for visible agent sessions, patch review, and local or cloud model experiments without losing the repo context.",
-    audience: "For developers who want coding-agent experiments to stay visible, local-aware, and easier to inspect.",
-    result: "Shows model, session, token, cache, and cost state in the terminal when providers expose that metadata.",
+      "PatchPilot keeps agent sessions, approvals, model choice, token use, and patch review visible inside one terminal workflow instead of hiding the run behind a chat box.",
+    audience: "For developers who want agent experiments to stay inspectable, approval-aware, and close to the repository they are changing.",
+    result: "v0.4.0 adds a clearer TUI, safer release automation, provider-aware model handling, and better token and session visibility.",
     caseStudy: {
-      problem: "Agent runs can feel like a black box when context, model choice, token use, and cost are hidden from the developer.",
-      built: "I built an Ink-based TUI around session logs, approval-aware patch review, provider metadata, transcript panes, and local/cloud model selection.",
-      result: "The run becomes easier to inspect while the repository context stays close.",
+      problem: "Coding-agent runs become hard to trust when permissions, provider state, model selection, token use, and patch context are scattered or hidden.",
+      built: "I built an Ink-based TUI around sticky approvals, transcript panes, provider metadata, safer tool execution, and local/cloud model selection.",
+      result: "The run is easier to inspect and steer while the repository context stays close.",
     },
     stack: ["TypeScript", "Ink", "AI"],
     featuredTier: "project",
     repo: "jx-grxf/PatchPilot",
     githubUrl: "https://github.com/jx-grxf/PatchPilot",
-    releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v0.3.0",
-    fallbackVersion: "v0.3.0",
+    releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v0.4.0",
+    fallbackVersion: "v0.4.0",
     npmPackage: "@jx-grxf/patchpilot",
     highlights: [
-      "Shows provider, model, session, token, cache, and cost telemetry when available.",
-      "Keeps transcript and session context visible while working in the terminal.",
-      "Supports local-first workflows with Ollama alongside cloud-provider experiments.",
+      "Shows provider, model, session, token, cache, and cost telemetry in the terminal.",
+      "Keeps transcript, permission state, and approval prompts visible while working.",
+      "Supports Codex, Gemini, NVIDIA, OpenRouter, Ollama, and other provider experiments from one setup flow.",
+    ],
+    releaseHighlights: [
+      "Sticky approval UI makes write and shell escalation visible instead of burying it in grey transcript text.",
+      "Provider model filtering and safer fallback data reduce broken model-picker states.",
+      "Windows shell handling, secret-path blocking, and release-hook automation make the CLI safer to ship.",
     ],
     showcase: [
       {

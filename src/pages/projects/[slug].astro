@@ -22,18 +22,9 @@ const downloads = [...stableDownloads, ...(github.downloadGroup?.prereleases ?? 
 );
 const hasMultipleDownloads = downloads.length > 1;
 const downloadMenuId = `${project.slug}-download-menu`;
-const platformLabel = (download: ProjectReleaseDownload) => {
-  if (download.kind === "macos") {
-    return "Mac";
-  }
-
-  if (download.kind === "windows") {
-    return "Windows";
-  }
-
-  return "Asset";
-};
-
+const npmPackageUrl = project.npmPackage ? `https://www.npmjs.com/package/${project.npmPackage}` : undefined;
+const downloadActionLabel = project.npmPackage ? "Package archive" : "Download";
+const downloadActionDetail = project.npmPackage ? "Release TGZ" : "Mac or Windows";
 const formatDate = (date: string) => {
   if (!date) {
     return "recent";
@@ -44,6 +35,31 @@ const formatDate = (date: string) => {
     day: "numeric",
     year: "numeric",
   }).format(new Date(date));
+};
+const metaItems = project.npmPackage
+  ? [
+      { label: "Version", value: github.version },
+      { label: "Install", value: "npm" },
+      { label: "Language", value: github.language },
+      { label: "Updated", value: formatDate(github.updatedAt) },
+    ]
+  : [
+      { label: "Version", value: github.version },
+      { label: "Language", value: github.language },
+      { label: "Stars", value: String(github.stars) },
+      { label: "Forks", value: String(github.forks) },
+      { label: "Updated", value: formatDate(github.updatedAt) },
+    ];
+const platformLabel = (download: ProjectReleaseDownload) => {
+  if (download.kind === "macos") {
+    return "Mac";
+  }
+
+  if (download.kind === "windows") {
+    return "Windows";
+  }
+
+  return "Asset";
 };
 ---
 
@@ -85,6 +101,12 @@ const formatDate = (date: string) => {
           <p class="project-tagline">{project.tagline}</p>
           <p class="project-description">{project.description}</p>
           <div class="project-actions">
+            {npmPackageUrl && (
+              <a class="button install-button" href={npmPackageUrl} target="_blank" rel="noreferrer">
+                <span>Install with npm</span>
+                <small>npm install -g {project.npmPackage}</small>
+              </a>
+            )}
             {github.downloadGroup && (
               hasMultipleDownloads ? (
                 <div class="download-menu" data-download-menu>
@@ -95,8 +117,8 @@ const formatDate = (date: string) => {
                     aria-controls={downloadMenuId}
                     data-download-trigger
                   >
-                    <span>Download</span>
-                    <small>Mac or Windows</small>
+                    <span>{downloadActionLabel}</span>
+                    <small>{downloadActionDetail}</small>
                   </button>
                   <div id={downloadMenuId} class="download-options" aria-hidden="true" data-download-options>
                     {stableDownloads.map((download) => (
@@ -117,7 +139,7 @@ const formatDate = (date: string) => {
                 </div>
               ) : (
                 <a class={`button download-button ${downloads[0]?.kind ?? "release"}`} href={downloads[0]?.assetUrl} target="_blank" rel="noreferrer">
-                  <span>{downloads[0]?.label}</span>
+                  <span>{project.npmPackage ? "Package archive" : downloads[0]?.label}</span>
                   <small>{downloads[0]?.detail}</small>
                 </a>
               )
@@ -129,26 +151,12 @@ const formatDate = (date: string) => {
 
         <aside class="project-meta-panel" aria-label={`${project.name} GitHub summary`}>
           <dl class="project-meta-grid">
-            <div>
-              <dt>Version</dt>
-              <dd>{github.version}</dd>
-            </div>
-            <div>
-              <dt>Language</dt>
-              <dd>{github.language}</dd>
-            </div>
-            <div>
-              <dt>Stars</dt>
-              <dd>{github.stars}</dd>
-            </div>
-            <div>
-              <dt>Forks</dt>
-              <dd>{github.forks}</dd>
-            </div>
-            <div>
-              <dt>Updated</dt>
-              <dd>{formatDate(github.updatedAt)}</dd>
-            </div>
+            {metaItems.map((item) => (
+              <div>
+                <dt>{item.label}</dt>
+                <dd>{item.value}</dd>
+              </div>
+            ))}
           </dl>
         </aside>
       </section>
@@ -178,6 +186,18 @@ const formatDate = (date: string) => {
           <p>{project.audience}</p>
         </article>
       </section>
+
+      {project.releaseHighlights && (
+        <section class="release-panel" aria-label={`${project.name} release highlights`}>
+          <div>
+            <span>Latest release</span>
+            <h2>{github.version}</h2>
+          </div>
+          <ul>
+            {project.releaseHighlights.map((highlight) => <li>{highlight}</li>)}
+          </ul>
+        </section>
+      )}
 
       <section class="project-detail-grid" aria-label={`${project.name} details`}>
         <div class="command-panel">
