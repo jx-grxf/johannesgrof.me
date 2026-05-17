@@ -22,6 +22,24 @@ const downloads = [...stableDownloads, ...(github.downloadGroup?.prereleases ?? 
 );
 const hasMultipleDownloads = downloads.length > 1;
 const downloadMenuId = `${project.slug}-download-menu`;
+const downloadButtonDetail = (() => {
+  const hasMac = downloads.some((download) => download.kind === "macos");
+  const hasWindows = downloads.some((download) => download.kind === "windows");
+
+  if (hasMac && hasWindows) {
+    return "Mac or Windows";
+  }
+
+  if (hasMac) {
+    return "Mac only";
+  }
+
+  if (hasWindows) {
+    return "Windows only";
+  }
+
+  return "Release assets";
+})();
 const platformLabel = (download: ProjectReleaseDownload) => {
   if (download.kind === "macos") {
     return "Mac";
@@ -96,7 +114,7 @@ const formatDate = (date: string) => {
                     data-download-trigger
                   >
                     <span>Download</span>
-                    <small>Mac or Windows</small>
+                    <small>{downloadButtonDetail}</small>
                   </button>
                   <div id={downloadMenuId} class="download-options" aria-hidden="true" data-download-options>
                     {stableDownloads.map((download) => (
