@@ -10,13 +10,35 @@ Personal website and project portfolio.
 [![Website](https://img.shields.io/badge/website-johannesgrof.me-111111?style=flat-square)](https://johannesgrof.me)
 [![License](https://img.shields.io/badge/license-all%20rights%20reserved-lightgrey?style=flat-square)](#license)
 
-[Website](https://johannesgrof.me) · [GitHub](https://github.com/jx-grxf)
+[Website](https://www.johannesgrof.me) · [GitHub](https://github.com/jx-grxf)
 
 </div>
 
 ## Overview
 
 This repository contains the source for my personal portfolio website. It is built as a small, fast Astro site with a focused project showcase, skills section, contact surface, and static deployment on Vercel, using Cloudflare as DNS.
+
+## Showcase
+
+![Portfolio project showcase](public/projects/macdev/showcase.webp)
+
+## Highlights
+
+| Feature | Description |
+| --- | --- |
+| Project proof | Highlights shipped GitHub releases, npm packages, DMG builds, and Windows EXE assets. |
+| Case studies | Each project page explains the problem, build approach, result, and audience. |
+| Static-first build | Astro renders the portfolio as a fast static site with Vercel deployment. |
+| GitHub metadata | Build-time GitHub API data enriches release, update, and download surfaces with safe fallbacks. |
+
+## Featured Projects
+
+| Project | Public proof |
+| --- | --- |
+| [MacDev](https://www.johannesgrof.me/projects/macdev/) | Native macOS app with DMG release. |
+| [Caruso-Reborn](https://www.johannesgrof.me/projects/caruso-reborn/) | Local playback dashboard with GitHub release. |
+| [SlamX](https://www.johannesgrof.me/projects/slamx/) | Sensor-only macOS experiment with release assets. |
+| [PatchPilot](https://www.johannesgrof.me/projects/patchpilot/) | npm package and coding-agent TUI release. |
 
 ## Stack
 

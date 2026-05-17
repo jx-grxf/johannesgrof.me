@@ -1,6 +1,7 @@
 ---
 import BaseHead from "@/components/BaseHead.astro";
-import { featuredShowcaseProjects, publicProjects, standardProjects, statusClass, upcomingProjects } from "@/data/projects";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { featuredShowcaseProjects, publicProjects, standardProjects, statusClass, statusLabel, upcomingProjects } from "@/data/projects";
 import { siteContent } from "@/data/siteContent";
 import { toCanonicalUrl } from "@/data/siteMetadata";
 import "@/styles/global.css";
@@ -11,7 +12,7 @@ const navItems = [
   { label: "Skills", href: "#skills" },
   { label: "Services", href: "#services" },
   { label: "About", href: "#about" },
-  { label: "Contact", href: "#contact" },
+  { label: "Contact", href: "#contact", dinoTrigger: true },
 ];
 
 const escapeHtml = (value: string) =>
@@ -78,15 +79,7 @@ const profileSchema = {
     <script type="application/ld+json" is:inline set:html={JSON.stringify(profileSchema)} />
   </head>
   <body>
-    <header class="site-header">
-      <a class="brand" href="/" aria-label="Johannes Grof home">
-        <span class="brand-mark">jg</span>
-        <span>Johannes Grof</span>
-      </a>
-      <nav aria-label="Primary navigation">
-        {navItems.map((item) => <a href={item.href} data-dino-trigger={item.href === "#contact" ? "true" : undefined}>{item.label}</a>)}
-      </nav>
-    </header>
+    <SiteHeader navItems={navItems} />
 
     <main>
       <section class="hero section-shell" aria-labelledby="hero-title">
@@ -94,6 +87,7 @@ const profileSchema = {
           <p class="eyebrow">{siteContent.hero.eyebrow}</p>
           <h1 id="hero-title">{siteContent.hero.title}</h1>
           <p class="hero-text">{siteContent.hero.body}</p>
+          <p class="hero-proof">{siteContent.hero.proof}</p>
           <div class="hero-actions">
             <a class="button primary" href="#projects">{siteContent.hero.primaryAction}</a>
             <a class="button secondary" href="#skills">{siteContent.hero.secondaryAction}</a>
@@ -128,21 +122,32 @@ const profileSchema = {
           {
             featuredShowcaseProjects.map((project, index) => {
               const heroImage = project.showcase[0];
+              const cardImageSrc = heroImage.cardSrc ?? heroImage.src;
 
               return (
                 <a class="project-card featured-project-card reveal" style={`--reveal-delay: ${index * 80}ms`} href={`/projects/${project.slug}/`}>
                   <div class="featured-card-media">
                     <picture>
-                      {heroImage.fallbackSrc && <source srcset={heroImage.src} type="image/webp" />}
-                      <img class="featured-card-image" src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
+                      <source srcset={cardImageSrc} type="image/webp" />
+                      <img class="featured-card-image" src={cardImageSrc} alt={heroImage.alt} width={heroImage.width} height={heroImage.height} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
                     </picture>
-                    {project.logo && <img class="featured-card-logo" src={project.logo.src} alt="" aria-hidden="true" loading="lazy" decoding="async" />}
+                    {project.logo && (
+                      <picture>
+                        {project.logo.fallbackSrc && <source srcset={project.logo.src} type="image/webp" />}
+                        <img class="featured-card-logo" src={project.logo.fallbackSrc ?? project.logo.src} alt="" width={project.logo.width} height={project.logo.height} aria-hidden="true" loading="lazy" decoding="async" />
+                      </picture>
+                    )}
                   </div>
                   <div class="featured-card-body">
                     <div class="card-topline">
                       <h3>{project.name}</h3>
-                      <span class={`status ${statusClass(project.status)}`}>{project.status}</span>
+                      <span class={`status ${statusClass(project.status)}`}>{statusLabel(project.status)}</span>
                     </div>
+                    {project.proofLabels && (
+                      <ul class="proof-chip-list" aria-label={`${project.name} proof points`}>
+                        {project.proofLabels.map((label) => <li>{label}</li>)}
+                      </ul>
+                    )}
                     <p>{project.description}</p>
                     <p class="project-result">{project.result}</p>
                     <ul>
@@ -165,10 +170,15 @@ const profileSchema = {
           {
             standardProjects.map((project, index) => (
               <a class="project-card reveal" style={`--reveal-delay: ${index * 70}ms`} href={`/projects/${project.slug}/`}>
-                  <div class="card-topline">
-                    <h3>{project.name}</h3>
-                    <span class={`status ${statusClass(project.status)}`}>{project.status}</span>
-                  </div>
+                    <div class="card-topline">
+                      <h3>{project.name}</h3>
+                      <span class={`status ${statusClass(project.status)}`}>{statusLabel(project.status)}</span>
+                    </div>
+                  {project.proofLabels && (
+                    <ul class="proof-chip-list" aria-label={`${project.name} proof points`}>
+                      {project.proofLabels.map((label) => <li>{label}</li>)}
+                    </ul>
+                  )}
                   <p>{project.description}</p>
                   <p class="project-audience">{project.audience}</p>
                   <p class="project-result">{project.result}</p>
@@ -191,7 +201,7 @@ const profileSchema = {
                     <h4>{project.name}</h4>
                     <p>{project.description}</p>
                   </div>
-                  <span class={`status ${statusClass(project.status)}`}>{project.status}</span>
+                  <span class={`status ${statusClass(project.status)}`}>{statusLabel(project.status)}</span>
                 </article>
               ))
             }
@@ -244,7 +254,7 @@ const profileSchema = {
         <div>
           <p class="eyebrow contact-easter-trigger" data-dino-trigger role="button" tabindex="0" aria-label="Unlock portfolio easter egg">{siteContent.contact.eyebrow}</p>
           <h2>{siteContent.contact.title}</h2>
-          <p class="contact-note">For small project questions, message me on LinkedIn or GitHub.</p>
+          <p class="contact-note">Need a small automation, macOS utility, or project website? Message me on LinkedIn or GitHub.</p>
         </div>
         <div class="contact-links">
           <a href="https://github.com/jx-grxf" target="_blank" rel="noreferrer">GitHub</a>

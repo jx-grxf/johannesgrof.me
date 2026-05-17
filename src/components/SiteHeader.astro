@@ -1,0 +1,36 @@
+---
+interface NavItem {
+  label: string;
+  href: string;
+  external?: boolean;
+  dinoTrigger?: boolean;
+}
+
+interface Props {
+  navItems: NavItem[];
+  ariaLabel?: string;
+}
+
+const { navItems, ariaLabel = "Primary navigation" } = Astro.props;
+---
+
+<header class="site-header">
+  <a class="brand" href="/" aria-label="Johannes Grof home">
+    <span class="brand-mark" aria-hidden="true">jg</span>
+    <span>Johannes Grof</span>
+  </a>
+  <nav aria-label={ariaLabel}>
+    {
+      navItems.map((item) => (
+        <a
+          href={item.href}
+          target={item.external ? "_blank" : undefined}
+          rel={item.external ? "noreferrer" : undefined}
+          data-dino-trigger={item.dinoTrigger ? "true" : undefined}
+        >
+          {item.label}
+        </a>
+      ))
+    }
+  </nav>
+</header>
