@@ -52,6 +52,7 @@ export interface ProjectCommand {
 }
 
 export interface ProjectGitHubInfo {
+  metadataState: "live" | "partial" | "fallback";
   version: string;
   releaseUrl: string;
   stars: number;
@@ -248,6 +249,7 @@ const buildFallbackInfo = (project: Project): ProjectGitHubInfo => {
   const downloadGroup = buildFallbackDownloadGroup(project);
 
   return {
+    metadataState: "fallback",
     version: project.fallbackVersion,
     releaseUrl: project.releaseUrl,
     stars: 0,
@@ -357,9 +359,12 @@ export async function getProjectGitHubInfo(project: Project): Promise<ProjectGit
     const releaseList = releases ?? [];
     const release = releaseList.find((item) => !item.prerelease) ?? releaseList[0];
     const releaseUrl = release?.html_url ?? fallback.releaseUrl;
-    const downloadGroup = buildDownloadGroup(releaseList);
+    const releaseDownloadGroup = buildDownloadGroup(releaseList);
+    const downloadGroup = releaseDownloadGroup ?? fallback.downloadGroup;
+    const metadataState = releases ? "live" : "partial";
 
     return {
+      metadataState,
       version: release?.tag_name ?? fallback.version,
       releaseUrl,
       stars: repo.stargazers_count,

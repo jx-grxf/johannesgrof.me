@@ -2,9 +2,12 @@ export type ProjectStatus = "active" | "beta" | "experimental" | "preview" | "co
 
 export interface ShowcaseImage {
   src: string;
+  cardSrc?: string;
   fallbackSrc?: string;
   alt: string;
   fit?: "cover" | "contain";
+  width?: number;
+  height?: number;
 }
 
 export interface Project {
@@ -28,6 +31,8 @@ export interface Project {
   releaseUrl: string;
   fallbackVersion: string;
   npmPackage?: string;
+  platformLabels?: string[];
+  proofLabels?: string[];
   fallbackDownload?: {
     assetName: string;
     assetUrl: string;
@@ -41,9 +46,22 @@ export interface Project {
     kind: "macos" | "windows" | "archive";
   }[];
   highlights: string[];
+  releaseHighlights?: string[];
   showcase: ShowcaseImage[];
   visibility: "public" | "private" | "planned";
 }
+
+export const statusLabel = (status: ProjectStatus) => {
+  const labels: Record<ProjectStatus, string> = {
+    active: "active",
+    beta: "beta release",
+    experimental: "active experiment",
+    preview: "shipped preview",
+    "coming soon": "coming soon",
+  };
+
+  return labels[status];
+};
 
 export interface UpcomingProject {
   name: string;
@@ -59,9 +77,12 @@ export const featuredProjects: Project[] = [
     slug: "macdev",
     status: "preview",
     logo: {
-      src: "/projects/macdev/app-icon.png",
+      src: "/projects/macdev/app-icon.webp",
+      fallbackSrc: "/projects/macdev/app-icon.png",
       alt: "MacDev app icon",
       fit: "contain",
+      width: 256,
+      height: 256,
     },
     tagline: "Native macOS menu bar control for local development projects.",
     description:
@@ -79,6 +100,8 @@ export const featuredProjects: Project[] = [
     githubUrl: "https://github.com/jx-grxf/MacDev",
     releaseUrl: "https://github.com/jx-grxf/MacDev/releases/tag/v0.2.0",
     fallbackVersion: "v0.2.0",
+    platformLabels: ["macOS"],
+    proofLabels: ["DMG release", "Native app", "GitHub release"],
     fallbackDownload: {
       assetName: "MacDev-0.2.0.dmg",
       assetUrl: "https://github.com/jx-grxf/MacDev/releases/download/v0.2.0/MacDev-0.2.0.dmg",
@@ -93,9 +116,12 @@ export const featuredProjects: Project[] = [
     showcase: [
       {
         src: "/projects/macdev/showcase.webp",
+        cardSrc: "/projects/macdev/showcase-card.webp",
         fallbackSrc: "/projects/macdev/showcase.png",
         alt: "MacDev menu bar runtime panel with localhost runtimes, warnings, and diagnostics",
         fit: "contain",
+        width: 1600,
+        height: 900,
       },
     ],
     visibility: "public",
@@ -120,6 +146,8 @@ export const featuredProjects: Project[] = [
     githubUrl: "https://github.com/jx-grxf/OpenClaw-Discord-Voice",
     releaseUrl: "https://github.com/jx-grxf/OpenClaw-Discord-Voice/releases/tag/v1.0.4",
     fallbackVersion: "v1.0.4",
+    platformLabels: ["Node.js", "Discord"],
+    proofLabels: ["GitHub release", "TypeScript bridge"],
     highlights: [
       "Bridges Discord voice events into a local OpenClaw workflow.",
       "Keeps the runtime path explicit instead of hiding it behind a black-box bot.",
@@ -131,6 +159,8 @@ export const featuredProjects: Project[] = [
         fallbackSrc: "/projects/openclaw-discord-voice/pipeline.png",
         alt: "Pipeline diagram for OpenClaw Discord Voice",
         fit: "contain",
+        width: 1600,
+        height: 900,
       },
     ],
     visibility: "public",
@@ -155,6 +185,8 @@ export const featuredProjects: Project[] = [
     githubUrl: "https://github.com/jx-grxf/DocxToPDF",
     releaseUrl: "https://github.com/jx-grxf/DocxToPDF/releases/tag/v0.1.0",
     fallbackVersion: "v0.1.0",
+    platformLabels: ["macOS", "Microsoft Word"],
+    proofLabels: ["GitHub release", "Word renderer"],
     highlights: [
       "Uses Microsoft Word as the export engine for document fidelity.",
       "Supports batch conversion in a single Word session where possible.",
@@ -167,6 +199,8 @@ export const featuredProjects: Project[] = [
         fallbackSrc: "/projects/docxtopdf/hero.png",
         alt: "DocxToPDF terminal export flow",
         fit: "contain",
+        width: 1600,
+        height: 900,
       },
     ],
     visibility: "public",
@@ -176,9 +210,12 @@ export const featuredProjects: Project[] = [
     slug: "caruso-reborn",
     status: "active",
     logo: {
-      src: "/projects/caruso-reborn/logo.png",
+      src: "/projects/caruso-reborn/logo.webp",
+      fallbackSrc: "/projects/caruso-reborn/logo.png",
       alt: "Caruso Reborn app icon",
       fit: "contain",
+      width: 256,
+      height: 256,
     },
     tagline: "Modern radio playback for first-generation T+A Caruso systems.",
     description:
@@ -196,6 +233,8 @@ export const featuredProjects: Project[] = [
     githubUrl: "https://github.com/jx-grxf/Caruso-Reborn",
     releaseUrl: "https://github.com/jx-grxf/Caruso-Reborn/releases/tag/v0.2.1",
     fallbackVersion: "v0.2.1",
+    platformLabels: ["Browser", "UPnP/DLNA"],
+    proofLabels: ["GitHub release", "Local dashboard"],
     highlights: [
       "Publishes a browsable station list for compatible Caruso devices.",
       "Shows renderer transport, source, quality, position, and server metrics.",
@@ -204,9 +243,12 @@ export const featuredProjects: Project[] = [
     showcase: [
       {
         src: "/projects/caruso-reborn/hero.webp",
+        cardSrc: "/projects/caruso-reborn/hero-card.webp",
         fallbackSrc: "/projects/caruso-reborn/hero.png",
         alt: "Caruso Reborn dashboard",
         fit: "cover",
+        width: 1600,
+        height: 900,
       },
     ],
     visibility: "public",
@@ -214,28 +256,35 @@ export const featuredProjects: Project[] = [
   {
     name: "PatchPilot",
     slug: "patchpilot",
-    status: "experimental",
-    tagline: "Local-first coding-agent TUI with observable runs.",
+    status: "preview",
+    tagline: "Permissioned coding-agent TUI for local and cloud model runs.",
     description:
-      "An early provider-aware terminal interface for visible agent sessions, patch review, and local or cloud model experiments without losing the repo context.",
-    audience: "For developers who want coding-agent experiments to stay visible, local-aware, and easier to inspect.",
-    result: "Shows model, session, token, cache, and cost state in the terminal when providers expose that metadata.",
+      "PatchPilot keeps agent sessions, approvals, model choice, token use, and patch review visible inside one terminal workflow instead of hiding the run behind a chat box.",
+    audience: "For developers who want agent experiments to stay inspectable, approval-aware, and close to the repository they are changing.",
+    result: "v0.4.0 adds a clearer TUI, safer release automation, provider-aware model handling, and better token and session visibility.",
     caseStudy: {
-      problem: "Agent runs can feel like a black box when context, model choice, token use, and cost are hidden from the developer.",
-      built: "I built an Ink-based TUI around session logs, approval-aware patch review, provider metadata, transcript panes, and local/cloud model selection.",
-      result: "The run becomes easier to inspect while the repository context stays close.",
+      problem: "Coding-agent runs become hard to trust when permissions, provider state, model selection, token use, and patch context are scattered or hidden.",
+      built: "I built an Ink-based TUI around sticky approvals, transcript panes, provider metadata, safer tool execution, and local/cloud model selection.",
+      result: "The run is easier to inspect and steer while the repository context stays close.",
     },
     stack: ["TypeScript", "Ink", "AI"],
     featuredTier: "project",
     repo: "jx-grxf/PatchPilot",
     githubUrl: "https://github.com/jx-grxf/PatchPilot",
-    releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v0.3.0",
-    fallbackVersion: "v0.3.0",
+    releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v0.4.0",
+    fallbackVersion: "v0.4.0",
     npmPackage: "@jx-grxf/patchpilot",
+    platformLabels: ["npm", "Terminal"],
+    proofLabels: ["npm package", "GitHub release", "Agent TUI"],
     highlights: [
-      "Shows provider, model, session, token, cache, and cost telemetry when available.",
-      "Keeps transcript and session context visible while working in the terminal.",
-      "Supports local-first workflows with Ollama alongside cloud-provider experiments.",
+      "Shows provider, model, session, token, cache, and cost telemetry in the terminal.",
+      "Keeps transcript, permission state, and approval prompts visible while working.",
+      "Supports Codex, Gemini, NVIDIA, OpenRouter, Ollama, and other provider experiments from one setup flow.",
+    ],
+    releaseHighlights: [
+      "Sticky approval UI makes write and shell escalation visible instead of burying it in transcript text.",
+      "Provider model filtering and safer fallback data reduce broken model-picker states.",
+      "Windows shell handling, secret-path blocking, and release-hook automation make the CLI safer to ship.",
     ],
     showcase: [
       {
@@ -243,6 +292,8 @@ export const featuredProjects: Project[] = [
         fallbackSrc: "/projects/patchpilot/hero.png",
         alt: "PatchPilot TUI session",
         fit: "contain",
+        width: 1600,
+        height: 900,
       },
     ],
     visibility: "public",
@@ -267,6 +318,8 @@ export const featuredProjects: Project[] = [
     githubUrl: "https://github.com/jx-grxf/Digi2PDF",
     releaseUrl: "https://github.com/jx-grxf/Digi2PDF/releases/tag/v0.3.1",
     fallbackVersion: "v0.3.1",
+    platformLabels: ["macOS", "Windows"],
+    proofLabels: ["DMG release", "Windows EXE", "OCR workflow"],
     fallbackDownloads: [
       {
         assetName: "Digi2PDF-v0.3.1-macos-arm64.dmg",
@@ -293,6 +346,8 @@ export const featuredProjects: Project[] = [
         fallbackSrc: "/projects/digi2pdf/hero.png",
         alt: "Digi2PDF terminal workflow",
         fit: "contain",
+        width: 1600,
+        height: 900,
       },
     ],
     visibility: "public",
@@ -302,9 +357,12 @@ export const featuredProjects: Project[] = [
     slug: "slamx",
     status: "beta",
     logo: {
-      src: "/projects/slamx/logo.png",
+      src: "/projects/slamx/logo.webp",
+      fallbackSrc: "/projects/slamx/logo.png",
       alt: "SlamX app icon",
       fit: "contain",
+      width: 256,
+      height: 256,
     },
     tagline: "Sensor-only MacBook impact detection with sound feedback.",
     description:
@@ -322,6 +380,8 @@ export const featuredProjects: Project[] = [
     githubUrl: "https://github.com/jx-grxf/SlamX",
     releaseUrl: "https://github.com/jx-grxf/SlamX/releases/tag/v0.3.4",
     fallbackVersion: "v0.3.4",
+    platformLabels: ["macOS"],
+    proofLabels: ["DMG release", "Sensor-only", "GitHub release"],
     highlights: [
       "Reads Apple SPU accelerometer reports through local HID access.",
       "Provides live telemetry, calibration, threshold tuning, and sound selection.",
@@ -331,21 +391,28 @@ export const featuredProjects: Project[] = [
     showcase: [
       {
         src: "/projects/slamx/monitor-dash.webp",
+        cardSrc: "/projects/slamx/monitor-dash-card.webp",
         fallbackSrc: "/projects/slamx/monitor-dash.jpeg",
         alt: "SlamX live dashboard",
         fit: "contain",
+        width: 1600,
+        height: 900,
       },
       {
         src: "/projects/slamx/monitor-calibration.webp",
         fallbackSrc: "/projects/slamx/monitor-calibration.jpeg",
         alt: "SlamX calibration view",
         fit: "contain",
+        width: 1600,
+        height: 900,
       },
       {
         src: "/projects/slamx/monitor-slamx.webp",
         fallbackSrc: "/projects/slamx/monitor-slamx.jpeg",
         alt: "SlamX onboarding view",
         fit: "contain",
+        width: 1600,
+        height: 900,
       },
     ],
     visibility: "public",

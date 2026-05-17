@@ -4,7 +4,7 @@
   "description": "Personal website and project portfolio for Johannes Grof.",
   "private": true,
   "type": "module",
-  "homepage": "https://johannesgrof.me",
+  "homepage": "https://www.johannesgrof.me",
   "repository": {
     "type": "git",
     "url": "https://github.com/jx-grxf/johannesgrof.me.git"
@@ -17,9 +17,14 @@
     "check": "astro check"
   },
   "dependencies": {
-    "@astrojs/vercel": "10.0.6",
+    "@astrojs/vercel": "10.0.7",
     "@vercel/speed-insights": "^2.0.0",
-    "astro": "6.2.1"
+    "astro": "6.3.3"
+  },
+  "overrides": {
+    "@vercel/routing-utils": "6.2.0",
+    "devalue": "5.8.1",
+    "path-to-regexp": "6.3.0"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.9",

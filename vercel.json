@@ -1,11 +1,47 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "johannesgrof.com"
+        }
+      ],
+      "destination": "https://www.johannesgrof.me/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.johannesgrof.com"
+        }
+      ],
+      "destination": "https://www.johannesgrof.me/:path*",
+      "permanent": true
+    },
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "johannesgrof.me"
+        }
+      ],
+      "destination": "https://www.johannesgrof.me/:path*",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; base-uri 'self'; connect-src 'self' https://api.github.com https://vitals.vercel-insights.com; frame-ancestors 'self'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://va.vercel-scripts.com https://vercel.live; style-src 'self' 'unsafe-inline'; form-action 'self'"
+          "value": "default-src 'self'; base-uri 'self'; connect-src 'self' https://api.github.com https://vitals.vercel-insights.com; frame-ancestors 'none'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://vercel.live; style-src 'self' 'unsafe-inline'; form-action 'self'"
         },
         {
           "key": "Referrer-Policy",

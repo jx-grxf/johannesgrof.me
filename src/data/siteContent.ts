@@ -5,6 +5,7 @@ export const siteContent = {
     eyebrow: "student developer / austria",
     title: "Building useful tools before the idea gets boring.",
     body: "I'm a student at HTL Kaindorf in Austria. I enjoy building macOS apps, automations, and small apps or CLI tools that turn annoying technical problems into something fun and usable.",
+    proof: "7 public projects · native macOS apps · shipped GitHub releases · TypeScript / Swift / Python",
     primaryAction: "View projects",
     secondaryAction: "Skills",
     githubAction: "GitHub",
@@ -14,16 +15,16 @@ export const siteContent = {
     title: "Tools and areas I work with.",
     groups: [
       {
-        title: "Languages and apps",
+        title: "Native and web build work",
         items: ["TypeScript", "Swift", "Python", "Astro", "macOS utilities", "CLI tools"],
       },
       {
-        title: "Automation and AI workflow",
-        items: ["Codex", "Claude Code", "OpenClaw", "Browser automation", "Local-first agent tooling"],
+        title: "Developer automation",
+        items: ["Browser automation", "Document workflows", "GitHub releases", "Local-first agent tooling"],
       },
       {
-        title: "Practical build work",
-        items: ["Small websites", "Document workflows", "GitHub", "Debugging real device/app problems"],
+        title: "AI-assisted tooling",
+        items: ["Codex", "OpenClaw", "Claude Code", "Provider-aware workflows", "Debugging real device/app problems"],
       },
     ],
   },
@@ -40,7 +41,7 @@ export const siteContent = {
   about: {
     eyebrow: "about",
     title: "Student, builder, fast learner.",
-    body: "I live in Austria and am a first-year student at HTBLA Kaindorf. I love programming, especially when a project solves a real problem or makes a technical workflow easier. I know my way around AI tools like Codex and OpenClaw, keep up with new technology, and adapt quickly when the tools or requirements change.",
+    body: "I live in Austria and am a first-year student at HTBLA Kaindorf. I love programming, especially when a project solves a real problem or makes a technical workflow easier. I build with TypeScript, Swift, Python, and AI-assisted workflows, but the goal is always the shipped tool, not the toolchain hype.",
   },
   contact: {
     eyebrow: "contact",

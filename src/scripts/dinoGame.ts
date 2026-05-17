@@ -352,17 +352,6 @@ if (
     });
   });
 
-  window.setTimeout(() => {
-    if (gameShell.classList.contains("is-unlocked") || !hintButton || hasShownContactHint) {
-      return;
-    }
-
-    hintButton.textContent = "Have you found the easter egg yet?";
-    hintButton.dataset.hintVariant = "intro";
-    hintButton.hidden = false;
-    requestAnimationFrame(() => hintButton.classList.add("is-visible"));
-  }, 5200);
-
   hintButton?.addEventListener("click", () => {
     hideHint();
     scheduleContactHint();
