@@ -5,7 +5,7 @@ export interface ShowcaseImage {
   cardSrc?: string;
   fallbackSrc?: string;
   alt: string;
-  fit?: "cover" | "contain";
+  fit?: "cover" | "contain" | "banner";
   width?: number;
   height?: number;
 }
@@ -276,6 +276,13 @@ export const featuredProjects: Project[] = [
     npmPackage: "@jx-grxf/patchpilot",
     platformLabels: ["npm", "Terminal"],
     proofLabels: ["npm package", "GitHub release", "Agent TUI"],
+    logo: {
+      src: "/projects/patchpilot/logo.png",
+      alt: "PatchPilot logo",
+      fit: "contain",
+      width: 1254,
+      height: 1254,
+    },
     highlights: [
       "Shows provider, model, session, token, cache, and cost telemetry in the terminal.",
       "Keeps transcript, permission state, and approval prompts visible while working.",
@@ -288,12 +295,19 @@ export const featuredProjects: Project[] = [
     ],
     showcase: [
       {
+        src: "/projects/patchpilot/banner.png",
+        alt: "PatchPilot product banner",
+        fit: "banner",
+        width: 2172,
+        height: 724,
+      },
+      {
         src: "/projects/patchpilot/hero.webp",
         fallbackSrc: "/projects/patchpilot/hero.png",
         alt: "PatchPilot TUI session",
         fit: "contain",
-        width: 1600,
-        height: 900,
+        width: 2856,
+        height: 1904,
       },
     ],
     visibility: "public",
