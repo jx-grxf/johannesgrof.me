@@ -5,7 +5,7 @@ export interface ShowcaseImage {
   cardSrc?: string;
   fallbackSrc?: string;
   alt: string;
-  fit?: "cover" | "contain";
+  fit?: "cover" | "contain" | "banner";
   width?: number;
   height?: number;
 }
@@ -295,19 +295,19 @@ export const featuredProjects: Project[] = [
     ],
     showcase: [
       {
+        src: "/projects/patchpilot/banner.png",
+        alt: "PatchPilot product banner",
+        fit: "banner",
+        width: 2172,
+        height: 724,
+      },
+      {
         src: "/projects/patchpilot/hero.webp",
         fallbackSrc: "/projects/patchpilot/hero.png",
         alt: "PatchPilot TUI session",
         fit: "contain",
         width: 2856,
         height: 1904,
-      },
-      {
-        src: "/projects/patchpilot/banner.png",
-        alt: "PatchPilot product banner",
-        fit: "contain",
-        width: 2172,
-        height: 724,
       },
     ],
     visibility: "public",

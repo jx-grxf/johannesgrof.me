@@ -1458,6 +1458,14 @@ pre {
   padding: clamp(8px, 1.6vw, 18px);
 }
 
+.showcase-image.banner {
+  aspect-ratio: 3 / 1;
+  max-height: min(560px, 42vw);
+  background: #030912;
+  object-fit: contain;
+  padding: clamp(10px, 1.5vw, 18px);
+}
+
 .project-detail-grid {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
