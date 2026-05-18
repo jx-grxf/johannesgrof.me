@@ -261,7 +261,7 @@ export const featuredProjects: Project[] = [
     description:
       "PatchPilot keeps agent sessions, approvals, model choice, token use, and patch review visible inside one terminal workflow instead of hiding the run behind a chat box.",
     audience: "For developers who want agent experiments to stay inspectable, approval-aware, and close to the repository they are changing.",
-    result: "v0.4.0 adds a clearer TUI, safer release automation, provider-aware model handling, and better token and session visibility.",
+    result: "v1.0.0 ships the stable CLI release with clearer TUI controls, hardened permissions, Gemini-Wrapper routing, and better token and session visibility.",
     caseStudy: {
       problem: "Coding-agent runs become hard to trust when permissions, provider state, model selection, token use, and patch context are scattered or hidden.",
       built: "I built an Ink-based TUI around sticky approvals, transcript panes, provider metadata, safer tool execution, and local/cloud model selection.",
@@ -271,8 +271,8 @@ export const featuredProjects: Project[] = [
     featuredTier: "project",
     repo: "jx-grxf/PatchPilot",
     githubUrl: "https://github.com/jx-grxf/PatchPilot",
-    releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v0.4.0",
-    fallbackVersion: "v0.4.0",
+    releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v1.0.0",
+    fallbackVersion: "v1.0.0",
     npmPackage: "@jx-grxf/patchpilot",
     platformLabels: ["npm", "Terminal"],
     proofLabels: ["npm package", "GitHub release", "Agent TUI"],
