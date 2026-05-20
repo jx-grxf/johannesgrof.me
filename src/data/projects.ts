@@ -228,7 +228,7 @@ export const featuredProjects: Project[] = [
       result: "The device becomes usable again without replacing the hardware.",
     },
     stack: ["TypeScript", "UPnP", "DLNA"],
-    featuredTier: "featured",
+    featuredTier: "project",
     repo: "jx-grxf/Caruso-Reborn",
     githubUrl: "https://github.com/jx-grxf/Caruso-Reborn",
     releaseUrl: "https://github.com/jx-grxf/Caruso-Reborn/releases/tag/v0.2.1",
@@ -268,7 +268,7 @@ export const featuredProjects: Project[] = [
       result: "The run is easier to inspect and steer while the repository context stays close.",
     },
     stack: ["TypeScript", "Ink", "AI"],
-    featuredTier: "project",
+    featuredTier: "featured",
     repo: "jx-grxf/PatchPilot",
     githubUrl: "https://github.com/jx-grxf/PatchPilot",
     releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v1.0.0",
@@ -448,9 +448,9 @@ export const projectsBySlug = new Map(featuredProjects.map((project) => [project
 const orderedProjects = (slugs: string[]) =>
   slugs.map((slug) => projectsBySlug.get(slug)).filter((project): project is Project => Boolean(project));
 
-export const featuredShowcaseProjects = orderedProjects(["macdev", "caruso-reborn", "slamx"]);
+export const featuredShowcaseProjects = orderedProjects(["macdev", "patchpilot", "slamx"]);
 
-export const standardProjects = orderedProjects(["openclaw-discord-voice", "patchpilot", "digi2pdf", "docxtopdf"]);
+export const standardProjects = orderedProjects(["openclaw-discord-voice", "caruso-reborn", "digi2pdf", "docxtopdf"]);
 
 export const publicProjects = [...featuredShowcaseProjects, ...standardProjects];
 
