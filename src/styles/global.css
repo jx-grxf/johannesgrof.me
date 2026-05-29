@@ -628,6 +628,30 @@ pre {
   transform: translateY(-3px) scale(1.02);
 }
 
+.featured-card-placeholder {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 6px;
+  text-align: center;
+  place-items: center;
+}
+
+.featured-card-placeholder-mark {
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 2rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: rgb(255 255 255 / 92%);
+}
+
+.featured-card-placeholder-tagline {
+  max-width: 32ch;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: rgb(255 255 255 / 62%);
+}
+
 .featured-card-logo {
   position: absolute;
   right: 16px;

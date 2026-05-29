@@ -76,7 +76,7 @@ export const featuredProjects: Project[] = [
   {
     name: "PortPirate",
     slug: "portpirate",
-    status: "preview",
+    status: "coming soon",
     logo: {
       src: "/projects/portpirate/app-icon.webp",
       fallbackSrc: "/projects/portpirate/app-icon.png",
@@ -257,7 +257,7 @@ export const featuredProjects: Project[] = [
   {
     name: "PatchPilot",
     slug: "patchpilot",
-    status: "preview",
+    status: "beta",
     tagline: "Permissioned coding-agent TUI for local and cloud model runs.",
     description:
       "PatchPilot keeps agent sessions, approvals, model choice, token use, and patch review visible inside one terminal workflow instead of hiding the run behind a chat box.",
@@ -370,7 +370,7 @@ export const featuredProjects: Project[] = [
   {
     name: "SlamX",
     slug: "slamx",
-    status: "beta",
+    status: "active",
     logo: {
       src: "/projects/slamx/logo.webp",
       fallbackSrc: "/projects/slamx/logo.png",
@@ -390,7 +390,7 @@ export const featuredProjects: Project[] = [
       result: "It is a fun experiment, but also proof that the app reads actual device telemetry.",
     },
     stack: ["Swift", "macOS", "Sensors"],
-    featuredTier: "featured",
+    featuredTier: "project",
     repo: "jx-grxf/SlamX",
     githubUrl: "https://github.com/jx-grxf/SlamX",
     releaseUrl: "https://github.com/jx-grxf/SlamX/releases/tag/v0.3.4",
@@ -436,6 +436,14 @@ export const featuredProjects: Project[] = [
     name: "BriskEdit",
     slug: "briskedit",
     status: "in development",
+    logo: {
+      src: "/projects/briskedit/logo.webp",
+      fallbackSrc: "/projects/briskedit/logo.png",
+      alt: "BriskEdit app icon",
+      fit: "contain",
+      width: 256,
+      height: 256,
+    },
     tagline: "Native macOS text editor for developers, built without Electron.",
     description:
       "A SwiftUI and AppKit editor that opens files instantly, stays under 120 MB idle, and runs your code from a button that figures out the toolchain itself, with no tasks.json, no extension host, and no second runtime.",
@@ -447,7 +455,7 @@ export const featuredProjects: Project[] = [
       result: "A fast, native editing surface that uses the tools already on the machine instead of a marketplace of extensions.",
     },
     stack: ["Swift", "SwiftUI", "AppKit"],
-    featuredTier: "project",
+    featuredTier: "featured",
     repo: "jx-grxf/BriskEdit",
     githubUrl: "https://github.com/jx-grxf/BriskEdit",
     releaseUrl: "https://github.com/jx-grxf/BriskEdit/releases",
@@ -460,7 +468,16 @@ export const featuredProjects: Project[] = [
       "Ships an integrated SwiftTerm terminal, markdown preview, and gitignore-aware find.",
       "No telemetry, no account, no extension marketplace, and no Electron runtime.",
     ],
-    showcase: [],
+    showcase: [
+      {
+        src: "/projects/briskedit/hero.webp",
+        fallbackSrc: "/projects/briskedit/hero.png",
+        alt: "BriskEdit native macOS editor with integrated terminal and run button",
+        fit: "cover",
+        width: 1600,
+        height: 900,
+      },
+    ],
     visibility: "public",
   },
   {
@@ -478,7 +495,7 @@ export const featuredProjects: Project[] = [
       result: "Voice input stays private and self-hosted while the runtime and transport stay explicit.",
     },
     stack: ["TypeScript", "Discord", "Whisper"],
-    featuredTier: "project",
+    featuredTier: "featured",
     repo: "jx-grxf/Hermes-Discord-Voice",
     githubUrl: "https://github.com/jx-grxf/Hermes-Discord-Voice",
     releaseUrl: "https://github.com/jx-grxf/Hermes-Discord-Voice/releases",
@@ -491,12 +508,28 @@ export const featuredProjects: Project[] = [
       "Supports Piper, macOS say, ElevenLabs, or a custom TTS command for replies.",
       "Keeps voice input private by default with a per-guild speaker allowlist.",
     ],
-    showcase: [],
+    showcase: [
+      {
+        src: "/projects/hermes-discord-voice/banner.webp",
+        fallbackSrc: "/projects/hermes-discord-voice/banner.png",
+        alt: "Hermes-Voice wordmark",
+        fit: "contain",
+        width: 1672,
+        height: 941,
+      },
+    ],
     visibility: "public",
   },
 ];
 
 export const upcomingProjects: UpcomingProject[] = [
+  {
+    name: "PortPirate",
+    status: "coming soon",
+    description: "macOS menu bar control for local dev ports, mapping every listener to its process, repository, and the agent that started it.",
+    stack: ["Swift", "macOS", "Menu Bar"],
+    visibility: "public",
+  },
   {
     name: "TypeBot",
     status: "coming soon",
@@ -511,11 +544,10 @@ export const projectsBySlug = new Map(featuredProjects.map((project) => [project
 const orderedProjects = (slugs: string[]) =>
   slugs.map((slug) => projectsBySlug.get(slug)).filter((project): project is Project => Boolean(project));
 
-export const featuredShowcaseProjects = orderedProjects(["portpirate", "patchpilot", "slamx"]);
+export const featuredShowcaseProjects = orderedProjects(["hermes-discord-voice", "patchpilot", "briskedit"]);
 
 export const standardProjects = orderedProjects([
-  "briskedit",
-  "hermes-discord-voice",
+  "slamx",
   "openclaw-discord-voice",
   "caruso-reborn",
   "digi2pdf",

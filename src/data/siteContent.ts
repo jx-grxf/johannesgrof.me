@@ -41,7 +41,7 @@ export const siteContent = {
   about: {
     eyebrow: "about",
     title: "Student, builder, fast learner.",
-    body: "I live in Austria and am a first-year student at HTBLA Kaindorf. I love programming, especially when a project solves a real problem or makes a technical workflow easier. I build with TypeScript, Swift, Python, and AI-assisted workflows, but the goal is always the shipped tool, not the toolchain hype.",
+    body: "I live in Austria and am a first-year student at HTL Kaindorf. I love programming, especially when a project solves a real problem or makes a technical workflow easier. I build with TypeScript, Swift, Python, and AI-assisted workflows, but the goal is always the shipped tool, not the toolchain hype.",
   },
   contact: {
     eyebrow: "contact",
