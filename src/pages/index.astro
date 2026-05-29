@@ -64,7 +64,7 @@ const profileSchema = {
     sameAs: ["https://github.com/jx-grxf", "https://www.linkedin.com/in/johannes-grof/"],
     affiliation: {
       "@type": "EducationalOrganization",
-      name: "HTBLA Kaindorf",
+      name: "HTL Kaindorf",
     },
     knowsAbout: ["TypeScript", "Swift", "Python", "Astro", "macOS apps", "AI automation", "developer tools"],
   },
@@ -122,15 +122,22 @@ const profileSchema = {
           {
             featuredShowcaseProjects.map((project, index) => {
               const heroImage = project.showcase[0];
-              const cardImageSrc = heroImage.cardSrc ?? heroImage.src;
+              const cardImageSrc = heroImage?.cardSrc ?? heroImage?.src;
 
               return (
                 <a class="project-card featured-project-card reveal" style={`--reveal-delay: ${index * 80}ms`} href={`/projects/${project.slug}/`}>
                   <div class="featured-card-media">
-                    <picture>
-                      <source srcset={cardImageSrc} type="image/webp" />
-                      <img class="featured-card-image" src={cardImageSrc} alt={heroImage.alt} width={heroImage.width} height={heroImage.height} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
-                    </picture>
+                    {cardImageSrc ? (
+                      <picture>
+                        <source srcset={cardImageSrc} type="image/webp" />
+                        <img class="featured-card-image" src={cardImageSrc} alt={heroImage.alt} width={heroImage.width} height={heroImage.height} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
+                      </picture>
+                    ) : (
+                      <div class="featured-card-placeholder" aria-hidden="true">
+                        <span class="featured-card-placeholder-mark">{project.name}</span>
+                        <span class="featured-card-placeholder-tagline">{project.tagline}</span>
+                      </div>
+                    )}
                     {project.logo && (
                       <picture>
                         {project.logo.fallbackSrc && <source srcset={project.logo.src} type="image/webp" />}
