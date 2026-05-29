@@ -5,7 +5,7 @@ export const siteContent = {
     eyebrow: "student developer / austria",
     title: "Building useful tools before the idea gets boring.",
     body: "I'm a student at HTL Kaindorf in Austria. I enjoy building macOS apps, automations, and small apps or CLI tools that turn annoying technical problems into something fun and usable.",
-    proof: "7 public projects · native macOS apps · shipped GitHub releases · TypeScript / Swift / Python",
+    proof: "native macOS apps · shipped GitHub releases · TypeScript / Swift / Python",
     primaryAction: "View projects",
     secondaryAction: "Skills",
     githubAction: "GitHub",

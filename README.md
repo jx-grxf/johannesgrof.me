@@ -20,7 +20,7 @@ This repository contains the source for my personal portfolio website. It is bui
 
 ## Showcase
 
-![Portfolio project showcase](public/projects/macdev/showcase.webp)
+![Portfolio project showcase](public/projects/portpirate/showcase.webp)
 
 ## Highlights
 
@@ -35,10 +35,11 @@ This repository contains the source for my personal portfolio website. It is bui
 
 | Project | Public proof |
 | --- | --- |
-| [MacDev](https://www.johannesgrof.me/projects/macdev/) | Native macOS app with DMG release. |
-| [Caruso-Reborn](https://www.johannesgrof.me/projects/caruso-reborn/) | Local playback dashboard with GitHub release. |
-| [SlamX](https://www.johannesgrof.me/projects/slamx/) | Sensor-only macOS experiment with release assets. |
+| [PortPirate](https://www.johannesgrof.me/projects/portpirate/) | Native macOS menu bar app with DMG release. |
 | [PatchPilot](https://www.johannesgrof.me/projects/patchpilot/) | npm package and coding-agent TUI release. |
+| [SlamX](https://www.johannesgrof.me/projects/slamx/) | Sensor-only macOS experiment with release assets. |
+| [Caruso-Reborn](https://www.johannesgrof.me/projects/caruso-reborn/) | Local playback dashboard with GitHub release. |
+| [BriskEdit](https://www.johannesgrof.me/projects/briskedit/) | Native macOS developer text editor (in development). |
 
 ## Stack
 
