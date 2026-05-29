@@ -16,10 +16,11 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const github = await getProjectGitHubInfo(project);
+const hasRelease = Boolean(github.downloadGroup) || (Boolean(github.version) && github.version !== "unreleased");
 const navItems = [
   { label: "Projects", href: "/#projects" },
   { label: "GitHub", href: project.githubUrl, external: true },
-  { label: "Release", href: github.releaseUrl, external: true },
+  ...(hasRelease ? [{ label: "Release", href: github.releaseUrl, external: true }] : []),
 ];
 const [heroImage, ...galleryImages] = project.showcase;
 const stableDownloads = github.downloadGroup?.stableDownloads ?? (github.downloadGroup?.stable ? [github.downloadGroup.stable] : []);
@@ -83,13 +84,14 @@ const downloadValue = project.npmPackage
     ? stableDownloads.length > 1
       ? `${stableDownloads.length} release assets`
       : stableDownloads[0]?.label ?? "GitHub release"
-    : "GitHub release";
+    : "GitHub repository";
+const downloadLabel = project.npmPackage || github.downloadGroup ? "Download" : "Source";
 const metaItems = [
-  { label: "Latest release", value: github.version },
+  hasRelease ? { label: "Latest release", value: github.version } : undefined,
   { label: "Platform", value: platformValue },
-  { label: "Download", value: downloadValue },
+  { label: downloadLabel, value: downloadValue },
   { label: "Updated", value: formatDate(github.updatedAt) },
-];
+].filter((item): item is { label: string; value: string } => Boolean(item));
 const metadataNote =
   github.metadataState === "live"
     ? undefined
@@ -105,7 +107,7 @@ const metadataNote =
       title={`${project.name} · Johannes Grof`}
       description={`${project.name}: ${project.tagline}`}
       canonicalPath={`/projects/${project.slug}/`}
-      image={heroImage.src}
+      image={heroImage?.src}
       type="article"
     />
   </head>
@@ -125,7 +127,7 @@ const metadataNote =
           )}
           <div class="project-kicker">
             <span class={`status ${statusClass(project.status)}`}>{statusLabel(project.status)}</span>
-            <span>{github.version}</span>
+            {hasRelease && <span>{github.version}</span>}
           </div>
           <h1 id="project-title">{project.name}</h1>
           <p class="project-tagline">{project.tagline}</p>
@@ -175,7 +177,7 @@ const metadataNote =
               )
             )}
             <a class="button secondary" href={project.githubUrl} target="_blank" rel="noreferrer">Open source</a>
-            <a class="button secondary" href={github.releaseUrl} target="_blank" rel="noreferrer">Latest release</a>
+            {hasRelease && <a class="button secondary" href={github.releaseUrl} target="_blank" rel="noreferrer">Latest release</a>}
           </div>
         </div>
 
@@ -192,12 +194,14 @@ const metadataNote =
         </aside>
       </section>
 
-      <section class="project-showcase" aria-label={`${project.name} showcase`}>
-        <picture>
-          {heroImage.fallbackSrc && <source srcset={heroImage.src} type="image/webp" />}
-          <img class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} width={heroImage.width} height={heroImage.height} loading="eager" decoding="async" />
-        </picture>
-      </section>
+      {heroImage && (
+        <section class="project-showcase" aria-label={`${project.name} showcase`}>
+          <picture>
+            {heroImage.fallbackSrc && <source srcset={heroImage.src} type="image/webp" />}
+            <img class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} width={heroImage.width} height={heroImage.height} loading="eager" decoding="async" />
+          </picture>
+        </section>
+      )}
 
       <section class="case-study-panel" aria-label={`${project.name} case study`}>
         <article>

@@ -1,4 +1,4 @@
-export type ProjectStatus = "active" | "beta" | "experimental" | "preview" | "coming soon";
+export type ProjectStatus = "active" | "beta" | "experimental" | "preview" | "in development" | "coming soon";
 
 export interface ShowcaseImage {
   src: string;
@@ -57,6 +57,7 @@ export const statusLabel = (status: ProjectStatus) => {
     beta: "beta release",
     experimental: "active experiment",
     preview: "shipped preview",
+    "in development": "in development",
     "coming soon": "coming soon",
   };
 
@@ -73,52 +74,52 @@ export interface UpcomingProject {
 
 export const featuredProjects: Project[] = [
   {
-    name: "MacDev",
-    slug: "macdev",
+    name: "PortPirate",
+    slug: "portpirate",
     status: "preview",
     logo: {
-      src: "/projects/macdev/app-icon.webp",
-      fallbackSrc: "/projects/macdev/app-icon.png",
-      alt: "MacDev app icon",
+      src: "/projects/portpirate/app-icon.webp",
+      fallbackSrc: "/projects/portpirate/app-icon.png",
+      alt: "PortPirate app icon",
       fit: "contain",
       width: 256,
       height: 256,
     },
-    tagline: "Native macOS menu bar control for local development projects.",
+    tagline: "macOS menu bar control for local dev ports.",
     description:
-      "A Swift menu bar app that shows which local runtimes are listening, diagnoses busy ports, and opens or stops exact localhost processes from one native surface.",
+      "A Swift menu bar app that maps every listening port to its process, its repository, and the AI agent that started it, so localhost stays visible and exact processes can be stopped from one native surface.",
     audience: "For Mac developers who want localhost state, runtime warnings, and safe process control without digging through terminals.",
     result: "Turns messy local server state into a visible menu bar workflow.",
     caseStudy: {
-      problem: "Local development servers keep running, ports collide, and macOS system listeners can look like broken dev processes.",
-      built: "I built a native Swift menu bar app that scans listening TCP ports, classifies runtimes, explains warnings, and gates process control behind precise actions.",
-      result: "MacDev keeps localhost state visible while staying out of the main workspace.",
+      problem: "Local development servers keep running, ports collide, and it is hard to tell which process, repository, or agent owns a given listener.",
+      built: "I built a native Swift menu bar app that scans listening TCP ports, links each one to its process, repo, and agent, and gates process control behind precise actions.",
+      result: "PortPirate keeps localhost state visible while staying out of the main workspace.",
     },
     stack: ["Swift", "macOS", "Menu Bar"],
     featuredTier: "featured",
-    repo: "jx-grxf/MacDev",
-    githubUrl: "https://github.com/jx-grxf/MacDev",
-    releaseUrl: "https://github.com/jx-grxf/MacDev/releases/tag/v0.2.0",
-    fallbackVersion: "v0.2.0",
+    repo: "jx-grxf/PortPirate",
+    githubUrl: "https://github.com/jx-grxf/PortPirate",
+    releaseUrl: "https://github.com/jx-grxf/PortPirate/releases/tag/v0.2.2",
+    fallbackVersion: "v0.2.2",
     platformLabels: ["macOS"],
     proofLabels: ["DMG release", "Native app", "GitHub release"],
     fallbackDownload: {
-      assetName: "MacDev-0.2.0.dmg",
-      assetUrl: "https://github.com/jx-grxf/MacDev/releases/download/v0.2.0/MacDev-0.2.0.dmg",
-      size: 4938950,
+      assetName: "MacDev-0.2.2.dmg",
+      assetUrl: "https://github.com/jx-grxf/PortPirate/releases/download/v0.2.2/MacDev-0.2.2.dmg",
+      size: 4490078,
       kind: "macos",
     },
     highlights: [
       "Runs as a native macOS menu bar utility with a dedicated runtime browser.",
-      "Classifies local runtimes, system listeners, and warning states from live TCP ports.",
+      "Maps each listening TCP port to its process, repository, and the agent that started it.",
       "Opens localhost URLs and stops exact PIDs instead of using broad process commands.",
     ],
     showcase: [
       {
-        src: "/projects/macdev/showcase.webp",
-        cardSrc: "/projects/macdev/showcase-card.webp",
-        fallbackSrc: "/projects/macdev/showcase.png",
-        alt: "MacDev menu bar runtime panel with localhost runtimes, warnings, and diagnostics",
+        src: "/projects/portpirate/showcase.webp",
+        cardSrc: "/projects/portpirate/showcase-card.webp",
+        fallbackSrc: "/projects/portpirate/showcase.png",
+        alt: "PortPirate menu bar runtime panel with localhost runtimes, warnings, and diagnostics",
         fit: "contain",
         width: 1600,
         height: 900,
@@ -261,7 +262,7 @@ export const featuredProjects: Project[] = [
     description:
       "PatchPilot keeps agent sessions, approvals, model choice, token use, and patch review visible inside one terminal workflow instead of hiding the run behind a chat box.",
     audience: "For developers who want agent experiments to stay inspectable, approval-aware, and close to the repository they are changing.",
-    result: "v1.0.0 ships the stable CLI release with clearer TUI controls, hardened permissions, Gemini-Wrapper routing, and better token and session visibility.",
+    result: "The stable CLI release ships clearer TUI controls, hardened permissions, Gemini-Wrapper routing, and better token and session visibility.",
     caseStudy: {
       problem: "Coding-agent runs become hard to trust when permissions, provider state, model selection, token use, and patch context are scattered or hidden.",
       built: "I built an Ink-based TUI around sticky approvals, transcript panes, provider metadata, safer tool execution, and local/cloud model selection.",
@@ -271,8 +272,8 @@ export const featuredProjects: Project[] = [
     featuredTier: "featured",
     repo: "jx-grxf/PatchPilot",
     githubUrl: "https://github.com/jx-grxf/PatchPilot",
-    releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v1.0.0",
-    fallbackVersion: "v1.0.0",
+    releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v1.2.1",
+    fallbackVersion: "v1.2.1",
     npmPackage: "@jx-grxf/patchpilot",
     platformLabels: ["npm", "Terminal"],
     proofLabels: ["npm package", "GitHub release", "Agent TUI"],
@@ -431,6 +432,68 @@ export const featuredProjects: Project[] = [
     ],
     visibility: "public",
   },
+  {
+    name: "BriskEdit",
+    slug: "briskedit",
+    status: "in development",
+    tagline: "Native macOS text editor for developers, built without Electron.",
+    description:
+      "A SwiftUI and AppKit editor that opens files instantly, stays under 120 MB idle, and runs your code from a button that figures out the toolchain itself, with no tasks.json, no extension host, and no second runtime.",
+    audience: "For developers who want a fast native editor for quick edits and small projects instead of a heavyweight Electron setup.",
+    result: "Opens before your finger leaves the trackpad and runs C, Swift, Python, JS/TS, Rust, or Go without config files.",
+    caseStudy: {
+      problem: "Opening a heavyweight editor to fix one typo means waiting on RAM, an extension host, and a folder index before you can type.",
+      built: "I built a native macOS editor on TextKit 2 and AppKit with an integrated terminal, run button, markdown preview, and gitignore-aware find, all without Electron or telemetry.",
+      result: "A fast, native editing surface that uses the tools already on the machine instead of a marketplace of extensions.",
+    },
+    stack: ["Swift", "SwiftUI", "AppKit"],
+    featuredTier: "project",
+    repo: "jx-grxf/BriskEdit",
+    githubUrl: "https://github.com/jx-grxf/BriskEdit",
+    releaseUrl: "https://github.com/jx-grxf/BriskEdit/releases",
+    fallbackVersion: "unreleased",
+    platformLabels: ["macOS"],
+    proofLabels: ["Swift 6", "SwiftUI + AppKit", "Source available"],
+    highlights: [
+      "Opens large files instantly with a TextKit 2 view and no launch-time indexing.",
+      "Runs code from one button that discovers the right toolchain per file.",
+      "Ships an integrated SwiftTerm terminal, markdown preview, and gitignore-aware find.",
+      "No telemetry, no account, no extension marketplace, and no Electron runtime.",
+    ],
+    showcase: [],
+    visibility: "public",
+  },
+  {
+    name: "Hermes-Discord-Voice",
+    slug: "hermes-discord-voice",
+    status: "in development",
+    tagline: "Self-hosted Discord voice bridge for the Hermes agent.",
+    description:
+      "A TypeScript bridge that joins a Discord voice channel, transcribes a spoken turn locally with Whisper, sends the text to Hermes, and plays the reply back through a configurable TTS provider.",
+    audience: "For personal and small trusted Discord servers that want voice access to a local Hermes agent without a hosted service.",
+    result: "Turns a Discord voice channel into a private, self-hosted voice interface for Hermes.",
+    caseStudy: {
+      problem: "Talking to a local agent over Discord voice usually means trusting a hosted bot and giving up control of the speech pipeline.",
+      built: "I built a self-hosted bridge around local whisper-cli transcription, per-guild sessions, an allowlist, and pluggable TTS providers.",
+      result: "Voice input stays private and self-hosted while the runtime and transport stay explicit.",
+    },
+    stack: ["TypeScript", "Discord", "Whisper"],
+    featuredTier: "project",
+    repo: "jx-grxf/Hermes-Discord-Voice",
+    githubUrl: "https://github.com/jx-grxf/Hermes-Discord-Voice",
+    releaseUrl: "https://github.com/jx-grxf/Hermes-Discord-Voice/releases",
+    fallbackVersion: "unreleased",
+    platformLabels: ["Node.js", "Discord"],
+    proofLabels: ["Local STT/TTS", "Self-hosted", "Source available"],
+    highlights: [
+      "Joins Discord voice, records a turn, and transcribes it locally with whisper-cli.",
+      "Routes transcripts to Hermes over CLI by default, with optional API/Gateway transport.",
+      "Supports Piper, macOS say, ElevenLabs, or a custom TTS command for replies.",
+      "Keeps voice input private by default with a per-guild speaker allowlist.",
+    ],
+    showcase: [],
+    visibility: "public",
+  },
 ];
 
 export const upcomingProjects: UpcomingProject[] = [
@@ -448,9 +511,16 @@ export const projectsBySlug = new Map(featuredProjects.map((project) => [project
 const orderedProjects = (slugs: string[]) =>
   slugs.map((slug) => projectsBySlug.get(slug)).filter((project): project is Project => Boolean(project));
 
-export const featuredShowcaseProjects = orderedProjects(["macdev", "patchpilot", "slamx"]);
+export const featuredShowcaseProjects = orderedProjects(["portpirate", "patchpilot", "slamx"]);
 
-export const standardProjects = orderedProjects(["openclaw-discord-voice", "caruso-reborn", "digi2pdf", "docxtopdf"]);
+export const standardProjects = orderedProjects([
+  "briskedit",
+  "hermes-discord-voice",
+  "openclaw-discord-voice",
+  "caruso-reborn",
+  "digi2pdf",
+  "docxtopdf",
+]);
 
 export const publicProjects = [...featuredShowcaseProjects, ...standardProjects];
 

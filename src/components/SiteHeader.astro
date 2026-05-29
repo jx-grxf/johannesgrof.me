@@ -3,7 +3,6 @@ interface NavItem {
   label: string;
   href: string;
   external?: boolean;
-  dinoTrigger?: boolean;
 }
 
 interface Props {
@@ -26,7 +25,6 @@ const { navItems, ariaLabel = "Primary navigation" } = Astro.props;
           href={item.href}
           target={item.external ? "_blank" : undefined}
           rel={item.external ? "noreferrer" : undefined}
-          data-dino-trigger={item.dinoTrigger ? "true" : undefined}
         >
           {item.label}
         </a>
