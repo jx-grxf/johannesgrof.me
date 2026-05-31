@@ -246,7 +246,7 @@ const buildFallbackDownloadGroup = (project: Project): ProjectReleaseGroup | und
 };
 
 const buildFallbackInfo = (project: Project): ProjectGitHubInfo => {
-  const downloadGroup = buildFallbackDownloadGroup(project);
+  const downloadGroup = project.downloadsDisabled ? undefined : buildFallbackDownloadGroup(project);
 
   return {
     metadataState: "fallback",
@@ -299,6 +299,10 @@ const buildCommands = (project: Project, releaseUrl: string, downloadGroup?: Pro
   const repoName = normalizeRepoName(project.repo);
   const commands: ProjectCommand[] = [];
 
+  if (project.downloadsDisabled) {
+    return commands;
+  }
+
   if (project.npmPackage) {
     commands.push(
       {
@@ -320,12 +324,15 @@ const buildCommands = (project: Project, releaseUrl: string, downloadGroup?: Pro
     {
       label: "source with GitHub CLI",
       command: `gh repo clone ${project.repo} && cd ${repoName}`,
-    },
-    {
+    }
+  );
+
+  if (!project.downloadsDisabled) {
+    commands.push({
       label: "latest release",
       command: `open ${releaseUrl}`,
-    },
-  );
+    });
+  }
 
   const downloads = downloadGroup?.stableDownloads.length
     ? downloadGroup.stableDownloads
@@ -345,6 +352,19 @@ export async function getProjectGitHubInfo(project: Project): Promise<ProjectGit
   const fallback = buildFallbackInfo(project);
 
   try {
+    if (project.downloadsDisabled) {
+      const repo = await fetchGitHubJson<GitHubRepo>(`https://api.github.com/repos/${project.repo}`, project, { warnOnFailure: true });
+
+      return {
+        ...fallback,
+        metadataState: repo ? "live" : fallback.metadataState,
+        stars: repo?.stargazers_count ?? fallback.stars,
+        forks: repo?.forks_count ?? fallback.forks,
+        language: repo?.language ?? fallback.language,
+        updatedAt: repo?.pushed_at ?? fallback.updatedAt,
+      };
+    }
+
     const [repo, releases] = await Promise.all([
       fetchGitHubJson<GitHubRepo>(`https://api.github.com/repos/${project.repo}`, project, { warnOnFailure: true }),
       fetchGitHubJson<GitHubRelease[]>(`https://api.github.com/repos/${project.repo}/releases?per_page=10`, project, {

@@ -1,4 +1,4 @@
-export type ProjectStatus = "active" | "beta" | "experimental" | "preview" | "in development" | "coming soon";
+export type ProjectStatus = "active" | "beta" | "experimental" | "preview" | "in development" | "coming soon" | "archived";
 
 export interface ShowcaseImage {
   src: string;
@@ -31,6 +31,7 @@ export interface Project {
   releaseUrl: string;
   fallbackVersion: string;
   npmPackage?: string;
+  downloadsDisabled?: boolean;
   platformLabels?: string[];
   proofLabels?: string[];
   fallbackDownload?: {
@@ -59,6 +60,7 @@ export const statusLabel = (status: ProjectStatus) => {
     preview: "shipped preview",
     "in development": "in development",
     "coming soon": "coming soon",
+    archived: "archived",
   };
 
   return labels[status];
@@ -316,55 +318,30 @@ export const featuredProjects: Project[] = [
   {
     name: "Digi2PDF",
     slug: "digi2pdf",
-    status: "experimental",
-    tagline: "Owned Digi4School ebooks to clean searchable PDFs.",
+    status: "archived",
+    tagline: "Archived and not accessible anymore due to legal matters.",
     description:
-      "A document capture and OCR workflow for turning difficult browser-based ebook exports into clean PDFs with explicit user confirmation.",
-    audience: "For students who own Digi4School books and need a cleaner private-study PDF workflow.",
-    result: "Captures pages, builds PDFs, and keeps OCR and confirmation controls visible.",
+      "This project has been archived and is no longer accessible or maintained due to legal matters.",
+    audience: "No public downloads, binaries, source distribution, or support are available anymore.",
+    result: "Project files and release access have been removed.",
     caseStudy: {
-      problem: "Some school ebook workflows are awkward when you want searchable notes or offline study material for books you already have access to.",
-      built: "I built a browser capture and OCR pipeline with explicit private-use confirmation, delay controls, and PDF cleanup.",
-      result: "The output is easier to search and archive while the tool keeps the user in control.",
+      problem: "The project is no longer publicly accessible.",
+      built: "The public project page has been reduced to an archive notice.",
+      result: "Downloads, release assets, usage claims, and support messaging are no longer shown.",
     },
-    stack: ["Python", "Selenium", "OCR"],
+    stack: ["Archived"],
     featuredTier: "project",
     repo: "jx-grxf/Digi2PDF",
     githubUrl: "https://github.com/jx-grxf/Digi2PDF",
-    releaseUrl: "https://github.com/jx-grxf/Digi2PDF/releases/tag/v0.3.1",
-    fallbackVersion: "v0.3.1",
-    platformLabels: ["macOS", "Windows"],
-    proofLabels: ["DMG release", "Windows EXE", "OCR workflow"],
-    fallbackDownloads: [
-      {
-        assetName: "Digi2PDF-v0.3.1-macos-arm64.dmg",
-        assetUrl: "https://github.com/jx-grxf/Digi2PDF/releases/download/v0.3.1/Digi2PDF-v0.3.1-macos-arm64.dmg",
-        size: 0,
-        kind: "macos",
-      },
-      {
-        assetName: "digi2pdf-v0.3.1-windows-x64.exe",
-        assetUrl: "https://github.com/jx-grxf/Digi2PDF/releases/download/v0.3.1/digi2pdf-v0.3.1-windows-x64.exe",
-        size: 0,
-        kind: "windows",
-      },
-    ],
+    releaseUrl: "https://github.com/jx-grxf/Digi2PDF",
+    fallbackVersion: "archived",
+    downloadsDisabled: true,
     highlights: [
-      "Offers ready-to-download macOS DMG and Windows EXE release assets.",
-      "Runs multi-book exports with recommended parallel Chrome sessions when a saved login is available.",
-      "Makes private-use confirmation explicit before export.",
-      "Keeps OCR, delay, and failure recovery controls visible in the terminal flow.",
+      "Archived and not accessible anymore due to legal matters.",
+      "No binaries, installers, source distribution, usage instructions, or support are provided.",
+      "Previous project files should not be mirrored, repackaged, redistributed, or requested.",
     ],
-    showcase: [
-      {
-        src: "/projects/digi2pdf/hero.webp",
-        fallbackSrc: "/projects/digi2pdf/hero.png",
-        alt: "Digi2PDF terminal workflow",
-        fit: "contain",
-        width: 1600,
-        height: 900,
-      },
-    ],
+    showcase: [],
     visibility: "public",
   },
   {

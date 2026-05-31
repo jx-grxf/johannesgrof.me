@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const github = await getProjectGitHubInfo(project);
-const hasRelease = Boolean(github.downloadGroup) || (Boolean(github.version) && github.version !== "unreleased");
+const hasRelease = !project.downloadsDisabled && (Boolean(github.downloadGroup) || (Boolean(github.version) && github.version !== "unreleased"));
 const navItems = [
   { label: "Projects", href: "/#projects" },
   { label: "GitHub", href: project.githubUrl, external: true },
@@ -77,15 +77,17 @@ const formatDate = (date: string) => {
   }).format(new Date(date));
 };
 
-const platformValue = project.platformLabels?.join(" / ") ?? github.language;
+const platformValue = project.downloadsDisabled ? "Archived" : project.platformLabels?.join(" / ") ?? github.language;
 const downloadValue = project.npmPackage
   ? "npm package"
+  : project.downloadsDisabled
+    ? "not accessible"
   : github.downloadGroup
     ? stableDownloads.length > 1
       ? `${stableDownloads.length} release assets`
       : stableDownloads[0]?.label ?? "GitHub release"
     : "GitHub repository";
-const downloadLabel = project.npmPackage || github.downloadGroup ? "Download" : "Source";
+const downloadLabel = project.downloadsDisabled ? "Access" : project.npmPackage || github.downloadGroup ? "Download" : "Source";
 const metaItems = [
   hasRelease ? { label: "Latest release", value: github.version } : undefined,
   { label: "Platform", value: platformValue },
@@ -176,7 +178,7 @@ const metadataNote =
                 </a>
               )
             )}
-            <a class="button secondary" href={project.githubUrl} target="_blank" rel="noreferrer">Open source</a>
+            <a class="button secondary" href={project.githubUrl} target="_blank" rel="noreferrer">{project.downloadsDisabled ? "GitHub archive" : "Open source"}</a>
             {hasRelease && <a class="button secondary" href={github.releaseUrl} target="_blank" rel="noreferrer">Latest release</a>}
           </div>
         </div>
@@ -235,15 +237,17 @@ const metadataNote =
       )}
 
       <section class="project-detail-grid" aria-label={`${project.name} details`}>
-        <div class="command-panel">
-          <h2>Developer setup</h2>
-          {github.commands.map((command) => (
-            <div class="command-block">
-              <span>{command.label}</span>
-              <code>{command.command}</code>
-            </div>
-          ))}
-        </div>
+        {github.commands.length > 0 && (
+          <div class="command-panel">
+            <h2>Developer setup</h2>
+            {github.commands.map((command) => (
+              <div class="command-block">
+                <span>{command.label}</span>
+                <code>{command.command}</code>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div class="highlights-panel">
           <h2>Highlights</h2>
