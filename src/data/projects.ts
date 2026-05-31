@@ -472,10 +472,10 @@ export const featuredProjects: Project[] = [
       {
         src: "/projects/briskedit/hero.webp",
         fallbackSrc: "/projects/briskedit/hero.png",
-        alt: "BriskEdit native macOS editor with integrated terminal and run button",
+        alt: "BriskEdit editing a Swift file with the file tree, tabs, and integrated terminal",
         fit: "cover",
-        width: 1600,
-        height: 900,
+        width: 2000,
+        height: 1298,
       },
     ],
     visibility: "public",
