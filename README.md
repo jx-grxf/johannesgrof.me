@@ -20,7 +20,7 @@ This repository contains the source for my personal portfolio website. It is bui
 
 ## Showcase
 
-![Portfolio project showcase](public/projects/portpirate/showcase.webp)
+- comming soon
 
 ## Highlights
 
