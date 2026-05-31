@@ -37,7 +37,8 @@ const terminalUpcomingRows = upcomingProjects
 const terminalTreeHtml = `<span class="path">/home/johannes_grof/</span>
 ├─ <span class="folder">my_links/</span>
 │  ├─ <a class="link terminal-link" href="https://github.com/jx-grxf" target="_blank" rel="noreferrer" aria-label="Open GitHub profile">github</a>
-│  └─ <a class="link terminal-link" href="https://www.linkedin.com/in/johannes-grof/" target="_blank" rel="noreferrer" aria-label="Open LinkedIn profile">linkedin</a>
+│  ├─ <a class="link terminal-link" href="https://www.linkedin.com/in/johannes-grof/" target="_blank" rel="noreferrer" aria-label="Open LinkedIn profile">linkedin</a>
+│  └─ <a class="link terminal-link" href="mailto:contact@johannesgrof.me" aria-label="Send an email to Johannes Grof">email</a>
 ├─ <a class="folder terminal-link" href="#projects">projects/</a>
 ${terminalProjectRows}
 │     └─ <span class="folder">coming-soon/</span>
@@ -61,6 +62,7 @@ const profileSchema = {
     "@type": "Person",
     name: "Johannes Grof",
     url: toCanonicalUrl("/"),
+    email: "contact@johannesgrof.me",
     sameAs: ["https://github.com/jx-grxf", "https://www.linkedin.com/in/johannes-grof/"],
     affiliation: {
       "@type": "EducationalOrganization",
@@ -261,9 +263,10 @@ const profileSchema = {
         <div>
           <p class="eyebrow">{siteContent.contact.eyebrow}</p>
           <h2>{siteContent.contact.title}</h2>
-          <p class="contact-note">Need a small automation, macOS utility, or project website? Message me on LinkedIn or GitHub.</p>
+          <p class="contact-note">Need a small automation, macOS utility, or project website? Email me or reach out on LinkedIn or GitHub.</p>
         </div>
         <div class="contact-links">
+          <a href="mailto:contact@johannesgrof.me">Email</a>
           <a href="https://github.com/jx-grxf" target="_blank" rel="noreferrer">GitHub</a>
           <a href="https://www.linkedin.com/in/johannes-grof/" target="_blank" rel="noreferrer">LinkedIn</a>
         </div>
