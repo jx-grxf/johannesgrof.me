@@ -2,8 +2,10 @@ export type ProjectStatus = "active" | "beta" | "experimental" | "preview" | "in
 
 export interface ShowcaseImage {
   src: string;
+  kind?: "image" | "video";
   cardSrc?: string;
   fallbackSrc?: string;
+  posterSrc?: string;
   alt: string;
   fit?: "cover" | "contain" | "banner";
   width?: number;
@@ -436,9 +438,23 @@ export const featuredProjects: Project[] = [
     repo: "jx-grxf/BriskEdit",
     githubUrl: "https://github.com/jx-grxf/BriskEdit",
     releaseUrl: "https://github.com/jx-grxf/BriskEdit/releases",
-    fallbackVersion: "unreleased",
+    fallbackVersion: "v0.2.0",
     platformLabels: ["macOS"],
     proofLabels: ["Swift 6", "SwiftUI + AppKit", "Source available"],
+    fallbackDownloads: [
+      {
+        assetName: "BriskEdit-0.2.0.dmg",
+        assetUrl: "https://github.com/jx-grxf/BriskEdit/releases/download/v0.2.0/BriskEdit-0.2.0.dmg",
+        size: 5568173,
+        kind: "macos",
+      },
+      {
+        assetName: "BriskEdit-0.2.0.zip",
+        assetUrl: "https://github.com/jx-grxf/BriskEdit/releases/download/v0.2.0/BriskEdit-0.2.0.zip",
+        size: 5642706,
+        kind: "archive",
+      },
+    ],
     highlights: [
       "Opens large files instantly with a TextKit 2 view and no launch-time indexing.",
       "Runs code from one button that discovers the right toolchain per file.",
@@ -453,6 +469,16 @@ export const featuredProjects: Project[] = [
         fit: "cover",
         width: 2000,
         height: 1298,
+      },
+      {
+        src: "/projects/briskedit/briskedit-promo.mp4",
+        kind: "video",
+        posterSrc: "/projects/briskedit/hero.webp",
+        fallbackSrc: "/projects/briskedit/hero.png",
+        alt: "BriskEdit demo video showing native editing, project navigation, and the integrated terminal",
+        fit: "contain",
+        width: 1920,
+        height: 1080,
       },
     ],
     visibility: "public",

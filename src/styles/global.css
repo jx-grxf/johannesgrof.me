@@ -1374,6 +1374,10 @@ pre {
   margin: 0;
 }
 
+.showcase-gallery-video {
+  grid-column: 1 / -1;
+}
+
 .motion-ready .reveal {
   opacity: 0;
   transform: translateY(26px);

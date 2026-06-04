@@ -100,6 +100,7 @@ const metadataNote =
     : github.metadataState === "partial"
       ? "Live repository data loaded; release assets use fallback data where needed."
       : "Showing verified fallback data because GitHub metadata was unavailable during build.";
+const isVideoShowcase = (item: typeof heroImage) => item?.kind === "video";
 ---
 
 <!doctype html>
@@ -198,10 +199,14 @@ const metadataNote =
 
       {heroImage && (
         <section class="project-showcase" aria-label={`${project.name} showcase`}>
-          <picture>
-            {heroImage.fallbackSrc && <source srcset={heroImage.src} type="image/webp" />}
-            <img class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} width={heroImage.width} height={heroImage.height} loading="eager" decoding="async" />
-          </picture>
+          {isVideoShowcase(heroImage) ? (
+            <video class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.src} poster={heroImage.posterSrc ?? heroImage.fallbackSrc} width={heroImage.width} height={heroImage.height} controls muted loop playsinline preload="metadata" aria-label={heroImage.alt} data-showcase-video></video>
+          ) : (
+            <picture>
+              {heroImage.fallbackSrc && <source srcset={heroImage.src} type="image/webp" />}
+              <img class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} width={heroImage.width} height={heroImage.height} loading="eager" decoding="async" />
+            </picture>
+          )}
         </section>
       )}
 
@@ -260,11 +265,15 @@ const metadataNote =
       {galleryImages.length > 0 && (
         <section class="showcase-gallery" aria-label={`${project.name} gallery`}>
           {galleryImages.map((image) => (
-            <figure>
-              <picture>
-                {image.fallbackSrc && <source srcset={image.src} type="image/webp" />}
-                <img class={`showcase-image ${image.fit ?? "cover"}`} src={image.fallbackSrc ?? image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" />
-              </picture>
+            <figure class={isVideoShowcase(image) ? "showcase-gallery-video" : undefined}>
+              {isVideoShowcase(image) ? (
+                <video class={`showcase-image ${image.fit ?? "cover"}`} src={image.src} poster={image.posterSrc ?? image.fallbackSrc} width={image.width} height={image.height} controls muted loop playsinline preload="metadata" aria-label={image.alt} data-showcase-video></video>
+              ) : (
+                <picture>
+                  {image.fallbackSrc && <source srcset={image.src} type="image/webp" />}
+                  <img class={`showcase-image ${image.fit ?? "cover"}`} src={image.fallbackSrc ?? image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" />
+                </picture>
+              )}
             </figure>
           ))}
         </section>
@@ -324,6 +333,34 @@ const metadataNote =
 
         downloadMenus.forEach(closeDownloadMenu);
       });
+
+      const showcaseVideos = document.querySelectorAll<HTMLVideoElement>("[data-showcase-video]");
+
+      if ("IntersectionObserver" in window) {
+        const videoObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              const video = entry.target;
+
+              if (!(video instanceof HTMLVideoElement)) {
+                return;
+              }
+
+              if (entry.intersectionRatio >= 0.55) {
+                video.play().catch(() => undefined);
+              } else {
+                video.pause();
+              }
+            });
+          },
+          { threshold: [0, 0.55, 1] },
+        );
+
+        showcaseVideos.forEach((video) => {
+          video.muted = true;
+          videoObserver.observe(video);
+        });
+      }
     </script>
     <SpeedInsights />
   </body>
