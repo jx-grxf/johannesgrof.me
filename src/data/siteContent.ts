@@ -218,12 +218,12 @@ const de: LocaleContent = {
   },
   services: {
     eyebrow: "leistungen",
-    title: "Womit ich dir helfen kann.",
+    title: "Womit ich Ihnen helfen kann.",
     lead: "Standort Südost-Steiermark — vor Ort in der Umgebung, sonst österreichweit remote.",
     items: [
       {
         title: "Website-Erstellung & Hosting",
-        body: "Moderne, schnelle Portfolio-, Business- und Vereinsseiten — inklusive Hosting, Domain-Verwaltung und laufender Wartung. Ich richte dir immer das beste, günstigste und schnellste Angebot ein, damit alles aus einer Hand kommt.",
+        body: "Moderne, schnelle Portfolio-, Business- und Vereinsseiten — inklusive Hosting, Domain-Verwaltung und laufender Wartung. Ich richte Ihnen immer das beste, günstigste und schnellste Angebot ein, damit alles aus einer Hand kommt.",
       },
       {
         title: "Elektronik-Reparatur & Einrichtung",
@@ -248,15 +248,15 @@ const de: LocaleContent = {
         a: "Ich bin Softwareentwickler und Schüler an der HTL Kaindorf in Österreich. Ich baue macOS-Apps, Developer-Tools und Websites und biete außerdem Elektronik-Reparatur und technischen Support an.",
       },
       {
-        q: "Arbeitest du auch vor Ort in der Steiermark?",
+        q: "Arbeiten Sie auch vor Ort in der Steiermark?",
         a: "Ja. Reparatur und Geräte-Einrichtung mache ich vor Ort in der Südost-Steiermark. Websites, Tools und Support gehen auch österreichweit remote.",
       },
       {
         q: "Was kostet eine Website?",
-        a: "Das hängt vom Umfang ab. Hosting, Domain und Wartung können alles dabei sein – schreib mir kurz, was du brauchst, und du bekommst ein kostenloses, unverbindliches Angebot mit der besten und günstigsten Lösung.",
+        a: "Das hängt vom Umfang ab. Hosting, Domain und Wartung können alles dabei sein – schreiben Sie mir kurz, was Sie brauchen, und Sie bekommen ein kostenloses, unverbindliches Angebot mit der besten und günstigsten Lösung.",
       },
       {
-        q: "Wie erreiche ich dich?",
+        q: "Wie erreiche ich Sie?",
         a: "Per E-Mail an contact@johannesgrof.me oder über LinkedIn und GitHub.",
       },
     ],
@@ -268,8 +268,8 @@ const de: LocaleContent = {
   },
   contact: {
     eyebrow: "kontakt",
-    title: "Melde dich.",
-    note: "Du brauchst eine Website, eine Reparatur, technischen Support oder ein kleines individuelles Tool? Schreib mir per E-Mail oder über LinkedIn bzw. GitHub – das erste Gespräch ist kostenlos.",
+    title: "Melden Sie sich.",
+    note: "Sie brauchen eine Website, eine Reparatur, technischen Support oder ein kleines individuelles Tool? Schreiben Sie mir per E-Mail oder über LinkedIn bzw. GitHub – das erste Gespräch ist kostenlos.",
   },
 };
 
