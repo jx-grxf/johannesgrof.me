@@ -1648,6 +1648,11 @@ pre {
   line-height: 1.6;
 }
 
+/* About: align body text with the large heading */
+#about.split-section {
+  align-items: center;
+}
+
 /* FAQ */
 .faq-section {
   padding-top: 88px;

@@ -118,8 +118,8 @@ const en: LocaleContent = {
     lead: "Based in south-east Styria, Austria — on-site nearby, remote everywhere else.",
     items: [
       {
-        title: "Website development",
-        body: "Modern, fast portfolio, business, and club websites — built and shipped, not just mocked up.",
+        title: "Website development & hosting",
+        body: "Modern, fast portfolio, business, and club websites — including hosting, domain management, and ongoing maintenance. I always set you up with the best, cheapest, and fastest option, so everything is taken care of in one place.",
       },
       {
         title: "Electronics repair & setup",
@@ -149,7 +149,7 @@ const en: LocaleContent = {
       },
       {
         q: "How much does a website cost?",
-        a: "It depends on scope. Just send me a short message about what you need and you'll get a free, no-obligation quote.",
+        a: "It depends on scope. Hosting, domain, and maintenance can all be included — just send me a short message about what you need and you'll get a free, no-obligation quote with the best and cheapest option.",
       },
       {
         q: "How can I reach you?",
@@ -222,8 +222,8 @@ const de: LocaleContent = {
     lead: "Standort Südost-Steiermark — vor Ort in der Umgebung, sonst österreichweit remote.",
     items: [
       {
-        title: "Website-Erstellung",
-        body: "Moderne, schnelle Portfolio-, Business- und Vereinsseiten — fertig umgesetzt, nicht nur als Entwurf.",
+        title: "Website-Erstellung & Hosting",
+        body: "Moderne, schnelle Portfolio-, Business- und Vereinsseiten — inklusive Hosting, Domain-Verwaltung und laufender Wartung. Ich richte dir immer das beste, günstigste und schnellste Angebot ein, damit alles aus einer Hand kommt.",
       },
       {
         title: "Elektronik-Reparatur & Einrichtung",
@@ -253,7 +253,7 @@ const de: LocaleContent = {
       },
       {
         q: "Was kostet eine Website?",
-        a: "Das hängt vom Umfang ab. Schreib mir kurz, was du brauchst – du bekommst ein kostenloses, unverbindliches Angebot.",
+        a: "Das hängt vom Umfang ab. Hosting, Domain und Wartung können alles dabei sein – schreib mir kurz, was du brauchst, und du bekommst ein kostenloses, unverbindliches Angebot mit der besten und günstigsten Lösung.",
       },
       {
         q: "Wie erreiche ich dich?",
