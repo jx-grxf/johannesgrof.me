@@ -5,16 +5,24 @@ interface NavItem {
   external?: boolean;
 }
 
+interface LangSwitch {
+  label: string;
+  href: string;
+  ariaLabel: string;
+}
+
 interface Props {
   navItems: NavItem[];
   ariaLabel?: string;
+  homeHref?: string;
+  langSwitch?: LangSwitch;
 }
 
-const { navItems, ariaLabel = "Primary navigation" } = Astro.props;
+const { navItems, ariaLabel = "Primary navigation", homeHref = "/", langSwitch } = Astro.props;
 ---
 
 <header class="site-header">
-  <a class="brand" href="/" aria-label="Johannes Grof home">
+  <a class="brand" href={homeHref} aria-label="Johannes Grof home">
     <span class="brand-mark" aria-hidden="true">jg</span>
     <span>Johannes Grof</span>
   </a>
@@ -29,6 +37,13 @@ const { navItems, ariaLabel = "Primary navigation" } = Astro.props;
           {item.label}
         </a>
       ))
+    }
+    {
+      langSwitch && (
+        <a class="lang-switch" href={langSwitch.href} aria-label={langSwitch.ariaLabel}>
+          {langSwitch.label}
+        </a>
+      )
     }
   </nav>
 </header>

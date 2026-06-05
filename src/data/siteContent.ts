@@ -1,13 +1,97 @@
-export const siteContent = {
-  metaDescription:
-    "Portfolio of Johannes Grof, an HTL Kaindorf student in Austria building macOS apps, AI automations, developer tools, and document workflows.",
+export type Locale = "en" | "de";
+
+export interface ServiceItem {
+  title: string;
+  body: string;
+}
+
+export interface FaqItem {
+  q: string;
+  a: string;
+}
+
+export interface NavItem {
+  label: string;
+  href: string;
+}
+
+export interface LocaleContent {
+  lang: string;
+  ogLocale: string;
+  meta: {
+    title: string;
+    description: string;
+  };
+  nav: NavItem[];
+  langSwitch: {
+    label: string;
+    href: string;
+    ariaLabel: string;
+  };
+  hero: {
+    eyebrow: string;
+    title: string;
+    body: string;
+    proof: string;
+    primaryAction: string;
+    secondaryAction: string;
+    githubAction: string;
+  };
+  skills: {
+    eyebrow: string;
+    title: string;
+    groups: { title: string; items: string[] }[];
+  };
+  services: {
+    eyebrow: string;
+    title: string;
+    lead: string;
+    items: ServiceItem[];
+  };
+  faq: {
+    eyebrow: string;
+    title: string;
+    items: FaqItem[];
+  };
+  about: {
+    eyebrow: string;
+    title: string;
+    body: string;
+  };
+  contact: {
+    eyebrow: string;
+    title: string;
+    note: string;
+  };
+}
+
+const en: LocaleContent = {
+  lang: "en",
+  ogLocale: "en_US",
+  meta: {
+    title: "Johannes Grof - Student Developer in Austria",
+    description:
+      "Portfolio of Johannes Grof, an HTL Kaindorf student in Austria building macOS apps, AI automations, developer tools, websites, and offering tech support.",
+  },
+  nav: [
+    { label: "Projects", href: "#projects" },
+    { label: "Skills", href: "#skills" },
+    { label: "Services", href: "#services" },
+    { label: "About", href: "#about" },
+    { label: "Contact", href: "#contact" },
+  ],
+  langSwitch: {
+    label: "DE",
+    href: "/de/",
+    ariaLabel: "Diese Seite auf Deutsch ansehen",
+  },
   hero: {
     eyebrow: "student developer / austria",
     title: "Building useful tools before the idea gets boring.",
-    body: "I'm a student at HTL Kaindorf in Austria. I enjoy building macOS apps, automations, and small apps or CLI tools that turn annoying technical problems into something fun and usable.",
+    body: "I'm a student at HTL Kaindorf in Austria. I build macOS apps, automations, websites, and small CLI tools that turn annoying technical problems into something usable.",
     proof: "native macOS apps · shipped GitHub releases · TypeScript / Swift / Python",
     primaryAction: "View projects",
-    secondaryAction: "Skills",
+    secondaryAction: "Services",
     githubAction: "GitHub",
   },
   skills: {
@@ -31,20 +115,165 @@ export const siteContent = {
   services: {
     eyebrow: "services",
     title: "What I can help with.",
+    lead: "Based in south-east Styria, Austria — on-site nearby, remote everywhere else.",
     items: [
-      "Focused portfolio and project websites.",
-      "Small automation tools for repetitive browser, document, or desktop workflows.",
-      "macOS utilities and CLI tools.",
-      "AI-assisted workflows with Codex, OpenClaw, and related agent tooling.",
+      {
+        title: "Website development",
+        body: "Modern, fast portfolio, business, and club websites — built and shipped, not just mocked up.",
+      },
+      {
+        title: "Electronics repair & setup",
+        body: "PC and Mac repair, setting up new devices, printers and peripherals, getting things running again.",
+      },
+      {
+        title: "Technical support / IT help",
+        body: "Fixing everyday tech problems, backups, updates, and clear advice without the jargon.",
+      },
+      {
+        title: "Custom tools & automation",
+        body: "Small macOS utilities, scripts, and automations for when off-the-shelf software isn't enough.",
+      },
+    ],
+  },
+  faq: {
+    eyebrow: "faq",
+    title: "Frequently asked questions.",
+    items: [
+      {
+        q: "What does Johannes Grof do?",
+        a: "I'm a software developer and student at HTL Kaindorf in Austria. I build macOS apps, developer tools, and websites, and I also offer electronics repair and technical support.",
+      },
+      {
+        q: "Do you work remotely?",
+        a: "Yes. Websites, tools, and tech support can be done remotely worldwide. On-site repair and setup is available in south-east Styria, Austria.",
+      },
+      {
+        q: "How much does a website cost?",
+        a: "It depends on scope. Just send me a short message about what you need and you'll get a free, no-obligation quote.",
+      },
+      {
+        q: "How can I reach you?",
+        a: "By email at contact@johannesgrof.me, or via LinkedIn and GitHub.",
+      },
     ],
   },
   about: {
     eyebrow: "about",
     title: "Student, builder, fast learner.",
-    body: "I live in Austria and am a first-year student at HTL Kaindorf. I love programming, especially when a project solves a real problem or makes a technical workflow easier. I build with TypeScript, Swift, Python, and AI-assisted workflows, but the goal is always the shipped tool, not the toolchain hype.",
+    body: "I live in Austria and study at HTL Kaindorf. I love programming, especially when a project solves a real problem or makes a technical workflow easier. I build with TypeScript, Swift, Python, and AI-assisted workflows, but the goal is always the shipped tool, not the toolchain hype.",
   },
   contact: {
     eyebrow: "contact",
-    title: "Find me online.",
+    title: "Get in touch.",
+    note: "Need a website, a repair, tech support, or a small custom tool? Email me or reach out on LinkedIn or GitHub — first chat is free.",
   },
 };
+
+const de: LocaleContent = {
+  lang: "de-AT",
+  ogLocale: "de_AT",
+  meta: {
+    title: "Johannes Grof - Softwareentwickler & Tech-Support aus der Südost-Steiermark",
+    description:
+      "Johannes Grof aus der Südost-Steiermark: Softwareentwickler und HTL-Kaindorf-Schüler. Websites, macOS-Apps, individuelle Tools sowie Elektronik-Reparatur und technischer Support.",
+  },
+  nav: [
+    { label: "Projekte", href: "#projects" },
+    { label: "Skills", href: "#skills" },
+    { label: "Leistungen", href: "#services" },
+    { label: "Über mich", href: "#about" },
+    { label: "Kontakt", href: "#contact" },
+  ],
+  langSwitch: {
+    label: "EN",
+    href: "/",
+    ariaLabel: "View this page in English",
+  },
+  hero: {
+    eyebrow: "softwareentwickler / südost-steiermark",
+    title: "Nützliche Tools bauen, bevor die Idee langweilig wird.",
+    body: "Ich bin Schüler an der HTL Kaindorf in Österreich. Ich baue macOS-Apps, Automatisierungen, Websites und kleine Tools – und helfe in der Südost-Steiermark bei Reparatur und Technik-Problemen.",
+    proof: "native macOS-Apps · veröffentlichte GitHub-Releases · TypeScript / Swift / Python",
+    primaryAction: "Projekte ansehen",
+    secondaryAction: "Leistungen",
+    githubAction: "GitHub",
+  },
+  skills: {
+    eyebrow: "skills",
+    title: "Womit ich arbeite.",
+    groups: [
+      {
+        title: "Native- und Web-Entwicklung",
+        items: ["TypeScript", "Swift", "Python", "Astro", "macOS-Tools", "CLI-Tools"],
+      },
+      {
+        title: "Automatisierung",
+        items: ["Browser-Automatisierung", "Dokument-Workflows", "GitHub-Releases", "Local-first Agent-Tooling"],
+      },
+      {
+        title: "KI-gestützte Tools",
+        items: ["Codex", "OpenClaw", "Claude Code", "Provider-bewusste Workflows", "Geräte- & App-Probleme lösen"],
+      },
+    ],
+  },
+  services: {
+    eyebrow: "leistungen",
+    title: "Womit ich dir helfen kann.",
+    lead: "Standort Südost-Steiermark — vor Ort in der Umgebung, sonst österreichweit remote.",
+    items: [
+      {
+        title: "Website-Erstellung",
+        body: "Moderne, schnelle Portfolio-, Business- und Vereinsseiten — fertig umgesetzt, nicht nur als Entwurf.",
+      },
+      {
+        title: "Elektronik-Reparatur & Einrichtung",
+        body: "PC- und Mac-Reparatur, neue Geräte aufsetzen, Drucker und Zubehör einrichten, alles wieder zum Laufen bringen.",
+      },
+      {
+        title: "Technischer Support / IT-Hilfe",
+        body: "Alltägliche Technik-Probleme lösen, Backups, Updates und verständliche Beratung ohne Fachchinesisch.",
+      },
+      {
+        title: "Individuelle Tools & Automatisierung",
+        body: "Kleine macOS-Tools, Skripte und Automatisierungen, wenn Standardsoftware nicht ausreicht.",
+      },
+    ],
+  },
+  faq: {
+    eyebrow: "faq",
+    title: "Häufige Fragen.",
+    items: [
+      {
+        q: "Was macht Johannes Grof?",
+        a: "Ich bin Softwareentwickler und Schüler an der HTL Kaindorf in Österreich. Ich baue macOS-Apps, Developer-Tools und Websites und biete außerdem Elektronik-Reparatur und technischen Support an.",
+      },
+      {
+        q: "Arbeitest du auch vor Ort in der Steiermark?",
+        a: "Ja. Reparatur und Geräte-Einrichtung mache ich vor Ort in der Südost-Steiermark. Websites, Tools und Support gehen auch österreichweit remote.",
+      },
+      {
+        q: "Was kostet eine Website?",
+        a: "Das hängt vom Umfang ab. Schreib mir kurz, was du brauchst – du bekommst ein kostenloses, unverbindliches Angebot.",
+      },
+      {
+        q: "Wie erreiche ich dich?",
+        a: "Per E-Mail an contact@johannesgrof.me oder über LinkedIn und GitHub.",
+      },
+    ],
+  },
+  about: {
+    eyebrow: "über mich",
+    title: "Schüler, Macher, schneller Lerner.",
+    body: "Ich lebe in der Südost-Steiermark und besuche die HTL Kaindorf. Ich liebe das Programmieren – besonders, wenn ein Projekt ein echtes Problem löst oder einen Ablauf einfacher macht. Ich arbeite mit TypeScript, Swift, Python und KI-gestützten Workflows, aber das Ziel ist immer das fertige Tool, nicht der Hype drumherum.",
+  },
+  contact: {
+    eyebrow: "kontakt",
+    title: "Melde dich.",
+    note: "Du brauchst eine Website, eine Reparatur, technischen Support oder ein kleines individuelles Tool? Schreib mir per E-Mail oder über LinkedIn bzw. GitHub – das erste Gespräch ist kostenlos.",
+  },
+};
+
+export const siteContentByLocale: Record<Locale, LocaleContent> = { en, de };
+
+// Backward-compatible default (English) for any importer that expects the old shape.
+export const siteContent = en;
