@@ -1586,3 +1586,117 @@ pre {
     justify-content: start;
   }
 }
+
+/* Language switcher */
+.lang-switch {
+  margin-left: 4px;
+  border: 1px solid rgb(77 241 210 / 30%);
+  border-radius: 999px;
+  padding: 8px 12px;
+  color: var(--cyan);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.lang-switch:hover {
+  background: rgb(77 241 210 / 12%);
+  color: var(--cyan);
+}
+
+/* Service cards (title + description) */
+.services-lead {
+  margin-top: 10px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.service-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 0;
+}
+
+.service-list li.service-item {
+  display: block;
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 12px;
+  padding: 16px 18px;
+  background: rgb(16 17 19 / 42%);
+  font-size: inherit;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    transform 180ms ease;
+}
+
+.service-list li.service-item:hover {
+  border-color: rgb(77 241 210 / 28%);
+  background: rgb(16 17 19 / 62%);
+  transform: translateY(-2px);
+}
+
+.service-item h3 {
+  margin: 0 0 6px;
+  font-size: 1.02rem;
+}
+
+.service-item p {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+/* About: align body text with the large heading */
+#about.split-section {
+  align-items: center;
+}
+
+/* FAQ */
+.faq-section {
+  padding-top: 88px;
+}
+
+.faq-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.faq-item {
+  border: 1px solid rgb(255 255 255 / 10%);
+  border-radius: 12px;
+  padding: 4px 18px;
+  background: rgb(16 17 19 / 42%);
+}
+
+.faq-item summary {
+  cursor: pointer;
+  padding: 14px 0;
+  color: var(--text);
+  font-weight: 700;
+  list-style: none;
+}
+
+.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-item summary::after {
+  content: "+";
+  float: right;
+  color: var(--cyan);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-weight: 800;
+}
+
+.faq-item[open] summary::after {
+  content: "−";
+}
+
+.faq-item p {
+  margin: 0 0 14px;
+  color: var(--muted);
+  line-height: 1.65;
+}

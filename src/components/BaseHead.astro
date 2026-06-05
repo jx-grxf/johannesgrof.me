@@ -1,12 +1,19 @@
 ---
 import { defaultSocialImage, toCanonicalUrl } from "@/data/siteMetadata";
 
+interface HreflangAlternate {
+  hreflang: string;
+  href: string;
+}
+
 interface Props {
   title: string;
   description: string;
   canonicalPath?: string;
   image?: string;
   type?: "website" | "article";
+  ogLocale?: string;
+  hreflangAlternates?: HreflangAlternate[];
 }
 
 const {
@@ -15,6 +22,8 @@ const {
   canonicalPath = Astro.url.pathname,
   image = defaultSocialImage,
   type = "website",
+  ogLocale = "en_US",
+  hreflangAlternates = [],
 } = Astro.props;
 
 const canonicalUrl = toCanonicalUrl(canonicalPath);
@@ -26,8 +35,10 @@ const imageUrl = toCanonicalUrl(image);
 <meta name="description" content={description} />
 <title>{title}</title>
 <link rel="canonical" href={canonicalUrl} />
+{hreflangAlternates.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />)}
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <meta property="og:type" content={type} />
+<meta property="og:locale" content={ogLocale} />
 <meta property="og:site_name" content="Johannes Grof" />
 <meta property="og:title" content={title} />
 <meta property="og:description" content={description} />
