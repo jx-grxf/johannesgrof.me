@@ -3,7 +3,7 @@ import BaseHead from "@/components/BaseHead.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import { featuredShowcaseProjects, publicProjects, standardProjects, statusClass, statusLabel, upcomingProjects } from "@/data/projects";
 import type { LocaleContent } from "@/data/siteContent";
-import { toCanonicalUrl } from "@/data/siteMetadata";
+import { defaultSocialImage, toCanonicalUrl } from "@/data/siteMetadata";
 import "@/styles/global.css";
 import SpeedInsights from "@vercel/speed-insights/astro";
 
@@ -105,6 +105,38 @@ const faqSchema = {
     },
   })),
 };
+
+// Ties the website to the Google Business Profile (same name, phone, and area).
+const localBusinessSchema = {
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "@id": `${toCanonicalUrl("/")}#business`,
+  name: "Johannes Grof IT",
+  image: toCanonicalUrl(defaultSocialImage),
+  url: toCanonicalUrl("/"),
+  telephone: "+436645486840",
+  email: "contact@johannesgrof.me",
+  description: content.meta.description,
+  founder: {
+    "@type": "Person",
+    name: "Johannes Grof",
+  },
+  address: {
+    "@type": "PostalAddress",
+    addressRegion: "Steiermark",
+    addressCountry: "AT",
+  },
+  areaServed: [
+    { "@type": "AdministrativeArea", name: "Südoststeiermark" },
+    { "@type": "AdministrativeArea", name: "Steiermark" },
+  ],
+  sameAs: [
+    "https://github.com/jx-grxf",
+    "https://www.linkedin.com/in/johannes-grof",
+    "https://x.com/jx_grxf",
+  ],
+  knowsAbout: ["website development", "web hosting", "domain management", "website maintenance", "technical support", "computer setup", "electronics help", "custom software"],
+};
 ---
 
 <!doctype html>
@@ -119,6 +151,7 @@ const faqSchema = {
     />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(profileSchema)} />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(localBusinessSchema)} />
   </head>
   <body>
     <SiteHeader navItems={content.nav} homeHref={canonicalPath} langSwitch={content.langSwitch} />
@@ -331,12 +364,21 @@ const faqSchema = {
           <p class="contact-note">{content.contact.note}</p>
         </div>
         <div class="contact-links">
+          <a href="tel:+436645486840">0664 5486840</a>
           <a href="mailto:contact@johannesgrof.me">Email</a>
           <a href="https://github.com/jx-grxf" target="_blank" rel="noreferrer">GitHub</a>
           <a href="https://www.linkedin.com/in/johannes-grof" target="_blank" rel="noreferrer">LinkedIn</a>
         </div>
       </section>
     </main>
+    <footer class="site-footer">
+      <p class="footer-brand"><strong>Johannes Grof IT</strong> · {content.lang === "en" ? "South-East Styria, Austria" : "Südost-Steiermark, Österreich"}</p>
+      <p class="footer-contact">
+        <a href="tel:+436645486840">0664 5486840</a>
+        <a href="mailto:contact@johannesgrof.me">contact@johannesgrof.me</a>
+      </p>
+      <p class="footer-copy">© {new Date().getFullYear()} Johannes Grof IT</p>
+    </footer>
     <script>
       const revealElements = document.querySelectorAll(".reveal");
 

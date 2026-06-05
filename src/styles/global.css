@@ -1700,3 +1700,43 @@ pre {
   color: var(--muted);
   line-height: 1.65;
 }
+
+/* Footer: business identity (NAP consistency with Google Business) */
+.site-footer {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 48px 24px 56px;
+  border-top: 1px solid rgb(255 255 255 / 10%);
+  text-align: center;
+  color: var(--muted);
+}
+
+.site-footer p {
+  margin: 6px 0;
+  font-size: 0.9rem;
+}
+
+.footer-brand strong {
+  color: var(--text);
+}
+
+.footer-contact {
+  display: flex;
+  gap: 18px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.footer-contact a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+.footer-contact a:hover {
+  text-decoration: underline;
+}
+
+.footer-copy {
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
