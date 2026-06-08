@@ -35,6 +35,7 @@ export interface LocaleContent {
     proof: string;
     primaryAction: string;
     secondaryAction: string;
+    contactAction: string;
     githubAction: string;
   };
   skills: {
@@ -92,6 +93,7 @@ const en: LocaleContent = {
     proof: "native macOS apps · shipped GitHub releases · TypeScript / Swift / Python",
     primaryAction: "View projects",
     secondaryAction: "Services",
+    contactAction: "Contact",
     githubAction: "GitHub",
   },
   skills: {
@@ -165,7 +167,7 @@ const en: LocaleContent = {
   contact: {
     eyebrow: "contact",
     title: "Get in touch.",
-    note: "Need a website, a repair, tech support, or a small custom tool? Email me or reach out on LinkedIn or GitHub — first chat is free.",
+    note: "Need a website, a repair, tech support, or a small custom tool? Call me, message me on WhatsApp, or send an email.",
   },
 };
 
@@ -196,6 +198,7 @@ const de: LocaleContent = {
     proof: "native macOS-Apps · veröffentlichte GitHub-Releases · TypeScript / Swift / Python",
     primaryAction: "Projekte ansehen",
     secondaryAction: "Leistungen",
+    contactAction: "Kontakt",
     githubAction: "GitHub",
   },
   skills: {
@@ -269,7 +272,7 @@ const de: LocaleContent = {
   contact: {
     eyebrow: "kontakt",
     title: "Melden Sie sich.",
-    note: "Sie brauchen eine Website, eine Reparatur, technischen Support oder ein kleines individuelles Tool? Schreiben Sie mir per E-Mail oder über LinkedIn bzw. GitHub – das erste Gespräch ist kostenlos.",
+    note: "Sie brauchen eine Website, eine Reparatur, technischen Support oder ein kleines individuelles Tool? Rufen Sie mich an, schreiben Sie per WhatsApp oder E-Mail.",
   },
 };
 

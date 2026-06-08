@@ -57,8 +57,7 @@ a {
 
 .brand,
 nav,
-.hero-actions,
-.contact-links {
+.hero-actions {
   display: flex;
   align-items: center;
 }
@@ -112,7 +111,7 @@ nav a:hover {
 nav a:focus-visible,
 .button:focus-visible,
 .project-card:focus-visible,
-.contact-links a:focus-visible,
+.contact-btn:focus-visible,
 .download-options a:focus-visible,
 .terminal-link:focus-visible,
 .back-link:focus-visible {
@@ -929,35 +928,111 @@ pre {
   padding-top: 14px;
 }
 
-.contact-links {
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: end;
-}
-
-.contact-links a {
-  border: 1px solid rgb(255 255 255 / 12%);
-  border-radius: 8px;
-  padding: 12px 15px;
-  background: rgb(255 255 255 / 5%);
-  font-weight: 800;
-  transition:
-    border-color 180ms ease,
-    background 180ms ease,
-    transform 180ms ease;
-}
-
-.contact-links a:hover {
-  border-color: rgb(77 241 210 / 36%);
-  background: rgb(255 255 255 / 8%);
-  transform: translateY(-2px);
-}
-
 .contact-note {
   max-width: 430px;
   margin: 10px 0 0;
   color: var(--muted);
   line-height: 1.6;
+}
+
+.contact-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 14px;
+}
+
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.contact-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 12px;
+  padding: 12px 18px;
+  background: rgb(255 255 255 / 5%);
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    transform 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.contact-btn:hover {
+  transform: translateY(-2px);
+}
+
+.contact-btn-icon {
+  flex-shrink: 0;
+}
+
+.contact-btn--icon-only {
+  padding: 12px;
+  gap: 0;
+}
+
+.contact-btn--call {
+  border-color: rgb(77 241 210 / 36%);
+  background: rgb(77 241 210 / 10%);
+  color: var(--cyan);
+}
+
+.contact-btn--call:hover {
+  border-color: rgb(77 241 210 / 60%);
+  background: rgb(77 241 210 / 16%);
+  box-shadow: 0 10px 28px rgb(77 241 210 / 14%);
+}
+
+.contact-btn--whatsapp {
+  border-color: rgb(37 211 102 / 40%);
+  background: rgb(37 211 102 / 12%);
+  color: #25d366;
+}
+
+.contact-btn--whatsapp:hover {
+  border-color: rgb(37 211 102 / 65%);
+  background: rgb(37 211 102 / 18%);
+  box-shadow: 0 10px 28px rgb(37 211 102 / 16%);
+}
+
+.contact-btn--email {
+  border-color: rgb(74 142 255 / 42%);
+  background: rgb(74 142 255 / 12%);
+  color: #4a8eff;
+}
+
+.contact-btn--email:hover {
+  border-color: rgb(74 142 255 / 68%);
+  background: rgb(74 142 255 / 18%);
+  box-shadow: 0 10px 28px rgb(74 142 255 / 16%);
+}
+
+.contact-btn--github {
+  color: var(--text);
+}
+
+.contact-btn--github:hover {
+  border-color: rgb(255 255 255 / 36%);
+  background: rgb(255 255 255 / 10%);
+  box-shadow: 0 10px 28px rgb(255 255 255 / 10%);
+}
+
+.contact-btn--linkedin {
+  border-color: rgb(0 119 183 / 45%);
+  background: rgb(0 119 183 / 14%);
+  color: #2a9fe0;
+}
+
+.contact-btn--linkedin:hover {
+  border-color: rgb(0 119 183 / 70%);
+  background: rgb(0 119 183 / 20%);
+  box-shadow: 0 10px 28px rgb(0 119 183 / 18%);
 }
 
 .project-detail {
@@ -1582,7 +1657,11 @@ pre {
     padding: 54px 0;
   }
 
-  .contact-links {
+  .contact-panel {
+    align-items: stretch;
+  }
+
+  .contact-actions {
     justify-content: start;
   }
 }
@@ -1677,6 +1756,8 @@ pre {
   color: var(--text);
   font-weight: 700;
   list-style: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .faq-item summary::-webkit-details-marker {
@@ -1689,16 +1770,46 @@ pre {
   color: var(--cyan);
   font-family: "SFMono-Regular", Consolas, monospace;
   font-weight: 800;
+  transition: transform 260ms var(--smooth);
 }
 
-.faq-item[open] summary::after {
-  content: "−";
+.faq-item.is-open summary::after {
+  transform: rotate(135deg);
+}
+
+.faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    grid-template-rows 300ms var(--smooth),
+    opacity 180ms ease,
+    transform 240ms var(--smooth);
+}
+
+.faq-answer > div {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.faq-item.is-open .faq-answer {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .faq-item p {
   margin: 0 0 14px;
   color: var(--muted);
   line-height: 1.65;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-item summary::after,
+  .faq-answer {
+    transition: none;
+  }
 }
 
 /* Footer: business identity (NAP consistency with Google Business) */
