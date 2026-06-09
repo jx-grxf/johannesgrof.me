@@ -21,11 +21,15 @@ const getRatelimit = () => {
   if (ratelimit) {
     return ratelimit;
   }
-  if (!import.meta.env.UPSTASH_REDIS_REST_URL || !import.meta.env.UPSTASH_REDIS_REST_TOKEN) {
+  // The Vercel Upstash integration provisions KV_REST_API_* vars; fall back to
+  // the UPSTASH_REDIS_REST_* names in case a plain Upstash setup is used.
+  const url = import.meta.env.KV_REST_API_URL ?? import.meta.env.UPSTASH_REDIS_REST_URL;
+  const token = import.meta.env.KV_REST_API_TOKEN ?? import.meta.env.UPSTASH_REDIS_REST_TOKEN;
+  if (!url || !token) {
     return null;
   }
   ratelimit = new Ratelimit({
-    redis: Redis.fromEnv(),
+    redis: new Redis({ url, token }),
     // 5 submissions per IP per 10 minutes.
     limiter: Ratelimit.slidingWindow(5, "10 m"),
     prefix: "ratelimit:contact",
