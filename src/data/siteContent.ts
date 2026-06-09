@@ -63,7 +63,22 @@ export interface LocaleContent {
     eyebrow: string;
     title: string;
     note: string;
+    form: ContactFormContent;
   };
+}
+
+export interface ContactFormContent {
+  nameLabel: string;
+  namePlaceholder: string;
+  emailLabel: string;
+  emailPlaceholder: string;
+  messageLabel: string;
+  messagePlaceholder: string;
+  submit: string;
+  sending: string;
+  success: string;
+  error: string;
+  rateLimited: string;
 }
 
 const en: LocaleContent = {
@@ -167,7 +182,20 @@ const en: LocaleContent = {
   contact: {
     eyebrow: "contact",
     title: "Get in touch.",
-    note: "Need a website, a repair, tech support, or a small custom tool? Send me an email or reach out via LinkedIn or GitHub.",
+    note: "Need a website, a repair, tech support, or a small custom tool? Send me a message below, or reach out via email, LinkedIn, or GitHub.",
+    form: {
+      nameLabel: "Name",
+      namePlaceholder: "Your name",
+      emailLabel: "Email",
+      emailPlaceholder: "you@example.com",
+      messageLabel: "Message",
+      messagePlaceholder: "What can I help you with?",
+      submit: "Send message",
+      sending: "Sending…",
+      success: "Thanks — your message is on its way. I'll get back to you soon.",
+      error: "Something went wrong. Please try again or email contact@johannesgrof.me.",
+      rateLimited: "Too many requests. Please wait a few minutes, or email contact@johannesgrof.me.",
+    },
   },
 };
 
@@ -272,7 +300,20 @@ const de: LocaleContent = {
   contact: {
     eyebrow: "kontakt",
     title: "Melden Sie sich.",
-    note: "Sie brauchen eine Website, eine Reparatur, technischen Support oder ein kleines individuelles Tool? Schreiben Sie mir per E-Mail, LinkedIn oder GitHub.",
+    note: "Sie brauchen eine Website, eine Reparatur, technischen Support oder ein kleines individuelles Tool? Schreiben Sie mir direkt hier – oder per E-Mail, LinkedIn oder GitHub.",
+    form: {
+      nameLabel: "Name",
+      namePlaceholder: "Ihr Name",
+      emailLabel: "E-Mail",
+      emailPlaceholder: "sie@beispiel.at",
+      messageLabel: "Nachricht",
+      messagePlaceholder: "Wobei kann ich Ihnen helfen?",
+      submit: "Nachricht senden",
+      sending: "Wird gesendet…",
+      success: "Danke – Ihre Nachricht ist unterwegs. Ich melde mich bald.",
+      error: "Etwas ist schiefgelaufen. Bitte erneut versuchen oder an contact@johannesgrof.me schreiben.",
+      rateLimited: "Zu viele Anfragen. Bitte ein paar Minuten warten oder an contact@johannesgrof.me schreiben.",
+    },
   },
 };
 

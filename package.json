@@ -18,8 +18,11 @@
   },
   "dependencies": {
     "@astrojs/vercel": "10.0.7",
+    "@upstash/ratelimit": "2.0.8",
+    "@upstash/redis": "1.38.0",
     "@vercel/speed-insights": "^2.0.0",
-    "astro": "6.3.3"
+    "astro": "6.3.3",
+    "resend": "6.12.4"
   },
   "overrides": {
     "@vercel/routing-utils": "6.2.0",
