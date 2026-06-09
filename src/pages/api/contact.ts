@@ -6,10 +6,10 @@ import { Resend } from "resend";
 // Runs as an on-demand Vercel function rather than being prerendered.
 export const prerender = false;
 
-const TO_ADDRESS = import.meta.env.CONTACT_TO_EMAIL ?? "contact@johannesgrof.me";
-// Must be an address on a domain verified in Resend. Falls back to Resend's
-// shared onboarding sender so the form still works before the domain is verified.
-const FROM_ADDRESS = import.meta.env.CONTACT_FROM_EMAIL ?? "Contact Form <onboarding@resend.dev>";
+// Read at runtime via process.env (falling back to import.meta.env for local
+// dev) so changing a Vercel env var takes effect on redeploy without the value
+// being baked into the build.
+const env = (key: string): string | undefined => process.env[key] ?? (import.meta.env as Record<string, string | undefined>)[key];
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -23,8 +23,8 @@ const getRatelimit = () => {
   }
   // The Vercel Upstash integration provisions KV_REST_API_* vars; fall back to
   // the UPSTASH_REDIS_REST_* names in case a plain Upstash setup is used.
-  const url = import.meta.env.KV_REST_API_URL ?? import.meta.env.UPSTASH_REDIS_REST_URL;
-  const token = import.meta.env.KV_REST_API_TOKEN ?? import.meta.env.UPSTASH_REDIS_REST_TOKEN;
+  const url = env("KV_REST_API_URL") ?? env("UPSTASH_REDIS_REST_URL");
+  const token = env("KV_REST_API_TOKEN") ?? env("UPSTASH_REDIS_REST_TOKEN");
   if (!url || !token) {
     return null;
   }
@@ -60,7 +60,7 @@ const escapeHtml = (value: string) =>
     .replaceAll('"', "&quot;");
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
-  const apiKey = import.meta.env.RESEND_API_KEY;
+  const apiKey = env("RESEND_API_KEY");
   if (!apiKey) {
     console.error("Contact form: RESEND_API_KEY is not configured.");
     return json(500, { ok: false, error: "server_misconfigured" });
@@ -107,11 +107,14 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
 
   const resend = new Resend(apiKey);
+  const toAddress = env("CONTACT_TO_EMAIL") ?? "contact@johannesgrof.me";
+  // Falls back to Resend's shared onboarding sender until the domain is verified.
+  const fromAddress = env("CONTACT_FROM_EMAIL") ?? "Contact Form <onboarding@resend.dev>";
 
   try {
     const { error } = await resend.emails.send({
-      from: FROM_ADDRESS,
-      to: TO_ADDRESS,
+      from: fromAddress,
+      to: toAddress,
       replyTo: email,
       subject: `New contact form message from ${name}`,
       text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
