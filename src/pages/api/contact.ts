@@ -1,4 +1,6 @@
 import type { APIRoute } from "astro";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
 import { Resend } from "resend";
 
 // Runs as an on-demand Vercel function rather than being prerendered.
@@ -10,6 +12,35 @@ const TO_ADDRESS = import.meta.env.CONTACT_TO_EMAIL ?? "contact@johannesgrof.me"
 const FROM_ADDRESS = import.meta.env.CONTACT_FROM_EMAIL ?? "Contact Form <onboarding@resend.dev>";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Per-IP rate limit backed by Upstash Redis (shared across all serverless
+// instances). Lazily created and only active when the Upstash env vars are
+// present, so the form keeps working before the integration is provisioned.
+let ratelimit: Ratelimit | null = null;
+const getRatelimit = () => {
+  if (ratelimit) {
+    return ratelimit;
+  }
+  if (!import.meta.env.UPSTASH_REDIS_REST_URL || !import.meta.env.UPSTASH_REDIS_REST_TOKEN) {
+    return null;
+  }
+  ratelimit = new Ratelimit({
+    redis: Redis.fromEnv(),
+    // 5 submissions per IP per 10 minutes.
+    limiter: Ratelimit.slidingWindow(5, "10 m"),
+    prefix: "ratelimit:contact",
+    analytics: false,
+  });
+  return ratelimit;
+};
+
+const getClientIp = (request: Request, fallback: string) => {
+  const forwarded = request.headers.get("x-forwarded-for");
+  if (forwarded) {
+    return forwarded.split(",")[0]!.trim();
+  }
+  return request.headers.get("x-real-ip") ?? fallback ?? "unknown";
+};
 
 const json = (status: number, body: Record<string, unknown>) =>
   new Response(JSON.stringify(body), {
@@ -24,11 +55,20 @@ const escapeHtml = (value: string) =>
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, clientAddress }) => {
   const apiKey = import.meta.env.RESEND_API_KEY;
   if (!apiKey) {
     console.error("Contact form: RESEND_API_KEY is not configured.");
     return json(500, { ok: false, error: "server_misconfigured" });
+  }
+
+  const limiter = getRatelimit();
+  if (limiter) {
+    const ip = getClientIp(request, clientAddress);
+    const { success } = await limiter.limit(ip);
+    if (!success) {
+      return json(429, { ok: false, error: "rate_limited" });
+    }
   }
 
   let payload: Record<string, unknown>;

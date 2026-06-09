@@ -78,6 +78,7 @@ export interface ContactFormContent {
   sending: string;
   success: string;
   error: string;
+  rateLimited: string;
 }
 
 const en: LocaleContent = {
@@ -193,6 +194,7 @@ const en: LocaleContent = {
       sending: "Sending…",
       success: "Thanks — your message is on its way. I'll get back to you soon.",
       error: "Something went wrong. Please try again or email contact@johannesgrof.me.",
+      rateLimited: "Too many requests. Please wait a few minutes, or email contact@johannesgrof.me.",
     },
   },
 };
@@ -310,6 +312,7 @@ const de: LocaleContent = {
       sending: "Wird gesendet…",
       success: "Danke – Ihre Nachricht ist unterwegs. Ich melde mich bald.",
       error: "Etwas ist schiefgelaufen. Bitte erneut versuchen oder an contact@johannesgrof.me schreiben.",
+      rateLimited: "Zu viele Anfragen. Bitte ein paar Minuten warten oder an contact@johannesgrof.me schreiben.",
     },
   },
 };
