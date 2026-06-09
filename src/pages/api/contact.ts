@@ -30,8 +30,8 @@ const getRatelimit = () => {
   }
   ratelimit = new Ratelimit({
     redis: new Redis({ url, token }),
-    // 5 submissions per IP per 10 minutes.
-    limiter: Ratelimit.slidingWindow(5, "10 m"),
+    // 3 submissions per IP per 10 minutes.
+    limiter: Ratelimit.slidingWindow(3, "10 m"),
     prefix: "ratelimit:contact",
     analytics: false,
   });
