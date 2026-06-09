@@ -167,7 +167,7 @@ const en: LocaleContent = {
   contact: {
     eyebrow: "contact",
     title: "Get in touch.",
-    note: "Need a website, a repair, tech support, or a small custom tool? Call me, message me on WhatsApp, or send an email.",
+    note: "Need a website, a repair, tech support, or a small custom tool? Send me an email or reach out via LinkedIn or GitHub.",
   },
 };
 
@@ -272,7 +272,7 @@ const de: LocaleContent = {
   contact: {
     eyebrow: "kontakt",
     title: "Melden Sie sich.",
-    note: "Sie brauchen eine Website, eine Reparatur, technischen Support oder ein kleines individuelles Tool? Rufen Sie mich an, schreiben Sie per WhatsApp oder E-Mail.",
+    note: "Sie brauchen eine Website, eine Reparatur, technischen Support oder ein kleines individuelles Tool? Schreiben Sie mir per E-Mail, LinkedIn oder GitHub.",
   },
 };
 

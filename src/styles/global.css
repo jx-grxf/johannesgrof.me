@@ -977,30 +977,6 @@ pre {
   gap: 0;
 }
 
-.contact-btn--call {
-  border-color: rgb(77 241 210 / 36%);
-  background: rgb(77 241 210 / 10%);
-  color: var(--cyan);
-}
-
-.contact-btn--call:hover {
-  border-color: rgb(77 241 210 / 60%);
-  background: rgb(77 241 210 / 16%);
-  box-shadow: 0 10px 28px rgb(77 241 210 / 14%);
-}
-
-.contact-btn--whatsapp {
-  border-color: rgb(37 211 102 / 40%);
-  background: rgb(37 211 102 / 12%);
-  color: #25d366;
-}
-
-.contact-btn--whatsapp:hover {
-  border-color: rgb(37 211 102 / 65%);
-  background: rgb(37 211 102 / 18%);
-  box-shadow: 0 10px 28px rgb(37 211 102 / 16%);
-}
-
 .contact-btn--email {
   border-color: rgb(74 142 255 / 42%);
   background: rgb(74 142 255 / 12%);
