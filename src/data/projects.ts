@@ -468,7 +468,7 @@ export const featuredProjects: Project[] = [
         alt: "BriskEdit editing a Swift file with the file tree, tabs, and integrated terminal",
         fit: "cover",
         width: 2000,
-        height: 1298,
+        height: 1176,
       },
       {
         src: "/projects/briskedit/briskedit-promo.mp4",
