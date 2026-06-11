@@ -788,6 +788,36 @@ pre {
   font-weight: 800;
 }
 
+.project-card .live-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+}
+
+.project-card .live-stats li {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: 999px;
+  padding: 3px 9px;
+  background: rgb(255 255 255 / 4%);
+  color: var(--muted);
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* Lead chip (latest version) gets the brand accent. */
+.project-card .live-stats li:first-child {
+  border-color: rgb(77 241 210 / 28%);
+  background: rgb(77 241 210 / 8%);
+  color: #d8fff6;
+}
+
 .coming-soon-group {
   margin-top: 28px;
   border-top: 1px solid rgb(255 255 255 / 9%);

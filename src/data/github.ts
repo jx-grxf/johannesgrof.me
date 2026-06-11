@@ -4,6 +4,7 @@ interface GitHubAsset {
   name: string;
   browser_download_url: string;
   size: number;
+  download_count?: number;
 }
 
 interface GitHubRelease {
@@ -57,11 +58,16 @@ export interface ProjectGitHubInfo {
   releaseUrl: string;
   stars: number;
   forks: number;
+  downloads: number;
   language: string;
   updatedAt: string;
   downloadGroup?: ProjectReleaseGroup;
   commands: ProjectCommand[];
 }
+
+// Total downloads across every release asset of a repo (a strong public proof).
+const sumReleaseDownloads = (releases: GitHubRelease[]) =>
+  releases.reduce((total, release) => total + release.assets.reduce((sum, asset) => sum + (asset.download_count ?? 0), 0), 0);
 
 const gitHubHeaders = () => {
   const token = import.meta.env.GITHUB_TOKEN ?? import.meta.env.GH_TOKEN;
@@ -254,6 +260,7 @@ const buildFallbackInfo = (project: Project): ProjectGitHubInfo => {
     releaseUrl: project.releaseUrl,
     stars: 0,
     forks: 0,
+    downloads: 0,
     language: project.stack[0] ?? "Code",
     updatedAt: "",
     downloadGroup,
@@ -389,6 +396,7 @@ export async function getProjectGitHubInfo(project: Project): Promise<ProjectGit
       releaseUrl,
       stars: repo.stargazers_count,
       forks: repo.forks_count,
+      downloads: sumReleaseDownloads(releaseList),
       language: repo.language ?? fallback.language,
       updatedAt: repo.pushed_at,
       downloadGroup,
