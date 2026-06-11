@@ -1,0 +1,45 @@
+---
+import LegalPage from "@/layouts/LegalPage.astro";
+---
+
+{/*
+  Portfolio-grade disclosure (§ 25 MedienG) for a non-commercial personal site.
+  No address / no ECG details because no paid services are offered here.
+  When paid services go live, swap in the full § 5 ECG Impressum with a
+  business address, Gewerbe details and the responsible Bezirkshauptmannschaft
+  (Südoststeiermark) — see git history for the drafted full version.
+*/}
+<LegalPage
+  title="Impressum · Johannes Grof"
+  description="Impressum und Offenlegung gemäß § 25 Mediengesetz."
+  canonicalPath="/impressum/"
+>
+  <h1>Impressum</h1>
+  <p class="legal-updated">Offenlegung gemäß § 25 Mediengesetz</p>
+
+  <h2>Medieninhaber und für den Inhalt verantwortlich</h2>
+  <p>Johannes Grof</p>
+
+  <h2>Kontakt</h2>
+  <p>
+    E-Mail: <a href="mailto:contact@johannesgrof.me">contact@johannesgrof.me</a>
+  </p>
+
+  <h2>Gegenstand der Website</h2>
+  <p>
+    Persönliche Website und Projekt-Portfolio. Die Seite dient der Präsentation eigener
+    Software-Projekte und enthält kein entgeltliches Dienstleistungsangebot.
+  </p>
+
+  <h2>Haftung für Inhalte</h2>
+  <p>
+    Die Inhalte dieser Website werden mit größtmöglicher Sorgfalt erstellt. Für die Richtigkeit,
+    Vollständigkeit und Aktualität wird keine Gewähr übernommen. Für Inhalte verlinkter externer
+    Websites ist ausschließlich deren jeweiliger Betreiber verantwortlich.
+  </p>
+
+  <p style="margin-top: 40px;">
+    Informationen zur Datenverarbeitung finden Sie in der
+    <a href="/datenschutz/">Datenschutzerklärung</a>.
+  </p>
+</LegalPage>

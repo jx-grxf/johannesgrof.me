@@ -14,6 +14,7 @@ interface Props {
   type?: "website" | "article";
   ogLocale?: string;
   hreflangAlternates?: HreflangAlternate[];
+  noindex?: boolean;
 }
 
 const {
@@ -24,6 +25,7 @@ const {
   type = "website",
   ogLocale = "en_US",
   hreflangAlternates = [],
+  noindex = false,
 } = Astro.props;
 
 const canonicalUrl = toCanonicalUrl(canonicalPath);
@@ -33,6 +35,7 @@ const imageUrl = toCanonicalUrl(image);
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="description" content={description} />
+{noindex && <meta name="robots" content="noindex, nofollow" />}
 <title>{title}</title>
 <link rel="canonical" href={canonicalUrl} />
 {hreflangAlternates.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />)}

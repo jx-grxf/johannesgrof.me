@@ -136,7 +136,7 @@ const en: LocaleContent = {
     items: [
       {
         title: "Website development & hosting",
-        body: "Modern, fast portfolio, business, and club websites — including hosting, domain management, and ongoing maintenance. I always set you up with the best, cheapest, and fastest option, so everything is taken care of in one place.",
+        body: "Modern, fast portfolio, business, and club websites — built with hosting, domain setup, and ongoing maintenance in mind, so everything runs from one place.",
       },
       {
         title: "Electronics repair & setup",
@@ -166,7 +166,7 @@ const en: LocaleContent = {
       },
       {
         q: "How much does a website cost?",
-        a: "It depends on scope. Hosting, domain, and maintenance can all be included — just send me a short message about what you need and you'll get a free, no-obligation quote with the best and cheapest option.",
+        a: "It depends on scope — hosting, domain, and maintenance can all be part of it. Send me a short message about what you need and I'll get back to you.",
       },
       {
         q: "How can I reach you?",
@@ -254,7 +254,7 @@ const de: LocaleContent = {
     items: [
       {
         title: "Website-Erstellung & Hosting",
-        body: "Moderne, schnelle Portfolio-, Business- und Vereinsseiten — inklusive Hosting, Domain-Verwaltung und laufender Wartung. Ich richte Ihnen immer das beste, günstigste und schnellste Angebot ein, damit alles aus einer Hand kommt.",
+        body: "Moderne, schnelle Portfolio-, Business- und Vereinsseiten — gleich mit Hosting, Domain und laufender Wartung gedacht, damit alles aus einer Hand läuft.",
       },
       {
         title: "Elektronik-Reparatur & Einrichtung",
@@ -284,7 +284,7 @@ const de: LocaleContent = {
       },
       {
         q: "Was kostet eine Website?",
-        a: "Das hängt vom Umfang ab. Hosting, Domain und Wartung können alles dabei sein – schreiben Sie mir kurz, was Sie brauchen, und Sie bekommen ein kostenloses, unverbindliches Angebot mit der besten und günstigsten Lösung.",
+        a: "Das hängt vom Umfang ab – Hosting, Domain und Wartung können alles dabei sein. Schreiben Sie mir kurz, was Sie brauchen, und ich melde mich.",
       },
       {
         q: "Wie erreiche ich Sie?",
