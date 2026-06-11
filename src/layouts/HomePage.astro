@@ -383,6 +383,10 @@ const localBusinessSchema = {
           <input type="text" name="company" class="contact-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <button type="submit" class="contact-submit" data-label={content.contact.form.submit} data-sending={content.contact.form.sending}>{content.contact.form.submit}</button>
           <p class="contact-status" role="status" aria-live="polite" data-success={content.contact.form.success} data-error={content.contact.form.error} data-rate-limited={content.contact.form.rateLimited}></p>
+          <p class="contact-privacy-note">
+            {content.lang === "en" ? "By sending you agree to the " : "Mit dem Absenden stimmst du der "}
+            <a href="/datenschutz/">{content.lang === "en" ? "privacy policy" : "Datenschutzerklärung"}</a>{content.lang === "en" ? "." : " zu."}
+          </p>
         </form>
         <div class="contact-actions">
           <a class="contact-btn contact-btn--email contact-btn--icon-only" href="mailto:contact@johannesgrof.me" aria-label="E-Mail">
@@ -410,7 +414,10 @@ const localBusinessSchema = {
       <p class="footer-contact">
         <a href="mailto:contact@johannesgrof.me">contact@johannesgrof.me</a>
       </p>
-      <p class="footer-copy">© {new Date().getFullYear()} Johannes Grof IT</p>
+      <p class="footer-legal">
+        <a href="/impressum/">{content.lang === "en" ? "Imprint" : "Impressum"}</a> · <a href="/datenschutz/">{content.lang === "en" ? "Privacy" : "Datenschutz"}</a>
+      </p>
+      <p class="footer-copy">© {new Date().getFullYear()} Johannes Grof</p>
     </footer>
     <script>
       const revealElements = document.querySelectorAll(".reveal");
