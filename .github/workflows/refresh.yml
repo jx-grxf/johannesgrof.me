@@ -1,0 +1,29 @@
+name: Refresh deployment
+
+# Rebuilds the site on a schedule so build-time GitHub data (releases,
+# download counts, repo metadata) stays current without a manual push.
+#
+# Setup (one-time):
+#   1. Vercel → Project → Settings → Git → Deploy Hooks → create a hook for
+#      the `main` branch and copy its URL.
+#   2. GitHub → repo → Settings → Secrets and variables → Actions → add a
+#      secret named VERCEL_DEPLOY_HOOK with that URL.
+
+on:
+  schedule:
+    # Every day at 04:00 UTC.
+    - cron: "0 4 * * *"
+  workflow_dispatch: {}
+
+jobs:
+  redeploy:
+    name: Trigger Vercel rebuild
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Vercel deploy hook
+        run: |
+          if [ -z "${{ secrets.VERCEL_DEPLOY_HOOK }}" ]; then
+            echo "VERCEL_DEPLOY_HOOK secret is not set — skipping." >&2
+            exit 0
+          fi
+          curl -fsSL -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
