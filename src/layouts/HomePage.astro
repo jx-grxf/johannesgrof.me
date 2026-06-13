@@ -2,6 +2,8 @@
 import BaseHead from "@/components/BaseHead.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import { featuredShowcaseProjects, publicProjects, standardProjects, statusClass, statusLabel, upcomingProjects } from "@/data/projects";
+import type { ProjectStatus } from "@/data/projects";
+import { getProjectGitHubInfo } from "@/data/github";
 import type { LocaleContent } from "@/data/siteContent";
 import { defaultSocialImage, toCanonicalUrl } from "@/data/siteMetadata";
 import "@/styles/global.css";
@@ -13,6 +15,49 @@ interface Props {
 }
 
 const { content, canonicalPath } = Astro.props;
+const isDe = content.lang !== "en";
+
+// Build-time live GitHub data for the project cards (stars, latest release,
+// total downloads). Falls back gracefully when the API is unavailable.
+const githubInfoBySlug = new Map(
+  await Promise.all(publicProjects.map(async (project) => [project.slug, await getProjectGitHubInfo(project)] as const))
+);
+
+const compactCount = (value: number) =>
+  value >= 1000 ? `${(value / 1000).toFixed(value >= 10000 ? 0 : 1).replace(/\.0$/, "")}k` : String(value);
+
+// Small, locale-aware live stat chips shown on each project card.
+const liveStats = (slug: string) => {
+  const info = githubInfoBySlug.get(slug);
+  if (!info) {
+    return [];
+  }
+  const stats: string[] = [];
+  // Only show a version chip for real version numbers — skip status words
+  // like "unreleased" or "archived" so we never render e.g. "varchived".
+  if (info.version && /\d/.test(info.version)) {
+    stats.push(/^v/i.test(info.version) ? info.version : `v${info.version}`);
+  }
+  if (info.stars > 0) {
+    stats.push(`★ ${info.stars}`);
+  }
+  if (info.downloads > 0) {
+    stats.push(`↓ ${compactCount(info.downloads)}`);
+  }
+  return stats;
+};
+
+// German labels for the status badge (statusLabel() is English-only).
+const statusLabelDe: Record<ProjectStatus, string> = {
+  active: "aktiv",
+  beta: "beta-release",
+  experimental: "aktives experiment",
+  preview: "preview",
+  "in development": "in entwicklung",
+  "coming soon": "bald verfügbar",
+  archived: "archiviert",
+};
+const localizedStatus = (status: ProjectStatus) => (isDe ? statusLabelDe[status] : statusLabel(status));
 
 const escapeHtml = (value: string) =>
   value
@@ -189,7 +234,7 @@ const localBusinessSchema = {
 
       <section id="projects" class="section-shell">
         <div class="section-heading reveal">
-          <p class="eyebrow">selected work</p>
+          <p class="eyebrow">{isDe ? "ausgewählte arbeit" : "selected work"}</p>
           <h2>{content.lang === "en" ? "Featured Projects" : "Ausgewählte Projekte"}</h2>
         </div>
         <div class="featured-project-grid">
@@ -222,8 +267,13 @@ const localBusinessSchema = {
                   <div class="featured-card-body">
                     <div class="card-topline">
                       <h3>{project.name}</h3>
-                      <span class={`status ${statusClass(project.status)}`}>{statusLabel(project.status)}</span>
+                      <span class={`status ${statusClass(project.status)}`}>{localizedStatus(project.status)}</span>
                     </div>
+                    {liveStats(project.slug).length > 0 && (
+                      <ul class="live-stats" aria-label={`${project.name} GitHub stats`}>
+                        {liveStats(project.slug).map((stat) => <li>{stat}</li>)}
+                      </ul>
+                    )}
                     {project.proofLabels && (
                       <ul class="proof-chip-list" aria-label={`${project.name} proof points`}>
                         {project.proofLabels.map((label) => <li>{label}</li>)}
@@ -244,7 +294,7 @@ const localBusinessSchema = {
         </div>
 
         <div class="section-heading project-subheading reveal">
-          <p class="eyebrow">more projects</p>
+          <p class="eyebrow">{isDe ? "weitere projekte" : "more projects"}</p>
           <h2>{content.lang === "en" ? "Projects" : "Projekte"}</h2>
         </div>
         <div class="project-grid">
@@ -253,8 +303,13 @@ const localBusinessSchema = {
               <a class="project-card reveal" style={`--reveal-delay: ${index * 70}ms`} href={`/projects/${project.slug}/`}>
                     <div class="card-topline">
                       <h3>{project.name}</h3>
-                      <span class={`status ${statusClass(project.status)}`}>{statusLabel(project.status)}</span>
+                      <span class={`status ${statusClass(project.status)}`}>{localizedStatus(project.status)}</span>
                     </div>
+                  {liveStats(project.slug).length > 0 && (
+                    <ul class="live-stats" aria-label={`${project.name} GitHub stats`}>
+                      {liveStats(project.slug).map((stat) => <li>{stat}</li>)}
+                    </ul>
+                  )}
                   {project.proofLabels && (
                     <ul class="proof-chip-list" aria-label={`${project.name} proof points`}>
                       {project.proofLabels.map((label) => <li>{label}</li>)}
@@ -273,7 +328,7 @@ const localBusinessSchema = {
           }
         </div>
         <div class="coming-soon-group reveal" aria-labelledby="coming-soon-title">
-          <h3 id="coming-soon-title">coming soon</h3>
+          <h3 id="coming-soon-title">{isDe ? "bald verfügbar" : "coming soon"}</h3>
           <div class="upcoming-list">
             {
               upcomingProjects.map((project, index) => (
@@ -282,7 +337,7 @@ const localBusinessSchema = {
                     <h4>{project.name}</h4>
                     <p>{project.description}</p>
                   </div>
-                  <span class={`status ${statusClass(project.status)}`}>{statusLabel(project.status)}</span>
+                  <span class={`status ${statusClass(project.status)}`}>{localizedStatus(project.status)}</span>
                 </article>
               ))
             }

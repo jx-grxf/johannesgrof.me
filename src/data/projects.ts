@@ -103,16 +103,10 @@ export const featuredProjects: Project[] = [
     featuredTier: "featured",
     repo: "jx-grxf/PortPirate",
     githubUrl: "https://github.com/jx-grxf/PortPirate",
-    releaseUrl: "https://github.com/jx-grxf/PortPirate/releases/tag/v0.2.2",
-    fallbackVersion: "v0.2.2",
+    releaseUrl: "https://github.com/jx-grxf/PortPirate/releases",
+    fallbackVersion: "unreleased",
     platformLabels: ["macOS"],
-    proofLabels: ["DMG release", "Native app", "GitHub release"],
-    fallbackDownload: {
-      assetName: "MacDev-0.2.2.dmg",
-      assetUrl: "https://github.com/jx-grxf/PortPirate/releases/download/v0.2.2/MacDev-0.2.2.dmg",
-      size: 4490078,
-      kind: "macos",
-    },
+    proofLabels: ["Native macOS app", "Menu bar utility"],
     highlights: [
       "Runs as a native macOS menu bar utility with a dedicated runtime browser.",
       "Maps each listening TCP port to its process, repository, and the agent that started it.",
@@ -129,7 +123,7 @@ export const featuredProjects: Project[] = [
         height: 900,
       },
     ],
-    visibility: "public",
+    visibility: "planned",
   },
   {
     name: "OpenClaw-Discord-Voice",
