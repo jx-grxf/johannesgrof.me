@@ -47,10 +47,11 @@ const liveStats = (slug: string) => {
   return stats;
 };
 
-// Locale-aware project copy and status labels for the cards.
+// Locale-aware project copy, links, and status labels for the cards.
 const lang: ProjectLang = isDe ? "de" : "en";
 const copy = (project: Project) => getProjectCopy(project, lang);
 const localizedStatus = (status: ProjectStatus) => localizedStatusLabel(status, lang);
+const projectHref = (slug: string) => `${isDe ? "/de" : ""}/projects/${slug}/`;
 
 const escapeHtml = (value: string) =>
   value
@@ -62,7 +63,7 @@ const escapeHtml = (value: string) =>
 const terminalProjectRows = publicProjects
   .map((project, index) => {
     const branch = index === publicProjects.length - 1 ? "└" : "├";
-    return `│  ${branch}─ <a class="terminal-link" href="/projects/${project.slug}/">${escapeHtml(project.name)}</a>`;
+    return `│  ${branch}─ <a class="terminal-link" href="${projectHref(project.slug)}">${escapeHtml(project.name)}</a>`;
   })
   .join("\n");
 const terminalUpcomingRows = upcomingProjects
@@ -238,7 +239,7 @@ const localBusinessSchema = {
               const c = copy(project);
 
               return (
-                <a class="project-card featured-project-card reveal" style={`--reveal-delay: ${index * 80}ms`} href={`/projects/${project.slug}/`}>
+                <a class="project-card featured-project-card reveal" style={`--reveal-delay: ${index * 80}ms`} href={projectHref(project.slug)}>
                   <div class="featured-card-media">
                     {cardImageSrc ? (
                       <picture>
@@ -297,7 +298,7 @@ const localBusinessSchema = {
               const c = copy(project);
 
               return (
-              <a class="project-card reveal" style={`--reveal-delay: ${index * 70}ms`} href={`/projects/${project.slug}/`}>
+              <a class="project-card reveal" style={`--reveal-delay: ${index * 70}ms`} href={projectHref(project.slug)}>
                     <div class="card-topline">
                       <h3>{project.name}</h3>
                       <span class={`status ${statusClass(project.status)}`}>{localizedStatus(project.status)}</span>

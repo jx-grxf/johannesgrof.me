@@ -1,0 +1,475 @@
+---
+import BaseHead from "@/components/BaseHead.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SpeedInsights from "@vercel/speed-insights/astro";
+import type { ProjectReleaseDownload } from "@/data/github";
+import { getProjectGitHubInfo } from "@/data/github";
+import type { Project, ProjectLang } from "@/data/projects";
+import { getProjectCopy, localizedStatusLabel, statusClass } from "@/data/projects";
+import { toCanonicalUrl } from "@/data/siteMetadata";
+import "@/styles/global.css";
+
+interface Props {
+  project: Project;
+  lang: ProjectLang;
+}
+
+const { project, lang } = Astro.props;
+const isDe = lang === "de";
+const c = getProjectCopy(project, lang);
+const github = await getProjectGitHubInfo(project);
+const isPublicRepo = project.visibility === "public";
+const hasRelease = !project.downloadsDisabled && (Boolean(github.downloadGroup) || (Boolean(github.version) && github.version !== "unreleased"));
+
+// Localized chrome strings (project copy itself comes from getProjectCopy).
+const s = isDe
+  ? {
+      projects: "Projekte",
+      release: "Release",
+      back: "Zurück zu den Projekten",
+      latestRelease: "Neuestes Release",
+      platform: "Plattform",
+      download: "Download",
+      source: "Quelle",
+      access: "Zugriff",
+      availability: "Verfügbarkeit",
+      updated: "Aktualisiert",
+      comingSoon: "bald verfügbar",
+      notAccessible: "nicht zugänglich",
+      githubRepository: "GitHub-Repository",
+      npmPackageVal: "npm-Paket",
+      githubReleaseVal: "GitHub-Release",
+      releaseAssets: (n: number) => `${n} Release-Assets`,
+      archived: "Archiviert",
+      installNpm: "Mit npm installieren",
+      openSource: "Quelltext öffnen",
+      githubArchive: "GitHub-Archiv",
+      comingSoonNote: "Öffentliches Release in Kürze — dieser Build ist noch in privater Entwicklung.",
+      problem: "Problem",
+      built: "Was ich gebaut habe",
+      resultLabel: "Ergebnis",
+      audience: "Zielgruppe",
+      developerSetup: "Entwickler-Setup",
+      highlights: "Highlights",
+      packageArchive: "Paket-Archiv",
+      releaseTgz: "Release-TGZ",
+      macOnly: "nur Mac",
+      windowsOnly: "nur Windows",
+      macOrWindows: "Mac oder Windows",
+      releaseAssetsLabel: "Release-Assets",
+      stable: "Stabil",
+      prerelease: "Vorabversion",
+      recent: "kürzlich",
+      notePartial: "Live-Repository-Daten geladen; Release-Assets nutzen bei Bedarf Fallback-Daten.",
+      noteFallback: "Es werden geprüfte Fallback-Daten angezeigt, weil die GitHub-Metadaten beim Build nicht verfügbar waren.",
+    }
+  : {
+      projects: "Projects",
+      release: "Release",
+      back: "Back to projects",
+      latestRelease: "Latest release",
+      platform: "Platform",
+      download: "Download",
+      source: "Source",
+      access: "Access",
+      availability: "Availability",
+      updated: "Updated",
+      comingSoon: "coming soon",
+      notAccessible: "not accessible",
+      githubRepository: "GitHub repository",
+      npmPackageVal: "npm package",
+      githubReleaseVal: "GitHub release",
+      releaseAssets: (n: number) => `${n} release assets`,
+      archived: "Archived",
+      installNpm: "Install with npm",
+      openSource: "Open source",
+      githubArchive: "GitHub archive",
+      comingSoonNote: "Public release coming soon — this build is still in private development.",
+      problem: "Problem",
+      built: "What I built",
+      resultLabel: "Result",
+      audience: "Audience",
+      developerSetup: "Developer setup",
+      highlights: "Highlights",
+      packageArchive: "Package archive",
+      releaseTgz: "Release TGZ",
+      macOnly: "Mac only",
+      windowsOnly: "Windows only",
+      macOrWindows: "Mac or Windows",
+      releaseAssetsLabel: "Release assets",
+      stable: "Stable",
+      prerelease: "Pre-release",
+      recent: "recent",
+      notePartial: "Live repository data loaded; release assets use fallback data where needed.",
+      noteFallback: "Showing verified fallback data because GitHub metadata was unavailable during build.",
+    };
+
+const localePrefix = isDe ? "/de" : "";
+const navItems = [
+  { label: s.projects, href: `${isDe ? "/de/" : "/"}#projects` },
+  ...(isPublicRepo ? [{ label: "GitHub", href: project.githubUrl, external: true }] : []),
+  ...(hasRelease ? [{ label: s.release, href: github.releaseUrl, external: true }] : []),
+];
+const [heroImage, ...galleryImages] = project.showcase;
+const stableDownloads = github.downloadGroup?.stableDownloads ?? (github.downloadGroup?.stable ? [github.downloadGroup.stable] : []);
+const downloads = [...stableDownloads, ...(github.downloadGroup?.prereleases ?? [])].filter(
+  (download): download is ProjectReleaseDownload => Boolean(download)
+);
+const hasMultipleDownloads = downloads.length > 1;
+const downloadMenuId = `${project.slug}-download-menu`;
+const npmPackageUrl = project.npmPackage ? `https://www.npmjs.com/package/${project.npmPackage}` : undefined;
+const downloadActionLabel = project.npmPackage ? s.packageArchive : s.download;
+const downloadButtonDetail = (() => {
+  if (project.npmPackage) {
+    return s.releaseTgz;
+  }
+
+  const hasMac = downloads.some((download) => download.kind === "macos");
+  const hasWindows = downloads.some((download) => download.kind === "windows");
+
+  if (hasMac && hasWindows) {
+    return s.macOrWindows;
+  }
+
+  if (hasMac) {
+    return s.macOnly;
+  }
+
+  if (hasWindows) {
+    return s.windowsOnly;
+  }
+
+  return s.releaseAssetsLabel;
+})();
+const platformLabel = (download: ProjectReleaseDownload) => {
+  if (download.kind === "macos") {
+    return "Mac";
+  }
+
+  if (download.kind === "windows") {
+    return "Windows";
+  }
+
+  return "Asset";
+};
+
+const formatDate = (date: string) => {
+  if (!date) {
+    return s.recent;
+  }
+
+  return new Intl.DateTimeFormat(isDe ? "de-AT" : "en", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(date));
+};
+
+const platformValue = project.downloadsDisabled ? s.archived : project.platformLabels?.join(" / ") ?? github.language;
+const downloadValue = project.npmPackage
+  ? s.npmPackageVal
+  : project.downloadsDisabled
+    ? s.notAccessible
+  : !isPublicRepo
+    ? s.comingSoon
+  : github.downloadGroup
+    ? stableDownloads.length > 1
+      ? s.releaseAssets(stableDownloads.length)
+      : stableDownloads[0]?.label ?? s.githubReleaseVal
+    : s.githubRepository;
+const downloadLabel = project.downloadsDisabled
+  ? s.access
+  : !isPublicRepo
+    ? s.availability
+  : project.npmPackage || github.downloadGroup
+    ? s.download
+    : s.source;
+const metaItems = [
+  hasRelease ? { label: s.latestRelease, value: github.version } : undefined,
+  { label: s.platform, value: platformValue },
+  { label: downloadLabel, value: downloadValue },
+  github.updatedAt ? { label: s.updated, value: formatDate(github.updatedAt) } : undefined,
+].filter((item): item is { label: string; value: string } => Boolean(item));
+const metadataNote =
+  github.metadataState === "live"
+    ? undefined
+    : github.metadataState === "partial"
+      ? s.notePartial
+      : s.noteFallback;
+const isVideoShowcase = (item: typeof heroImage) => item?.kind === "video";
+
+const canonicalPath = `${localePrefix}/projects/${project.slug}/`;
+const hreflangAlternates = [
+  { hreflang: "en", href: toCanonicalUrl(`/projects/${project.slug}/`) },
+  { hreflang: "de-AT", href: toCanonicalUrl(`/de/projects/${project.slug}/`) },
+  { hreflang: "x-default", href: toCanonicalUrl(`/projects/${project.slug}/`) },
+];
+---
+
+<!doctype html>
+<html lang={isDe ? "de-AT" : "en"}>
+  <head>
+    <BaseHead
+      title={`${project.name} · Johannes Grof`}
+      description={`${project.name}: ${c.tagline}`}
+      canonicalPath={canonicalPath}
+      image={heroImage?.src}
+      type="article"
+      ogLocale={isDe ? "de_AT" : "en_US"}
+      hreflangAlternates={hreflangAlternates}
+    />
+  </head>
+  <body>
+    <SiteHeader navItems={navItems} ariaLabel="Project navigation" />
+
+    <main class="project-detail section-shell">
+      <a class="back-link" href={`${isDe ? "/de/" : "/"}#projects`}>{s.back}</a>
+
+      <section class="project-detail-hero" aria-labelledby="project-title">
+        <div class="project-detail-copy">
+          {project.logo && (
+            <picture>
+              {project.logo.fallbackSrc && <source srcset={project.logo.src} type="image/webp" />}
+              <img class="project-detail-logo" src={project.logo.fallbackSrc ?? project.logo.src} alt="" width={project.logo.width} height={project.logo.height} aria-hidden="true" loading="eager" decoding="async" />
+            </picture>
+          )}
+          <div class="project-kicker">
+            <span class={`status ${statusClass(project.status)}`}>{localizedStatusLabel(project.status, lang)}</span>
+            {hasRelease && <span>{github.version}</span>}
+          </div>
+          <h1 id="project-title">{project.name}</h1>
+          <p class="project-tagline">{c.tagline}</p>
+          <p class="project-description">{c.description}</p>
+          <div class="project-actions">
+            {npmPackageUrl && (
+              <a class="button install-button" href={npmPackageUrl} target="_blank" rel="noreferrer">
+                <span>{s.installNpm}</span>
+                <small>npm install -g {project.npmPackage}</small>
+              </a>
+            )}
+            {github.downloadGroup && (
+              hasMultipleDownloads ? (
+                <div class="download-menu" data-download-menu>
+                  <button
+                    class={`button download-button ${downloads[0]?.kind ?? "release"}`}
+                    type="button"
+                    aria-expanded="false"
+                    aria-controls={downloadMenuId}
+                    data-download-trigger
+                  >
+                    <span>{downloadActionLabel}</span>
+                    <small>{downloadButtonDetail}</small>
+                  </button>
+                  <div id={downloadMenuId} class="download-options" aria-hidden="true" data-download-options>
+                    {stableDownloads.map((download) => (
+                      <a href={download.assetUrl} target="_blank" rel="noreferrer">
+                        <span class="download-option-meta">{s.stable} · {platformLabel(download)}</span>
+                        <strong>{download.label}</strong>
+                        <span>{download.tag} · {download.detail}</span>
+                      </a>
+                    ))}
+                    {github.downloadGroup.prereleases.map((download) => (
+                      <a href={download.assetUrl} target="_blank" rel="noreferrer">
+                        <span class="download-option-meta">{s.prerelease} · {platformLabel(download)}</span>
+                        <strong>{download.label}</strong>
+                        <span>{download.tag} · {download.detail}</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <a class={`button download-button ${downloads[0]?.kind ?? "release"}`} href={downloads[0]?.assetUrl} target="_blank" rel="noreferrer">
+                  <span>{project.npmPackage ? s.packageArchive : downloads[0]?.label}</span>
+                  <small>{downloads[0]?.detail}</small>
+                </a>
+              )
+            )}
+            {isPublicRepo && <a class="button secondary" href={project.githubUrl} target="_blank" rel="noreferrer">{project.downloadsDisabled ? s.githubArchive : s.openSource}</a>}
+            {hasRelease && <a class="button secondary" href={github.releaseUrl} target="_blank" rel="noreferrer">{s.latestRelease}</a>}
+            {!isPublicRepo && !hasRelease && !github.downloadGroup && !npmPackageUrl && (
+              <p class="actions-note">{s.comingSoonNote}</p>
+            )}
+          </div>
+        </div>
+
+        <aside class="project-meta-panel" aria-label={`${project.name} GitHub summary`}>
+          <dl class="project-meta-grid">
+            {metaItems.map((item) => (
+              <div>
+                <dt>{item.label}</dt>
+                <dd>{item.value}</dd>
+              </div>
+            ))}
+          </dl>
+          {metadataNote && <p class="metadata-note">{metadataNote}</p>}
+        </aside>
+      </section>
+
+      {heroImage && (
+        <section class="project-showcase" aria-label={`${project.name} showcase`}>
+          {isVideoShowcase(heroImage) ? (
+            <video class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.src} poster={heroImage.posterSrc ?? heroImage.fallbackSrc} width={heroImage.width} height={heroImage.height} controls muted loop playsinline preload="metadata" aria-label={heroImage.alt} data-showcase-video></video>
+          ) : (
+            <picture>
+              {heroImage.fallbackSrc && <source srcset={heroImage.src} type="image/webp" />}
+              <img class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} width={heroImage.width} height={heroImage.height} loading="eager" decoding="async" />
+            </picture>
+          )}
+        </section>
+      )}
+
+      <section class="case-study-panel" aria-label={`${project.name} case study`}>
+        <article>
+          <span>{s.problem}</span>
+          <p>{c.caseStudy.problem}</p>
+        </article>
+        <article>
+          <span>{s.built}</span>
+          <p>{c.caseStudy.built}</p>
+        </article>
+        <article>
+          <span>{s.resultLabel}</span>
+          <p>{c.caseStudy.result}</p>
+        </article>
+        <article>
+          <span>{s.audience}</span>
+          <p>{c.audience}</p>
+        </article>
+      </section>
+
+      {c.releaseHighlights && (
+        <section class="release-panel" aria-label={`${project.name} release highlights`}>
+          <div>
+            <span>{s.latestRelease}</span>
+            <h2>{github.version}</h2>
+          </div>
+          <ul>
+            {c.releaseHighlights.map((highlight) => <li>{highlight}</li>)}
+          </ul>
+        </section>
+      )}
+
+      <section class="project-detail-grid" aria-label={`${project.name} details`}>
+        {github.commands.length > 0 && (
+          <div class="command-panel">
+            <h2>{s.developerSetup}</h2>
+            {github.commands.map((command) => (
+              <div class="command-block">
+                <span>{command.label}</span>
+                <code>{command.command}</code>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div class="highlights-panel">
+          <h2>{s.highlights}</h2>
+          <ul>
+            {c.highlights.map((highlight) => <li>{highlight}</li>)}
+          </ul>
+        </div>
+      </section>
+
+      {galleryImages.length > 0 && (
+        <section class="showcase-gallery" aria-label={`${project.name} gallery`}>
+          {galleryImages.map((image) => (
+            <figure class={isVideoShowcase(image) ? "showcase-gallery-video" : undefined}>
+              {isVideoShowcase(image) ? (
+                <video class={`showcase-image ${image.fit ?? "cover"}`} src={image.src} poster={image.posterSrc ?? image.fallbackSrc} width={image.width} height={image.height} controls muted loop playsinline preload="metadata" aria-label={image.alt} data-showcase-video></video>
+              ) : (
+                <picture>
+                  {image.fallbackSrc && <source srcset={image.src} type="image/webp" />}
+                  <img class={`showcase-image ${image.fit ?? "cover"}`} src={image.fallbackSrc ?? image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" />
+                </picture>
+              )}
+            </figure>
+          ))}
+        </section>
+      )}
+    </main>
+    <script>
+      const downloadMenus = document.querySelectorAll<HTMLElement>("[data-download-menu]");
+
+      const closeDownloadMenu = (menu: HTMLElement) => {
+        const trigger = menu.querySelector("[data-download-trigger]");
+        const options = menu.querySelector("[data-download-options]");
+
+        menu.dataset.open = "false";
+        trigger?.setAttribute("aria-expanded", "false");
+        options?.setAttribute("aria-hidden", "true");
+      };
+
+      downloadMenus.forEach((menu) => {
+        const trigger = menu.querySelector("[data-download-trigger]");
+        const options = menu.querySelector("[data-download-options]");
+
+        menu.dataset.open = "false";
+
+        trigger?.addEventListener("click", () => {
+          const willOpen = menu.dataset.open !== "true";
+
+          downloadMenus.forEach((item) => {
+            if (item !== menu) {
+              closeDownloadMenu(item);
+            }
+          });
+
+          menu.dataset.open = String(willOpen);
+          trigger.setAttribute("aria-expanded", String(willOpen));
+          options?.setAttribute("aria-hidden", String(!willOpen));
+        });
+      });
+
+      document.addEventListener("click", (event) => {
+        const target = event.target;
+
+        if (!(target instanceof Node)) {
+          return;
+        }
+
+        downloadMenus.forEach((menu) => {
+          if (!menu.contains(target)) {
+            closeDownloadMenu(menu);
+          }
+        });
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape") {
+          return;
+        }
+
+        downloadMenus.forEach(closeDownloadMenu);
+      });
+
+      const showcaseVideos = document.querySelectorAll<HTMLVideoElement>("[data-showcase-video]");
+
+      if ("IntersectionObserver" in window) {
+        const videoObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              const video = entry.target;
+
+              if (!(video instanceof HTMLVideoElement)) {
+                return;
+              }
+
+              if (entry.intersectionRatio >= 0.55) {
+                video.play().catch(() => undefined);
+              } else {
+                video.pause();
+              }
+            });
+          },
+          { threshold: [0, 0.55, 1] },
+        );
+
+        showcaseVideos.forEach((video) => {
+          video.muted = true;
+          videoObserver.observe(video);
+        });
+      }
+    </script>
+    <SpeedInsights />
+  </body>
+</html>
