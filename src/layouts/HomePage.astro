@@ -1,8 +1,8 @@
 ---
 import BaseHead from "@/components/BaseHead.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
-import { featuredShowcaseProjects, publicProjects, standardProjects, statusClass, statusLabel, upcomingProjects } from "@/data/projects";
-import type { ProjectStatus } from "@/data/projects";
+import { featuredShowcaseProjects, getProjectCopy, localizedStatusLabel, publicProjects, standardProjects, statusClass, upcomingProjects } from "@/data/projects";
+import type { Project, ProjectLang, ProjectStatus } from "@/data/projects";
 import { getProjectGitHubInfo } from "@/data/github";
 import type { LocaleContent } from "@/data/siteContent";
 import { defaultSocialImage, toCanonicalUrl } from "@/data/siteMetadata";
@@ -47,17 +47,10 @@ const liveStats = (slug: string) => {
   return stats;
 };
 
-// German labels for the status badge (statusLabel() is English-only).
-const statusLabelDe: Record<ProjectStatus, string> = {
-  active: "aktiv",
-  beta: "beta-release",
-  experimental: "aktives experiment",
-  preview: "preview",
-  "in development": "in entwicklung",
-  "coming soon": "bald verfügbar",
-  archived: "archiviert",
-};
-const localizedStatus = (status: ProjectStatus) => (isDe ? statusLabelDe[status] : statusLabel(status));
+// Locale-aware project copy and status labels for the cards.
+const lang: ProjectLang = isDe ? "de" : "en";
+const copy = (project: Project) => getProjectCopy(project, lang);
+const localizedStatus = (status: ProjectStatus) => localizedStatusLabel(status, lang);
 
 const escapeHtml = (value: string) =>
   value
@@ -242,6 +235,7 @@ const localBusinessSchema = {
             featuredShowcaseProjects.map((project, index) => {
               const heroImage = project.showcase[0];
               const cardImageSrc = heroImage?.cardSrc ?? heroImage?.src;
+              const c = copy(project);
 
               return (
                 <a class="project-card featured-project-card reveal" style={`--reveal-delay: ${index * 80}ms`} href={`/projects/${project.slug}/`}>
@@ -254,7 +248,7 @@ const localBusinessSchema = {
                     ) : (
                       <div class="featured-card-placeholder" aria-hidden="true">
                         <span class="featured-card-placeholder-mark">{project.name}</span>
-                        <span class="featured-card-placeholder-tagline">{project.tagline}</span>
+                        <span class="featured-card-placeholder-tagline">{c.tagline}</span>
                       </div>
                     )}
                     {project.logo && (
@@ -274,13 +268,13 @@ const localBusinessSchema = {
                         {liveStats(project.slug).map((stat) => <li>{stat}</li>)}
                       </ul>
                     )}
-                    {project.proofLabels && (
+                    {c.proofLabels && (
                       <ul class="proof-chip-list" aria-label={`${project.name} proof points`}>
-                        {project.proofLabels.map((label) => <li>{label}</li>)}
+                        {c.proofLabels.map((label) => <li>{label}</li>)}
                       </ul>
                     )}
-                    <p>{project.description}</p>
-                    <p class="project-result">{project.result}</p>
+                    <p>{c.description}</p>
+                    <p class="project-result">{c.result}</p>
                     <ul>
                       {project.stack.map((item) => (
                         <li>{item}</li>
@@ -299,7 +293,10 @@ const localBusinessSchema = {
         </div>
         <div class="project-grid">
           {
-            standardProjects.map((project, index) => (
+            standardProjects.map((project, index) => {
+              const c = copy(project);
+
+              return (
               <a class="project-card reveal" style={`--reveal-delay: ${index * 70}ms`} href={`/projects/${project.slug}/`}>
                     <div class="card-topline">
                       <h3>{project.name}</h3>
@@ -310,21 +307,22 @@ const localBusinessSchema = {
                       {liveStats(project.slug).map((stat) => <li>{stat}</li>)}
                     </ul>
                   )}
-                  {project.proofLabels && (
+                  {c.proofLabels && (
                     <ul class="proof-chip-list" aria-label={`${project.name} proof points`}>
-                      {project.proofLabels.map((label) => <li>{label}</li>)}
+                      {c.proofLabels.map((label) => <li>{label}</li>)}
                     </ul>
                   )}
-                  <p>{project.description}</p>
-                  <p class="project-audience">{project.audience}</p>
-                  <p class="project-result">{project.result}</p>
+                  <p>{c.description}</p>
+                  <p class="project-audience">{c.audience}</p>
+                  <p class="project-result">{c.result}</p>
                   <ul>
                     {project.stack.map((item) => (
                       <li>{item}</li>
                     ))}
                   </ul>
                 </a>
-            ))
+              );
+            })
           }
         </div>
         <div class="coming-soon-group reveal" aria-labelledby="coming-soon-title">
@@ -335,7 +333,7 @@ const localBusinessSchema = {
                 <article class="upcoming-project reveal" style={`--reveal-delay: ${index * 70}ms`}>
                   <div>
                     <h4>{project.name}</h4>
-                    <p>{project.description}</p>
+                    <p>{isDe && project.de ? project.de.description : project.description}</p>
                   </div>
                   <span class={`status ${statusClass(project.status)}`}>{localizedStatus(project.status)}</span>
                 </article>
