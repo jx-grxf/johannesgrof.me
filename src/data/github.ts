@@ -306,7 +306,9 @@ const buildCommands = (project: Project, releaseUrl: string, downloadGroup?: Pro
   const repoName = normalizeRepoName(project.repo);
   const commands: ProjectCommand[] = [];
 
-  if (project.downloadsDisabled) {
+  // Planned/private repos have no clonable source or release yet — skip the
+  // clone/download commands so the page never points at a 404.
+  if (project.downloadsDisabled || project.visibility !== "public") {
     return commands;
   }
 

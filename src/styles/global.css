@@ -1284,6 +1284,13 @@ pre {
   margin-top: 24px;
 }
 
+.actions-note {
+  margin: 0;
+  color: var(--subtle);
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
 .project-meta-panel {
   position: sticky;
   top: 18px;

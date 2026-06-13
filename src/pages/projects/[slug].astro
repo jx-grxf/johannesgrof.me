@@ -16,10 +16,11 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const github = await getProjectGitHubInfo(project);
+const isPublicRepo = project.visibility === "public";
 const hasRelease = !project.downloadsDisabled && (Boolean(github.downloadGroup) || (Boolean(github.version) && github.version !== "unreleased"));
 const navItems = [
   { label: "Projects", href: "/#projects" },
-  { label: "GitHub", href: project.githubUrl, external: true },
+  ...(isPublicRepo ? [{ label: "GitHub", href: project.githubUrl, external: true }] : []),
   ...(hasRelease ? [{ label: "Release", href: github.releaseUrl, external: true }] : []),
 ];
 const [heroImage, ...galleryImages] = project.showcase;
@@ -82,17 +83,25 @@ const downloadValue = project.npmPackage
   ? "npm package"
   : project.downloadsDisabled
     ? "not accessible"
+  : !isPublicRepo
+    ? "coming soon"
   : github.downloadGroup
     ? stableDownloads.length > 1
       ? `${stableDownloads.length} release assets`
       : stableDownloads[0]?.label ?? "GitHub release"
     : "GitHub repository";
-const downloadLabel = project.downloadsDisabled ? "Access" : project.npmPackage || github.downloadGroup ? "Download" : "Source";
+const downloadLabel = project.downloadsDisabled
+  ? "Access"
+  : !isPublicRepo
+    ? "Availability"
+  : project.npmPackage || github.downloadGroup
+    ? "Download"
+    : "Source";
 const metaItems = [
   hasRelease ? { label: "Latest release", value: github.version } : undefined,
   { label: "Platform", value: platformValue },
   { label: downloadLabel, value: downloadValue },
-  { label: "Updated", value: formatDate(github.updatedAt) },
+  github.updatedAt ? { label: "Updated", value: formatDate(github.updatedAt) } : undefined,
 ].filter((item): item is { label: string; value: string } => Boolean(item));
 const metadataNote =
   github.metadataState === "live"
@@ -179,8 +188,11 @@ const isVideoShowcase = (item: typeof heroImage) => item?.kind === "video";
                 </a>
               )
             )}
-            <a class="button secondary" href={project.githubUrl} target="_blank" rel="noreferrer">{project.downloadsDisabled ? "GitHub archive" : "Open source"}</a>
+            {isPublicRepo && <a class="button secondary" href={project.githubUrl} target="_blank" rel="noreferrer">{project.downloadsDisabled ? "GitHub archive" : "Open source"}</a>}
             {hasRelease && <a class="button secondary" href={github.releaseUrl} target="_blank" rel="noreferrer">Latest release</a>}
+            {!isPublicRepo && !hasRelease && !github.downloadGroup && !npmPackageUrl && (
+              <p class="actions-note">Public release coming soon — this build is still in private development.</p>
+            )}
           </div>
         </div>
 
