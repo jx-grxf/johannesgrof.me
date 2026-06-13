@@ -12,6 +12,23 @@ export interface ShowcaseImage {
   height?: number;
 }
 
+// Translatable, human-written copy. English lives on the Project directly;
+// `de` carries the full German equivalent. getProjectCopy() merges them.
+export interface ProjectCopy {
+  tagline: string;
+  description: string;
+  audience: string;
+  result: string;
+  caseStudy: {
+    problem: string;
+    built: string;
+    result: string;
+  };
+  highlights: string[];
+  releaseHighlights?: string[];
+  proofLabels?: string[];
+}
+
 export interface Project {
   name: string;
   slug: string;
@@ -26,6 +43,7 @@ export interface Project {
     built: string;
     result: string;
   };
+  de?: ProjectCopy;
   stack: string[];
   featuredTier: "featured" | "project";
   repo: `jx-grxf/${string}`;
@@ -68,10 +86,46 @@ export const statusLabel = (status: ProjectStatus) => {
   return labels[status];
 };
 
+export type ProjectLang = "en" | "de";
+
+// German status labels for the project badge.
+export const statusLabelDe: Record<ProjectStatus, string> = {
+  active: "aktiv",
+  beta: "beta-release",
+  experimental: "aktives experiment",
+  preview: "preview",
+  "in development": "in entwicklung",
+  "coming soon": "bald verfügbar",
+  archived: "archiviert",
+};
+
+export const localizedStatusLabel = (status: ProjectStatus, lang: ProjectLang) =>
+  lang === "de" ? statusLabelDe[status] : statusLabel(status);
+
+// Returns the project's copy in the requested language, falling back to the
+// English fields whenever a German translation is not provided.
+export const getProjectCopy = (project: Project, lang: ProjectLang): ProjectCopy => {
+  if (lang === "de" && project.de) {
+    return project.de;
+  }
+
+  return {
+    tagline: project.tagline,
+    description: project.description,
+    audience: project.audience,
+    result: project.result,
+    caseStudy: project.caseStudy,
+    highlights: project.highlights,
+    releaseHighlights: project.releaseHighlights,
+    proofLabels: project.proofLabels,
+  };
+};
+
 export interface UpcomingProject {
   name: string;
   status: ProjectStatus;
   description: string;
+  de?: { description: string };
   stack: string[];
   visibility: "public" | "private" | "planned";
 }
@@ -129,15 +183,34 @@ export const featuredProjects: Project[] = [
     name: "OpenClaw-Discord-Voice",
     slug: "openclaw-discord-voice",
     status: "active",
-    tagline: "Discord voice transport for local OpenClaw sessions.",
+    tagline: "Talk to a local OpenClaw agent through a Discord voice channel.",
     description:
-      "A small TypeScript bridge that connects Discord voice events with a local OpenClaw runtime, keeping the voice pipeline observable and controllable.",
-    audience: "For local-agent experiments that need Discord voice input without hiding the runtime.",
-    result: "Turns Discord voice events into an inspectable local OpenClaw workflow.",
+      "Join a voice channel, speak one turn, and the bridge transcribes it locally with Whisper, hands it to your local OpenClaw session, and plays the reply back. The whole pipeline stays on your machine and in view.",
+    audience: "For self-hosted agent setups that want voice in Discord without handing the runtime to a hosted bot.",
+    result: "Discord voice in, local OpenClaw out — Opus to Whisper to agent to speech, all self-hosted.",
     caseStudy: {
-      problem: "Local OpenClaw sessions can be hard to use naturally when voice input and runtime state live in separate tools.",
-      built: "I built a TypeScript bridge around explicit status output, session control, and a visible voice pipeline.",
-      result: "Discord voice events become a visible OpenClaw workflow with session control, tool-calling context, memory support, and optional speech output.",
+      problem: "Voice-controlling a local agent over Discord usually means a hosted bot you can't see into and don't fully control.",
+      built: "A self-hosted Discord.js bridge: Opus decode, ffmpeg to WAV, local whisper-cli transcription, one session per guild, and switchable Piper, macOS say, or ElevenLabs voices.",
+      result: "Speech stays on your machine, the session is yours, and every step of the pipeline is inspectable.",
+    },
+    de: {
+      tagline: "Sprich über einen Discord-Voice-Channel mit einem lokalen OpenClaw-Agenten.",
+      description:
+        "Tritt einem Voice-Channel bei, sprich einen Zug, und die Bridge transkribiert ihn lokal mit Whisper, gibt ihn an deine lokale OpenClaw-Session und spielt die Antwort zurück. Die ganze Pipeline bleibt auf deinem Rechner und sichtbar.",
+      audience: "Für self-hosted Agent-Setups, die Voice in Discord wollen, ohne die Runtime an einen gehosteten Bot abzugeben.",
+      result: "Discord-Voice rein, lokales OpenClaw raus — Opus zu Whisper zu Agent zu Sprache, komplett self-hosted.",
+      caseStudy: {
+        problem: "Einen lokalen Agenten per Discord-Voice zu steuern heißt meist: ein gehosteter Bot, in den du nicht reinsiehst und den du nicht kontrollierst.",
+        built: "Eine self-hosted Discord.js-Bridge: Opus-Decode, ffmpeg zu WAV, lokale whisper-cli-Transkription, eine Session pro Guild und umschaltbare Stimmen (Piper, macOS say oder ElevenLabs).",
+        result: "Die Sprache bleibt auf deinem Rechner, die Session gehört dir, und jeder Schritt der Pipeline ist einsehbar.",
+      },
+      proofLabels: ["GitHub-Release", "TypeScript-Bridge"],
+      highlights: [
+        "Nimmt einen gesprochenen Zug auf und transkribiert ihn lokal mit whisper-cli — kein Cloud-STT.",
+        "Verbindet direkt mit deiner lokalen OpenClaw-Session, eine pro Discord-Guild.",
+        "Umschaltbare Antworten: Piper, macOS say oder ElevenLabs.",
+        "Eingebaute doctor- und /info-Checks für Env, Binaries, Modellpfad und Discord-Auth.",
+      ],
     },
     stack: ["TypeScript", "Discord", "Voice"],
     featuredTier: "project",
@@ -148,9 +221,10 @@ export const featuredProjects: Project[] = [
     platformLabels: ["Node.js", "Discord"],
     proofLabels: ["GitHub release", "TypeScript bridge"],
     highlights: [
-      "Bridges Discord voice events into a local OpenClaw workflow.",
-      "Keeps the runtime path explicit instead of hiding it behind a black-box bot.",
-      "Designed around status output, session control, and maintainable TypeScript.",
+      "Captures one spoken turn and transcribes it locally with whisper-cli — no cloud STT.",
+      "Bridges straight into your local OpenClaw session, one per Discord guild.",
+      "Switchable replies: Piper, macOS say, or ElevenLabs.",
+      "Built-in doctor and /info checks for env, binaries, model path, and Discord auth.",
     ],
     showcase: [
       {
@@ -168,15 +242,34 @@ export const featuredProjects: Project[] = [
     name: "DocxToPDF",
     slug: "docxtopdf",
     status: "active",
-    tagline: "Batch DOCX to PDF conversion through Microsoft Word.",
+    tagline: "Batch-convert DOCX to PDF using Word itself as the engine.",
     description:
-      "A macOS TUI that searches DOCX files, lets you select them with the keyboard, and exports PDFs through Word's native renderer.",
-    audience: "For Mac users who need reliable DOCX exports without opening every file by hand.",
-    result: "Batch converts selected DOCX files while keeping Word's PDF fidelity.",
+      "A keyboard-driven macOS tool that Spotlight-searches your whole Mac for DOCX files, lets you tick the ones you want, and exports them all in one Word session — so the PDFs match Word's own output, not a parser's guess.",
+    audience: "For anyone on a Mac who has to turn a pile of Word documents into faithful PDFs.",
+    result: "Pick files with the keyboard, hit export, and Word renders every PDF in one pass — optionally with a searchable OCR layer.",
     caseStudy: {
-      problem: "Manual DOCX to PDF export is slow, and non-Word converters often break document layout.",
-      built: "I built a keyboard-driven macOS TUI that finds DOCX files, lets the user select batches, and drives Word's native renderer.",
-      result: "The workflow keeps document fidelity high while removing the repeated open-export-close loop.",
+      problem: "Exporting DOCX to PDF by hand is tedious, and LibreOffice or library converters quietly mangle complex Word layouts.",
+      built: "A TypeScript TUI that finds DOCX via Spotlight, offers keyboard multi-select, and drives Microsoft Word over AppleScript to export in a single batch session.",
+      result: "Layout fidelity stays Word-exact, and the open-export-close loop disappears.",
+    },
+    de: {
+      tagline: "DOCX stapelweise zu PDF — mit Word selbst als Engine.",
+      description:
+        "Ein tastaturgesteuertes macOS-Tool, das per Spotlight den ganzen Mac nach DOCX-Dateien durchsucht, dich die gewünschten anhaken lässt und sie alle in einer Word-Session exportiert — so passen die PDFs zu Words eigener Ausgabe, nicht zum Rateversuch eines Parsers.",
+      audience: "Für alle am Mac, die einen Stapel Word-Dokumente in originalgetreue PDFs verwandeln müssen.",
+      result: "Dateien per Tastatur wählen, exportieren, und Word rendert jedes PDF in einem Durchgang — optional mit durchsuchbarer OCR-Schicht.",
+      caseStudy: {
+        problem: "DOCX von Hand zu PDF zu exportieren ist mühsam, und LibreOffice oder Library-Konverter zerschießen komplexe Word-Layouts stillschweigend.",
+        built: "Ein TypeScript-TUI, das DOCX per Spotlight findet, Mehrfachauswahl per Tastatur bietet und Microsoft Word über AppleScript zum Batch-Export in einer Session steuert.",
+        result: "Die Layout-Treue bleibt Word-exakt, und die Öffnen-Exportieren-Schließen-Schleife verschwindet.",
+      },
+      proofLabels: ["GitHub-Release", "Word-Renderer"],
+      highlights: [
+        "Nutzt Microsoft Word selbst als Renderer, damit die PDFs zu Words eigenem Export passen.",
+        "Durchsucht den ganzen Mac per Spotlight nach DOCX, mit Dateisystem-Fallback.",
+        "Mehrfachauswahl und Filter per Tastatur; eine Word-Session exportiert den ganzen Stapel.",
+        "Optionale OCRmyPDF-Schicht hält die Ausgabe durchsuchbar.",
+      ],
     },
     stack: ["TypeScript", "macOS", "Word"],
     featuredTier: "project",
@@ -187,10 +280,10 @@ export const featuredProjects: Project[] = [
     platformLabels: ["macOS", "Microsoft Word"],
     proofLabels: ["GitHub release", "Word renderer"],
     highlights: [
-      "Uses Microsoft Word as the export engine for document fidelity.",
-      "Supports batch conversion in a single Word session where possible.",
-      "Optional OCR layer support keeps generated PDFs searchable.",
-      "Removes the repeated open-export-close loop from DOCX to PDF work.",
+      "Uses Microsoft Word itself as the renderer, so PDFs match Word's own export.",
+      "Spotlight-searches the whole Mac for DOCX, with a filesystem fallback.",
+      "Keyboard multi-select and filter; one Word session exports the whole batch.",
+      "Optional OCRmyPDF layer keeps the output searchable.",
     ],
     showcase: [
       {
@@ -216,15 +309,34 @@ export const featuredProjects: Project[] = [
       width: 256,
       height: 256,
     },
-    tagline: "Modern radio playback for first-generation T+A Caruso systems.",
+    tagline: "Internet radio, brought back to first-gen T+A Caruso systems.",
     description:
-      "A local radio and playback bridge that makes old Caruso systems usable again with browsable stations, renderer status, and server controls.",
-    audience: "For owners of older T+A Caruso systems that lost comfortable modern radio browsing.",
-    result: "Brings station browsing, playback state, and local controls back into one dashboard.",
+      "T+A dropped a usable internet-radio path for older Caruso units, so this turns your computer into a local UPnP/DLNA source: search stations on your laptop, save the ones that work, and browse them again from the Caruso — plus your own music folders.",
+    audience: "For owners of a first-generation T+A Caruso whose built-in radio browsing stopped being usable.",
+    result: "Search and save stations from a dashboard, then browse them on the Caruso through its own UPnP tree — no new hardware.",
     caseStudy: {
-      problem: "Older Caruso systems still sound good, but modern radio browsing and control can be awkward or broken.",
-      built: "I built a local UPnP/DLNA bridge with station management, renderer status, and server controls.",
-      result: "The device becomes usable again without replacing the hardware.",
+      problem: "First-gen Caruso systems still sound great, but T+A no longer offers a practical native internet-radio path, so everyday station browsing is broken.",
+      built: "A local Fastify and UPnP/DLNA bridge that announces itself as a media server, resolves real stream URLs from TuneIn and Radio Browser, and exposes saved stations and local music under the Caruso's own tree, with a web dashboard and a keyboard TUI control room.",
+      result: "The Caruso browses and plays stations again over the still-working local path — no replacement, no cloud.",
+    },
+    de: {
+      tagline: "Internetradio zurück auf T+A-Caruso-Systeme der ersten Generation.",
+      description:
+        "T+A hat den brauchbaren Internetradio-Weg für ältere Caruso-Geräte fallengelassen — also macht das hier deinen Computer zur lokalen UPnP/DLNA-Quelle: Sender am Laptop suchen, die funktionierenden speichern und am Caruso wieder durchblättern, plus deine eigenen Musikordner.",
+      audience: "Für Besitzer eines T+A Caruso der ersten Generation, deren eingebautes Radio-Browsing nicht mehr brauchbar ist.",
+      result: "Sender im Dashboard suchen und speichern, dann am Caruso über dessen eigenen UPnP-Baum durchblättern — ohne neue Hardware.",
+      caseStudy: {
+        problem: "Caruso-Systeme der ersten Generation klingen noch immer top, aber T+A bietet keinen praktikablen nativen Internetradio-Weg mehr, also ist das alltägliche Sender-Browsing kaputt.",
+        built: "Eine lokale Fastify-und-UPnP/DLNA-Bridge, die sich als Media-Server ankündigt, echte Stream-URLs aus TuneIn und Radio Browser auflöst und gespeicherte Sender und lokale Musik im Caruso-eigenen Baum bereitstellt — mit Web-Dashboard und tastaturgesteuertem TUI-Kontrollraum.",
+        result: "Der Caruso blättert und spielt wieder Sender über den noch funktionierenden lokalen Weg — kein Ersatz, keine Cloud.",
+      },
+      proofLabels: ["GitHub-Release", "Lokales Dashboard"],
+      highlights: [
+        "Macht deinen Mac zum UPnP/DLNA-Media-Server, den der Caruso durchblättern kann.",
+        "Löst spielbare Streams aus TuneIn auf, mit Radio-Browser als Fallback.",
+        "Gespeicherte Sender und lokale Musikordner erscheinen im Caruso-eigenen Baum.",
+        "Web-Dashboard plus tastaturgesteuertes Kontrollraum-TUI; bindet neu, wenn du LAN/WLAN wechselst.",
+      ],
     },
     stack: ["TypeScript", "UPnP", "DLNA"],
     featuredTier: "project",
@@ -235,9 +347,10 @@ export const featuredProjects: Project[] = [
     platformLabels: ["Browser", "UPnP/DLNA"],
     proofLabels: ["GitHub release", "Local dashboard"],
     highlights: [
-      "Publishes a browsable station list for compatible Caruso devices.",
-      "Shows renderer transport, source, quality, position, and server metrics.",
-      "Keeps local server controls and station management in one dashboard.",
+      "Turns your Mac into a UPnP/DLNA media server the Caruso can browse.",
+      "Resolves playable streams from TuneIn, with a Radio Browser fallback.",
+      "Saved stations and local music folders appear in the Caruso's own tree.",
+      "Web dashboard plus a keyboard control-room TUI; rebinds when you switch LAN/Wi-Fi.",
     ],
     showcase: [
       {
@@ -256,15 +369,39 @@ export const featuredProjects: Project[] = [
     name: "PatchPilot",
     slug: "patchpilot",
     status: "beta",
-    tagline: "Permissioned coding-agent TUI for local and cloud model runs.",
+    tagline: "A coding agent that shows its work — every read, command, and token, in your terminal.",
     description:
-      "PatchPilot keeps agent sessions, approvals, model choice, token use, and patch review visible inside one terminal workflow instead of hiding the run behind a chat box.",
-    audience: "For developers who want agent experiments to stay inspectable, approval-aware, and close to the repository they are changing.",
-    result: "The stable CLI release ships clearer TUI controls, hardened permissions, Gemini-Wrapper routing, and better token and session visibility.",
+      "PatchPilot runs coding-agent tasks inside your repo and keeps the whole run in the open: the transcript, the diff it wants to write, the command it wants to run, the model it's routing to, and what the tokens cost. Risky actions wait behind an approval box. Local Ollama by default — Gemini, OpenRouter, NVIDIA, and Codex when you want them.",
+    audience: "For developers who don't trust a chat box that edits their code out of sight.",
+    result: "Plan read-only, approve writes one at a time, check the diff, run tests, commit yourself — the agent never gets ahead of you.",
     caseStudy: {
-      problem: "Coding-agent runs become hard to trust when permissions, provider state, model selection, token use, and patch context are scattered or hidden.",
-      built: "I built an Ink-based TUI around sticky approvals, transcript panes, provider metadata, safer tool execution, and local/cloud model selection.",
-      result: "The run is easier to inspect and steer while the repository context stays close.",
+      problem: "Most coding agents hide the run behind a chat bubble: you can't see which files it touched, what command it's about to run, which model answered, or what it cost — so you can't trust it on a real repo.",
+      built: "An Ink terminal UI with sticky approval prompts, a live transcript, per-tool permissions, a workspace boundary that blocks secret files, and one setup flow across local and cloud models.",
+      result: "Powerful actions stay boring and reviewable — you see every read, write, and command before it happens, and the diff before you commit.",
+    },
+    de: {
+      tagline: "Ein Coding-Agent, der seine Arbeit zeigt — jeder Zugriff, jeder Befehl, jedes Token, im Terminal.",
+      description:
+        "PatchPilot führt Agent-Aufgaben direkt in deinem Repository aus und hält den ganzen Lauf offen: das Transcript, das geplante Diff, den Befehl, das gewählte Modell und die Token-Kosten. Riskante Aktionen warten hinter einer Freigabe. Standardmäßig lokales Ollama — Gemini, OpenRouter, NVIDIA und Codex, wenn du willst.",
+      audience: "Für Entwickler, die einer Chatbox nicht trauen, die ihren Code unsichtbar bearbeitet.",
+      result: "Erst lesen-only planen, Schreibzugriffe einzeln freigeben, Diff prüfen, Tests laufen lassen, selbst committen — der Agent läuft dir nie voraus.",
+      caseStudy: {
+        problem: "Die meisten Coding-Agents verstecken den Lauf hinter einer Chat-Blase: Du siehst nicht, welche Dateien angefasst wurden, welcher Befehl gleich läuft, welches Modell geantwortet hat oder was es gekostet hat — also kannst du ihm im echten Repo nicht trauen.",
+        built: "Ein Ink-Terminal-UI mit klebenden Freigaben, Live-Transcript, Tool-Berechtigungen, einer Workspace-Grenze, die Secret-Dateien blockt, und einem Setup-Flow über lokale und Cloud-Modelle.",
+        result: "Mächtige Aktionen bleiben langweilig und prüfbar — du siehst jeden Lese-, Schreib- und Shell-Schritt, bevor er passiert, und das Diff, bevor du committest.",
+      },
+      proofLabels: ["npm-Paket", "GitHub-Release", "Agent-TUI"],
+      highlights: [
+        "Local-first: läuft standardmäßig auf deinem eigenen Ollama; Gemini, OpenRouter, NVIDIA und Codex sind einen Umschalter entfernt.",
+        "Jeder Dateizugriff, jedes geplante Schreiben und jeder Shell-Befehl landet im Transcript, bevor er läuft.",
+        "Riskante Aktionen sitzen hinter einer klebenden Freigabe; Secret-Dateien wie .env werden komplett geblockt.",
+        "Live-Telemetrie zu Tokens, Cache-Treffern, Latenz und Kosten — inklusive dem, was eine kostenlose Route über die bezahlte API gekostet hätte.",
+      ],
+      releaseHighlights: [
+        "Standardmäßiger Vollbild-Shell mit echtem scrollbarem Transcript, Command-Palette und fixiertem Composer.",
+        "Kombinierbare Ultra-Modi — ultrafast, ultracheap, ultrafocus — steuern Aufwand, Tempo und Umfang direkt aus dem Prompt.",
+        "Gehärtete Shell-Freigaben, Risiko-Bestätigung beim ersten Start und Windows-Pfad-Fixes.",
+      ],
     },
     stack: ["TypeScript", "Ink", "AI"],
     featuredTier: "featured",
@@ -283,14 +420,15 @@ export const featuredProjects: Project[] = [
       height: 1254,
     },
     highlights: [
-      "Shows provider, model, session, token, cache, and cost telemetry in the terminal.",
-      "Keeps transcript, permission state, and approval prompts visible while working.",
-      "Supports Codex, Gemini, NVIDIA, OpenRouter, Ollama, and other provider experiments from one setup flow.",
+      "Local-first: runs on your own Ollama by default; Gemini, OpenRouter, NVIDIA, and Codex are one switch away.",
+      "Every file read, proposed write, and shell command lands in the transcript before it runs.",
+      "Risky actions sit behind a sticky approval box; secret files like .env are blocked outright.",
+      "Live token, cache-hit, latency, and cost telemetry — including what a free route would have cost on the paid API.",
     ],
     releaseHighlights: [
-      "Sticky approval UI makes write and shell escalation visible instead of burying it in transcript text.",
-      "Provider model filtering and safer fallback data reduce broken model-picker states.",
-      "Windows shell handling, secret-path blocking, and release-hook automation make the CLI safer to ship.",
+      "Default fullscreen shell with a real scrolling transcript, command palette, and pinned composer.",
+      "Composable ultra modes — ultrafast, ultracheap, ultrafocus — tune effort, speed, and scope from the prompt.",
+      "Hardened shell approvals, first-run risk acceptance, and Windows path fixes.",
     ],
     showcase: [
       {
@@ -352,15 +490,34 @@ export const featuredProjects: Project[] = [
       width: 256,
       height: 256,
     },
-    tagline: "Sensor-only MacBook impact detection with sound feedback.",
+    tagline: "Slap your MacBook and it knows — real accelerometer, no microphone.",
     description:
-      "A fun macOS utility that reads Apple SPU accelerometer data, detects sharp impact spikes, and plays local sound feedback with visible calibration.",
-    audience: "For Mac users who like weird native experiments with real sensor data.",
-    result: "Detects impact spikes from Apple SPU accelerometer reports without using the microphone.",
+      "A native macOS toy that reads the MacBook's built-in Apple SPU accelerometer over IOKit HID, spots a sharp impact spike, counts it, and plays a sound. No mic, no fake triggers — it reacts to the actual motion sensor, with live telemetry and a calibration wizard so you can see it working.",
+    audience: "For Mac people who enjoy a weird native experiment wired to real hardware.",
+    result: "Reads genuine accelerometer reports, detects the spike, and gives instant sound feedback — motion data never leaves the Mac.",
     caseStudy: {
-      problem: "Most joke impact apps would fake detection through audio or simple triggers instead of reading the real sensor path.",
-      built: "I built a native macOS utility around HID accelerometer reports, calibration, threshold tuning, and local sound feedback.",
-      result: "It is a fun experiment, but also proof that the app reads actual device telemetry.",
+      problem: "A joke 'slap detector' is easy to fake with the microphone or a fixed trigger. Apple also gives no clean public Core Motion API for the MacBook accelerometer.",
+      built: "A SwiftUI app that taps the private AppleSPUHIDDevice stream through IOKit HID, with live telemetry (impact, peak, sample rate, raw bytes), Soft/Balanced/Hard presets, a calibration wizard, and local sound feedback.",
+      result: "A genuinely fun toy that's also proof it reads real device telemetry — sensor-only, with no microphone access and nothing uploaded.",
+    },
+    de: {
+      tagline: "Hau auf dein MacBook und es merkt's — echter Beschleunigungssensor, kein Mikrofon.",
+      description:
+        "Ein natives macOS-Spielzeug, das den eingebauten Apple-SPU-Beschleunigungssensor des MacBooks über IOKit HID ausliest, einen scharfen Impuls erkennt, ihn zählt und einen Sound spielt. Kein Mikro, keine gefälschten Trigger — es reagiert auf den echten Bewegungssensor, mit Live-Telemetrie und Kalibrier-Assistent, damit du es arbeiten siehst.",
+      audience: "Für Mac-Leute, die ein schräges natives Experiment direkt an echter Hardware mögen.",
+      result: "Liest echte Sensor-Reports, erkennt den Impuls und gibt sofort Sound-Feedback — die Bewegungsdaten verlassen den Mac nie.",
+      caseStudy: {
+        problem: "Ein Scherz-Schlagdetektor lässt sich leicht mit dem Mikrofon oder einem festen Trigger faken. Apple bietet auch keine saubere öffentliche Core-Motion-API für den MacBook-Beschleunigungssensor.",
+        built: "Eine SwiftUI-App, die den privaten AppleSPUHIDDevice-Stream über IOKit HID anzapft — mit Live-Telemetrie (Impuls, Peak, Sample-Rate, Roh-Bytes), Soft/Balanced/Hard-Presets, Kalibrier-Assistent und lokalem Sound-Feedback.",
+        result: "Ein wirklich lustiges Spielzeug, das zugleich beweist, dass es echte Geräte-Telemetrie liest — nur Sensor, ohne Mikrofonzugriff und ohne Upload.",
+      },
+      proofLabels: ["DMG-Release", "Nur Sensor", "GitHub-Release"],
+      highlights: [
+        "Liest den Apple-SPU-Beschleunigungssensor des MacBooks direkt über IOKit HID.",
+        "Live-Telemetrie: Impuls, Peak, Sample-Rate, Achsen, Magnitude und Roh-HID-Bytes.",
+        "Nur Sensor — kein Mikrofonzugriff, kein Audio-Fallback, kein Upload.",
+        "Kalibrier-Assistent, Schwellen-Presets und eigene Sounds. Für den Spaß gebaut; bitte misshandle deinen Mac nicht wirklich.",
+      ],
     },
     stack: ["Swift", "macOS", "Sensors"],
     featuredTier: "project",
@@ -371,10 +528,10 @@ export const featuredProjects: Project[] = [
     platformLabels: ["macOS"],
     proofLabels: ["DMG release", "Sensor-only", "GitHub release"],
     highlights: [
-      "Reads Apple SPU accelerometer reports through local HID access.",
-      "Provides live telemetry, calibration, threshold tuning, and sound selection.",
-      "Does not use microphone access or audio-based fallback detection.",
-      "Built for fun. Please do not actually abuse your Mac.",
+      "Reads the MacBook's Apple SPU accelerometer directly over IOKit HID.",
+      "Live telemetry: impact, peak, sample rate, axes, magnitude, and raw HID bytes.",
+      "Sensor-only by design — no microphone access, no audio fallback, nothing uploaded.",
+      "Calibration wizard, threshold presets, and your own sounds. Built for fun; please don't actually abuse your Mac.",
     ],
     showcase: [
       {
@@ -417,15 +574,34 @@ export const featuredProjects: Project[] = [
       width: 256,
       height: 256,
     },
-    tagline: "Native macOS text editor for developers, built without Electron.",
+    tagline: "A native macOS code editor that opens before your finger leaves the trackpad.",
     description:
-      "A SwiftUI and AppKit editor that opens files instantly, stays under 120 MB idle, and runs your code from a button that figures out the toolchain itself, with no tasks.json, no extension host, and no second runtime.",
-    audience: "For developers who want a fast native editor for quick edits and small projects instead of a heavyweight Electron setup.",
-    result: "Opens before your finger leaves the trackpad and runs C, Swift, Python, JS/TS, Rust, or Go without config files.",
+      "A SwiftUI and AppKit editor — not Electron — that opens instantly, stays under 120 MB idle, and runs your code from one button that figures out the toolchain itself. No tasks.json, no extension host, no second runtime.",
+    audience: "For developers tired of waiting on 2 GB of RAM and an extension host just to fix one typo.",
+    result: "Opens C, Swift, Python, JS/TS, Rust, or Go and runs them from a button — using the language servers already on your machine, with no marketplace.",
     caseStudy: {
-      problem: "Opening a heavyweight editor to fix one typo means waiting on RAM, an extension host, and a folder index before you can type.",
-      built: "I built a native macOS editor on TextKit 2 and AppKit with an integrated terminal, run button, markdown preview, and gitignore-aware find, all without Electron or telemetry.",
-      result: "A fast, native editing surface that uses the tools already on the machine instead of a marketplace of extensions.",
+      problem: "You open VS Code to fix one typo and watch 2 GB of RAM vanish, an extension host pin a core, and a folder index spin for thirty seconds before you can type.",
+      built: "A native editor on TextKit 2 and AppKit with an integrated SwiftTerm terminal, a toolchain-discovering Run button, Markdown preview, gitignore-aware find, and LSP completion from the servers already on your box — no Electron, no telemetry.",
+      result: "A fast native surface that leans on the tools already installed instead of a marketplace of extensions.",
+    },
+    de: {
+      tagline: "Ein nativer macOS-Code-Editor, der offen ist, bevor dein Finger das Trackpad verlässt.",
+      description:
+        "Ein SwiftUI- und AppKit-Editor — kein Electron — der sofort öffnet, im Leerlauf unter 120 MB bleibt und deinen Code aus einem Knopf startet, der die Toolchain selbst findet. Kein tasks.json, kein Extension-Host, keine zweite Runtime.",
+      audience: "Für Entwickler, die es satthaben, auf 2 GB RAM und einen Extension-Host zu warten, nur um einen Tippfehler zu korrigieren.",
+      result: "Öffnet C, Swift, Python, JS/TS, Rust oder Go und startet sie aus einem Knopf — mit den Language-Servern, die schon auf deinem Rechner sind, ohne Marketplace.",
+      caseStudy: {
+        problem: "Du öffnest VS Code für einen Tippfehler und siehst zu, wie 2 GB RAM verschwinden, ein Extension-Host einen Kern auslastet und ein Ordner-Index dreißig Sekunden dreht, bevor du tippen kannst.",
+        built: "Ein nativer Editor auf TextKit 2 und AppKit mit integriertem SwiftTerm-Terminal, einem toolchain-erkennenden Run-Knopf, Markdown-Vorschau, gitignore-bewusster Suche und LSP-Vervollständigung aus den Servern, die schon auf deinem Rechner sind — kein Electron, keine Telemetrie.",
+        result: "Eine schnelle native Oberfläche, die sich auf die bereits installierten Tools stützt statt auf einen Marktplatz voller Erweiterungen.",
+      },
+      proofLabels: ["Swift 6", "SwiftUI + AppKit", "Quelloffen"],
+      highlights: [
+        "Öffnet eine 100-MB-Datei sofort — TextKit-2-View, kein Indexieren beim Start.",
+        "Ein Run-Knopf erkennt die Toolchain pro Datei (clang, swiftc, python3, node, cargo, go).",
+        "Integriertes SwiftTerm-Terminal, Live-Markdown-Vorschau und gitignore-bewusste Suche im Ordner.",
+        "LSP-Vervollständigung und Diagnosen aus deinen eigenen Language-Servern — kein Extension-Marketplace, keine Telemetrie, kein Electron.",
+      ],
     },
     stack: ["Swift", "SwiftUI", "AppKit"],
     featuredTier: "featured",
@@ -450,10 +626,10 @@ export const featuredProjects: Project[] = [
       },
     ],
     highlights: [
-      "Opens large files instantly with a TextKit 2 view and no launch-time indexing.",
-      "Runs code from one button that discovers the right toolchain per file.",
-      "Ships an integrated SwiftTerm terminal, markdown preview, and gitignore-aware find.",
-      "No telemetry, no account, no extension marketplace, and no Electron runtime.",
+      "Opens a 100 MB file instantly — TextKit 2 view, no launch-time indexing.",
+      "One Run button discovers the toolchain per file (clang, swiftc, python3, node, cargo, go).",
+      "Integrated SwiftTerm terminal, live Markdown preview, and gitignore-aware find-in-folder.",
+      "LSP completion and diagnostics from your own language servers — no marketplace, no telemetry, no Electron.",
     ],
     showcase: [
       {
@@ -481,15 +657,34 @@ export const featuredProjects: Project[] = [
     name: "Hermes-Discord-Voice",
     slug: "hermes-discord-voice",
     status: "in development",
-    tagline: "Self-hosted Discord voice bridge for the Hermes agent.",
+    tagline: "Self-hosted voice for the Hermes agent, straight in a Discord call.",
     description:
-      "A TypeScript bridge that joins a Discord voice channel, transcribes a spoken turn locally with Whisper, sends the text to Hermes, and plays the reply back through a configurable TTS provider.",
-    audience: "For personal and small trusted Discord servers that want voice access to a local Hermes agent without a hosted service.",
-    result: "Turns a Discord voice channel into a private, self-hosted voice interface for Hermes.",
+      "The bot joins your Discord voice channel, captures a spoken turn, transcribes it locally with Whisper, sends the text to Hermes, and speaks the reply back through the TTS voice you pick. Personal servers only — no hosted service in the middle.",
+    audience: "For personal or small trusted Discord servers that want to talk to a local Hermes agent without trusting a hosted bot.",
+    result: "Speak in a Discord channel, hear Hermes answer — transcription is local, sessions are per-guild, and the speaker allowlist keeps it private.",
     caseStudy: {
       problem: "Talking to a local agent over Discord voice usually means trusting a hosted bot and giving up control of the speech pipeline.",
-      built: "I built a self-hosted bridge around local whisper-cli transcription, per-guild sessions, an allowlist, and pluggable TTS providers.",
-      result: "Voice input stays private and self-hosted while the runtime and transport stay explicit.",
+      built: "A self-hosted Discord.js bridge with local whisper-cli transcription, one Hermes session per guild, a per-guild speaker allowlist, and pluggable TTS — Piper, macOS say, ElevenLabs, or a custom command.",
+      result: "Voice input stays private and on your machine, while the Hermes transport and every step of the pipeline stay explicit.",
+    },
+    de: {
+      tagline: "Self-hosted Voice für den Hermes-Agenten, direkt im Discord-Call.",
+      description:
+        "Der Bot tritt deinem Discord-Voice-Channel bei, nimmt einen gesprochenen Zug auf, transkribiert ihn lokal mit Whisper, schickt den Text an Hermes und spricht die Antwort über die TTS-Stimme deiner Wahl zurück. Nur persönliche Server — kein gehosteter Dienst dazwischen.",
+      audience: "Für persönliche oder kleine vertraute Discord-Server, die mit einem lokalen Hermes-Agenten reden wollen, ohne einem gehosteten Bot zu vertrauen.",
+      result: "Im Discord-Channel sprechen, Hermes antworten hören — die Transkription ist lokal, Sessions laufen pro Guild, und die Sprecher-Allowlist hält es privat.",
+      caseStudy: {
+        problem: "Mit einem lokalen Agenten per Discord-Voice zu reden heißt meist: einem gehosteten Bot vertrauen und die Kontrolle über die Sprach-Pipeline abgeben.",
+        built: "Eine self-hosted Discord.js-Bridge mit lokaler whisper-cli-Transkription, einer Hermes-Session pro Guild, einer Sprecher-Allowlist pro Guild und steckbarem TTS — Piper, macOS say, ElevenLabs oder ein eigener Befehl.",
+        result: "Die Spracheingabe bleibt privat und auf deinem Rechner, während der Hermes-Transport und jeder Schritt der Pipeline explizit bleiben.",
+      },
+      proofLabels: ["Lokales STT/TTS", "Self-hosted", "Quelloffen"],
+      highlights: [
+        "Tritt Discord-Voice bei, nimmt einen Zug auf und transkribiert ihn lokal mit whisper-cli — kein Cloud-STT.",
+        "Leitet Transkripte standardmäßig per CLI an Hermes, oder über dessen API/Gateway.",
+        "Antwortet über Piper, macOS say, ElevenLabs oder deinen eigenen TTS-Befehl.",
+        "Privat per Default: eine Session pro Guild mit einer Sprecher-Allowlist, die du kontrollierst.",
+      ],
     },
     stack: ["TypeScript", "Discord", "Whisper"],
     featuredTier: "featured",
@@ -500,10 +695,10 @@ export const featuredProjects: Project[] = [
     platformLabels: ["Node.js", "Discord"],
     proofLabels: ["Local STT/TTS", "Self-hosted", "Source available"],
     highlights: [
-      "Joins Discord voice, records a turn, and transcribes it locally with whisper-cli.",
-      "Routes transcripts to Hermes over CLI by default, with optional API/Gateway transport.",
-      "Supports Piper, macOS say, ElevenLabs, or a custom TTS command for replies.",
-      "Keeps voice input private by default with a per-guild speaker allowlist.",
+      "Joins Discord voice, records a turn, and transcribes it locally with whisper-cli — no cloud STT.",
+      "Routes transcripts to Hermes over CLI by default, or its API/Gateway.",
+      "Replies through Piper, macOS say, ElevenLabs, or your own TTS command.",
+      "Private by default: one session per guild with a speaker allowlist you control.",
     ],
     showcase: [
       {
@@ -524,6 +719,9 @@ export const upcomingProjects: UpcomingProject[] = [
     name: "PortPirate",
     status: "coming soon",
     description: "macOS menu bar control for local dev ports, mapping every listener to its process, repository, and the agent that started it.",
+    de: {
+      description: "macOS-Menüleisten-Kontrolle für lokale Dev-Ports — verknüpft jeden Listener mit seinem Prozess, Repository und dem Agenten, der ihn gestartet hat.",
+    },
     stack: ["Swift", "macOS", "Menu Bar"],
     visibility: "public",
   },
@@ -531,6 +729,9 @@ export const upcomingProjects: UpcomingProject[] = [
     name: "TypeBot",
     status: "coming soon",
     description: "A controlled typing automation tool for predictable browser and desktop workflows.",
+    de: {
+      description: "Ein kontrolliertes Tipp-Automationstool für vorhersehbare Browser- und Desktop-Abläufe.",
+    },
     stack: ["TypeScript", "CLI", "Automation"],
     visibility: "private",
   },

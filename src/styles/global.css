@@ -85,6 +85,12 @@ nav,
   font-size: 0.86rem;
 }
 
+/* Rendered via CSS so the decorative initials don't count as the link's
+   visible text (keeps the brand link's accessible name as "Johannes Grof"). */
+.brand-mark::before {
+  content: "jg";
+}
+
 nav {
   gap: 6px;
   border: 1px solid rgb(255 255 255 / 8%);
