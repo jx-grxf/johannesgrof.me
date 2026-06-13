@@ -33,7 +33,9 @@ const liveStats = (slug: string) => {
     return [];
   }
   const stats: string[] = [];
-  if (info.version && info.version.toLowerCase() !== "unreleased") {
+  // Only show a version chip for real version numbers — skip status words
+  // like "unreleased" or "archived" so we never render e.g. "varchived".
+  if (info.version && /\d/.test(info.version)) {
     stats.push(/^v/i.test(info.version) ? info.version : `v${info.version}`);
   }
   if (info.stars > 0) {
