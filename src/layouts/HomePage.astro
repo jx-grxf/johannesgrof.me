@@ -4,6 +4,7 @@ import SiteHeader from "@/components/SiteHeader.astro";
 import { featuredShowcaseProjects, getProjectCopy, localizedStatusLabel, projectSections, publicProjects, statusClass, upcomingProjects } from "@/data/projects";
 import type { Project, ProjectLang, ProjectStatus } from "@/data/projects";
 import { getProjectGitHubInfo } from "@/data/github";
+import { oeffigo } from "@/data/oeffigo";
 import type { LocaleContent } from "@/data/siteContent";
 import { defaultSocialImage, toCanonicalUrl } from "@/data/siteMetadata";
 import "@/styles/global.css";
@@ -244,6 +245,50 @@ const localBusinessSchema = {
           </div>
         )
       }
+
+      <section id="oeffigo" class="oeffigo-band" aria-labelledby="oeffigo-title" style={`--ogreen:${oeffigo.brand.green};--ogreen-bright:${oeffigo.brand.greenBright}`}>
+        <div class="section-shell oeffigo-layout">
+          <div class="oeffigo-intro reveal">
+            <p class="eyebrow oeffigo-eyebrow">{oeffigo.eyebrow[lang]}</p>
+            <div class="oeffigo-headline">
+              <img class="oeffigo-icon" src={oeffigo.icon} alt="ÖffiGo app icon" width="120" height="120" loading="lazy" decoding="async" />
+              <div>
+                <h2 id="oeffigo-title">{oeffigo.name}</h2>
+                <p class="oeffigo-tagline">{oeffigo.tagline[lang]}</p>
+              </div>
+            </div>
+            <p class="oeffigo-lead">{oeffigo.lead[lang]}</p>
+            <ul class="oeffigo-meta" aria-label="ÖffiGo platform and status">
+              <li>{oeffigo.platform[lang]}</li>
+              <li>{oeffigo.status[lang]}</li>
+            </ul>
+            <div class="oeffigo-promo">
+              <span class="promo-badge" aria-hidden="true">2&times;</span>
+              <div class="promo-copy">
+                <strong>{oeffigo.promo.headline[lang]}</strong>
+                <p>{oeffigo.promo.body[lang]}</p>
+                <p class="promo-code">
+                  <span>{lang === "en" ? "launch code" : "launch-code"}</span>
+                  <code>{oeffigo.promo.code}</code>
+                  <em>{lang === "en" ? "at release" : "zum release"}</em>
+                </p>
+              </div>
+            </div>
+            <p class="oeffigo-datanote">{oeffigo.dataNote[lang]}</p>
+          </div>
+          <div class="oeffigo-features">
+            {oeffigo.features.map((feature) => (
+              <article class="oeffigo-feature reveal">
+                <span class="oeffigo-feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d={feature.icon} /></svg>
+                </span>
+                <h3>{feature.title[lang]}</h3>
+                <p>{feature.body[lang]}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
 
       <section id="projects" class="section-shell">
         <div class="section-heading project-subheading reveal">
