@@ -360,6 +360,10 @@ const buildCommands = (project: Project, releaseUrl: string, downloadGroup?: Pro
 export async function getProjectGitHubInfo(project: Project): Promise<ProjectGitHubInfo> {
   const fallback = buildFallbackInfo(project);
 
+  if (project.visibility !== "public") {
+    return fallback;
+  }
+
   try {
     if (project.downloadsDisabled) {
       const repo = await fetchGitHubJson<GitHubRepo>(`https://api.github.com/repos/${project.repo}`, project, { warnOnFailure: true });

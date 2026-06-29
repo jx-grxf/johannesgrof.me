@@ -1,7 +1,7 @@
 ---
 import BaseHead from "@/components/BaseHead.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
-import { featuredShowcaseProjects, getProjectCopy, localizedStatusLabel, publicProjects, standardProjects, statusClass, upcomingProjects } from "@/data/projects";
+import { featuredShowcaseProjects, getProjectCopy, localizedStatusLabel, projectSections, publicProjects, statusClass, upcomingProjects } from "@/data/projects";
 import type { Project, ProjectLang, ProjectStatus } from "@/data/projects";
 import { getProjectGitHubInfo } from "@/data/github";
 import type { LocaleContent } from "@/data/siteContent";
@@ -53,42 +53,26 @@ const copy = (project: Project) => getProjectCopy(project, lang);
 const localizedStatus = (status: ProjectStatus) => localizedStatusLabel(status, lang);
 const projectHref = (slug: string) => `${isDe ? "/de" : ""}/projects/${slug}/`;
 
-const escapeHtml = (value: string) =>
-  value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
+// Hero spotlight: the strongest shipped app, screenshot-forward.
+const spotlight = publicProjects.find((project) => project.slug === "briskedit") ?? featuredShowcaseProjects[0];
+const spotlightImage = spotlight?.showcase[0];
+const spotlightImageSrc = spotlightImage?.cardSrc ?? spotlightImage?.src;
 
-const terminalProjectRows = publicProjects
-  .map((project, index) => {
-    const branch = index === publicProjects.length - 1 ? "└" : "├";
-    return `│  ${branch}─ <a class="terminal-link" href="${projectHref(project.slug)}">${escapeHtml(project.name)}</a>`;
+// Normalize a version-ish string to a "vX.Y.Z" chip, or null if it isn't one.
+const versionChip = (value?: string) => {
+  if (!value || !/\d/.test(value)) {
+    return null;
+  }
+  return /^v/i.test(value) ? value : `v${value}`;
+};
+
+// "Now shipping" ticker — real release versions, newest projects first.
+const shippedReleases = publicProjects
+  .map((project) => {
+    const info = githubInfoBySlug.get(project.slug);
+    return { name: project.name, version: versionChip(info?.version ?? project.fallbackVersion) };
   })
-  .join("\n");
-const terminalUpcomingRows = upcomingProjects
-  .map((project, index) => {
-    const branch = index === upcomingProjects.length - 1 ? "└" : "├";
-    return `│        ${branch}─ ${escapeHtml(project.name)}`;
-  })
-  .join("\n");
-const terminalTreeHtml = `<span class="path">/home/johannes_grof/</span>
-├─ <span class="folder">my_links/</span>
-│  ├─ <a class="link terminal-link" href="https://github.com/jx-grxf" target="_blank" rel="noreferrer" aria-label="Open GitHub profile">github</a>
-│  ├─ <a class="link terminal-link" href="https://www.linkedin.com/in/johannes-grof" target="_blank" rel="noreferrer" aria-label="Open LinkedIn profile">linkedin</a>
-│  └─ <a class="link terminal-link" href="mailto:contact@johannesgrof.me" aria-label="Send an email to Johannes Grof">email</a>
-├─ <a class="folder terminal-link" href="#projects">projects/</a>
-${terminalProjectRows}
-│     └─ <span class="folder">coming-soon/</span>
-${terminalUpcomingRows}
-├─ <a class="folder terminal-link" href="#skills">skills/</a>
-│  ├─ TypeScript
-│  ├─ Swift
-│  └─ Codex
-├─ <a class="folder terminal-link" href="#services">services/</a>
-│  └─ websites-and-tools
-└─ <span class="folder">contact/</span>
-   └─ <a class="link terminal-link" href="mailto:contact@johannesgrof.me">contact@johannesgrof.me</a>`;
+  .filter((release): release is { name: string; version: string } => release.version !== null);
 
 const hreflangAlternates = [
   { hreflang: "en", href: toCanonicalUrl("/") },
@@ -199,7 +183,6 @@ const localBusinessSchema = {
           <p class="eyebrow">{content.hero.eyebrow}</p>
           <h1 id="hero-title">{content.hero.title}</h1>
           <p class="hero-text">{content.hero.body}</p>
-          <p class="hero-proof">{publicProjects.length} {content.lang === "en" ? "public projects" : "öffentliche Projekte"} · {content.hero.proof}</p>
           <div class="hero-actions">
             <a class="button primary" href="#projects">{content.hero.primaryAction}</a>
             <a class="button secondary" href="#services">{content.hero.secondaryAction}</a>
@@ -214,22 +197,58 @@ const localBusinessSchema = {
               {content.hero.githubAction}
             </a>
           </div>
+          <p class="hero-proof">{publicProjects.length} {content.lang === "en" ? "shipped projects" : "veröffentlichte Projekte"} · {content.hero.proof}</p>
         </div>
 
-        <aside class="terminal-card" aria-label="Developer profile tree">
-          <div class="terminal-bar">
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-          <pre><code set:html={terminalTreeHtml}></code></pre>
-        </aside>
+        {
+          spotlight && (
+            <aside class="hero-spotlight">
+              <a class="spotlight-card" href={projectHref(spotlight.slug)} aria-label={`${spotlight.name} — ${content.lang === "en" ? "latest project" : "neuestes Projekt"}`}>
+                <div class="spotlight-media">
+                  {spotlightImageSrc ? (
+                    <img src={spotlightImageSrc} alt={spotlightImage?.alt ?? spotlight.name} width={spotlightImage?.width} height={spotlightImage?.height} loading="eager" decoding="async" />
+                  ) : (
+                    <div class="featured-card-placeholder" aria-hidden="true">
+                      <span class="featured-card-placeholder-mark">{spotlight.name}</span>
+                    </div>
+                  )}
+                  <span class="spotlight-flag">{content.lang === "en" ? "now shipping" : "frisch live"}</span>
+                </div>
+                <div class="spotlight-body">
+                  <h2>{spotlight.name}</h2>
+                  <p>{copy(spotlight).tagline}</p>
+                  {liveStats(spotlight.slug).length > 0 && (
+                    <div class="spotlight-meta">
+                      {liveStats(spotlight.slug).map((stat) => <span>{stat}</span>)}
+                    </div>
+                  )}
+                </div>
+              </a>
+            </aside>
+          )
+        }
       </section>
 
+      {
+        shippedReleases.length > 0 && (
+          <div class="ship-ticker" aria-label={content.lang === "en" ? "Recent releases" : "Aktuelle Releases"}>
+            <div class="ship-track">
+              {[0, 1].map((pass) =>
+                shippedReleases.map((release) => (
+                  <span class="ship-item" aria-hidden={pass === 1 ? "true" : undefined}>
+                    {release.name} <em>{release.version}</em>
+                  </span>
+                ))
+              )}
+            </div>
+          </div>
+        )
+      }
+
       <section id="projects" class="section-shell">
-        <div class="section-heading reveal">
-          <p class="eyebrow">{isDe ? "ausgewählte arbeit" : "selected work"}</p>
-          <h2>{content.lang === "en" ? "Featured Projects" : "Ausgewählte Projekte"}</h2>
+        <div class="section-heading project-subheading reveal">
+          <p class="eyebrow">{isDe ? "highlights" : "highlights"}</p>
+          <h2>{content.lang === "en" ? "Highlighted Projects" : "Ausgewählte Projekte"}</h2>
         </div>
         <div class="featured-project-grid">
           {
@@ -288,44 +307,48 @@ const localBusinessSchema = {
           }
         </div>
 
-        <div class="section-heading project-subheading reveal">
-          <p class="eyebrow">{isDe ? "weitere projekte" : "more projects"}</p>
-          <h2>{content.lang === "en" ? "Projects" : "Projekte"}</h2>
-        </div>
-        <div class="project-grid">
-          {
-            standardProjects.map((project, index) => {
-              const c = copy(project);
+        {
+          projectSections.map((section, sectionIndex) => (
+            <section class="project-category" aria-labelledby={`project-category-${sectionIndex}`}>
+              <div class="section-heading project-subheading reveal">
+                <p class="eyebrow">{isDe ? section.de.eyebrow : section.eyebrow}</p>
+                <h2 id={`project-category-${sectionIndex}`}>{isDe ? section.de.title : section.title}</h2>
+              </div>
+              <div class="project-grid">
+                {section.projects.map((project, index) => {
+                  const c = copy(project);
 
-              return (
-              <a class="project-card reveal" style={`--reveal-delay: ${index * 70}ms`} href={projectHref(project.slug)}>
-                    <div class="card-topline">
-                      <h3>{project.name}</h3>
-                      <span class={`status ${statusClass(project.status)}`}>{localizedStatus(project.status)}</span>
-                    </div>
-                  {liveStats(project.slug).length > 0 && (
-                    <ul class="live-stats" aria-label={`${project.name} GitHub stats`}>
-                      {liveStats(project.slug).map((stat) => <li>{stat}</li>)}
-                    </ul>
-                  )}
-                  {c.proofLabels && (
-                    <ul class="proof-chip-list" aria-label={`${project.name} proof points`}>
-                      {c.proofLabels.map((label) => <li>{label}</li>)}
-                    </ul>
-                  )}
-                  <p>{c.description}</p>
-                  <p class="project-audience">{c.audience}</p>
-                  <p class="project-result">{c.result}</p>
-                  <ul>
-                    {project.stack.map((item) => (
-                      <li>{item}</li>
-                    ))}
-                  </ul>
-                </a>
-              );
-            })
-          }
-        </div>
+                  return (
+                    <a class="project-card reveal" style={`--reveal-delay: ${index * 70}ms`} href={projectHref(project.slug)}>
+                      <div class="card-topline">
+                        <h3>{project.name}</h3>
+                        <span class={`status ${statusClass(project.status)}`}>{localizedStatus(project.status)}</span>
+                      </div>
+                      {liveStats(project.slug).length > 0 && (
+                        <ul class="live-stats" aria-label={`${project.name} GitHub stats`}>
+                          {liveStats(project.slug).map((stat) => <li>{stat}</li>)}
+                        </ul>
+                      )}
+                      {c.proofLabels && (
+                        <ul class="proof-chip-list" aria-label={`${project.name} proof points`}>
+                          {c.proofLabels.map((label) => <li>{label}</li>)}
+                        </ul>
+                      )}
+                      <p>{c.description}</p>
+                      <p class="project-audience">{c.audience}</p>
+                      <p class="project-result">{c.result}</p>
+                      <ul>
+                        {project.stack.map((item) => (
+                          <li>{item}</li>
+                        ))}
+                      </ul>
+                    </a>
+                  );
+                })}
+              </div>
+            </section>
+          ))
+        }
         <div class="coming-soon-group reveal" aria-labelledby="coming-soon-title">
           <h3 id="coming-soon-title">{isDe ? "bald verfügbar" : "coming soon"}</h3>
           <div class="upcoming-list">

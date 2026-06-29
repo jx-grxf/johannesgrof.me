@@ -130,6 +130,16 @@ export interface UpcomingProject {
   visibility: "public" | "private" | "planned";
 }
 
+export interface ProjectSection {
+  eyebrow: string;
+  title: string;
+  de: {
+    eyebrow: string;
+    title: string;
+  };
+  projects: Project[];
+}
+
 export const featuredProjects: Project[] = [
   {
     name: "PortPirate",
@@ -178,6 +188,149 @@ export const featuredProjects: Project[] = [
       },
     ],
     visibility: "planned",
+  },
+  {
+    name: "BottleLite",
+    slug: "bottlelite",
+    status: "preview",
+    logo: {
+      src: "/projects/bottlelite/logo.png",
+      alt: "BottleLite app icon",
+      fit: "contain",
+      width: 1024,
+      height: 1024,
+    },
+    tagline: "A lightweight native macOS runner for Windows apps.",
+    description:
+      "BottleLite is a SwiftUI Wine front-end for running Windows apps on macOS without Electron, accounts, telemetry, or a bundled runtime. It detects your existing Wine install, keeps bottles persistent, imports .exe files safely, and gives each program logs, settings, and stop controls.",
+    audience: "For Mac users who want a small, inspectable Wine wrapper instead of a heavyweight launcher.",
+    result: "Create bottles, import Windows apps, run or stop them, and keep diagnostics visible from one native macOS app.",
+    caseStudy: {
+      problem: "Wine workflows on macOS tend to sprawl across Terminal commands, prefixes, logs, and runtime assumptions.",
+      built: "A SwiftUI app that manages bottles, validates PE executables, runs GUI and console programs through existing Wine, captures logs, and wires Sparkle update feeds for preview releases.",
+      result: "Windows app testing becomes a native Mac workflow with explicit runtime state and no hidden bundled layer.",
+    },
+    de: {
+      tagline: "Ein schlanker nativer macOS-Runner für Windows-Apps.",
+      description:
+        "BottleLite ist ein SwiftUI-Wine-Frontend für Windows-Apps auf macOS — ohne Electron, Accounts, Telemetrie oder gebündelte Runtime. Es erkennt dein vorhandenes Wine, hält Bottles persistent, importiert .exe-Dateien sauber und gibt jedem Programm Logs, Einstellungen und Stop-Kontrollen.",
+      audience: "Für Mac-Nutzer, die einen kleinen, einsehbaren Wine-Wrapper statt eines schweren Launchers wollen.",
+      result: "Bottles anlegen, Windows-Apps importieren, starten oder stoppen und Diagnosen in einer nativen macOS-App behalten.",
+      caseStudy: {
+        problem: "Wine-Workflows auf macOS zerfallen schnell in Terminal-Befehle, Prefixes, Logs und Runtime-Vermutungen.",
+        built: "Eine SwiftUI-App, die Bottles verwaltet, PE-Dateien validiert, GUI- und Konsolenprogramme über vorhandenes Wine startet, Logs erfasst und Sparkle-Update-Feeds für Preview-Releases verdrahtet.",
+        result: "Windows-App-Tests werden zu einem nativen Mac-Workflow mit explizitem Runtime-Zustand und ohne versteckte Bundle-Schicht.",
+      },
+      proofLabels: ["DMG-Release", "SwiftUI", "Wine"],
+      highlights: [
+        "Verwaltet persistente Wine-Bottles mit Import, Umbenennen, Löschen und Programm-Settings.",
+        "Validiert .exe-Dateien über Endung und MZ-Header, bevor sie in eine Bottle übernommen werden.",
+        "Startet GUI-Apps leise und Konsolenprogramme sichtbar in Terminal.app, jeweils mit Logs.",
+        "Preview-Distribution mit DMG, Sparkle-Appcast und SHA256-Prüfsummen.",
+      ],
+    },
+    stack: ["Swift", "SwiftUI", "Wine"],
+    featuredTier: "featured",
+    repo: "jx-grxf/BottleLite",
+    githubUrl: "https://github.com/jx-grxf/BottleLite",
+    releaseUrl: "https://github.com/jx-grxf/BottleLite/releases/tag/v0.2.0",
+    fallbackVersion: "v0.2.0",
+    platformLabels: ["macOS", "Wine"],
+    proofLabels: ["DMG release", "SwiftUI", "Wine"],
+    fallbackDownloads: [
+      {
+        assetName: "BottleLite-0.2.0.dmg",
+        assetUrl: "https://github.com/jx-grxf/BottleLite/releases/download/v0.2.0/BottleLite-0.2.0.dmg",
+        size: 3611850,
+        kind: "macos",
+      },
+      {
+        assetName: "BottleLite-0.2.0.zip",
+        assetUrl: "https://github.com/jx-grxf/BottleLite/releases/download/v0.2.0/BottleLite-0.2.0.zip",
+        size: 2676195,
+        kind: "archive",
+      },
+    ],
+    highlights: [
+      "Manages persistent Wine bottles with import, rename, delete, and per-program settings.",
+      "Validates .exe files by extension and MZ header before adding them to a bottle.",
+      "Runs GUI apps quietly and console tools visibly in Terminal.app, with logs for each launch.",
+      "Preview distribution includes a DMG, Sparkle appcast, and SHA256 checksums.",
+    ],
+    showcase: [
+      {
+        src: "/projects/bottlelite/logo.png",
+        alt: "BottleLite app icon",
+        fit: "contain",
+        width: 1024,
+        height: 1024,
+      },
+    ],
+    visibility: "public",
+  },
+  {
+    name: "MacPhone",
+    slug: "macphone",
+    status: "active",
+    tagline: "A native macOS device lab that bridges a real Bluetooth LE device into an emulator.",
+    description:
+      "MacPhone runs and controls many Android emulators and iOS simulators from one Mac, and bridges a real Bluetooth LE device straight into an emulator — mirroring its full GATT tree onto the emulator's virtual controller so on-device apps see the real services, characteristics, and advertisement with no dongle.",
+    audience: "For mobile developers testing hardware-talking apps without juggling physical devices and BLE dongles.",
+    result: "Drive parallel Android and iOS environments and let an emulated app talk to real BLE hardware over the Mac's own radio.",
+    caseStudy: {
+      problem: "The hard part of testing a hardware-talking mobile app isn't the app — it's getting a real BLE device in front of code running inside an emulator.",
+      built: "A SwiftUI app that manages AVDs and Xcode simulators, connects to a physical BLE device over CoreBluetooth, mirrors its full GATT tree, and re-broadcasts it on the Android emulator's netsim controller via a Bumble virtual peripheral, forwarding reads, writes, and notifications both ways.",
+      result: "An emulated app under test sees the real device's services and live traffic, and sessions tear down cleanly with no orphaned peripherals.",
+    },
+    de: {
+      tagline: "Ein natives macOS-Device-Lab, das ein echtes Bluetooth-LE-Gerät in einen Emulator bridgt.",
+      description:
+        "MacPhone startet und steuert viele Android-Emulatoren und iOS-Simulatoren von einem Mac aus und bridgt ein echtes Bluetooth-LE-Gerät direkt in einen Emulator — es spiegelt den vollständigen GATT-Baum auf den virtuellen Controller des Emulators, sodass On-Device-Apps die echten Services, Characteristics und das Advertisement sehen, ganz ohne Dongle.",
+      audience: "Für Mobile-Entwickler, die hardwarenahe Apps testen, ohne mit physischen Geräten und BLE-Dongles zu jonglieren.",
+      result: "Parallele Android- und iOS-Umgebungen steuern und eine emulierte App über das eigene Mac-Radio mit echter BLE-Hardware sprechen lassen.",
+      caseStudy: {
+        problem: "Das Schwierige beim Testen einer hardwarenahen Mobile-App ist nicht die App — es ist, ein echtes BLE-Gerät vor Code zu bringen, der in einem Emulator läuft.",
+        built: "Eine SwiftUI-App, die AVDs und Xcode-Simulatoren verwaltet, sich über CoreBluetooth mit einem physischen BLE-Gerät verbindet, dessen vollständigen GATT-Baum spiegelt und ihn über ein virtuelles Bumble-Peripheral auf dem netsim-Controller des Android-Emulators neu broadcastet — Lese-, Schreib- und Notify-Verkehr wird in beide Richtungen weitergeleitet.",
+        result: "Die getestete emulierte App sieht die echten Services und den Live-Verkehr des Geräts, und Sessions werden sauber abgebaut, ohne verwaiste Peripherals.",
+      },
+      proofLabels: ["DMG-Release", "Swift 6", "BLE-Bridge"],
+      highlights: [
+        "Verwaltet Android-Emulatoren (AVDs) und Xcode-iOS-Simulatoren parallel in einer Oberfläche.",
+        "Bridgt ein echtes BLE-Gerät über CoreBluetooth in den Emulator und spiegelt den vollständigen GATT-Baum.",
+        "Leitet Lese-/Schreibzugriffe und Notifications in beide Richtungen weiter — die App unter Test sieht die echte Hardware.",
+        "Baut Sessions sauber ab: trennt abgestandene Clients und räumt das Bridge mit dem Elternprozess auf.",
+      ],
+    },
+    stack: ["Swift", "SwiftUI", "Bluetooth LE"],
+    featuredTier: "featured",
+    repo: "jx-grxf/MacPhone",
+    githubUrl: "https://github.com/jx-grxf/MacPhone",
+    releaseUrl: "https://github.com/jx-grxf/MacPhone/releases/tag/v0.2.1",
+    fallbackVersion: "v0.2.1",
+    platformLabels: ["macOS"],
+    proofLabels: ["DMG release", "Swift 6", "BLE bridge"],
+    fallbackDownloads: [
+      {
+        assetName: "MacPhone-0.2.1.dmg",
+        assetUrl: "https://github.com/jx-grxf/MacPhone/releases/download/v0.2.1/MacPhone-0.2.1.dmg",
+        size: 4243692,
+        kind: "macos",
+      },
+      {
+        assetName: "MacPhone-0.2.1.zip",
+        assetUrl: "https://github.com/jx-grxf/MacPhone/releases/download/v0.2.1/MacPhone-0.2.1.zip",
+        size: 4294532,
+        kind: "archive",
+      },
+    ],
+    highlights: [
+      "Manages Android emulators (AVDs) and Xcode iOS simulators in parallel from one panel.",
+      "Bridges a real BLE device into the emulator over CoreBluetooth, mirroring the full GATT tree.",
+      "Forwards reads, writes, and notifications both ways — the app under test sees the real hardware.",
+      "Keeps sessions clean: disconnects stale clients and tears the bridge down with its parent process.",
+    ],
+    showcase: [],
+    visibility: "public",
   },
   {
     name: "OpenClaw-Discord-Voice",
@@ -236,6 +389,56 @@ export const featuredProjects: Project[] = [
         height: 900,
       },
     ],
+    visibility: "public",
+  },
+  {
+    name: "HealthKit-MCP",
+    slug: "healthkit-mcp",
+    status: "experimental",
+    tagline: "Read-only Apple Health context for MCP-capable agents.",
+    description:
+      "A privacy-first bridge that syncs Apple Health aggregates from an iPhone app into a scoped backend and exposes sleep, workouts, training load, and trends through a read-only Model Context Protocol server.",
+    audience: "For personal agents that need health context without raw samples, write access, or an opaque hosted integration.",
+    result: "Agents can answer questions about sleep, workouts, and training load from structured read-only summaries.",
+    caseStudy: {
+      problem: "Apple Health has rich personal context, but there is no normal server API an agent can read from safely.",
+      built: "A TypeScript MCP server, Supabase schema, and iOS HealthKit sync plan that move aggregate summaries instead of raw health samples.",
+      result: "Health context becomes available to ChatGPT, Claude, Codex, and Claude Code through explicit read-only tools.",
+    },
+    de: {
+      tagline: "Read-only Apple-Health-Kontext für MCP-fähige Agents.",
+      description:
+        "Eine privacy-first Bridge, die Apple-Health-Aggregate aus einer iPhone-App in ein abgegrenztes Backend synchronisiert und Schlaf, Workouts, Trainingslast und Trends über einen read-only Model-Context-Protocol-Server verfügbar macht.",
+      audience: "Für persönliche Agents, die Gesundheitskontext brauchen, ohne Rohdaten, Schreibzugriff oder undurchsichtige Hosted-Integration.",
+      result: "Agents können Fragen zu Schlaf, Workouts und Trainingslast aus strukturierten read-only Summaries beantworten.",
+      caseStudy: {
+        problem: "Apple Health enthält wertvollen persönlichen Kontext, aber es gibt keine normale Server-API, aus der ein Agent sicher lesen kann.",
+        built: "Einen TypeScript-MCP-Server, ein Supabase-Schema und einen iOS-HealthKit-Sync-Plan, der Aggregate statt roher Health-Samples bewegt.",
+        result: "Health-Kontext wird für ChatGPT, Claude, Codex und Claude Code über explizite read-only Tools nutzbar.",
+      },
+      proofLabels: ["MCP", "HealthKit", "Read-only"],
+      highlights: [
+        "Read-only MCP-Tools für tägliche Zusammenfassungen, Schlaf, Workouts, Trainingslast und Trends.",
+        "Demo-Modus läuft ohne Backend; Supabase-Pfad ist für echte Nutzertrennung vorbereitet.",
+        "iPhone liest HealthKit lokal und synchronisiert Aggregate statt Rohsamples.",
+        "Für ChatGPT, Claude, Codex und Claude Code als MCP-Connector gedacht.",
+      ],
+    },
+    stack: ["TypeScript", "MCP", "HealthKit"],
+    featuredTier: "project",
+    repo: "jx-grxf/HealthKit-MCP",
+    githubUrl: "https://github.com/jx-grxf/HealthKit-MCP",
+    releaseUrl: "https://github.com/jx-grxf/HealthKit-MCP/releases",
+    fallbackVersion: "unreleased",
+    platformLabels: ["MCP", "iOS", "Supabase"],
+    proofLabels: ["MCP", "HealthKit", "Read-only"],
+    highlights: [
+      "Read-only MCP tools for daily summaries, sleep, workouts, training load, and trends.",
+      "Demo mode runs without a backend; the Supabase path is prepared for real user isolation.",
+      "The iPhone side reads HealthKit locally and syncs aggregates instead of raw samples.",
+      "Built for ChatGPT, Claude, Codex, and Claude Code as MCP-capable clients.",
+    ],
+    showcase: [],
     visibility: "public",
   },
   {
@@ -366,6 +569,56 @@ export const featuredProjects: Project[] = [
     visibility: "public",
   },
   {
+    name: "ip-multitool",
+    slug: "ip-multitool",
+    status: "active",
+    tagline: "A focused terminal toolkit for IP, DNS, RDAP, HTTP, and subnet diagnostics.",
+    description:
+      "A Python CLI/TUI for practical network checks: IP and domain lookup, privacy indicators, DNS records, RDAP/WHOIS, HTTP response inspection, subnet math, local network discovery, and authorized port checks.",
+    audience: "For troubleshooting your own networks and endpoints with clear limits around what IP tooling can prove.",
+    result: "One terminal entry point for quick network intelligence, JSON output, and safer authorized checks.",
+    caseStudy: {
+      problem: "Network debugging often jumps between web lookups, dig, whois, curl, subnet calculators, and local scan tools.",
+      built: "A Python package with a full-screen TUI, scriptable commands, JSON output, optional dig/nmap/arp-scan integration, and explicit safety boundaries.",
+      result: "Common IP, DNS, registration, HTTP, subnet, LAN, and port checks sit behind one consistent command.",
+    },
+    de: {
+      tagline: "Ein fokussiertes Terminal-Toolkit für IP-, DNS-, RDAP-, HTTP- und Subnetz-Diagnostik.",
+      description:
+        "Ein Python-CLI/TUI für praktische Netzwerkchecks: IP- und Domain-Lookup, Privacy-Indikatoren, DNS-Records, RDAP/WHOIS, HTTP-Inspection, Subnetz-Rechnung, lokale Netzwerkerkennung und autorisierte Port-Checks.",
+      audience: "Für das Troubleshooting eigener Netzwerke und Endpunkte, mit klaren Grenzen dazu, was IP-Tools wirklich beweisen können.",
+      result: "Ein Terminal-Einstiegspunkt für schnelle Netzwerk-Intelligence, JSON-Ausgabe und sicherere autorisierte Checks.",
+      caseStudy: {
+        problem: "Netzwerkdebugging springt oft zwischen Web-Lookups, dig, whois, curl, Subnetzrechnern und lokalen Scan-Tools.",
+        built: "Ein Python-Package mit Fullscreen-TUI, scriptbaren Commands, JSON-Ausgabe, optionaler dig/nmap/arp-scan-Integration und expliziten Sicherheitsgrenzen.",
+        result: "Gängige IP-, DNS-, Registrierungs-, HTTP-, Subnetz-, LAN- und Port-Checks liegen hinter einem konsistenten Command.",
+      },
+      proofLabels: ["Python CLI", "TUI", "JSON"],
+      highlights: [
+        "IP-/Domain-Lookups mit Geo, ISP, ASN, Reverse DNS, RDAP und Privacy-Indikatoren.",
+        "DNS-, WHOIS/RDAP-, HTTP- und TLS-Checks mit JSON-Ausgabe für Automation.",
+        "Subnetzrechner, Telefonnummern-Parsing, LAN-Erkennung und autorisierte Port-Checks.",
+        "Klare Grenzen: keine Personalisierung aus IPs, keine Scans ohne Berechtigung.",
+      ],
+    },
+    stack: ["Python", "CLI", "Networking"],
+    featuredTier: "project",
+    repo: "jx-grxf/ip-multitool",
+    githubUrl: "https://github.com/jx-grxf/ip-multitool",
+    releaseUrl: "https://github.com/jx-grxf/ip-multitool/releases",
+    fallbackVersion: "unreleased",
+    platformLabels: ["Terminal", "Python"],
+    proofLabels: ["Python CLI", "TUI", "JSON"],
+    highlights: [
+      "IP and domain lookups with geo, ISP, ASN, reverse DNS, RDAP, and privacy indicators.",
+      "DNS, WHOIS/RDAP, HTTP, and TLS checks with JSON output for automation.",
+      "Subnet calculator, phone parsing, LAN discovery, and authorized port checks.",
+      "Clear limits: no person identification from IPs and no scans without authorization.",
+    ],
+    showcase: [],
+    visibility: "public",
+  },
+  {
     name: "PatchPilot",
     slug: "patchpilot",
     status: "beta",
@@ -407,8 +660,8 @@ export const featuredProjects: Project[] = [
     featuredTier: "featured",
     repo: "jx-grxf/PatchPilot",
     githubUrl: "https://github.com/jx-grxf/PatchPilot",
-    releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v1.2.1",
-    fallbackVersion: "v1.2.1",
+    releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v1.2.2",
+    fallbackVersion: "v1.2.2",
     npmPackage: "@jx-grxf/patchpilot",
     platformLabels: ["npm", "Terminal"],
     proofLabels: ["npm package", "GitHub release", "Agent TUI"],
@@ -523,8 +776,8 @@ export const featuredProjects: Project[] = [
     featuredTier: "project",
     repo: "jx-grxf/SlamX",
     githubUrl: "https://github.com/jx-grxf/SlamX",
-    releaseUrl: "https://github.com/jx-grxf/SlamX/releases/tag/v0.3.4",
-    fallbackVersion: "v0.3.4",
+    releaseUrl: "https://github.com/jx-grxf/SlamX/releases/tag/v0.3.5",
+    fallbackVersion: "v0.3.5",
     platformLabels: ["macOS"],
     proofLabels: ["DMG release", "Sensor-only", "GitHub release"],
     highlights: [
@@ -607,21 +860,21 @@ export const featuredProjects: Project[] = [
     featuredTier: "featured",
     repo: "jx-grxf/BriskEdit",
     githubUrl: "https://github.com/jx-grxf/BriskEdit",
-    releaseUrl: "https://github.com/jx-grxf/BriskEdit/releases",
-    fallbackVersion: "v0.2.0",
+    releaseUrl: "https://github.com/jx-grxf/BriskEdit/releases/tag/v0.5.1",
+    fallbackVersion: "v0.5.1",
     platformLabels: ["macOS"],
     proofLabels: ["Swift 6", "SwiftUI + AppKit", "Source available"],
     fallbackDownloads: [
       {
-        assetName: "BriskEdit-0.2.0.dmg",
-        assetUrl: "https://github.com/jx-grxf/BriskEdit/releases/download/v0.2.0/BriskEdit-0.2.0.dmg",
-        size: 5568173,
+        assetName: "BriskEdit-0.5.1.dmg",
+        assetUrl: "https://github.com/jx-grxf/BriskEdit/releases/download/v0.5.1/BriskEdit-0.5.1.dmg",
+        size: 8237929,
         kind: "macos",
       },
       {
-        assetName: "BriskEdit-0.2.0.zip",
-        assetUrl: "https://github.com/jx-grxf/BriskEdit/releases/download/v0.2.0/BriskEdit-0.2.0.zip",
-        size: 5642706,
+        assetName: "BriskEdit-0.5.1.zip",
+        assetUrl: "https://github.com/jx-grxf/BriskEdit/releases/download/v0.5.1/BriskEdit-0.5.1.zip",
+        size: 8333161,
         kind: "archive",
       },
     ],
@@ -716,14 +969,14 @@ export const featuredProjects: Project[] = [
 
 export const upcomingProjects: UpcomingProject[] = [
   {
-    name: "PortPirate",
+    name: "oeffigo",
     status: "coming soon",
-    description: "macOS menu bar control for local dev ports, mapping every listener to its process, repository, and the agent that started it.",
+    description: "A fast native iOS app for Austrian public transport (VAO/HAFAS) with a modern Liquid Glass UI.",
     de: {
-      description: "macOS-Menüleisten-Kontrolle für lokale Dev-Ports — verknüpft jeden Listener mit seinem Prozess, Repository und dem Agenten, der ihn gestartet hat.",
+      description: "Eine schnelle native iOS-App für den österreichischen öffentlichen Verkehr (VAO/HAFAS) mit moderner Liquid-Glass-Oberfläche.",
     },
-    stack: ["Swift", "macOS", "Menu Bar"],
-    visibility: "public",
+    stack: ["Swift", "iOS", "SwiftUI"],
+    visibility: "private",
   },
   {
     name: "TypeBot",
@@ -742,16 +995,42 @@ export const projectsBySlug = new Map(featuredProjects.map((project) => [project
 const orderedProjects = (slugs: string[]) =>
   slugs.map((slug) => projectsBySlug.get(slug)).filter((project): project is Project => Boolean(project));
 
-export const featuredShowcaseProjects = orderedProjects(["hermes-discord-voice", "patchpilot", "briskedit"]);
+// The "Highlighted" showcase row — the flagship projects, rendered as large
+// image cards. Each project appears here OR in a section below, never both.
+export const featuredShowcaseProjects = orderedProjects(["patchpilot", "briskedit", "macphone"]);
 
-export const standardProjects = orderedProjects([
-  "slamx",
-  "openclaw-discord-voice",
-  "caruso-reborn",
-  "digi2pdf",
-  "docxtopdf",
-]);
+export const projectSections: ProjectSection[] = [
+  {
+    eyebrow: "mac apps",
+    title: "Mac Apps",
+    de: {
+      eyebrow: "mac-apps",
+      title: "Mac-Apps",
+    },
+    projects: orderedProjects(["bottlelite", "slamx", "portpirate"]),
+  },
+  {
+    eyebrow: "agents & tools",
+    title: "Agents and developer tools",
+    de: {
+      eyebrow: "agents & tools",
+      title: "Agent- und Entwickler-Tools",
+    },
+    projects: orderedProjects(["healthkit-mcp", "hermes-discord-voice", "openclaw-discord-voice"]),
+  },
+  {
+    eyebrow: "more",
+    title: "More Projects",
+    de: {
+      eyebrow: "mehr",
+      title: "Weitere Projekte",
+    },
+    projects: orderedProjects(["caruso-reborn", "ip-multitool", "docxtopdf", "digi2pdf"]),
+  },
+];
 
-export const publicProjects = [...featuredShowcaseProjects, ...standardProjects];
+const uniqueProjects = (projects: Project[]) => Array.from(new Map(projects.map((project) => [project.slug, project])).values());
+
+export const publicProjects = uniqueProjects([...featuredShowcaseProjects, ...projectSections.flatMap((section) => section.projects)]);
 
 export const statusClass = (status: string) => status.replaceAll(" ", "-");
