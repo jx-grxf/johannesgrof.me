@@ -122,8 +122,8 @@ export const oeffigo: OeffigoContent = {
     code: "OEFFIGO2X",
     headline: { en: "Launch offer: double the free trial", de: "Launch-Aktion: doppelte Testphase" },
     body: {
-      en: "Redeem a launch code at release for twice the standard free trial — plenty of time to see whether ÖffiGo fits your daily routine.",
-      de: "Löse zum Release einen Launch-Code ein und erhalte die doppelte Standard-Testphase — genug Zeit, um zu schauen, ob ÖffiGo in deinen Alltag passt.",
+      en: "The first 100 on the waitlist get a double free trial and 15% off the first month at launch. Enough time to see whether ÖffiGo fits your daily routine.",
+      de: "Die ersten 100 auf der Warteliste bekommen zum Launch die doppelte Testphase und 15% Rabatt im ersten Monat. Genug Zeit, um zu schauen, ob ÖffiGo in deinen Alltag passt.",
     },
     note: {
       en: "The code drops when ÖffiGo hits the App Store — iOS first, with Android to follow. Want it first? Reach out and I'll send it your way.",

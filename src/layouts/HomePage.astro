@@ -298,23 +298,33 @@ const faqSchema = {
               <div class="promo-copy">
                 <strong>{oeffigo.promo.headline[lang]}</strong>
                 <p>{oeffigo.promo.body[lang]}</p>
-                <p class="promo-code">
-                  <span>{lang === "en" ? "launch code" : "launch-code"}</span>
-                  <button
-                    type="button"
-                    class="promo-code-copy"
-                    data-copy={oeffigo.promo.code}
-                    data-copied={lang === "en" ? "Copied" : "Kopiert"}
-                    aria-label={lang === "en" ? `Copy launch code ${oeffigo.promo.code}` : `Launch-Code ${oeffigo.promo.code} kopieren`}
-                  >
-                    <code>{oeffigo.promo.code}</code>
-                    <svg class="promo-code-copy-icon" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <rect x="9" y="9" width="11" height="11" rx="2" />
-                      <path d="M5 15V5a2 2 0 0 1 2-2h10" />
-                    </svg>
-                  </button>
-                  <em>{lang === "en" ? "at release" : "zum release"}</em>
-                </p>
+                {oeffigo.promo.active ? (
+                  <p class="promo-code">
+                    <span>{lang === "en" ? "launch code" : "launch-code"}</span>
+                    <button
+                      type="button"
+                      class="promo-code-copy"
+                      data-copy={oeffigo.promo.code}
+                      data-copied={lang === "en" ? "Copied" : "Kopiert"}
+                      aria-label={lang === "en" ? `Copy launch code ${oeffigo.promo.code}` : `Launch-Code ${oeffigo.promo.code} kopieren`}
+                    >
+                      <code>{oeffigo.promo.code}</code>
+                      <svg class="promo-code-copy-icon" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="11" height="11" rx="2" />
+                        <path d="M5 15V5a2 2 0 0 1 2-2h10" />
+                      </svg>
+                    </button>
+                    <em>{lang === "en" ? "at release" : "zum release"}</em>
+                  </p>
+                ) : (
+                  <p class="promo-note">
+                    {lang === "en"
+                      ? "No public code — the first 100 on the waitlist get theirs by email at launch."
+                      : "Kein öffentlicher Code — die ersten 100 auf der Warteliste bekommen ihren per Mail zum Launch."}
+                    {" "}
+                    <a href={oeffigo.websiteUrl} rel="me">{lang === "en" ? "Join at oeffigo.app" : "Zur Warteliste auf oeffigo.app"}</a>
+                  </p>
+                )}
               </div>
             </div>
             <p class="oeffigo-datanote">{oeffigo.dataNote[lang]}</p>

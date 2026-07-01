@@ -2724,6 +2724,23 @@ pre {
   margin: 0 !important;
 }
 
+/* Pre-launch: no public code, just a waitlist pointer. */
+.promo-note {
+  margin: 0 !important;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.promo-note a {
+  color: var(--ogreen-bright, #7be25a);
+  text-decoration: none;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.promo-note a:hover { text-decoration: underline; }
+
 .promo-code span {
   font-family: var(--font-mono);
   font-size: 0.64rem;
