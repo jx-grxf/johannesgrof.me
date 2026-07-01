@@ -17,6 +17,8 @@ export interface OeffigoContent {
   status: { en: string; de: string };
   dataNote: { en: string; de: string };
   appStoreUrl: string | null;
+  /** Canonical product site — the cross-link to oeffigo.app for SEO + users. */
+  websiteUrl: string;
   icon: string;
   features: OeffigoFeature[];
   promo: {
@@ -56,21 +58,22 @@ export const oeffigo: OeffigoContent = {
     en: "Real-time departures, journey planning and live disruptions for all of Austria, in a modern, fast interface. ÖffiGo talks straight to the VAO / HAFAS backend — the same data behind the official apps — and presents it faster and clearer, without pretending a schedule is always live.",
     de: "Echtzeit-Abfahrten, Routenplanung und Live-Störungen für ganz Österreich, in einer modernen, schnellen Oberfläche. ÖffiGo spricht direkt mit dem VAO-/HAFAS-Backend — denselben Daten wie die offiziellen Apps — und zeigt sie schneller und übersichtlicher, ohne so zu tun, als wäre der Fahrplan immer live.",
   },
-  platform: { en: "iOS 17+ & Android · Liquid Glass on iOS 26", de: "iOS 17+ & Android · Liquid Glass ab iOS 26" },
+  platform: { en: "iOS 17+, Android in the works · Liquid Glass on iOS 26", de: "iOS 17+, Android in Arbeit · Liquid Glass ab iOS 26" },
   status: { en: "in active development", de: "in aktiver Entwicklung" },
   dataNote: {
-    en: "VAO / HAFAS data for all of Austria — tram, bus, train, S-Bahn, subway, cableway, ship. Realtime where operators provide it.",
-    de: "VAO/HAFAS-Daten für ganz Österreich — Tram, Bus, Bahn, S-Bahn, U-Bahn, Seilbahn, Schiff. Echtzeit dort, wo Betreiber sie liefern.",
+    en: "VAO / HAFAS data for all of Austria — tram, bus, train, S-Bahn, subway, cableway, ship. Realtime where operators provide it, plus Wiener Linien realtime overlaid on the Vienna subway.",
+    de: "VAO/HAFAS-Daten für ganz Österreich — Tram, Bus, Bahn, S-Bahn, U-Bahn, Seilbahn, Schiff. Echtzeit dort, wo Betreiber sie liefern, plus Wiener-Linien-Echtzeit für die Wiener U-Bahn.",
   },
   appStoreUrl: null,
+  websiteUrl: "https://oeffigo.app",
   icon: "/projects/oeffigo/icon.png",
   features: [
     {
       icon: ICONS.clock,
       title: { en: "Live departure board", de: "Live-Abfahrtstafel" },
       body: {
-        en: "Your nearest stop, departures for every mode, and realtime where it's available — including delays, platform changes and disruptions.",
-        de: "Deine nächste Haltestelle, Abfahrten für alle Öffis und Echtzeit dort, wo sie verfügbar ist — inklusive Verspätungen, Steigwechseln und Störungen.",
+        en: "Your nearest stop, departures for every mode, and realtime where it's available — including delays, platform changes and disruptions. For the Vienna subway it even overlays Wiener Linien realtime where VAO ships only a schedule.",
+        de: "Deine nächste Haltestelle, Abfahrten für alle Öffis und Echtzeit dort, wo sie verfügbar ist — inklusive Verspätungen, Steigwechseln und Störungen. Für die Wiener U-Bahn blendet sie sogar die Wiener-Linien-Echtzeit ein, wo die VAO nur den Fahrplan liefert.",
       },
     },
     {
@@ -123,8 +126,8 @@ export const oeffigo: OeffigoContent = {
       de: "Löse zum Release einen Launch-Code ein und erhalte die doppelte Standard-Testphase — genug Zeit, um zu schauen, ob ÖffiGo in deinen Alltag passt.",
     },
     note: {
-      en: "The code drops when ÖffiGo hits the App Store and Google Play. Want it first? Reach out and I'll send it your way.",
-      de: "Der Code kommt, sobald ÖffiGo im App Store und bei Google Play ist. Zuerst dabei sein? Melde dich, dann schicke ich ihn dir.",
+      en: "The code drops when ÖffiGo hits the App Store — iOS first, with Android to follow. Want it first? Reach out and I'll send it your way.",
+      de: "Der Code kommt, sobald ÖffiGo im App Store ist — zuerst für iOS, Android folgt. Zuerst dabei sein? Melde dich, dann schicke ich ihn dir.",
     },
   },
   brand: {

@@ -212,14 +212,14 @@ const faqSchema = {
                         <span>iOS 26</span>
                         <span>Liquid Glass</span>
                       </div>
-                      <div class="spotlight-stores" aria-label={content.lang === "en" ? "Coming to the App Store and Google Play" : "Bald im App Store und bei Google Play"}>
+                      <div class="spotlight-stores" aria-label={content.lang === "en" ? "Coming to the App Store first, Android planned" : "Zuerst im App Store, Android geplant"}>
                         <picture>
                           <source srcset="/projects/oeffigo/appstore.webp" type="image/webp" />
-                          <img src="/projects/oeffigo/appstore.png" alt="App Store" width="202" height="60" loading="lazy" decoding="async" />
+                          <img src="/projects/oeffigo/appstore.png" alt="App Store" width="81" height="24" loading="lazy" decoding="async" />
                         </picture>
                         <picture>
                           <source srcset="/projects/oeffigo/googleplay.webp" type="image/webp" />
-                          <img src="/projects/oeffigo/googleplay.png" alt="Google Play" width="203" height="60" loading="lazy" decoding="async" />
+                          <img class="spotlight-store--soon" src="/projects/oeffigo/googleplay.png" alt={content.lang === "en" ? "Google Play (planned)" : "Google Play (geplant)"} width="81" height="24" loading="lazy" decoding="async" />
                         </picture>
                       </div>
                     </div>
@@ -318,6 +318,12 @@ const faqSchema = {
               </div>
             </div>
             <p class="oeffigo-datanote">{oeffigo.dataNote[lang]}</p>
+            <p class="oeffigo-actions">
+              <a class="oeffigo-site-link" href={oeffigo.websiteUrl} rel="me">
+                {lang === "en" ? "Visit oeffigo.app" : "Zu oeffigo.app"}
+                <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9" /></svg>
+              </a>
+            </p>
           </div>
           <div class="oeffigo-features">
             {oeffigo.features.map((feature) => (

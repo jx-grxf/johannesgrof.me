@@ -1,5 +1,5 @@
 ---
-import { defaultSocialImage, toCanonicalUrl } from "@/data/siteMetadata";
+import { author, canonicalOrigin, defaultSocialImage, personSameAs, toCanonicalUrl } from "@/data/siteMetadata";
 
 interface HreflangAlternate {
   hreflang: string;
@@ -33,6 +33,32 @@ const imageUrl = toCanonicalUrl(image);
 // Only the branded default card has known 1200×630 dimensions; project pages
 // pass their own screenshots, so we omit the explicit size for those.
 const isDefaultImage = image === defaultSocialImage;
+
+// Person is the same @id on every page; sameAs (incl. oeffigo.app) is the
+// entity bridge that tells Google this site and ÖffiGo share one maker.
+const personId = `${canonicalOrigin}/#person`;
+const personLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "@id": personId,
+  name: author.name,
+  url: canonicalOrigin,
+  email: `mailto:${author.email}`,
+  sameAs: personSameAs,
+};
+
+// WebSite entity, authored by the Person — only emitted on the home pages.
+const isHome = canonicalPath === "/" || canonicalPath === "/de/" || canonicalPath === "/de";
+const websiteLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${canonicalOrigin}/#website`,
+  url: canonicalOrigin,
+  name: author.name,
+  inLanguage: ["en", "de-AT"],
+  author: { "@id": personId },
+  publisher: { "@id": personId },
+};
 ---
 
 <meta charset="UTF-8" />
@@ -63,3 +89,5 @@ const isDefaultImage = image === defaultSocialImage;
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={imageUrl} />
 <meta name="twitter:image:alt" content="Johannes Grof project portfolio preview" />
+<script type="application/ld+json" set:html={JSON.stringify(personLd)} />
+{isHome && <script type="application/ld+json" set:html={JSON.stringify(websiteLd)} />}

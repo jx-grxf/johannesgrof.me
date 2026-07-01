@@ -484,7 +484,7 @@ nav a:focus-visible,
   color: var(--ogreen-bright, #7be25a);
 }
 
-/* Store badges — small, clean, both stores since ÖffiGo ships on iOS + Android. */
+/* Store badges — App Store first, Google Play planned (dimmed until Android ships). */
 .spotlight-stores {
   display: flex;
   flex-wrap: wrap;
@@ -494,15 +494,47 @@ nav a:focus-visible,
 }
 
 .spotlight-stores img {
-  height: 30px;
+  height: 24px;
   width: auto;
-  border-radius: 7px;
-  opacity: 0.92;
+  opacity: 0.9;
   transition: opacity 200ms var(--smooth);
+}
+
+/* Google Play is planned, not live — mute it so the App Store reads as primary. */
+.spotlight-stores img.spotlight-store--soon {
+  opacity: 0.5;
+  filter: grayscale(0.35);
 }
 
 .spotlight-card--oeffigo:hover .spotlight-stores img {
   opacity: 1;
+}
+
+.spotlight-card--oeffigo:hover .spotlight-stores img.spotlight-store--soon {
+  opacity: 0.7;
+}
+
+/* ÖffiGo section CTA to the product site — the cross-link to oeffigo.app. */
+.oeffigo-actions {
+  margin-top: 18px;
+}
+
+.oeffigo-site-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--ogreen, #56c441);
+  color: var(--ogreen-bright, #7be25a);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 200ms var(--smooth), color 200ms var(--smooth);
+}
+
+.oeffigo-site-link:hover {
+  background: var(--ogreen, #56c441);
+  color: #05210a;
 }
 
 /* "Now shipping" marquee — built from real GitHub release versions. */
