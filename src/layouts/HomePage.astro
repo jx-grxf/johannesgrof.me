@@ -6,7 +6,7 @@ import type { Project, ProjectLang, ProjectStatus } from "@/data/projects";
 import { getProjectGitHubInfo } from "@/data/github";
 import { oeffigo } from "@/data/oeffigo";
 import type { LocaleContent } from "@/data/siteContent";
-import { defaultSocialImage, toCanonicalUrl } from "@/data/siteMetadata";
+import { toCanonicalUrl } from "@/data/siteMetadata";
 import "@/styles/global.css";
 import SpeedInsights from "@vercel/speed-insights/astro";
 
@@ -53,6 +53,10 @@ const lang: ProjectLang = isDe ? "de" : "en";
 const copy = (project: Project) => getProjectCopy(project, lang);
 const localizedStatus = (status: ProjectStatus) => localizedStatusLabel(status, lang);
 const projectHref = (slug: string) => `${isDe ? "/de" : ""}/projects/${slug}/`;
+
+// Only advertise a WebP <source> when the asset is actually WebP — otherwise
+// the browser fetches a PNG that was mislabeled as image/webp.
+const isWebp = (src?: string): src is string => Boolean(src && src.endsWith(".webp"));
 
 // Hero spotlight: the strongest shipped app, screenshot-forward.
 const spotlight = publicProjects.find((project) => project.slug === "briskedit") ?? featuredShowcaseProjects[0];
@@ -128,37 +132,6 @@ const faqSchema = {
     },
   })),
 };
-
-// Ties the website to the Google Business Profile (same name and area).
-const localBusinessSchema = {
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  "@id": `${toCanonicalUrl("/")}#business`,
-  name: "Johannes Grof IT",
-  image: toCanonicalUrl(defaultSocialImage),
-  url: toCanonicalUrl("/"),
-  email: "contact@johannesgrof.me",
-  description: content.meta.description,
-  founder: {
-    "@type": "Person",
-    name: "Johannes Grof",
-  },
-  address: {
-    "@type": "PostalAddress",
-    addressRegion: "Steiermark",
-    addressCountry: "AT",
-  },
-  areaServed: [
-    { "@type": "AdministrativeArea", name: "Südoststeiermark" },
-    { "@type": "AdministrativeArea", name: "Steiermark" },
-  ],
-  sameAs: [
-    "https://github.com/jx-grxf",
-    "https://www.linkedin.com/in/johannes-grof",
-    "https://x.com/jx_grxf",
-  ],
-  knowsAbout: ["website development", "web hosting", "domain management", "website maintenance", "technical support", "computer setup", "electronics help", "custom software"],
-};
 ---
 
 <!doctype html>
@@ -173,7 +146,6 @@ const localBusinessSchema = {
     />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(profileSchema)} />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(localBusinessSchema)} />
   </head>
   <body>
     <SiteHeader navItems={content.nav} homeHref={canonicalPath} langSwitch={content.langSwitch} />
@@ -182,7 +154,17 @@ const localBusinessSchema = {
       <section class="hero section-shell" aria-labelledby="hero-title">
         <div class="hero-copy">
           <p class="eyebrow">{content.hero.eyebrow}</p>
-          <h1 id="hero-title">{content.hero.title}</h1>
+          <h1 id="hero-title">{
+            content.hero.titleAccent && content.hero.title.includes(content.hero.titleAccent) ? (
+              <Fragment>
+                {content.hero.title.slice(0, content.hero.title.indexOf(content.hero.titleAccent))}
+                <span class="display-em">{content.hero.titleAccent}</span>
+                {content.hero.title.slice(content.hero.title.indexOf(content.hero.titleAccent) + content.hero.titleAccent.length)}
+              </Fragment>
+            ) : (
+              content.hero.title
+            )
+          }</h1>
           <p class="hero-text">{content.hero.body}</p>
           <div class="hero-actions">
             <a class="button primary" href="#projects">{content.hero.primaryAction}</a>
@@ -204,27 +186,76 @@ const localBusinessSchema = {
         {
           spotlight && (
             <aside class="hero-spotlight">
-              <a class="spotlight-card" href={projectHref(spotlight.slug)} aria-label={`${spotlight.name} — ${content.lang === "en" ? "latest project" : "neuestes Projekt"}`}>
-                <div class="spotlight-media">
-                  {spotlightImageSrc ? (
-                    <img src={spotlightImageSrc} alt={spotlightImage?.alt ?? spotlight.name} width={spotlightImage?.width} height={spotlightImage?.height} loading="eager" decoding="async" />
-                  ) : (
-                    <div class="featured-card-placeholder" aria-hidden="true">
-                      <span class="featured-card-placeholder-mark">{spotlight.name}</span>
+              <div class="spotlight-stack">
+                <div class="spotlight-slot spotlight-slot--back">
+                  <a
+                    class="spotlight-card spotlight-card--oeffigo"
+                    href="#oeffigo"
+                    style={`--ogreen:${oeffigo.brand.green};--ogreen-bright:${oeffigo.brand.greenBright}`}
+                    aria-label={`${oeffigo.name} — ${oeffigo.tagline[lang]}`}
+                  >
+                    <div class="spotlight-media spotlight-media--oeffigo">
+                      <picture>
+                        <source srcset="/projects/oeffigo/showcase.webp" type="image/webp" />
+                        <img class="spotlight-phone" src="/projects/oeffigo/showcase.png" alt={`${oeffigo.name} — ${oeffigo.tagline[lang]}`} width="1000" height="2054" loading="lazy" decoding="async" />
+                      </picture>
+                      <span class="spotlight-flag spotlight-flag--oeffigo">{oeffigo.eyebrow[lang]}</span>
+                      <picture>
+                        <source srcset="/projects/oeffigo/icon.webp" type="image/webp" />
+                        <img class="spotlight-logo" src={oeffigo.icon} alt="" width="60" height="60" aria-hidden="true" loading="lazy" decoding="async" />
+                      </picture>
                     </div>
-                  )}
-                  <span class="spotlight-flag">{content.lang === "en" ? "now shipping" : "frisch live"}</span>
-                </div>
-                <div class="spotlight-body">
-                  <h2>{spotlight.name}</h2>
-                  <p>{copy(spotlight).tagline}</p>
-                  {liveStats(spotlight.slug).length > 0 && (
-                    <div class="spotlight-meta">
-                      {liveStats(spotlight.slug).map((stat) => <span>{stat}</span>)}
+                    <div class="spotlight-body">
+                      <h2>{oeffigo.name}</h2>
+                      <p>{oeffigo.tagline[lang]}</p>
+                      <div class="spotlight-meta spotlight-meta--oeffigo">
+                        <span>iOS 26</span>
+                        <span>Liquid Glass</span>
+                      </div>
+                      <div class="spotlight-stores" aria-label={content.lang === "en" ? "Coming to the App Store and Google Play" : "Bald im App Store und bei Google Play"}>
+                        <picture>
+                          <source srcset="/projects/oeffigo/appstore.webp" type="image/webp" />
+                          <img src="/projects/oeffigo/appstore.png" alt="App Store" width="202" height="60" loading="lazy" decoding="async" />
+                        </picture>
+                        <picture>
+                          <source srcset="/projects/oeffigo/googleplay.webp" type="image/webp" />
+                          <img src="/projects/oeffigo/googleplay.png" alt="Google Play" width="203" height="60" loading="lazy" decoding="async" />
+                        </picture>
+                      </div>
                     </div>
-                  )}
+                  </a>
                 </div>
-              </a>
+
+                <div class="spotlight-slot spotlight-slot--front">
+                  <a class="spotlight-card spotlight-card--front" href={projectHref(spotlight.slug)} aria-label={`${spotlight.name} — ${content.lang === "en" ? "latest project" : "neuestes Projekt"}`}>
+                    <div class="spotlight-media">
+                      {spotlightImageSrc ? (
+                        <img src={spotlightImageSrc} alt={spotlightImage?.alt ?? spotlight.name} width={spotlightImage?.width} height={spotlightImage?.height} loading="eager" decoding="async" />
+                      ) : (
+                        <div class="featured-card-placeholder" aria-hidden="true">
+                          <span class="featured-card-placeholder-mark">{spotlight.name}</span>
+                        </div>
+                      )}
+                      <span class="spotlight-flag">{content.lang === "en" ? "now shipping" : "frisch live"}</span>
+                      {spotlight.logo && (
+                        <picture>
+                          {isWebp(spotlight.logo.src) && spotlight.logo.fallbackSrc && <source srcset={spotlight.logo.src} type="image/webp" />}
+                          <img class="spotlight-logo" src={spotlight.logo.fallbackSrc ?? spotlight.logo.src} alt="" width={spotlight.logo.width} height={spotlight.logo.height} aria-hidden="true" loading="lazy" decoding="async" />
+                        </picture>
+                      )}
+                    </div>
+                    <div class="spotlight-body">
+                      <h2>{spotlight.name}</h2>
+                      <p>{copy(spotlight).tagline}</p>
+                      {liveStats(spotlight.slug).length > 0 && (
+                        <div class="spotlight-meta">
+                          {liveStats(spotlight.slug).map((stat) => <span>{stat}</span>)}
+                        </div>
+                      )}
+                    </div>
+                  </a>
+                </div>
+              </div>
             </aside>
           )
         }
@@ -269,7 +300,19 @@ const localBusinessSchema = {
                 <p>{oeffigo.promo.body[lang]}</p>
                 <p class="promo-code">
                   <span>{lang === "en" ? "launch code" : "launch-code"}</span>
-                  <code>{oeffigo.promo.code}</code>
+                  <button
+                    type="button"
+                    class="promo-code-copy"
+                    data-copy={oeffigo.promo.code}
+                    data-copied={lang === "en" ? "Copied" : "Kopiert"}
+                    aria-label={lang === "en" ? `Copy launch code ${oeffigo.promo.code}` : `Launch-Code ${oeffigo.promo.code} kopieren`}
+                  >
+                    <code>{oeffigo.promo.code}</code>
+                    <svg class="promo-code-copy-icon" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="9" y="9" width="11" height="11" rx="2" />
+                      <path d="M5 15V5a2 2 0 0 1 2-2h10" />
+                    </svg>
+                  </button>
                   <em>{lang === "en" ? "at release" : "zum release"}</em>
                 </p>
               </div>
@@ -307,8 +350,8 @@ const localBusinessSchema = {
                   <div class="featured-card-media">
                     {cardImageSrc ? (
                       <picture>
-                        <source srcset={cardImageSrc} type="image/webp" />
-                        <img class="featured-card-image" src={cardImageSrc} alt={heroImage.alt} width={heroImage.width} height={heroImage.height} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
+                        {isWebp(cardImageSrc) && <source srcset={cardImageSrc} type="image/webp" />}
+                        <img class="featured-card-image" src={heroImage.fallbackSrc ?? cardImageSrc} alt={heroImage.alt} width={heroImage.width} height={heroImage.height} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
                       </picture>
                     ) : (
                       <div class="featured-card-placeholder" aria-hidden="true">
@@ -318,7 +361,7 @@ const localBusinessSchema = {
                     )}
                     {project.logo && (
                       <picture>
-                        {project.logo.fallbackSrc && <source srcset={project.logo.src} type="image/webp" />}
+                        {isWebp(project.logo.src) && project.logo.fallbackSrc && <source srcset={project.logo.src} type="image/webp" />}
                         <img class="featured-card-logo" src={project.logo.fallbackSrc ?? project.logo.src} alt="" width={project.logo.width} height={project.logo.height} aria-hidden="true" loading="lazy" decoding="async" />
                       </picture>
                     )}
@@ -616,6 +659,44 @@ const localBusinessSchema = {
             submitButton.disabled = false;
             submitButton.textContent = submitButton.dataset.label ?? "Send message";
           }
+        });
+      }
+
+      // ÖffiGo launch-code copy button.
+      const copyButton = document.querySelector<HTMLButtonElement>(".promo-code-copy");
+      if (copyButton) {
+        const codeEl = copyButton.querySelector("code");
+        const originalLabel = codeEl?.textContent ?? "";
+        const copiedLabel = copyButton.dataset.copied ?? "Copied";
+        let resetTimer: number | undefined;
+
+        copyButton.addEventListener("click", async () => {
+          const code = copyButton.dataset.copy ?? originalLabel;
+          try {
+            await navigator.clipboard.writeText(code);
+          } catch {
+            const range = document.createRange();
+            if (codeEl) {
+              range.selectNodeContents(codeEl);
+              const selection = window.getSelection();
+              selection?.removeAllRanges();
+              selection?.addRange(range);
+              document.execCommand("copy");
+              selection?.removeAllRanges();
+            }
+          }
+
+          copyButton.classList.add("is-copied");
+          if (codeEl) {
+            codeEl.textContent = copiedLabel;
+          }
+          window.clearTimeout(resetTimer);
+          resetTimer = window.setTimeout(() => {
+            copyButton.classList.remove("is-copied");
+            if (codeEl) {
+              codeEl.textContent = originalLabel;
+            }
+          }, 1600);
         });
       }
 

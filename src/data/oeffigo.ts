@@ -47,20 +47,20 @@ const ICONS = {
 
 export const oeffigo: OeffigoContent = {
   name: "ÖffiGo",
-  eyebrow: { en: "launching soon · iOS", de: "bald im app store · iOS" },
+  eyebrow: { en: "launching soon", de: "bald verfügbar" },
   tagline: {
     en: "Austria's public transport — truly native.",
     de: "Österreichs Öffis — wirklich nativ.",
   },
   lead: {
-    en: "Real-time departures, journey planning, and live disruptions for all of Austria, wrapped in a modern iOS 26 Liquid Glass interface. ÖffiGo talks straight to the VAO / HAFAS backend — the same data behind the official apps — and presents it the way iOS should.",
-    de: "Echtzeit-Abfahrten, Routenplanung und Live-Störungen für ganz Österreich, in einer modernen iOS-26-Liquid-Glass-Oberfläche. ÖffiGo spricht direkt mit dem VAO-/HAFAS-Backend — denselben Daten wie die offiziellen Apps — und zeigt sie so, wie iOS es verdient.",
+    en: "Real-time departures, journey planning and live disruptions for all of Austria, in a modern, fast interface. ÖffiGo talks straight to the VAO / HAFAS backend — the same data behind the official apps — and presents it faster and clearer, without pretending a schedule is always live.",
+    de: "Echtzeit-Abfahrten, Routenplanung und Live-Störungen für ganz Österreich, in einer modernen, schnellen Oberfläche. ÖffiGo spricht direkt mit dem VAO-/HAFAS-Backend — denselben Daten wie die offiziellen Apps — und zeigt sie schneller und übersichtlicher, ohne so zu tun, als wäre der Fahrplan immer live.",
   },
-  platform: { en: "iOS 17+ · Liquid Glass on iOS 26", de: "iOS 17+ · Liquid Glass ab iOS 26" },
+  platform: { en: "iOS 17+ & Android · Liquid Glass on iOS 26", de: "iOS 17+ & Android · Liquid Glass ab iOS 26" },
   status: { en: "in active development", de: "in aktiver Entwicklung" },
   dataNote: {
-    en: "Live data from Verkehrsauskunft Österreich (VAO / HAFAS). All of Austria, every mode — tram, bus, train, S-Bahn, subway, cableway, ship.",
-    de: "Live-Daten von der Verkehrsauskunft Österreich (VAO / HAFAS). Ganz Österreich, alle Verkehrsmittel — Tram, Bus, Bahn, S-Bahn, U-Bahn, Seilbahn, Schiff.",
+    en: "VAO / HAFAS data for all of Austria — tram, bus, train, S-Bahn, subway, cableway, ship. Realtime where operators provide it.",
+    de: "VAO/HAFAS-Daten für ganz Österreich — Tram, Bus, Bahn, S-Bahn, U-Bahn, Seilbahn, Schiff. Echtzeit dort, wo Betreiber sie liefern.",
   },
   appStoreUrl: null,
   icon: "/projects/oeffigo/icon.png",
@@ -69,32 +69,32 @@ export const oeffigo: OeffigoContent = {
       icon: ICONS.clock,
       title: { en: "Live departure board", de: "Live-Abfahrtstafel" },
       body: {
-        en: "Your nearest stop and live departures for every mode, with realtime delays and platform-change warnings.",
-        de: "Deine nächste Haltestelle und Live-Abfahrten für jedes Verkehrsmittel — mit Echtzeit-Verspätungen und Steig-Wechsel-Warnungen.",
+        en: "Your nearest stop, departures for every mode, and realtime where it's available — including delays, platform changes and disruptions.",
+        de: "Deine nächste Haltestelle, Abfahrten für alle Öffis und Echtzeit dort, wo sie verfügbar ist — inklusive Verspätungen, Steigwechseln und Störungen.",
       },
     },
     {
       icon: ICONS.route,
       title: { en: "Journey planner", de: "Routenplaner" },
       body: {
-        en: "Full transfers and leg timeline, now / depart-at / arrive-by, routed from your exact position — including the walk to the first stop.",
-        de: "Komplette Umstiege und Leg-Timeline, jetzt / Abfahrt / Ankunft, geroutet von deiner genauen Position — inklusive Fußweg zur ersten Haltestelle.",
+        en: "Plan your route with all transfers, the walk to the first stop, and a depart-at or arrive-by time.",
+        de: "Plane deine Route mit allen Umstiegen, Fußweg zur ersten Haltestelle und Abfahrts- oder Ankunftszeit.",
       },
     },
     {
       icon: ICONS.map,
       title: { en: "Live map", de: "Live-Karte" },
       body: {
-        en: "Nearby stops and live vehicle positions that glide between polls instead of jumping across the map.",
-        de: "Haltestellen in der Nähe und Live-Fahrzeugpositionen, die zwischen den Updates gleiten statt über die Karte zu springen.",
+        en: "Nearby stops and, where available, live vehicle positions on the map.",
+        de: "Haltestellen in der Nähe und, wo verfügbar, Fahrzeugpositionen auf der Karte.",
       },
     },
     {
       icon: ICONS.spark,
       title: { en: "ÖffiGo AI", de: "ÖffiGo KI" },
       body: {
-        en: "An on-device Apple Intelligence transit chat that plans routes, shows departures and disruptions, and keeps context for follow-ups.",
-        de: "Ein On-Device-Apple-Intelligence-Chat, der Routen plant, Abfahrten und Störungen zeigt und den Kontext für Rückfragen behält.",
+        en: "A chat on your iPhone that explains routes, departures and disruptions — private, where Apple Intelligence is supported.",
+        de: "Ein Chat am iPhone, der dir Routen, Abfahrten und Störungen erklärt — privat, wenn Apple Intelligence unterstützt wird.",
       },
     },
     {
@@ -109,8 +109,8 @@ export const oeffigo: OeffigoContent = {
       icon: ICONS.star,
       title: { en: "Favorites & saved routes", de: "Favoriten & gespeicherte Routen" },
       body: {
-        en: "Home, work, and custom stops, plus saved routes with a pinned daily connection and a “Dein Weg” status card.",
-        de: "Zuhause, Arbeit und eigene Haltestellen, dazu gespeicherte Routen mit angepinnter Tagesverbindung und „Dein Weg“-Statuskarte.",
+        en: "Save home, work, the stops you use, and your usual routes.",
+        de: "Speichere Zuhause, Arbeit, wichtige Haltestellen und deine üblichen Wege.",
       },
     },
   ],
@@ -119,12 +119,12 @@ export const oeffigo: OeffigoContent = {
     code: "OEFFIGO2X",
     headline: { en: "Launch offer: double the free trial", de: "Launch-Aktion: doppelte Testphase" },
     body: {
-      en: "Redeem a launch code at release for twice the standard free trial — plenty of time to make ÖffiGo your daily transit app.",
-      de: "Löse zum Release einen Launch-Code ein und erhalte die doppelte Standard-Testphase — genug Zeit, ÖffiGo zu deiner täglichen Öffi-App zu machen.",
+      en: "Redeem a launch code at release for twice the standard free trial — plenty of time to see whether ÖffiGo fits your daily routine.",
+      de: "Löse zum Release einen Launch-Code ein und erhalte die doppelte Standard-Testphase — genug Zeit, um zu schauen, ob ÖffiGo in deinen Alltag passt.",
     },
     note: {
-      en: "The code drops when ÖffiGo hits the App Store. Want it first? Reach out and I'll send it your way.",
-      de: "Der Code kommt, sobald ÖffiGo im App Store ist. Zuerst dabei sein? Melde dich, dann schicke ich ihn dir.",
+      en: "The code drops when ÖffiGo hits the App Store and Google Play. Want it first? Reach out and I'll send it your way.",
+      de: "Der Code kommt, sobald ÖffiGo im App Store und bei Google Play ist. Zuerst dabei sein? Melde dich, dann schicke ich ihn dir.",
     },
   },
   brand: {

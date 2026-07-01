@@ -66,6 +66,25 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     return json(500, { ok: false, error: "server_misconfigured" });
   }
 
+  // Reject cross-site POSTs: a browser sets Origin on cross-origin requests, so
+  // a mismatch against our own host means the request came from another site.
+  // Comparing to the request host (not a hard-coded domain) keeps preview
+  // deployments working. Requests with no Origin (e.g. curl) are left to the
+  // rate limiter and honeypot.
+  const origin = request.headers.get("origin");
+  if (origin) {
+    let originHost: string | null = null;
+    try {
+      originHost = new URL(origin).host;
+    } catch {
+      originHost = null;
+    }
+    const requestHost = request.headers.get("host");
+    if (!originHost || originHost !== requestHost) {
+      return json(403, { ok: false, error: "forbidden" });
+    }
+  }
+
   const limiter = getRatelimit();
   if (limiter) {
     const ip = getClientIp(request, clientAddress);
@@ -73,6 +92,11 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     if (!success) {
       return json(429, { ok: false, error: "rate_limited" });
     }
+  } else if (env("NODE_ENV") === "production" || env("VERCEL_ENV") === "production") {
+    // Fail closed: never accept unthrottled submissions in production. Missing
+    // Upstash env vars are a misconfiguration, not a reason to drop the limit.
+    console.error("Contact form: rate-limit backend is not configured in production.");
+    return json(503, { ok: false, error: "server_misconfigured" });
   }
 
   let payload: Record<string, unknown>;

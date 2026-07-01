@@ -157,11 +157,11 @@ export const featuredProjects: Project[] = [
     description:
       "A Swift menu bar app that maps every listening port to its process, its repository, and the AI agent that started it, so localhost stays visible and exact processes can be stopped from one native surface.",
     audience: "For Mac developers who want localhost state, runtime warnings, and safe process control without digging through terminals.",
-    result: "Turns messy local server state into a visible menu bar workflow.",
+    result: "Shows which process, repo, and agent owns each localhost port, and stops the right one from the menu bar.",
     caseStudy: {
       problem: "Local development servers keep running, ports collide, and it is hard to tell which process, repository, or agent owns a given listener.",
       built: "I built a native Swift menu bar app that scans listening TCP ports, links each one to its process, repo, and agent, and gates process control behind precise actions.",
-      result: "PortPirate keeps localhost state visible while staying out of the main workspace.",
+      result: "PortPirate keeps localhost visible from the menu bar, without taking over your screen.",
     },
     stack: ["Swift", "macOS", "Menu Bar"],
     featuredTier: "featured",
@@ -272,11 +272,19 @@ export const featuredProjects: Project[] = [
     name: "MacPhone",
     slug: "macphone",
     status: "active",
+    logo: {
+      src: "/projects/macphone/logo.webp",
+      fallbackSrc: "/projects/macphone/logo.png",
+      alt: "MacPhone app icon",
+      fit: "contain",
+      width: 512,
+      height: 512,
+    },
     tagline: "A native macOS device lab that bridges a real Bluetooth LE device into an emulator.",
     description:
       "MacPhone runs and controls many Android emulators and iOS simulators from one Mac, and bridges a real Bluetooth LE device straight into an emulator — mirroring its full GATT tree onto the emulator's virtual controller so on-device apps see the real services, characteristics, and advertisement with no dongle.",
     audience: "For mobile developers testing hardware-talking apps without juggling physical devices and BLE dongles.",
-    result: "Drive parallel Android and iOS environments and let an emulated app talk to real BLE hardware over the Mac's own radio.",
+    result: "Run Android and iOS environments side by side, and let an app inside the emulator talk to a real BLE device through the Mac's built-in Bluetooth.",
     caseStudy: {
       problem: "The hard part of testing a hardware-talking mobile app isn't the app — it's getting a real BLE device in front of code running inside an emulator.",
       built: "A SwiftUI app that manages AVDs and Xcode simulators, connects to a physical BLE device over CoreBluetooth, mirrors its full GATT tree, and re-broadcasts it on the Android emulator's netsim controller via a Bumble virtual peripheral, forwarding reads, writes, and notifications both ways.",
@@ -287,7 +295,7 @@ export const featuredProjects: Project[] = [
       description:
         "MacPhone startet und steuert viele Android-Emulatoren und iOS-Simulatoren von einem Mac aus und bridgt ein echtes Bluetooth-LE-Gerät direkt in einen Emulator — es spiegelt den vollständigen GATT-Baum auf den virtuellen Controller des Emulators, sodass On-Device-Apps die echten Services, Characteristics und das Advertisement sehen, ganz ohne Dongle.",
       audience: "Für Mobile-Entwickler, die hardwarenahe Apps testen, ohne mit physischen Geräten und BLE-Dongles zu jonglieren.",
-      result: "Parallele Android- und iOS-Umgebungen steuern und eine emulierte App über das eigene Mac-Radio mit echter BLE-Hardware sprechen lassen.",
+      result: "Android- und iOS-Umgebungen parallel laufen lassen und eine App im Emulator über das eingebaute Bluetooth des Mac mit echter BLE-Hardware sprechen lassen.",
       caseStudy: {
         problem: "Das Schwierige beim Testen einer hardwarenahen Mobile-App ist nicht die App — es ist, ein echtes BLE-Gerät vor Code zu bringen, der in einem Emulator läuft.",
         built: "Eine SwiftUI-App, die AVDs und Xcode-Simulatoren verwaltet, sich über CoreBluetooth mit einem physischen BLE-Gerät verbindet, dessen vollständigen GATT-Baum spiegelt und ihn über ein virtuelles Bumble-Peripheral auf dem netsim-Controller des Android-Emulators neu broadcastet — Lese-, Schreib- und Notify-Verkehr wird in beide Richtungen weitergeleitet.",
@@ -329,7 +337,16 @@ export const featuredProjects: Project[] = [
       "Forwards reads, writes, and notifications both ways — the app under test sees the real hardware.",
       "Keeps sessions clean: disconnects stale clients and tears the bridge down with its parent process.",
     ],
-    showcase: [],
+    showcase: [
+      {
+        src: "/projects/macphone/overview.webp",
+        fallbackSrc: "/projects/macphone/overview.png",
+        alt: "MacPhone overview dashboard listing connected Android emulators and iOS simulators",
+        fit: "cover",
+        width: 2000,
+        height: 1450,
+      },
+    ],
     visibility: "public",
   },
   {
@@ -630,7 +647,7 @@ export const featuredProjects: Project[] = [
     caseStudy: {
       problem: "Most coding agents hide the run behind a chat bubble: you can't see which files it touched, what command it's about to run, which model answered, or what it cost — so you can't trust it on a real repo.",
       built: "An Ink terminal UI with sticky approval prompts, a live transcript, per-tool permissions, a workspace boundary that blocks secret files, and one setup flow across local and cloud models.",
-      result: "Powerful actions stay boring and reviewable — you see every read, write, and command before it happens, and the diff before you commit.",
+      result: "Every powerful action stays reviewable: you see each read, write, and command before it runs, and the diff before you commit.",
     },
     de: {
       tagline: "Ein Coding-Agent, der seine Arbeit zeigt — jeder Zugriff, jeder Befehl, jedes Token, im Terminal.",
@@ -641,7 +658,7 @@ export const featuredProjects: Project[] = [
       caseStudy: {
         problem: "Die meisten Coding-Agents verstecken den Lauf hinter einer Chat-Blase: Du siehst nicht, welche Dateien angefasst wurden, welcher Befehl gleich läuft, welches Modell geantwortet hat oder was es gekostet hat — also kannst du ihm im echten Repo nicht trauen.",
         built: "Ein Ink-Terminal-UI mit klebenden Freigaben, Live-Transcript, Tool-Berechtigungen, einer Workspace-Grenze, die Secret-Dateien blockt, und einem Setup-Flow über lokale und Cloud-Modelle.",
-        result: "Mächtige Aktionen bleiben langweilig und prüfbar — du siehst jeden Lese-, Schreib- und Shell-Schritt, bevor er passiert, und das Diff, bevor du committest.",
+        result: "Jede mächtige Aktion bleibt nachvollziehbar: Du siehst jeden Lese-, Schreib- und Shell-Schritt, bevor er passiert, und das Diff, bevor du committest.",
       },
       proofLabels: ["npm-Paket", "GitHub-Release", "Agent-TUI"],
       highlights: [
@@ -666,7 +683,8 @@ export const featuredProjects: Project[] = [
     platformLabels: ["npm", "Terminal"],
     proofLabels: ["npm package", "GitHub release", "Agent TUI"],
     logo: {
-      src: "/projects/patchpilot/logo.png",
+      src: "/projects/patchpilot/logo.webp",
+      fallbackSrc: "/projects/patchpilot/logo.png",
       alt: "PatchPilot logo",
       fit: "contain",
       width: 1254,
@@ -685,7 +703,8 @@ export const featuredProjects: Project[] = [
     ],
     showcase: [
       {
-        src: "/projects/patchpilot/banner.png",
+        src: "/projects/patchpilot/banner.webp",
+        fallbackSrc: "/projects/patchpilot/banner.png",
         alt: "PatchPilot product banner",
         fit: "banner",
         width: 2172,
@@ -715,6 +734,23 @@ export const featuredProjects: Project[] = [
       problem: "The project is no longer publicly accessible.",
       built: "The public project page has been reduced to an archive notice.",
       result: "Downloads, release assets, usage claims, and support messaging are no longer shown.",
+    },
+    de: {
+      tagline: "Archiviert und aus rechtlichen Gründen nicht mehr zugänglich.",
+      description:
+        "Dieses Projekt wurde archiviert und wird aus rechtlichen Gründen nicht mehr bereitgestellt oder gewartet.",
+      audience: "Es sind keine öffentlichen Downloads, Binaries, Quellcode-Distribution oder Support mehr verfügbar.",
+      result: "Projektdateien und Release-Zugriff wurden entfernt.",
+      caseStudy: {
+        problem: "Das Projekt ist nicht mehr öffentlich zugänglich.",
+        built: "Die öffentliche Projektseite wurde auf einen Archivhinweis reduziert.",
+        result: "Downloads, Release-Assets, Nutzungsangaben und Support werden nicht mehr angezeigt.",
+      },
+      highlights: [
+        "Archiviert und aus rechtlichen Gründen nicht mehr zugänglich.",
+        "Keine Binaries, Installer, Quellcode-Distribution, Anleitungen oder Support.",
+        "Frühere Projektdateien dürfen nicht gespiegelt, neu verpackt, weiterverbreitet oder angefragt werden.",
+      ],
     },
     stack: ["Archived"],
     featuredTier: "project",
@@ -827,7 +863,7 @@ export const featuredProjects: Project[] = [
       width: 256,
       height: 256,
     },
-    tagline: "A native macOS code editor that opens before your finger leaves the trackpad.",
+    tagline: "A native macOS code editor that opens instantly, without the Electron bloat.",
     description:
       "A SwiftUI and AppKit editor — not Electron — that opens instantly, stays under 120 MB idle, and runs your code from one button that figures out the toolchain itself. No tasks.json, no extension host, no second runtime.",
     audience: "For developers tired of waiting on 2 GB of RAM and an extension host just to fix one typo.",
@@ -838,7 +874,7 @@ export const featuredProjects: Project[] = [
       result: "A fast native surface that leans on the tools already installed instead of a marketplace of extensions.",
     },
     de: {
-      tagline: "Ein nativer macOS-Code-Editor, der offen ist, bevor dein Finger das Trackpad verlässt.",
+      tagline: "Ein nativer macOS-Editor, der sofort startet, ohne den Electron-Ballast.",
       description:
         "Ein SwiftUI- und AppKit-Editor — kein Electron — der sofort öffnet, im Leerlauf unter 120 MB bleibt und deinen Code aus einem Knopf startet, der die Toolchain selbst findet. Kein tasks.json, kein Extension-Host, keine zweite Runtime.",
       audience: "Für Entwickler, die es satthaben, auf 2 GB RAM und einen Extension-Host zu warten, nur um einen Tippfehler zu korrigieren.",
@@ -967,17 +1003,9 @@ export const featuredProjects: Project[] = [
   },
 ];
 
+// ÖffiGo has its own dedicated launch band on the homepage, so it is
+// intentionally omitted here to avoid showing the project twice.
 export const upcomingProjects: UpcomingProject[] = [
-  {
-    name: "oeffigo",
-    status: "coming soon",
-    description: "A fast native iOS app for Austrian public transport (VAO/HAFAS) with a modern Liquid Glass UI.",
-    de: {
-      description: "Eine schnelle native iOS-App für den österreichischen öffentlichen Verkehr (VAO/HAFAS) mit moderner Liquid-Glass-Oberfläche.",
-    },
-    stack: ["Swift", "iOS", "SwiftUI"],
-    visibility: "private",
-  },
   {
     name: "TypeBot",
     status: "coming soon",

@@ -31,6 +31,8 @@ export interface LocaleContent {
   hero: {
     eyebrow: string;
     title: string;
+    /** Substring of `title` rendered with the signature gradient. */
+    titleAccent?: string;
     body: string;
     proof: string;
     primaryAction: string;
@@ -104,6 +106,7 @@ const en: LocaleContent = {
   hero: {
     eyebrow: "student developer / austria",
     title: "Building useful tools before the idea gets boring.",
+    titleAccent: "useful",
     body: "I'm a student at HTL Kaindorf in Austria. I build macOS apps, automations, websites, and small CLI tools that turn annoying technical problems into something usable.",
     proof: "native macOS apps · shipped GitHub releases · TypeScript / Swift / Python",
     primaryAction: "View projects",
@@ -177,7 +180,7 @@ const en: LocaleContent = {
   about: {
     eyebrow: "about",
     title: "Student, builder, fast learner.",
-    body: "I live in Austria and study at HTL Kaindorf. I love programming, especially when a project solves a real problem or makes a technical workflow easier. I build with TypeScript, Swift, Python, and AI-assisted workflows, but the goal is always the shipped tool, not the toolchain hype.",
+    body: "I live in Austria and study at HTL Kaindorf. I love programming, especially when a project solves a real problem or makes a technical workflow easier. I build with TypeScript, Swift, Python, and AI-assisted workflows, but in the end what counts is the finished tool, not the stack it's built on.",
   },
   contact: {
     eyebrow: "contact",
@@ -222,6 +225,7 @@ const de: LocaleContent = {
   hero: {
     eyebrow: "softwareentwickler / südost-steiermark",
     title: "Nützliche Tools bauen, bevor die Idee langweilig wird.",
+    titleAccent: "Nützliche",
     body: "Ich bin Schüler an der HTL Kaindorf in Österreich. Ich baue macOS-Apps, Automatisierungen, Websites und kleine Tools – und helfe in der Südost-Steiermark bei Reparatur und Technik-Problemen.",
     proof: "native macOS-Apps · veröffentlichte GitHub-Releases · TypeScript / Swift / Python",
     primaryAction: "Projekte ansehen",
@@ -295,7 +299,7 @@ const de: LocaleContent = {
   about: {
     eyebrow: "über mich",
     title: "Schüler, Macher, schneller Lerner.",
-    body: "Ich lebe in der Südost-Steiermark und besuche die HTL Kaindorf. Ich liebe das Programmieren – besonders, wenn ein Projekt ein echtes Problem löst oder einen Ablauf einfacher macht. Ich arbeite mit TypeScript, Swift, Python und KI-gestützten Workflows, aber das Ziel ist immer das fertige Tool, nicht der Hype drumherum.",
+    body: "Ich lebe in der Südost-Steiermark und besuche die HTL Kaindorf. Ich liebe das Programmieren – besonders, wenn ein Projekt ein echtes Problem löst oder einen Ablauf einfacher macht. Ich arbeite mit TypeScript, Swift, Python und KI-gestützten Workflows, aber am Ende zählt das fertige Tool, nicht der Stack dahinter.",
   },
   contact: {
     eyebrow: "kontakt",

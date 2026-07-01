@@ -1,3 +1,8 @@
+/* Self-hosted variable fonts — served from the same origin so they load
+   under a strict CSP with no external font request. */
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";
+
 :root {
   color-scheme: dark;
 
@@ -9,7 +14,7 @@
   --line: #23263a;
   --text: #eef0fa;
   --muted: #a3a8c4;
-  --subtle: #6b7094;
+  --subtle: #868cb0;
 
   /* Electric accent triad. --cyan kept as the legacy single-accent hook
      (now electric blue); green + violet drive the gradient identity. */
@@ -23,9 +28,10 @@
   --green: #3ddc84;
   --violet: #b061ff;
 
-  /* Signature multi-stop gradient used on headlines, buttons and glows. */
-  --grad: linear-gradient(100deg, #3ddc84 0%, #4da3ff 46%, #b061ff 100%);
-  --grad-soft: linear-gradient(100deg, rgb(61 220 132 / 18%), rgb(77 163 255 / 18%) 50%, rgb(176 97 255 / 18%));
+  /* Signature gradient — two adjacent hues (electric blue → periwinkle violet),
+     reserved for one emphasis moment rather than sprayed on everything. */
+  --grad: linear-gradient(120deg, #5b9dff 0%, #9d7bff 100%);
+  --grad-soft: linear-gradient(120deg, rgb(91 157 255 / 16%), rgb(157 123 255 / 16%));
 
   --shadow: 0 24px 70px rgb(2 4 16 / 60%);
   --glass: linear-gradient(180deg, rgb(255 255 255 / 7%), rgb(255 255 255 / 2.5%));
@@ -40,10 +46,11 @@
   --r-lg: 26px;
   --r-xl: 34px;
 
-  /* Bold grotesque display + Geist body/mono — a hard turn from the serif. */
-  --font-display: "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+  /* One optically-sized family across display + body, SF-style: Geist set large
+     and tightly tracked for headlines, regular for text. Quiet, precise, Apple. */
+  --font-display: "Geist Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, "SFMono-Regular", Consolas, monospace;
 
   font-family: var(--font-sans);
 }
@@ -67,8 +74,8 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-/* Living aurora — slowly drifting colour clouds in the accent triad. Fixed so
-   it sits behind every section and gives the page real atmosphere. */
+/* Ambient depth — two quiet glows in the signature blue/violet, drifting almost
+   imperceptibly. Atmosphere, not a light show: low opacity, slow, unsaturated. */
 body::before {
   content: "";
   position: fixed;
@@ -76,12 +83,10 @@ body::before {
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(38% 42% at 18% 12%, rgb(61 220 132 / 26%), transparent 60%),
-    radial-gradient(42% 46% at 84% 8%, rgb(77 163 255 / 32%), transparent 62%),
-    radial-gradient(46% 50% at 70% 88%, rgb(176 97 255 / 26%), transparent 60%),
-    radial-gradient(40% 44% at 8% 82%, rgb(77 163 255 / 18%), transparent 60%);
-  filter: blur(22px) saturate(1.18);
-  animation: aurora-drift 26s ease-in-out infinite alternate;
+    radial-gradient(46% 50% at 82% 4%, rgb(91 157 255 / 16%), transparent 62%),
+    radial-gradient(50% 54% at 14% 90%, rgb(157 123 255 / 13%), transparent 62%);
+  filter: blur(26px);
+  animation: aurora-drift 42s ease-in-out infinite alternate;
 }
 
 /* Fine grain over the aurora so the big gradients never band. */
@@ -102,15 +107,15 @@ body > * {
 
 @keyframes aurora-drift {
   0% {
-    transform: translate3d(-3%, -2%, 0) scale(1);
+    transform: translate3d(-2%, -1%, 0) scale(1);
   }
 
   50% {
-    transform: translate3d(4%, 3%, 0) scale(1.08);
+    transform: translate3d(2%, 2%, 0) scale(1.04);
   }
 
   100% {
-    transform: translate3d(-2%, 4%, 0) scale(1.04);
+    transform: translate3d(-1%, 2%, 0) scale(1.02);
   }
 }
 
@@ -146,7 +151,8 @@ nav,
 
 .brand {
   gap: 10px;
-  font-weight: 800;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   transition: transform 180ms ease;
 }
 
@@ -200,6 +206,8 @@ nav a:focus-visible,
 .button:focus-visible,
 .project-card:focus-visible,
 .contact-btn:focus-visible,
+.contact-submit:focus-visible,
+.faq-item summary:focus-visible,
 .download-options a:focus-visible,
 .terminal-link:focus-visible,
 .back-link:focus-visible {
@@ -302,6 +310,26 @@ nav a:focus-visible,
   animation: pulse-dot 2.4s ease-out infinite;
 }
 
+/* App icon tucked into the screenshot's bottom-right, matching the cards.
+   Selector outranks the `.spotlight-media img` cover rule above. */
+.spotlight-media img.spotlight-logo {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  border: 1px solid rgb(255 255 255 / 16%);
+  border-radius: 24%;
+  background: rgb(3 8 18 / 28%);
+  box-shadow: 0 14px 26px rgb(0 0 0 / 30%);
+}
+
+/* Logo must not scale on hover like the screenshot does. */
+.spotlight-card:hover .spotlight-media img.spotlight-logo {
+  transform: none;
+}
+
 .spotlight-body {
   display: grid;
   gap: 9px;
@@ -342,6 +370,139 @@ nav a:focus-visible,
   border-color: rgb(77 163 255 / 30%);
   background: rgb(77 163 255 / 10%);
   color: var(--ember);
+}
+
+/* Two featured apps as a floating deck: BriskEdit in front, ÖffiGo behind and
+   peeking out below. Slots own the position + hover offset; the cards inside
+   own the gentle idle float — so the two transforms never fight. */
+.spotlight-stack {
+  position: relative;
+  isolation: isolate;
+  padding-bottom: 196px;
+}
+
+.spotlight-slot {
+  transition: transform 520ms var(--smooth), z-index 0ms;
+}
+
+.spotlight-slot--front {
+  position: relative;
+  z-index: 2;
+}
+
+.spotlight-slot--back {
+  position: absolute;
+  left: 7%;
+  right: 0;
+  top: 0;
+  z-index: 1;
+  transform: translate(0, 46%);
+}
+
+/* Idle float — rotation is baked into every keyframe so the tilt is kept. */
+@keyframes spotlight-float-front {
+  0%, 100% { transform: rotate(-1.8deg) translateY(0); }
+  50% { transform: rotate(-1.4deg) translateY(-8px); }
+}
+
+@keyframes spotlight-float-back {
+  0%, 100% { transform: rotate(3.1deg) translateY(0) scale(0.965); }
+  50% { transform: rotate(3.5deg) translateY(-11px) scale(0.965); }
+}
+
+.spotlight-card--front {
+  background-color: #0b0c16;
+  animation: spotlight-float-front 6.5s ease-in-out infinite;
+}
+
+.spotlight-card--oeffigo {
+  animation: spotlight-float-back 7.6s ease-in-out infinite 0.5s;
+}
+
+/* On hover the whole deck reacts: ÖffiGo drives further out and rises to the
+   front, BriskEdit eases back a touch so both stay readable. */
+.spotlight-stack:hover .spotlight-slot--back {
+  transform: translate(2%, 60%);
+  z-index: 3;
+}
+
+.spotlight-stack:hover .spotlight-slot--front {
+  transform: translateY(-4px) scale(0.985);
+}
+
+/* ÖffiGo card — opaque green brand glass instead of the blue spotlight. */
+.spotlight-card--oeffigo {
+  background:
+    radial-gradient(120% 80% at 78% 0%, rgb(86 196 65 / 20%), transparent 60%),
+    var(--glass-strong);
+  background-color: #060d06;
+}
+
+.spotlight-card--oeffigo:hover {
+  border-color: rgb(86 196 65 / 42%);
+  box-shadow: 0 32px 72px rgb(0 0 0 / 52%), 0 0 0 1px rgb(86 196 65 / 22%);
+}
+
+.spotlight-media--oeffigo {
+  background:
+    radial-gradient(90% 70% at 50% 8%, rgb(86 196 65 / 30%), transparent 62%),
+    linear-gradient(165deg, #0c1a0c, #060c06);
+}
+
+/* Real app screenshot as a device rising into the green frame: centered,
+   sized by width, top-anchored so the bottom overflows out of the media. */
+.spotlight-media--oeffigo .spotlight-phone {
+  position: absolute;
+  left: 42%;
+  top: 40px;
+  width: 50%;
+  height: auto;
+  max-width: 244px;
+  object-fit: contain;
+  transform: translateX(-50%);
+  transform-origin: top center;
+  filter: drop-shadow(0 30px 44px rgb(0 0 0 / 58%));
+}
+
+.spotlight-card--oeffigo:hover .spotlight-media .spotlight-phone {
+  transform: translateX(-50%) scale(1.035);
+}
+
+.spotlight-flag--oeffigo {
+  border-color: rgb(86 196 65 / 50%);
+  color: var(--ogreen-bright, #7be25a);
+}
+
+.spotlight-flag--oeffigo::before {
+  background: var(--ogreen-bright, #7be25a);
+  box-shadow: 0 0 0 0 rgb(86 196 65 / 60%);
+}
+
+.spotlight-meta--oeffigo span:first-child {
+  border-color: rgb(86 196 65 / 36%);
+  background: rgb(86 196 65 / 12%);
+  color: var(--ogreen-bright, #7be25a);
+}
+
+/* Store badges — small, clean, both stores since ÖffiGo ships on iOS + Android. */
+.spotlight-stores {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+  margin-top: 15px;
+}
+
+.spotlight-stores img {
+  height: 30px;
+  width: auto;
+  border-radius: 7px;
+  opacity: 0.92;
+  transition: opacity 200ms var(--smooth);
+}
+
+.spotlight-card--oeffigo:hover .spotlight-stores img {
+  opacity: 1;
 }
 
 /* "Now shipping" marquee — built from real GitHub release versions. */
@@ -454,15 +615,15 @@ p {
 h1,
 h2 {
   font-family: var(--font-display);
-  font-weight: 800;
+  font-weight: 600;
 }
 
 h1 {
-  max-width: 17ch;
+  max-width: 16ch;
   margin-bottom: 22px;
-  font-size: clamp(3.4rem, 7.4vw, 6.6rem);
-  line-height: 0.95;
-  letter-spacing: -0.03em;
+  font-size: clamp(3.1rem, 6.6vw, 5.8rem);
+  line-height: 1;
+  letter-spacing: -0.035em;
 }
 
 /* Gradient-fill emphasis spans inside display headings. */
@@ -479,9 +640,9 @@ h2 em,
 
 h2 {
   margin-bottom: 18px;
-  font-size: clamp(2.2rem, 4.4vw, 3.6rem);
-  line-height: 1;
-  letter-spacing: -0.022em;
+  font-size: clamp(2.05rem, 4vw, 3.3rem);
+  line-height: 1.02;
+  letter-spacing: -0.03em;
 }
 
 h3 {
@@ -524,7 +685,8 @@ h3 {
   min-height: 44px;
   border-radius: var(--r-md);
   padding: 0 18px;
-  font-weight: 800;
+  font-weight: 560;
+  letter-spacing: -0.01em;
   transition:
     border-color 160ms ease,
     background 160ms ease,
@@ -562,25 +724,16 @@ h3 {
 
 .button.primary {
   background: var(--grad);
-  background-size: 160% 160%;
-  box-shadow: 0 14px 34px rgb(77 163 255 / 30%);
-  color: #06121f;
-  animation: grad-pan 9s ease infinite;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 22%),
+    0 10px 26px rgb(91 157 255 / 22%);
+  color: #0a1024;
 }
 
 .button.primary:hover {
-  box-shadow: 0 18px 44px rgb(176 97 255 / 34%);
-}
-
-@keyframes grad-pan {
-  0%,
-  100% {
-    background-position: 0% 50%;
-  }
-
-  50% {
-    background-position: 100% 50%;
-  }
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 26%),
+    0 14px 32px rgb(123 130 255 / 26%);
 }
 
 .button.secondary {
@@ -2080,6 +2233,32 @@ pre {
     margin-top: 30px;
   }
 
+  /* Phones: drop the floating deck, show two plain stacked cards in order. */
+  .spotlight-stack {
+    padding-bottom: 0;
+    display: grid;
+    gap: 18px;
+  }
+
+  .spotlight-slot--front {
+    order: -1;
+  }
+
+  .spotlight-slot--back {
+    position: static;
+    transform: none;
+  }
+
+  .spotlight-stack:hover .spotlight-slot--back,
+  .spotlight-stack:hover .spotlight-slot--front {
+    transform: none;
+  }
+
+  .spotlight-card--front,
+  .spotlight-card--oeffigo {
+    animation: none;
+  }
+
   .ship-item {
     font-size: 0.95rem;
   }
@@ -2521,15 +2700,56 @@ pre {
   color: var(--subtle);
 }
 
-.promo-code code {
+.promo-code-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
   border: 1px dashed rgb(86 196 65 / 52%);
   border-radius: 8px;
-  padding: 3px 9px;
+  padding: 3px 8px 3px 9px;
   background: rgb(86 196 65 / 10%);
   color: var(--ogreen-bright);
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, transform 0.1s ease;
+}
+
+.promo-code-copy:hover {
+  background: rgb(86 196 65 / 18%);
+  border-color: rgb(86 196 65 / 72%);
+}
+
+.promo-code-copy:active {
+  transform: translateY(1px);
+}
+
+.promo-code-copy:focus-visible {
+  outline: 2px solid var(--ogreen-bright);
+  outline-offset: 2px;
+}
+
+.promo-code-copy code {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
   font-family: var(--font-mono);
   font-weight: 600;
   letter-spacing: 0.06em;
+}
+
+.promo-code-copy-icon {
+  flex-shrink: 0;
+  opacity: 0.72;
+  transition: opacity 0.18s ease;
+}
+
+.promo-code-copy:hover .promo-code-copy-icon {
+  opacity: 1;
+}
+
+.promo-code-copy.is-copied {
+  border-style: solid;
+  background: rgb(86 196 65 / 22%);
 }
 
 .promo-code em {
