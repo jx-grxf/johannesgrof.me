@@ -19,7 +19,17 @@ export interface OeffigoContent {
   appStoreUrl: string | null;
   /** Canonical product site — the cross-link to oeffigo.app for SEO + users. */
   websiteUrl: string;
+  liveUrl: string;
+  statusUrl: string;
   icon: string;
+  liveProof: {
+    eyebrow: { en: string; de: string };
+    title: { en: string; de: string };
+    body: { en: string; de: string };
+    stats: { en: string; de: string }[];
+    liveLabel: { en: string; de: string };
+    statusLabel: { en: string; de: string };
+  };
   features: OeffigoFeature[];
   promo: {
     /** Launch code is teased before release; the real code drops at launch. */
@@ -49,24 +59,42 @@ const ICONS = {
 
 export const oeffigo: OeffigoContent = {
   name: "ÖffiGo",
-  eyebrow: { en: "launching soon", de: "bald verfügbar" },
+  eyebrow: { en: "live measurement network · launching soon", de: "Messnetz live · bald verfügbar" },
   tagline: {
     en: "Austria's public transport — truly native.",
     de: "Österreichs Öffis — wirklich nativ.",
   },
   lead: {
-    en: "Real-time departures, journey planning and live disruptions for all of Austria, in a modern, fast interface. ÖffiGo talks straight to the VAO / HAFAS backend — the same data behind the official apps — and presents it faster and clearer, without pretending a schedule is always live.",
-    de: "Echtzeit-Abfahrten, Routenplanung und Live-Störungen für ganz Österreich, in einer modernen, schnellen Oberfläche. ÖffiGo spricht direkt mit dem VAO-/HAFAS-Backend — denselben Daten wie die offiziellen Apps — und zeigt sie schneller und übersichtlicher, ohne so zu tun, als wäre der Fahrplan immer live.",
+    en: "Real-time departures, journey planning and live disruptions for all of Austria, in a modern, fast interface. ÖffiGo talks straight to VAO / HAFAS, overlays Wiener Linien realtime for the Vienna subway, and now runs its own measurement network to spot delays earlier than the official display.",
+    de: "Echtzeit-Abfahrten, Routenplanung und Live-Störungen für ganz Österreich, in einer modernen, schnellen Oberfläche. ÖffiGo spricht direkt mit VAO/HAFAS, blendet Wiener-Linien-Echtzeit für die Wiener U-Bahn ein und betreibt inzwischen ein eigenes Messnetz, das Verspätungen früher erkennt als die offizielle Anzeige.",
   },
-  platform: { en: "iOS 17+, Android in the works · Liquid Glass on iOS 26", de: "iOS 17+, Android in Arbeit · Liquid Glass ab iOS 26" },
+  platform: { en: "iOS 17+ first, Android in the works", de: "zuerst iOS 17+, Android in Arbeit" },
   status: { en: "in active development", de: "in aktiver Entwicklung" },
   dataNote: {
-    en: "VAO / HAFAS data for all of Austria — tram, bus, train, S-Bahn, subway, cableway, ship. Realtime where operators provide it, plus Wiener Linien realtime overlaid on the Vienna subway.",
-    de: "VAO/HAFAS-Daten für ganz Österreich — Tram, Bus, Bahn, S-Bahn, U-Bahn, Seilbahn, Schiff. Echtzeit dort, wo Betreiber sie liefern, plus Wiener-Linien-Echtzeit für die Wiener U-Bahn.",
+    en: "Data sources match oeffigo.app: VAO / HAFAS for Austria-wide transport, Wiener Linien open data for Vienna subway realtime, HERE traffic, GeoSphere Austria weather and open timetable data where used.",
+    de: "Datenquellen wie auf oeffigo.app: VAO/HAFAS für Österreichs Öffis, Wiener-Linien-Open-Data für die Wiener U-Bahn-Echtzeit, HERE-Verkehrslage, GeoSphere-Austria-Wetter und offene Fahrplandaten, wo sie genutzt werden.",
   },
   appStoreUrl: null,
   websiteUrl: "https://oeffigo.app",
+  liveUrl: "https://oeffigo.app/live",
+  statusUrl: "https://oeffigo.app/status",
   icon: "/projects/oeffigo/icon.png",
+  liveProof: {
+    eyebrow: { en: "live proof", de: "Live-Beweis" },
+    title: { en: "Measuring Austria's public transport right now.", de: "Wir vermessen gerade Österreichs Öffis." },
+    body: {
+      en: "The public live page shows the current vehicle count, total observations, punctuality mix, divergence cases and the system status. I link to it instead of mirroring numbers here, because the values update every few seconds.",
+      de: "Die öffentliche Live-Seite zeigt aktuelle Fahrzeugzahl, Messpunkte, Pünktlichkeitsmix, Abweichungsfälle und Systemstatus. Ich verlinke sie, statt hier Zahlen zu spiegeln, weil sie sich laufend ändern.",
+    },
+    stats: [
+      { en: "collecting since 2 July 2026", de: "sammelt seit 2. Juli 2026" },
+      { en: "20 observation zones across Austria", de: "20 Beobachtungszonen in Österreich" },
+      { en: "full measurement cycle about every 35 seconds", de: "kompletter Messdurchlauf etwa alle 35 Sekunden" },
+      { en: "4 live data streams: positions, subway monitors, traffic, weather", de: "4 Live-Datenströme: Positionen, U-Bahn-Monitore, Verkehr, Wetter" },
+    ],
+    liveLabel: { en: "Open live data", de: "Live-Daten öffnen" },
+    statusLabel: { en: "System status", de: "Systemstatus" },
+  },
   features: [
     {
       icon: ICONS.clock,
@@ -86,10 +114,18 @@ export const oeffigo: OeffigoContent = {
     },
     {
       icon: ICONS.map,
-      title: { en: "Live map", de: "Live-Karte" },
+      title: { en: "Live map & measurement network", de: "Live-Karte & Messnetz" },
       body: {
-        en: "Nearby stops and, where available, live vehicle positions on the map.",
-        de: "Haltestellen in der Nähe und, wo verfügbar, Fahrzeugpositionen auf der Karte.",
+        en: "Nearby stops, live vehicle positions where available, and ÖffiGo's own GPS-vs-schedule measurement for confident predictions.",
+        de: "Haltestellen in der Nähe, Fahrzeugpositionen wo verfügbar und ÖffiGos eigene GPS-gegen-Fahrplan-Messung für sichere Prognosen.",
+      },
+    },
+    {
+      icon: ICONS.route,
+      title: { en: "Indoor station guidance", de: "Wegweisung im Bahnhof" },
+      body: {
+        en: "At mapped major stations, transfers can use OpenStreetMap indoor data for stairs, escalators and lifts.",
+        de: "Bei gemappten großen Bahnhöfen nutzt der Umstieg OpenStreetMap-Indoor-Daten für Treppen, Rolltreppen und Aufzüge.",
       },
     },
     {

@@ -132,6 +132,42 @@ const faqSchema = {
     },
   })),
 };
+
+const oeffigoSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "@id": `${oeffigo.websiteUrl}/#app`,
+  name: oeffigo.name,
+  applicationCategory: "TravelApplication",
+  operatingSystem: "iOS 17.0",
+  url: oeffigo.websiteUrl,
+  sameAs: [oeffigo.websiteUrl, oeffigo.liveUrl, oeffigo.statusUrl],
+  image: toCanonicalUrl(oeffigo.icon),
+  description: oeffigo.lead[lang],
+  inLanguage: ["de-AT", "en"],
+  author: { "@id": "https://www.johannesgrof.me/#person" },
+  creator: { "@id": "https://www.johannesgrof.me/#person" },
+  publisher: { "@id": "https://www.johannesgrof.me/#person" },
+  subjectOf: [
+    {
+      "@type": "WebPage",
+      name: "ÖffiGo Live",
+      url: oeffigo.liveUrl,
+      description: oeffigo.liveProof.body[lang],
+    },
+    {
+      "@type": "WebPage",
+      name: "ÖffiGo Status",
+      url: oeffigo.statusUrl,
+    },
+  ],
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "EUR",
+    availability: "https://schema.org/PreOrder",
+  },
+};
 ---
 
 <!doctype html>
@@ -145,6 +181,7 @@ const faqSchema = {
       hreflangAlternates={hreflangAlternates}
     />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(profileSchema)} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(oeffigoSchema)} />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />
   </head>
   <body>
@@ -328,6 +365,24 @@ const faqSchema = {
               </div>
             </div>
             <p class="oeffigo-datanote">{oeffigo.dataNote[lang]}</p>
+            <aside class="oeffigo-live-proof" aria-label={oeffigo.liveProof.title[lang]}>
+              <p class="oeffigo-live-eyebrow">{oeffigo.liveProof.eyebrow[lang]}</p>
+              <h3>{oeffigo.liveProof.title[lang]}</h3>
+              <p>{oeffigo.liveProof.body[lang]}</p>
+              <ul>
+                {oeffigo.liveProof.stats.map((stat) => <li>{stat[lang]}</li>)}
+              </ul>
+              <div class="oeffigo-live-actions">
+                <a href={oeffigo.liveUrl} rel="me">
+                  {oeffigo.liveProof.liveLabel[lang]}
+                  <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9" /></svg>
+                </a>
+                <a href={oeffigo.statusUrl} rel="me">
+                  {oeffigo.liveProof.statusLabel[lang]}
+                  <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9" /></svg>
+                </a>
+              </div>
+            </aside>
             <p class="oeffigo-actions">
               <a class="oeffigo-site-link" href={oeffigo.websiteUrl} rel="me">
                 {lang === "en" ? "Visit oeffigo.app" : "Zu oeffigo.app"}
