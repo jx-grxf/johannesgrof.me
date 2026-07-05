@@ -80,19 +80,19 @@ export const oeffigo: OeffigoContent = {
   statusUrl: "https://oeffigo.app/status",
   icon: "/projects/oeffigo/icon.png",
   liveProof: {
-    eyebrow: { en: "live proof", de: "Live-Beweis" },
-    title: { en: "Measuring Austria's public transport right now.", de: "Wir vermessen gerade Österreichs Öffis." },
+    eyebrow: { en: "running right now", de: "läuft gerade" },
+    title: { en: "The measurement network never sleeps.", de: "Das Messnetz schläft nie." },
     body: {
-      en: "The public live page shows the current vehicle count, total observations, punctuality mix, divergence cases and the system status. I link to it instead of mirroring numbers here, because the values update every few seconds.",
-      de: "Die öffentliche Live-Seite zeigt aktuelle Fahrzeugzahl, Messpunkte, Pünktlichkeitsmix, Abweichungsfälle und Systemstatus. Ich verlinke sie, statt hier Zahlen zu spiegeln, weil sie sich laufend ändern.",
+      en: "ÖffiGo doesn't just trust the official displays — it measures Austria's public transport itself, around the clock: GPS against schedule, across the whole country. Everything the system measures is public. Watch it work, live.",
+      de: "ÖffiGo vertraut nicht einfach den offiziellen Anzeigen — es vermisst Österreichs Öffis selbst, rund um die Uhr: GPS gegen Fahrplan, quer durchs ganze Land. Alles, was das System misst, ist öffentlich. Schau ihm live bei der Arbeit zu.",
     },
     stats: [
-      { en: "collecting since 2 July 2026", de: "sammelt seit 2. Juli 2026" },
-      { en: "20 observation zones across Austria", de: "20 Beobachtungszonen in Österreich" },
-      { en: "full measurement cycle about every 35 seconds", de: "kompletter Messdurchlauf etwa alle 35 Sekunden" },
-      { en: "4 live data streams: positions, subway monitors, traffic, weather", de: "4 Live-Datenströme: Positionen, U-Bahn-Monitore, Verkehr, Wetter" },
+      { en: "measuring non-stop since July 2, 2026", de: "misst ununterbrochen seit 2. Juli 2026" },
+      { en: "20 measurement zones across Austria", de: "20 Messzonen in ganz Österreich" },
+      { en: "a full sweep roughly every 35 seconds", de: "alle ~35 Sekunden ein kompletter Durchlauf" },
+      { en: "four data streams: GPS positions, subway monitors, road traffic, weather", de: "vier Datenströme: GPS-Positionen, U-Bahn-Monitore, Verkehrslage, Wetter" },
     ],
-    liveLabel: { en: "Open live data", de: "Live-Daten öffnen" },
+    liveLabel: { en: "Watch it live", de: "Live zusehen" },
     statusLabel: { en: "System status", de: "Systemstatus" },
   },
   features: [
