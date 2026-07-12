@@ -129,14 +129,6 @@ export const oeffigo: OeffigoContent = {
       },
     },
     {
-      icon: ICONS.spark,
-      title: { en: "ÖffiGo AI", de: "ÖffiGo KI" },
-      body: {
-        en: "A chat on your iPhone that explains routes, departures and disruptions — private, where Apple Intelligence is supported.",
-        de: "Ein Chat am iPhone, der dir Routen, Abfahrten und Störungen erklärt — privat, wenn Apple Intelligence unterstützt wird.",
-      },
-    },
-    {
       icon: ICONS.bell,
       title: { en: "Live Activities & widgets", de: "Live-Aktivitäten & Widgets" },
       body: {
