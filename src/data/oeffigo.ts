@@ -1,5 +1,10 @@
-// ÖffiGo — flagship iOS app, promoted ahead of its App Store release.
+// ÖffiGo — flagship iOS app, currently in closed TestFlight beta.
 // Copy is bilingual; the HomePage renders the matching language.
+//
+// Status discipline: this section must never claim more than the product
+// actually does. ÖffiGo is not released, the old automated position
+// measurement network is paused, and live vehicle positions run as a beta on a
+// deliberately sparing on-demand lookup. Keep this in sync with oeffigo.app.
 
 export interface OeffigoFeature {
   /** Inline SVG path data (24x24 viewBox) for the feature glyph. */
@@ -31,13 +36,11 @@ export interface OeffigoContent {
     statusLabel: { en: string; de: string };
   };
   features: OeffigoFeature[];
-  promo: {
-    /** Launch code is teased before release; the real code drops at launch. */
-    active: boolean;
-    code: string;
+  beta: {
     headline: { en: string; de: string };
     body: { en: string; de: string };
     note: { en: string; de: string };
+    ctaLabel: { en: string; de: string };
   };
   // The real app brand palette, lifted from the app's own theme.
   brand: {
@@ -59,20 +62,20 @@ const ICONS = {
 
 export const oeffigo: OeffigoContent = {
   name: "ÖffiGo",
-  eyebrow: { en: "live measurement network · launching soon", de: "Messnetz live · bald verfügbar" },
+  eyebrow: { en: "closed TestFlight beta · iOS 17+", de: "geschlossene TestFlight-Beta · iOS 17+" },
   tagline: {
     en: "Austria's public transport — truly native.",
     de: "Österreichs Öffis — wirklich nativ.",
   },
   lead: {
-    en: "Real-time departures, journey planning and live disruptions for all of Austria, in a modern, fast interface. ÖffiGo talks straight to VAO / HAFAS, overlays Wiener Linien realtime for the Vienna subway, and now runs its own measurement network to spot delays earlier than the official display.",
-    de: "Echtzeit-Abfahrten, Routenplanung und Live-Störungen für ganz Österreich, in einer modernen, schnellen Oberfläche. ÖffiGo spricht direkt mit VAO/HAFAS, blendet Wiener-Linien-Echtzeit für die Wiener U-Bahn ein und betreibt inzwischen ein eigenes Messnetz, das Verspätungen früher erkennt als die offizielle Anzeige.",
+    en: "Real-time departures, journey planning and live disruptions for all of Austria, in a modern, fast interface. ÖffiGo pulls its Austria-wide transport data from VAO / HAFAS, overlays Wiener Linien open realtime for the Vienna subway, and always labels whether a time is live or straight from the timetable.",
+    de: "Echtzeit-Abfahrten, Routenplanung und Live-Störungen für ganz Österreich, in einer modernen, schnellen Oberfläche. ÖffiGo bezieht die österreichweiten Fahrtdaten von VAO/HAFAS, blendet für die Wiener U-Bahn die offene Wiener-Linien-Echtzeit ein und kennzeichnet immer, ob eine Zeit live ist oder aus dem Fahrplan kommt.",
   },
-  platform: { en: "iOS 17+ first, Android in the works", de: "zuerst iOS 17+, Android in Arbeit" },
-  status: { en: "in active development", de: "in aktiver Entwicklung" },
+  platform: { en: "iOS 17+ and Apple Watch, Android in the works", de: "iOS 17+ und Apple Watch, Android in Arbeit" },
+  status: { en: "closed TestFlight beta — not released yet", de: "geschlossene TestFlight-Beta — noch nicht veröffentlicht" },
   dataNote: {
-    en: "Data sources match oeffigo.app: VAO / HAFAS for Austria-wide transport, Wiener Linien open data for Vienna subway realtime, HERE traffic, GeoSphere Austria weather and open timetable data where used.",
-    de: "Datenquellen wie auf oeffigo.app: VAO/HAFAS für Österreichs Öffis, Wiener-Linien-Open-Data für die Wiener U-Bahn-Echtzeit, HERE-Verkehrslage, GeoSphere-Austria-Wetter und offene Fahrplandaten, wo sie genutzt werden.",
+    en: "Data sources match oeffigo.app: VAO / HAFAS for Austria-wide transport, Wiener Linien open data for Vienna subway realtime, and official TRIAS stop-event history from Verkehrsverbund Steiermark (open data) — which carries no fleet positions.",
+    de: "Datenquellen wie auf oeffigo.app: VAO/HAFAS für Österreichs Öffis, Wiener-Linien-Open-Data für die Wiener U-Bahn-Echtzeit und offizielle TRIAS-StopEvent-History vom Verkehrsverbund Steiermark (OGD) — die keine Fahrzeugpositionen enthält.",
   },
   appStoreUrl: null,
   websiteUrl: "https://oeffigo.app",
@@ -80,19 +83,19 @@ export const oeffigo: OeffigoContent = {
   statusUrl: "https://oeffigo.app/status",
   icon: "/projects/oeffigo/icon.png",
   liveProof: {
-    eyebrow: { en: "running right now", de: "läuft gerade" },
-    title: { en: "The measurement network never sleeps.", de: "Das Messnetz schläft nie." },
+    eyebrow: { en: "live positions · beta", de: "live-positionen · beta" },
+    title: { en: "An honest label beats a confident guess.", de: "Ehrlich beschriftet schlägt selbstsicher geraten." },
     body: {
-      en: "ÖffiGo doesn't just trust the official displays — it measures Austria's public transport itself, around the clock: GPS against schedule, across the whole country. Everything the system measures is public. Watch it work, live.",
-      de: "ÖffiGo vertraut nicht einfach den offiziellen Anzeigen — es vermisst Österreichs Öffis selbst, rund um die Uhr: GPS gegen Fahrplan, quer durchs ganze Land. Alles, was das System misst, ist öffentlich. Schau ihm live bei der Arbeit zu.",
+      en: "Official operator realtime is what ÖffiGo shows first, clearly separated from the timetable. Live vehicle positions run as a beta on a deliberately sparing on-demand lookup, and ÖffiGo only adds a prediction of its own when the measurement basis behind it is fresh and approved. The whole data status is public.",
+      de: "ÖffiGo zeigt zuerst die offizielle Betreiber-Echtzeit, klar getrennt vom Fahrplan. Live-Fahrzeugpositionen laufen als Beta über einen bewusst sparsamen On-Demand-Abruf, und eine eigene Prognose kommt nur dazu, wenn die Messbasis dahinter frisch und freigegeben ist. Der gesamte Datenstatus ist öffentlich einsehbar.",
     },
     stats: [
-      { en: "measuring non-stop since July 2, 2026", de: "misst ununterbrochen seit 2. Juli 2026" },
-      { en: "20 measurement zones across Austria", de: "20 Messzonen in ganz Österreich" },
-      { en: "a full sweep roughly every 35 seconds", de: "alle ~35 Sekunden ein kompletter Durchlauf" },
-      { en: "four data streams: GPS positions, subway monitors, road traffic, weather", de: "vier Datenströme: GPS-Positionen, U-Bahn-Monitore, Verkehrslage, Wetter" },
+      { en: "schedule and realtime are always labelled apart", de: "Fahrplan und Echtzeit sind immer getrennt gekennzeichnet" },
+      { en: "live vehicle positions in beta, on-demand and rate-limited", de: "Live-Fahrzeugpositionen in Beta, on demand und mengenbegrenzt" },
+      { en: "the old automated measurement network stays paused", de: "das alte automatische Messnetz bleibt pausiert" },
+      { en: "own predictions only with a fresh, approved measurement basis", de: "eigene Prognosen nur mit frischer, freigegebener Messbasis" },
     ],
-    liveLabel: { en: "Watch it live", de: "Live zusehen" },
+    liveLabel: { en: "See the data status", de: "Datenstatus ansehen" },
     statusLabel: { en: "System status", de: "Systemstatus" },
   },
   features: [
@@ -114,10 +117,10 @@ export const oeffigo: OeffigoContent = {
     },
     {
       icon: ICONS.map,
-      title: { en: "Live map & measurement network", de: "Live-Karte & Messnetz" },
+      title: { en: "Live map & nearby stops", de: "Live-Karte & Haltestellen in der Nähe" },
       body: {
-        en: "Nearby stops, live vehicle positions where available, and ÖffiGo's own GPS-vs-schedule measurement for confident predictions.",
-        de: "Haltestellen in der Nähe, Fahrzeugpositionen wo verfügbar und ÖffiGos eigene GPS-gegen-Fahrplan-Messung für sichere Prognosen.",
+        en: "Stops around you on the map, plus live vehicle positions where they are available — a beta capability that fetches sparingly instead of polling the network.",
+        de: "Haltestellen rund um dich auf der Karte, dazu Live-Fahrzeugpositionen, wo es sie gibt — eine Beta-Funktion, die sparsam abruft statt dauerhaft zu pollen.",
       },
     },
     {
@@ -145,18 +148,17 @@ export const oeffigo: OeffigoContent = {
       },
     },
   ],
-  promo: {
-    active: false,
-    code: "OEFFIGO2X",
-    headline: { en: "Launch offer: double the free trial", de: "Launch-Aktion: doppelte Testphase" },
+  beta: {
+    headline: { en: "Testers wanted, spots are limited", de: "Testerinnen und Tester gesucht, Plätze sind begrenzt" },
     body: {
-      en: "The first 100 on the waitlist get a double free trial and 15% off the first month at launch. Enough time to see whether ÖffiGo fits your daily routine.",
-      de: "Die ersten 100 auf der Warteliste bekommen zum Launch die doppelte Testphase und 15% Rabatt im ersten Monat. Genug Zeit, um zu schauen, ob ÖffiGo in deinen Alltag passt.",
+      en: "ÖffiGo runs as an internal iOS TestFlight beta. You can ask for a spot on oeffigo.app — it's a request, not an automatic invite, and you get exactly one email when a suitable place opens.",
+      de: "ÖffiGo läuft als interne iOS-TestFlight-Beta. Einen Platz kannst du auf oeffigo.app anfragen — das ist eine Anfrage, keine automatische Zusage, und du bekommst genau eine E-Mail, sobald ein passender Platz frei wird.",
     },
     note: {
-      en: "The code drops when ÖffiGo hits the App Store — iOS first, with Android to follow. Want it first? Reach out and I'll send it your way.",
-      de: "Der Code kommt, sobald ÖffiGo im App Store ist — zuerst für iOS, Android folgt. Zuerst dabei sein? Melde dich, dann schicke ich ihn dir.",
+      en: "Free during the beta. There is no paid offering yet, and the scope and price of a later Pro tier are not decided.",
+      de: "Während der Beta kostenlos. Es gibt noch kein kostenpflichtiges Angebot, und Umfang und Preis eines späteren Pro-Tarifs sind nicht entschieden.",
     },
+    ctaLabel: { en: "Request a beta spot", de: "Beta-Platz anfragen" },
   },
   brand: {
     green: "#56c441",

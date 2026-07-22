@@ -89,7 +89,7 @@ const en: LocaleContent = {
   meta: {
     title: "Johannes Grof - Student Developer in Austria",
     description:
-      "Portfolio of Johannes Grof, an HTL Kaindorf student in Austria building macOS apps, AI automations, developer tools, websites, and offering tech support.",
+      "Portfolio of Johannes Grof, an HTL Kaindorf student in Austria building iOS and macOS apps, developer tools, automations and websites, and offering tech support.",
   },
   nav: [
     { label: "Projects", href: "#projects" },
@@ -208,7 +208,7 @@ const de: LocaleContent = {
   meta: {
     title: "Johannes Grof - Softwareentwickler & Tech-Support aus der Südost-Steiermark",
     description:
-      "Johannes Grof aus der Südost-Steiermark: Softwareentwickler und HTL-Kaindorf-Schüler. Websites, macOS-Apps, individuelle Tools sowie Elektronik-Reparatur und technischer Support.",
+      "Johannes Grof aus der Südost-Steiermark: Softwareentwickler und HTL-Kaindorf-Schüler. Websites, iOS- und macOS-Apps, individuelle Tools sowie Elektronik-Reparatur und technischer Support.",
   },
   nav: [
     { label: "Projekte", href: "#projects" },

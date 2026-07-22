@@ -1,5 +1,6 @@
 ---
 import BaseHead from "@/components/BaseHead.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import { featuredShowcaseProjects, getProjectCopy, localizedStatusLabel, projectSections, publicProjects, statusClass, upcomingProjects } from "@/data/projects";
 import type { Project, ProjectLang, ProjectStatus } from "@/data/projects";
@@ -71,6 +72,9 @@ const versionChip = (value?: string) => {
   return /^v/i.test(value) ? value : `v${value}`;
 };
 
+// Only count what is actually out in public — a planned project is not shipped.
+const shippedProjectCount = publicProjects.filter((project) => project.visibility === "public").length;
+
 // "Now shipping" ticker — real release versions, newest projects first.
 const shippedReleases = publicProjects
   .map((project) => {
@@ -133,6 +137,8 @@ const faqSchema = {
   })),
 };
 
+// The app is an unreleased closed beta with no decided pricing, so this
+// deliberately carries no `offers` — nothing here is purchasable yet.
 const oeffigoSchema = {
   "@context": "https://schema.org",
   "@type": "SoftwareApplication",
@@ -161,12 +167,6 @@ const oeffigoSchema = {
       url: oeffigo.statusUrl,
     },
   ],
-  offers: {
-    "@type": "Offer",
-    price: "0",
-    priceCurrency: "EUR",
-    availability: "https://schema.org/PreOrder",
-  },
 };
 ---
 
@@ -217,7 +217,7 @@ const oeffigoSchema = {
               {content.hero.githubAction}
             </a>
           </div>
-          <p class="hero-proof">{publicProjects.length} {content.lang === "en" ? "shipped projects" : "veröffentlichte Projekte"} · {content.hero.proof}</p>
+          <p class="hero-proof">{shippedProjectCount} {content.lang === "en" ? "shipped projects" : "veröffentlichte Projekte"} · {content.hero.proof}</p>
         </div>
 
         {
@@ -246,13 +246,17 @@ const oeffigoSchema = {
                       <h2>{oeffigo.name}</h2>
                       <p>{oeffigo.tagline[lang]}</p>
                       <div class="spotlight-meta spotlight-meta--oeffigo">
-                        <span>iOS 26</span>
-                        <span>Liquid Glass</span>
+                        <span>iOS 17+</span>
+                        <span>{content.lang === "en" ? "TestFlight beta" : "TestFlight-Beta"}</span>
                       </div>
-                      <div class="spotlight-stores" aria-label={content.lang === "en" ? "Coming to the App Store first, Android planned" : "Zuerst im App Store, Android geplant"}>
+                      <div
+                        class="spotlight-stores"
+                        role="group"
+                        aria-label={content.lang === "en" ? "Not in the stores yet: App Store first, Android planned" : "Noch in keinem Store: zuerst App Store, Android geplant"}
+                      >
                         <picture>
                           <source srcset="/projects/oeffigo/appstore.webp" type="image/webp" />
-                          <img src="/projects/oeffigo/appstore.png" alt="App Store" width="81" height="24" loading="lazy" decoding="async" />
+                          <img class="spotlight-store--soon" src="/projects/oeffigo/appstore.png" alt={content.lang === "en" ? "App Store (not released yet)" : "App Store (noch nicht veröffentlicht)"} width="81" height="24" loading="lazy" decoding="async" />
                         </picture>
                         <picture>
                           <source srcset="/projects/oeffigo/googleplay.webp" type="image/webp" />
@@ -300,7 +304,7 @@ const oeffigoSchema = {
 
       {
         shippedReleases.length > 0 && (
-          <div class="ship-ticker" aria-label={content.lang === "en" ? "Recent releases" : "Aktuelle Releases"}>
+          <div class="ship-ticker" role="group" aria-label={content.lang === "en" ? "Recent releases" : "Aktuelle Releases"}>
             <div class="ship-track">
               {[0, 1].map((pass) =>
                 shippedReleases.map((release) => (
@@ -326,42 +330,19 @@ const oeffigoSchema = {
               </div>
             </div>
             <p class="oeffigo-lead">{oeffigo.lead[lang]}</p>
-            <ul class="oeffigo-meta" aria-label="ÖffiGo platform and status">
+            <ul class="oeffigo-meta" aria-label={content.lang === "en" ? "ÖffiGo platform and status" : "ÖffiGo Plattform und Status"}>
               <li>{oeffigo.platform[lang]}</li>
               <li>{oeffigo.status[lang]}</li>
             </ul>
             <div class="oeffigo-promo">
-              <span class="promo-badge" aria-hidden="true">2&times;</span>
+              <span class="promo-badge" aria-hidden="true">&beta;</span>
               <div class="promo-copy">
-                <strong>{oeffigo.promo.headline[lang]}</strong>
-                <p>{oeffigo.promo.body[lang]}</p>
-                {oeffigo.promo.active ? (
-                  <p class="promo-code">
-                    <span>{lang === "en" ? "launch code" : "launch-code"}</span>
-                    <button
-                      type="button"
-                      class="promo-code-copy"
-                      data-copy={oeffigo.promo.code}
-                      data-copied={lang === "en" ? "Copied" : "Kopiert"}
-                      aria-label={lang === "en" ? `Copy launch code ${oeffigo.promo.code}` : `Launch-Code ${oeffigo.promo.code} kopieren`}
-                    >
-                      <code>{oeffigo.promo.code}</code>
-                      <svg class="promo-code-copy-icon" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <rect x="9" y="9" width="11" height="11" rx="2" />
-                        <path d="M5 15V5a2 2 0 0 1 2-2h10" />
-                      </svg>
-                    </button>
-                    <em>{lang === "en" ? "at release" : "zum release"}</em>
-                  </p>
-                ) : (
-                  <p class="promo-note">
-                    {lang === "en"
-                      ? "No public code — the first 100 on the waitlist get theirs by email at launch."
-                      : "Kein öffentlicher Code — die ersten 100 auf der Warteliste bekommen ihren per Mail zum Launch."}
-                    {" "}
-                    <a href={oeffigo.websiteUrl} rel="me">{lang === "en" ? "Join at oeffigo.app" : "Zur Warteliste auf oeffigo.app"}</a>
-                  </p>
-                )}
+                <strong>{oeffigo.beta.headline[lang]}</strong>
+                <p>{oeffigo.beta.body[lang]}</p>
+                <p class="promo-note">
+                  {oeffigo.beta.note[lang]}{" "}
+                  <a href={oeffigo.websiteUrl} rel="me">{oeffigo.beta.ctaLabel[lang]} &rarr;</a>
+                </p>
               </div>
             </div>
             <p class="oeffigo-datanote">{oeffigo.dataNote[lang]}</p>
@@ -406,7 +387,7 @@ const oeffigoSchema = {
 
       <section id="projects" class="section-shell">
         <div class="section-heading project-subheading reveal">
-          <p class="eyebrow">{isDe ? "highlights" : "highlights"}</p>
+          <p class="eyebrow">highlights</p>
           <h2>{content.lang === "en" ? "Highlighted Projects" : "Ausgewählte Projekte"}</h2>
         </div>
         <div class="featured-project-grid">
@@ -443,12 +424,12 @@ const oeffigoSchema = {
                       <span class={`status ${statusClass(project.status)}`}>{localizedStatus(project.status)}</span>
                     </div>
                     {liveStats(project.slug).length > 0 && (
-                      <ul class="live-stats" aria-label={`${project.name} GitHub stats`}>
+                      <ul class="live-stats" aria-label={`${project.name} ${content.lang === "en" ? "GitHub stats" : "GitHub-Werte"}`}>
                         {liveStats(project.slug).map((stat) => <li>{stat}</li>)}
                       </ul>
                     )}
                     {c.proofLabels && (
-                      <ul class="proof-chip-list" aria-label={`${project.name} proof points`}>
+                      <ul class="proof-chip-list" aria-label={`${project.name} ${content.lang === "en" ? "proof points" : "Belege"}`}>
                         {c.proofLabels.map((label) => <li>{label}</li>)}
                       </ul>
                     )}
@@ -484,12 +465,12 @@ const oeffigoSchema = {
                         <span class={`status ${statusClass(project.status)}`}>{localizedStatus(project.status)}</span>
                       </div>
                       {liveStats(project.slug).length > 0 && (
-                        <ul class="live-stats" aria-label={`${project.name} GitHub stats`}>
+                        <ul class="live-stats" aria-label={`${project.name} ${content.lang === "en" ? "GitHub stats" : "GitHub-Werte"}`}>
                           {liveStats(project.slug).map((stat) => <li>{stat}</li>)}
                         </ul>
                       )}
                       {c.proofLabels && (
-                        <ul class="proof-chip-list" aria-label={`${project.name} proof points`}>
+                        <ul class="proof-chip-list" aria-label={`${project.name} ${content.lang === "en" ? "proof points" : "Belege"}`}>
                           {c.proofLabels.map((label) => <li>{label}</li>)}
                         </ul>
                       )}
@@ -576,7 +557,7 @@ const oeffigoSchema = {
           {
             content.faq.items.map((item) => (
               <details class="faq-item">
-                <summary>{item.q}</summary>
+                <summary aria-expanded="false">{item.q}</summary>
                 <div class="faq-answer">
                   <div>
                     <p>{item.a}</p>
@@ -645,16 +626,7 @@ const oeffigoSchema = {
         </div>
       </section>
     </main>
-    <footer class="site-footer">
-      <p class="footer-brand"><strong>Johannes Grof IT</strong> · {content.lang === "en" ? "South-East Styria, Austria" : "Südost-Steiermark, Österreich"}</p>
-      <p class="footer-contact">
-        <a href="mailto:contact@johannesgrof.me">contact@johannesgrof.me</a>
-      </p>
-      <p class="footer-legal">
-        <a href="/impressum/">{content.lang === "en" ? "Imprint" : "Impressum"}</a> · <a href="/datenschutz/">{content.lang === "en" ? "Privacy" : "Datenschutz"}</a>
-      </p>
-      <p class="footer-copy">© {new Date().getFullYear()} Johannes Grof</p>
-    </footer>
+    <SiteFooter lang={isDe ? "de" : "en"} />
     <script>
       const revealElements = document.querySelectorAll(".reveal");
 
@@ -730,44 +702,6 @@ const oeffigoSchema = {
             submitButton.disabled = false;
             submitButton.textContent = submitButton.dataset.label ?? "Send message";
           }
-        });
-      }
-
-      // ÖffiGo launch-code copy button.
-      const copyButton = document.querySelector<HTMLButtonElement>(".promo-code-copy");
-      if (copyButton) {
-        const codeEl = copyButton.querySelector("code");
-        const originalLabel = codeEl?.textContent ?? "";
-        const copiedLabel = copyButton.dataset.copied ?? "Copied";
-        let resetTimer: number | undefined;
-
-        copyButton.addEventListener("click", async () => {
-          const code = copyButton.dataset.copy ?? originalLabel;
-          try {
-            await navigator.clipboard.writeText(code);
-          } catch {
-            const range = document.createRange();
-            if (codeEl) {
-              range.selectNodeContents(codeEl);
-              const selection = window.getSelection();
-              selection?.removeAllRanges();
-              selection?.addRange(range);
-              document.execCommand("copy");
-              selection?.removeAllRanges();
-            }
-          }
-
-          copyButton.classList.add("is-copied");
-          if (codeEl) {
-            codeEl.textContent = copiedLabel;
-          }
-          window.clearTimeout(resetTimer);
-          resetTimer = window.setTimeout(() => {
-            copyButton.classList.remove("is-copied");
-            if (codeEl) {
-              codeEl.textContent = originalLabel;
-            }
-          }, 1600);
         });
       }
 

@@ -1,5 +1,6 @@
 ---
 import BaseHead from "@/components/BaseHead.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import SpeedInsights from "@vercel/speed-insights/astro";
 import type { ProjectReleaseDownload } from "@/data/github";
@@ -64,6 +65,9 @@ const s = isDe
       recent: "kürzlich",
       notePartial: "Live-Repository-Daten geladen; Release-Assets nutzen bei Bedarf Fallback-Daten.",
       noteFallback: "Es werden geprüfte Fallback-Daten angezeigt, weil die GitHub-Metadaten beim Build nicht verfügbar waren.",
+      navLabel: "Projekt-Navigation",
+      langSwitchLabel: "EN",
+      langSwitchAria: "View this project page in English",
     }
   : {
       projects: "Projects",
@@ -106,6 +110,9 @@ const s = isDe
       recent: "recent",
       notePartial: "Live repository data loaded; release assets use fallback data where needed.",
       noteFallback: "Showing verified fallback data because GitHub metadata was unavailable during build.",
+      navLabel: "Project navigation",
+      langSwitchLabel: "DE",
+      langSwitchAria: "Diese Projektseite auf Deutsch ansehen",
     };
 
 const localePrefix = isDe ? "/de" : "";
@@ -114,6 +121,13 @@ const navItems = [
   ...(isPublicRepo ? [{ label: "GitHub", href: project.githubUrl, external: true }] : []),
   ...(hasRelease ? [{ label: s.release, href: github.releaseUrl, external: true }] : []),
 ];
+// Project pages have hreflang alternates, so they also need the visible
+// language switch the homepage has.
+const langSwitch = {
+  label: s.langSwitchLabel,
+  href: `${isDe ? "" : "/de"}/projects/${project.slug}/`,
+  ariaLabel: s.langSwitchAria,
+};
 const [heroImage, ...galleryImages] = project.showcase;
 const stableDownloads = github.downloadGroup?.stableDownloads ?? (github.downloadGroup?.stable ? [github.downloadGroup.stable] : []);
 const downloads = [...stableDownloads, ...(github.downloadGroup?.prereleases ?? [])].filter(
@@ -202,6 +216,15 @@ const metadataNote =
       : s.noteFallback;
 const isVideoShowcase = (item: typeof heroImage) => item?.kind === "video";
 
+// Social card: prefer a real raster still. The first showcase entry can be a
+// video, and WebP is a poor social-preview format, so fall back through
+// poster → raster fallback → the branded default card.
+const socialImageSource = project.showcase.find((item) => item.kind !== "video");
+const socialImage =
+  socialImageSource?.fallbackSrc ??
+  (socialImageSource && !socialImageSource.src.endsWith(".webp") ? socialImageSource.src : undefined);
+const socialImageAlt = socialImage ? socialImageSource?.alt : undefined;
+
 const canonicalPath = `${localePrefix}/projects/${project.slug}/`;
 const hreflangAlternates = [
   { hreflang: "en", href: toCanonicalUrl(`/projects/${project.slug}/`) },
@@ -217,14 +240,15 @@ const hreflangAlternates = [
       title={`${project.name} · Johannes Grof`}
       description={`${project.name}: ${c.tagline}`}
       canonicalPath={canonicalPath}
-      image={heroImage?.src}
+      image={socialImage}
+      imageAlt={socialImageAlt}
       type="article"
       ogLocale={isDe ? "de_AT" : "en_US"}
       hreflangAlternates={hreflangAlternates}
     />
   </head>
   <body>
-    <SiteHeader navItems={navItems} ariaLabel="Project navigation" />
+    <SiteHeader navItems={navItems} ariaLabel={s.navLabel} homeHref={isDe ? "/de/" : "/"} langSwitch={langSwitch} />
 
     <main class="project-detail section-shell">
       <a class="back-link" href={`${isDe ? "/de/" : "/"}#projects`}>{s.back}</a>
@@ -399,6 +423,7 @@ const hreflangAlternates = [
         </section>
       )}
     </main>
+    <SiteFooter lang={isDe ? "de" : "en"} />
     <script>
       const copyText = async (text: string) => {
         if (!navigator.clipboard?.writeText) {

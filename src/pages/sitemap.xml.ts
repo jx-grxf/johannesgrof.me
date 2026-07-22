@@ -18,6 +18,9 @@ const urls = [
     { path: `/projects/${project.slug}/`, priority: "0.8", alternates: projectAlternates(project.slug) },
     { path: `/de/projects/${project.slug}/`, priority: "0.7", alternates: projectAlternates(project.slug) },
   ]),
+  // German-only legal pages: indexable, but no locale alternates.
+  { path: "/impressum/", priority: "0.3", alternates: "" },
+  { path: "/datenschutz/", priority: "0.3", alternates: "" },
 ];
 
 export function GET() {
