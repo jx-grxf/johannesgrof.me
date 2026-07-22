@@ -18,10 +18,6 @@ Personal website and project portfolio.
 
 This repository contains the source for my personal portfolio website. It is built as a small, fast Astro site with a focused project showcase, skills section, contact surface, and static deployment on Vercel, using Cloudflare as DNS.
 
-## Showcase
-
-- comming soon
-
 ## Highlights
 
 | Feature | Description |
@@ -35,11 +31,12 @@ This repository contains the source for my personal portfolio website. It is bui
 
 | Project | Public proof |
 | --- | --- |
-| [PortPirate](https://www.johannesgrof.me/projects/portpirate/) | Native macOS menu bar app with DMG release. |
 | [PatchPilot](https://www.johannesgrof.me/projects/patchpilot/) | npm package and coding-agent TUI release. |
+| [BriskEdit](https://www.johannesgrof.me/projects/briskedit/) | Native macOS developer text editor with a DMG release. |
+| [MacPhone](https://www.johannesgrof.me/projects/macphone/) | Native macOS companion app with a GitHub release. |
 | [SlamX](https://www.johannesgrof.me/projects/slamx/) | Sensor-only macOS experiment with release assets. |
 | [Caruso-Reborn](https://www.johannesgrof.me/projects/caruso-reborn/) | Local playback dashboard with GitHub release. |
-| [BriskEdit](https://www.johannesgrof.me/projects/briskedit/) | Native macOS developer text editor (in development). |
+| [PortPirate](https://www.johannesgrof.me/projects/portpirate/) | macOS menu bar app for local dev ports — not released yet. |
 
 ## Stack
 
@@ -78,10 +75,12 @@ npm run dev
 
 ```text
 src/
+  components/ Shared head, header, footer, and project detail markup
   data/       Site copy and project data
-  pages/      Astro pages
+  layouts/    Page shells
+  pages/      Astro pages and the contact API route
   styles/     Global styling
-public/       Static assets, redirects, robots, sitemap
+public/       Static assets, robots, icons
 ```
 
 ## Deployment

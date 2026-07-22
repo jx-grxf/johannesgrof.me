@@ -357,7 +357,26 @@ const buildCommands = (project: Project, releaseUrl: string, downloadGroup?: Pro
   return commands;
 };
 
-export async function getProjectGitHubInfo(project: Project): Promise<ProjectGitHubInfo> {
+// One build renders both locales of the homepage plus two project pages per
+// project, and each of those asked GitHub again — well past the 60 requests an
+// hour an unauthenticated build gets, so nearly every card fell back to static
+// data. Resolve each repo once per build and share the result.
+const infoByRepo = new Map<string, Promise<ProjectGitHubInfo>>();
+
+export function getProjectGitHubInfo(project: Project): Promise<ProjectGitHubInfo> {
+  const cached = infoByRepo.get(project.repo);
+
+  if (cached) {
+    return cached;
+  }
+
+  const pending = fetchProjectGitHubInfo(project);
+  infoByRepo.set(project.repo, pending);
+
+  return pending;
+}
+
+async function fetchProjectGitHubInfo(project: Project): Promise<ProjectGitHubInfo> {
   const fallback = buildFallbackInfo(project);
 
   if (project.visibility !== "public") {

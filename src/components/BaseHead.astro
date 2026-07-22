@@ -11,6 +11,7 @@ interface Props {
   description: string;
   canonicalPath?: string;
   image?: string;
+  imageAlt?: string;
   type?: "website" | "article";
   ogLocale?: string;
   hreflangAlternates?: HreflangAlternate[];
@@ -22,6 +23,7 @@ const {
   description,
   canonicalPath = Astro.url.pathname,
   image = defaultSocialImage,
+  imageAlt = "Johannes Grof project portfolio preview",
   type = "website",
   ogLocale = "en_US",
   hreflangAlternates = [],
@@ -83,11 +85,11 @@ const websiteLd = {
 {isDefaultImage && <meta property="og:image:type" content="image/png" />}
 {isDefaultImage && <meta property="og:image:width" content="1200" />}
 {isDefaultImage && <meta property="og:image:height" content="630" />}
-<meta property="og:image:alt" content="Johannes Grof project portfolio preview" />
+<meta property="og:image:alt" content={imageAlt} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={imageUrl} />
-<meta name="twitter:image:alt" content="Johannes Grof project portfolio preview" />
-<script type="application/ld+json" set:html={JSON.stringify(personLd)} />
-{isHome && <script type="application/ld+json" set:html={JSON.stringify(websiteLd)} />}
+<meta name="twitter:image:alt" content={imageAlt} />
+<script type="application/ld+json" is:inline set:html={JSON.stringify(personLd)} />
+{isHome && <script type="application/ld+json" is:inline set:html={JSON.stringify(websiteLd)} />}

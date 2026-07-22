@@ -1,5 +1,6 @@
 ---
 import BaseHead from "@/components/BaseHead.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import "@/styles/global.css";
 
@@ -26,16 +27,7 @@ const navItems = [{ label: "Start", href: "/" }];
       <slot />
     </main>
 
-    <footer class="site-footer">
-      <p class="footer-brand"><strong>Johannes Grof IT</strong> · Südost-Steiermark, Österreich</p>
-      <p class="footer-contact">
-        <a href="mailto:contact@johannesgrof.me">contact@johannesgrof.me</a>
-      </p>
-      <p class="footer-legal">
-        <a href="/impressum/">Impressum</a> · <a href="/datenschutz/">Datenschutz</a>
-      </p>
-      <p class="footer-copy">© {new Date().getFullYear()} Johannes Grof</p>
-    </footer>
+    <SiteFooter lang="de" />
 
     <style>
       .legal-page {
