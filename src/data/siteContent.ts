@@ -31,28 +31,37 @@ export interface LocaleContent {
   hero: {
     eyebrow: string;
     title: string;
-    /** Substring of `title` rendered with the signature gradient. */
+    /** Substring of `title` rendered in the signal colour. */
     titleAccent?: string;
     body: string;
-    proof: string;
+    /** Unit for the shipped-project counter, e.g. "projects in public". */
+    factsCountLabel: string;
+    facts: string[];
     primaryAction: string;
     secondaryAction: string;
     contactAction: string;
-    githubAction: string;
+  };
+  oeffigo: {
+    eyebrow: string;
+    detailCta: string;
+  };
+  projects: {
+    title: string;
+    /** Unit for the total row count shown next to the section title. */
+    countLabel: string;
+    highlights: string;
+    comingSoon: string;
   };
   skills: {
-    eyebrow: string;
     title: string;
     groups: { title: string; items: string[] }[];
   };
   services: {
-    eyebrow: string;
     title: string;
     lead: string;
     items: ServiceItem[];
   };
   faq: {
-    eyebrow: string;
     title: string;
     items: FaqItem[];
   };
@@ -93,7 +102,7 @@ const en: LocaleContent = {
   },
   nav: [
     { label: "Projects", href: "#projects" },
-    { label: "Skills", href: "#skills" },
+    { label: "ÖffiGo", href: "#oeffigo" },
     { label: "Services", href: "#services" },
     { label: "About", href: "#about" },
     { label: "Contact", href: "#contact" },
@@ -104,37 +113,45 @@ const en: LocaleContent = {
     ariaLabel: "Diese Seite auf Deutsch ansehen",
   },
   hero: {
-    eyebrow: "student developer / austria",
-    title: "Building useful tools before the idea gets boring.",
-    titleAccent: "useful",
-    body: "I'm a student at HTL Kaindorf in Austria. I build macOS apps, automations, websites, and small CLI tools that turn annoying technical problems into something usable.",
-    proof: "native macOS apps · shipped GitHub releases · TypeScript / Swift / Python",
-    primaryAction: "View projects",
-    secondaryAction: "Services",
+    eyebrow: "software developer / styria, austria",
+    title: "Software that does one thing, properly.",
+    titleAccent: "one thing",
+    body: "I'm a developer from south-east Styria and a student at HTL Kaindorf. I build macOS and iOS apps, developer tools and automations — and I help people nearby with websites, repairs and everyday technology.",
+    factsCountLabel: "projects in public",
+    facts: ["macOS · iOS · CLI", "TypeScript · Swift · Python", "Styria, Austria"],
+    primaryAction: "See the projects",
+    secondaryAction: "What I do",
     contactAction: "Contact",
-    githubAction: "GitHub",
+  },
+  oeffigo: {
+    eyebrow: "flagship",
+    detailCta: "ÖffiGo in detail",
+  },
+  projects: {
+    title: "Projects",
+    countLabel: "entries",
+    highlights: "highlights",
+    comingSoon: "coming soon",
   },
   skills: {
-    eyebrow: "skills",
-    title: "Tools and areas I work with.",
+    title: "What I work with",
     groups: [
       {
-        title: "Native and web build work",
+        title: "Native and web",
         items: ["TypeScript", "Swift", "Python", "Astro", "macOS utilities", "CLI tools"],
       },
       {
-        title: "Developer automation",
+        title: "Automation",
         items: ["Browser automation", "Document workflows", "GitHub releases", "Local-first agent tooling"],
       },
       {
         title: "AI-assisted tooling",
-        items: ["Codex", "OpenClaw", "Claude Code", "Provider-aware workflows", "Debugging real device/app problems"],
+        items: ["Codex", "OpenClaw", "Claude Code", "Provider-aware workflows", "Debugging real device problems"],
       },
     ],
   },
   services: {
-    eyebrow: "services",
-    title: "What I can help with.",
+    title: "What I can help with",
     lead: "Based in south-east Styria, Austria — on-site nearby, remote everywhere else.",
     items: [
       {
@@ -156,8 +173,7 @@ const en: LocaleContent = {
     ],
   },
   faq: {
-    eyebrow: "faq",
-    title: "Frequently asked questions.",
+    title: "Frequently asked questions",
     items: [
       {
         q: "What does Johannes Grof do?",
@@ -179,13 +195,13 @@ const en: LocaleContent = {
   },
   about: {
     eyebrow: "about",
-    title: "Student, builder, fast learner.",
-    body: "I live in Austria and study at HTL Kaindorf. I love programming, especially when a project solves a real problem or makes a technical workflow easier. I build with TypeScript, Swift, Python, and AI-assisted workflows, but in the end what counts is the finished tool, not the stack it's built on.",
+    title: "The short version.",
+    body: "I live in south-east Styria and study at HTL Kaindorf. Most of what I build starts as a problem I ran into myself: a workflow that takes too many steps, a device that won't cooperate, an app that should exist and doesn't. I work with TypeScript, Swift and Python, but the stack matters less than whether the finished thing actually gets used.",
   },
   contact: {
     eyebrow: "contact",
     title: "Get in touch.",
-    note: "Need a website, a repair, tech support, or a small custom tool? Send me a message below, or reach out via email, LinkedIn, or GitHub.",
+    note: "Need a website, a repair, tech support, or a small custom tool? Send me a message below, or reach out by email.",
     form: {
       nameLabel: "Name",
       namePlaceholder: "Your name",
@@ -212,7 +228,7 @@ const de: LocaleContent = {
   },
   nav: [
     { label: "Projekte", href: "#projects" },
-    { label: "Skills", href: "#skills" },
+    { label: "ÖffiGo", href: "#oeffigo" },
     { label: "Leistungen", href: "#services" },
     { label: "Über mich", href: "#about" },
     { label: "Kontakt", href: "#contact" },
@@ -224,21 +240,30 @@ const de: LocaleContent = {
   },
   hero: {
     eyebrow: "softwareentwickler / südost-steiermark",
-    title: "Nützliche Tools bauen, bevor die Idee langweilig wird.",
-    titleAccent: "Nützliche",
-    body: "Ich bin Schüler an der HTL Kaindorf in Österreich. Ich baue macOS-Apps, Automatisierungen, Websites und kleine Tools – und helfe in der Südost-Steiermark bei Reparatur und Technik-Problemen.",
-    proof: "native macOS-Apps · veröffentlichte GitHub-Releases · TypeScript / Swift / Python",
+    title: "Software, die eine Sache richtig macht.",
+    titleAccent: "eine Sache",
+    body: "Ich bin Entwickler aus der Südost-Steiermark und Schüler an der HTL Kaindorf. Ich baue macOS- und iOS-Apps, Developer-Tools und Automatisierungen — und helfe in der Umgebung bei Websites, Reparaturen und alltäglicher Technik.",
+    factsCountLabel: "veröffentlichte Projekte",
+    facts: ["macOS · iOS · CLI", "TypeScript · Swift · Python", "Steiermark, Österreich"],
     primaryAction: "Projekte ansehen",
     secondaryAction: "Leistungen",
     contactAction: "Kontakt",
-    githubAction: "GitHub",
+  },
+  oeffigo: {
+    eyebrow: "hauptprojekt",
+    detailCta: "ÖffiGo im Detail",
+  },
+  projects: {
+    title: "Projekte",
+    countLabel: "Einträge",
+    highlights: "highlights",
+    comingSoon: "bald verfügbar",
   },
   skills: {
-    eyebrow: "skills",
-    title: "Womit ich arbeite.",
+    title: "Womit ich arbeite",
     groups: [
       {
-        title: "Native- und Web-Entwicklung",
+        title: "Native und Web",
         items: ["TypeScript", "Swift", "Python", "Astro", "macOS-Tools", "CLI-Tools"],
       },
       {
@@ -252,8 +277,7 @@ const de: LocaleContent = {
     ],
   },
   services: {
-    eyebrow: "leistungen",
-    title: "Womit ich Ihnen helfen kann.",
+    title: "Womit ich Ihnen helfen kann",
     lead: "Standort Südost-Steiermark — vor Ort in der Umgebung, sonst österreichweit remote.",
     items: [
       {
@@ -275,8 +299,7 @@ const de: LocaleContent = {
     ],
   },
   faq: {
-    eyebrow: "faq",
-    title: "Häufige Fragen.",
+    title: "Häufige Fragen",
     items: [
       {
         q: "Was macht Johannes Grof?",
@@ -298,13 +321,13 @@ const de: LocaleContent = {
   },
   about: {
     eyebrow: "über mich",
-    title: "Schüler, Macher, schneller Lerner.",
-    body: "Ich lebe in der Südost-Steiermark und besuche die HTL Kaindorf. Ich liebe das Programmieren – besonders, wenn ein Projekt ein echtes Problem löst oder einen Ablauf einfacher macht. Ich arbeite mit TypeScript, Swift, Python und KI-gestützten Workflows, aber am Ende zählt das fertige Tool, nicht der Stack dahinter.",
+    title: "Die Kurzfassung.",
+    body: "Ich lebe in der Südost-Steiermark und besuche die HTL Kaindorf. Das meiste, was ich baue, fängt als eigenes Problem an: ein Ablauf mit zu vielen Schritten, ein Gerät, das nicht will, eine App, die es geben sollte und nicht gibt. Ich arbeite mit TypeScript, Swift und Python — wichtiger als der Stack ist aber, ob das fertige Ding am Ende wirklich verwendet wird.",
   },
   contact: {
     eyebrow: "kontakt",
     title: "Melden Sie sich.",
-    note: "Sie brauchen eine Website, eine Reparatur, technischen Support oder ein kleines individuelles Tool? Schreiben Sie mir direkt hier – oder per E-Mail, LinkedIn oder GitHub.",
+    note: "Sie brauchen eine Website, eine Reparatur, technischen Support oder ein kleines individuelles Tool? Schreiben Sie mir direkt hier oder per E-Mail.",
     form: {
       nameLabel: "Name",
       namePlaceholder: "Ihr Name",

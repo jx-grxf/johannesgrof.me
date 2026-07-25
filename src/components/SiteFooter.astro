@@ -1,4 +1,6 @@
 ---
+import SocialLinks from "@/components/SocialLinks.astro";
+
 // Shared footer. Every page needs it: the Impressum and Datenschutz links have
 // to be reachable from any URL, including the project detail pages.
 interface Props {
@@ -10,15 +12,22 @@ const isEn = lang === "en";
 ---
 
 <footer class="site-footer">
-  <p class="footer-brand">
-    <strong>Johannes Grof IT</strong> · {isEn ? "South-East Styria, Austria" : "Südost-Steiermark, Österreich"}
-  </p>
-  <p class="footer-contact">
-    <a href="mailto:contact@johannesgrof.me">contact@johannesgrof.me</a>
-  </p>
-  <p class="footer-legal">
-    <a href="/impressum/">{isEn ? "Imprint" : "Impressum"}</a> ·
-    <a href="/datenschutz/">{isEn ? "Privacy" : "Datenschutz"}</a>
-  </p>
-  <p class="footer-copy">© {new Date().getFullYear()} Johannes Grof</p>
+  <div class="footer-top">
+    <p class="footer-brand">
+      <strong>Johannes Grof</strong><br />
+      {isEn ? "South-East Styria, Austria" : "Südost-Steiermark, Österreich"}
+    </p>
+    <p class="footer-contact">
+      <a href="mailto:contact@johannesgrof.me">contact@johannesgrof.me</a>
+    </p>
+    <SocialLinks variant="icons" />
+    <p class="footer-links">
+      <a href="/impressum/">{isEn ? "Imprint" : "Impressum"}</a>
+      <a href="/datenschutz/">{isEn ? "Privacy" : "Datenschutz"}</a>
+    </p>
+  </div>
+  <div class="footer-bottom">
+    <p>© {new Date().getFullYear()} Johannes Grof</p>
+    <p>{isEn ? "Built with Astro, hosted on Vercel" : "Gebaut mit Astro, gehostet auf Vercel"}</p>
+  </div>
 </footer>

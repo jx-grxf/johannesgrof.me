@@ -1,4 +1,6 @@
 ---
+import SocialLinks from "@/components/SocialLinks.astro";
+
 interface NavItem {
   label: string;
   href: string;
@@ -23,10 +25,10 @@ const { navItems, ariaLabel = "Primary navigation", homeHref = "/", langSwitch }
 
 <header class="site-header">
   <a class="brand" href={homeHref} aria-label="Johannes Grof home">
-    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="brand-prompt" aria-hidden="true">$</span>
     <span>Johannes Grof</span>
   </a>
-  <nav aria-label={ariaLabel}>
+  <nav class="site-nav" aria-label={ariaLabel}>
     {
       navItems.map((item) => (
         <a
@@ -38,6 +40,8 @@ const { navItems, ariaLabel = "Primary navigation", homeHref = "/", langSwitch }
         </a>
       ))
     }
+    <span class="nav-divider" aria-hidden="true"></span>
+    <SocialLinks variant="icons" class="nav-socials" />
     {
       langSwitch && (
         <a class="lang-switch" href={langSwitch.href} aria-label={langSwitch.ariaLabel}>
