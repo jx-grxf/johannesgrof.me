@@ -214,16 +214,23 @@ summary:focus-visible,
   letter-spacing: 0;
 }
 
-/* Blinking block cursor. Used once per page, at the end of a mono line, so it
-   reads as a caret rather than as decoration. */
+/* Blinking block cursor, sized off the em box so it sits on the baseline like a
+   terminal caret at any type size. Used once per page. */
 .cursor {
   display: inline-block;
-  width: 0.55em;
-  height: 1em;
-  margin-left: 0.35em;
-  vertical-align: -0.12em;
+  width: 0.36em;
+  height: 0.7em;
+  margin-left: 0.12em;
+  vertical-align: baseline;
   background: var(--signal);
-  animation: cursor-blink 1.15s steps(1, end) infinite;
+  animation: cursor-blink 1.05s steps(1, end) infinite;
+}
+
+/* While characters are still arriving the caret holds steady — a terminal only
+   blinks once it is waiting for you. */
+.is-typing .cursor {
+  animation: none;
+  opacity: 1;
 }
 
 @keyframes cursor-blink {
