@@ -218,9 +218,9 @@ summary:focus-visible,
    terminal caret at any type size. Used once per page. */
 .cursor {
   display: inline-block;
-  width: 0.36em;
-  height: 0.7em;
-  margin-left: 0.12em;
+  width: 0.24em;
+  height: 0.6em;
+  margin-left: 0.14em;
   vertical-align: baseline;
   background: var(--signal);
   animation: cursor-blink 1.05s steps(1, end) infinite;
