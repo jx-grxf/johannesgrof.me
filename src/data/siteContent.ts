@@ -38,7 +38,6 @@ export interface LocaleContent {
     factsCountLabel: string;
     facts: string[];
     primaryAction: string;
-    secondaryAction: string;
     contactAction: string;
   };
   oeffigo: {
@@ -47,10 +46,7 @@ export interface LocaleContent {
   };
   projects: {
     title: string;
-    /** Unit for the total row count shown next to the section title. */
-    countLabel: string;
     highlights: string;
-    comingSoon: string;
   };
   skills: {
     title: string;
@@ -120,7 +116,6 @@ const en: LocaleContent = {
     factsCountLabel: "projects in public",
     facts: ["macOS · iOS · CLI", "TypeScript · Swift · Python", "Styria, Austria"],
     primaryAction: "See the projects",
-    secondaryAction: "What I do",
     contactAction: "Contact",
   },
   oeffigo: {
@@ -129,30 +124,28 @@ const en: LocaleContent = {
   },
   projects: {
     title: "Projects",
-    countLabel: "entries",
     highlights: "highlights",
-    comingSoon: "coming soon",
   },
   skills: {
     title: "What I work with",
     groups: [
       {
         title: "Native and web",
-        items: ["TypeScript", "Swift", "Python", "Astro", "macOS utilities", "CLI tools"],
+        items: ["Swift", "SwiftUI", "AppKit", "TypeScript", "Python", "Astro"],
       },
       {
         title: "Automation",
-        items: ["Browser automation", "Document workflows", "GitHub releases", "Local-first agent tooling"],
+        items: ["CLI tools", "Browser automation", "Document workflows", "MCP servers", "Local-first agent tooling"],
       },
       {
-        title: "AI-assisted tooling",
-        items: ["Codex", "OpenClaw", "Claude Code", "Provider-aware workflows", "Debugging real device problems"],
+        title: "Shipping",
+        items: ["GitHub releases", "DMG packaging", "Notarization", "Sparkle update feeds", "Static hosting & deploys"],
       },
     ],
   },
   services: {
     title: "What I can help with",
-    lead: "Based in south-east Styria, Austria — on-site nearby, remote everywhere else.",
+    lead: "Alongside my own projects I help people and small businesses in the area with everyday technology. On-site nearby, remote everywhere else.",
     items: [
       {
         title: "Website development & hosting",
@@ -176,8 +169,8 @@ const en: LocaleContent = {
     title: "Frequently asked questions",
     items: [
       {
-        q: "What does Johannes Grof do?",
-        a: "I'm a software developer and student at HTL Kaindorf in Austria. I build macOS apps, developer tools, and websites, and I also offer electronics repair and technical support.",
+        q: "What do you build?",
+        a: "I'm Johannes Grof, a software developer and student at HTL Kaindorf in Austria. I build macOS and iOS apps, developer tools, and websites, and I also help with electronics repair and technical support.",
       },
       {
         q: "Do you work remotely?",
@@ -246,7 +239,6 @@ const de: LocaleContent = {
     factsCountLabel: "veröffentlichte Projekte",
     facts: ["macOS · iOS · CLI", "TypeScript · Swift · Python", "Steiermark, Österreich"],
     primaryAction: "Projekte ansehen",
-    secondaryAction: "Leistungen",
     contactAction: "Kontakt",
   },
   oeffigo: {
@@ -255,30 +247,28 @@ const de: LocaleContent = {
   },
   projects: {
     title: "Projekte",
-    countLabel: "Einträge",
-    highlights: "highlights",
-    comingSoon: "bald verfügbar",
+    highlights: "auswahl",
   },
   skills: {
     title: "Womit ich arbeite",
     groups: [
       {
         title: "Native und Web",
-        items: ["TypeScript", "Swift", "Python", "Astro", "macOS-Tools", "CLI-Tools"],
+        items: ["Swift", "SwiftUI", "AppKit", "TypeScript", "Python", "Astro"],
       },
       {
         title: "Automatisierung",
-        items: ["Browser-Automatisierung", "Dokument-Workflows", "GitHub-Releases", "Local-first Agent-Tooling"],
+        items: ["CLI-Tools", "Browser-Automatisierung", "Dokument-Workflows", "MCP-Server", "Local-first Agent-Tooling"],
       },
       {
-        title: "KI-gestützte Tools",
-        items: ["Codex", "OpenClaw", "Claude Code", "Provider-bewusste Workflows", "Geräte- & App-Probleme lösen"],
+        title: "Ausliefern",
+        items: ["GitHub-Releases", "DMG-Packaging", "Notarisierung", "Sparkle-Update-Feeds", "Static Hosting & Deploys"],
       },
     ],
   },
   services: {
     title: "Womit ich Ihnen helfen kann",
-    lead: "Standort Südost-Steiermark — vor Ort in der Umgebung, sonst österreichweit remote.",
+    lead: "Neben meinen eigenen Projekten helfe ich Menschen und kleinen Betrieben in der Umgebung bei alltäglicher Technik. Vor Ort in der Südost-Steiermark, sonst österreichweit remote.",
     items: [
       {
         title: "Website-Erstellung & Hosting",
@@ -302,8 +292,8 @@ const de: LocaleContent = {
     title: "Häufige Fragen",
     items: [
       {
-        q: "Was macht Johannes Grof?",
-        a: "Ich bin Softwareentwickler und Schüler an der HTL Kaindorf in Österreich. Ich baue macOS-Apps, Developer-Tools und Websites und biete außerdem Elektronik-Reparatur und technischen Support an.",
+        q: "Was bauen Sie?",
+        a: "Ich bin Johannes Grof, Softwareentwickler und Schüler an der HTL Kaindorf in Österreich. Ich baue macOS- und iOS-Apps, Developer-Tools und Websites und helfe außerdem bei Elektronik-Reparatur und technischem Support.",
       },
       {
         q: "Arbeiten Sie auch vor Ort in der Steiermark?",
