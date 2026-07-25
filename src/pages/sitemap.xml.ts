@@ -11,9 +11,16 @@ const projectAlternates = (slug: string) => `
     <xhtml:link rel="alternate" hreflang="de-AT" href="${toCanonicalUrl(`/de/projects/${slug}/`)}" />
     <xhtml:link rel="alternate" hreflang="x-default" href="${toCanonicalUrl(`/projects/${slug}/`)}" />`;
 
+const oeffigoAlternates = `
+    <xhtml:link rel="alternate" hreflang="en" href="${toCanonicalUrl("/oeffigo/")}" />
+    <xhtml:link rel="alternate" hreflang="de-AT" href="${toCanonicalUrl("/de/oeffigo/")}" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${toCanonicalUrl("/oeffigo/")}" />`;
+
 const urls = [
   { path: "/", priority: "1.0", alternates: homeAlternates },
   { path: "/de/", priority: "1.0", alternates: homeAlternates },
+  { path: "/oeffigo/", priority: "0.9", alternates: oeffigoAlternates },
+  { path: "/de/oeffigo/", priority: "0.8", alternates: oeffigoAlternates },
   ...publicProjects.flatMap((project) => [
     { path: `/projects/${project.slug}/`, priority: "0.8", alternates: projectAlternates(project.slug) },
     { path: `/de/projects/${project.slug}/`, priority: "0.7", alternates: projectAlternates(project.slug) },

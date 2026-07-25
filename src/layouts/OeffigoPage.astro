@@ -1,0 +1,239 @@
+---
+import BaseHead from "@/components/BaseHead.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import { oeffigo } from "@/data/oeffigo";
+import type { ProjectLang } from "@/data/projects";
+import { toCanonicalUrl } from "@/data/siteMetadata";
+import "@/styles/global.css";
+import SpeedInsights from "@vercel/speed-insights/astro";
+
+interface Props {
+  lang: ProjectLang;
+}
+
+const { lang } = Astro.props;
+const isDe = lang === "de";
+const localePrefix = isDe ? "/de" : "";
+const canonicalPath = `${localePrefix}/oeffigo/`;
+
+const s = isDe
+  ? {
+      back: "Zurück zur Startseite",
+      navProjects: "Projekte",
+      navContact: "Kontakt",
+      navLabel: "Seitennavigation",
+      langLabel: "EN",
+      langAria: "View this page in English",
+      title: `${oeffigo.name} — Österreichs Öffis, wirklich nativ`,
+      description:
+        "ÖffiGo: Echtzeit-Abfahrten, Routenplanung und Live-Störungen für ganz Österreich. Native iOS-App von Johannes Grof, derzeit in geschlossener TestFlight-Beta.",
+      features: "Funktionen",
+      data: "Daten & Quellen",
+      dataPlatform: "Plattform",
+      dataStatus: "Status",
+      dataSources: "Datenquellen",
+      dataPrice: "Kosten",
+      beta: "Beta",
+      visit: "Zu oeffigo.app",
+      screenshotAlt: "ÖffiGo App-Screenshot",
+    }
+  : {
+      back: "Back to the home page",
+      navProjects: "Projects",
+      navContact: "Contact",
+      navLabel: "Page navigation",
+      langLabel: "DE",
+      langAria: "Diese Seite auf Deutsch ansehen",
+      title: `${oeffigo.name} — Austria's public transport, truly native`,
+      description:
+        "ÖffiGo: real-time departures, journey planning and live disruptions for all of Austria. A native iOS app by Johannes Grof, currently in closed TestFlight beta.",
+      features: "Features",
+      data: "Data & sources",
+      dataPlatform: "Platform",
+      dataStatus: "Status",
+      dataSources: "Data sources",
+      dataPrice: "Cost",
+      beta: "Beta",
+      visit: "Visit oeffigo.app",
+      screenshotAlt: "ÖffiGo app screenshot",
+    };
+
+const navItems = [
+  { label: s.navProjects, href: `${isDe ? "/de/" : "/"}#projects` },
+  { label: "oeffigo.app", href: oeffigo.websiteUrl, external: true },
+  { label: s.navContact, href: `${isDe ? "/de/" : "/"}#contact` },
+];
+
+const langSwitch = {
+  label: s.langLabel,
+  href: `${isDe ? "" : "/de"}/oeffigo/`,
+  ariaLabel: s.langAria,
+};
+
+const hreflangAlternates = [
+  { hreflang: "en", href: toCanonicalUrl("/oeffigo/") },
+  { hreflang: "de-AT", href: toCanonicalUrl("/de/oeffigo/") },
+  { hreflang: "x-default", href: toCanonicalUrl("/oeffigo/") },
+];
+
+// The app is an unreleased closed beta with no decided pricing, so this
+// deliberately carries no `offers` — nothing here is purchasable yet.
+const oeffigoSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "@id": `${oeffigo.websiteUrl}/#app`,
+  name: oeffigo.name,
+  applicationCategory: "TravelApplication",
+  operatingSystem: "iOS 17.0",
+  url: oeffigo.websiteUrl,
+  sameAs: [oeffigo.websiteUrl, oeffigo.liveUrl, oeffigo.statusUrl],
+  image: toCanonicalUrl(oeffigo.icon),
+  description: oeffigo.lead[lang],
+  inLanguage: ["de-AT", "en"],
+  author: { "@id": "https://www.johannesgrof.me/#person" },
+  creator: { "@id": "https://www.johannesgrof.me/#person" },
+  publisher: { "@id": "https://www.johannesgrof.me/#person" },
+  subjectOf: [
+    {
+      "@type": "WebPage",
+      name: "ÖffiGo Live",
+      url: oeffigo.liveUrl,
+      description: oeffigo.liveProof.body[lang],
+    },
+    {
+      "@type": "WebPage",
+      name: "ÖffiGo Status",
+      url: oeffigo.statusUrl,
+    },
+  ],
+};
+---
+
+<!doctype html>
+<html lang={isDe ? "de-AT" : "en"}>
+  <head>
+    <BaseHead
+      title={`${s.title} · Johannes Grof`}
+      description={s.description}
+      canonicalPath={canonicalPath}
+      ogLocale={isDe ? "de_AT" : "en_US"}
+      hreflangAlternates={hreflangAlternates}
+    />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(oeffigoSchema)} />
+  </head>
+  <body>
+    <SiteHeader navItems={navItems} ariaLabel={s.navLabel} homeHref={isDe ? "/de/" : "/"} langSwitch={langSwitch} />
+
+    <main class="section-shell">
+      <div class="project-detail">
+        <a class="back-link" href={isDe ? "/de/" : "/"}>{s.back}</a>
+      </div>
+
+      <section class="oeffigo-page-hero" aria-labelledby="oeffigo-title">
+        <div class="oeffigo-layout">
+          <div>
+            <p class="eyebrow">{oeffigo.eyebrow[lang]}</p>
+            <div class="oeffigo-headline">
+              <img class="oeffigo-icon" src={oeffigo.icon} alt="ÖffiGo app icon" width="120" height="120" loading="eager" decoding="async" />
+              <div>
+                <h1 id="oeffigo-title">{oeffigo.name}</h1>
+                <p class="oeffigo-tagline">{oeffigo.tagline[lang]}</p>
+              </div>
+            </div>
+            <p class="oeffigo-page-lead">{oeffigo.lead[lang]}</p>
+            <div class="oeffigo-actions">
+              <a class="button primary" href={oeffigo.websiteUrl} rel="me">{s.visit}</a>
+              <a class="button secondary" href={oeffigo.statusUrl} rel="me">{oeffigo.liveProof.statusLabel[lang]}</a>
+            </div>
+          </div>
+
+          <picture>
+            <source srcset="/projects/oeffigo/showcase.webp" type="image/webp" />
+            <img class="oeffigo-shot" src="/projects/oeffigo/showcase.png" alt={s.screenshotAlt} width="1000" height="2054" loading="eager" decoding="async" />
+          </picture>
+        </div>
+      </section>
+
+      <section class="band" aria-labelledby="oeffigo-features-title">
+        <div class="section-head">
+          <span class="section-num">01</span>
+          <h2 id="oeffigo-features-title">{s.features}</h2>
+        </div>
+        <ul class="oeffigo-features oeffigo-feature-grid">
+          {
+            oeffigo.features.map((feature) => (
+              <li class="oeffigo-feature">
+                <span class="oeffigo-feature-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d={feature.icon} /></svg>
+                </span>
+                <h3>{feature.title[lang]}</h3>
+                <p>{feature.body[lang]}</p>
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section class="band" aria-labelledby="oeffigo-live-title">
+        <div class="section-head">
+          <span class="section-num">02</span>
+          <h2 id="oeffigo-live-title">{oeffigo.liveProof.eyebrow[lang]}</h2>
+        </div>
+        <div class="note-block" style="margin-top: 0">
+          <h3>{oeffigo.liveProof.title[lang]}</h3>
+          <p>{oeffigo.liveProof.body[lang]}</p>
+          <ul>
+            {oeffigo.liveProof.stats.map((stat) => <li>{stat[lang]}</li>)}
+          </ul>
+          <div class="note-actions">
+            <a href={oeffigo.liveUrl} rel="me">{oeffigo.liveProof.liveLabel[lang]}</a>
+            <a href={oeffigo.statusUrl} rel="me">{oeffigo.liveProof.statusLabel[lang]}</a>
+          </div>
+        </div>
+      </section>
+
+      <section class="band" aria-labelledby="oeffigo-data-title">
+        <div class="section-head">
+          <span class="section-num">03</span>
+          <h2 id="oeffigo-data-title">{s.data}</h2>
+        </div>
+        <dl class="data-list">
+          <div>
+            <dt>{s.dataPlatform}</dt>
+            <dd>{oeffigo.platform[lang]}</dd>
+          </div>
+          <div>
+            <dt>{s.dataStatus}</dt>
+            <dd>{oeffigo.status[lang]}</dd>
+          </div>
+          <div>
+            <dt>{s.dataSources}</dt>
+            <dd>{oeffigo.dataNote[lang]}</dd>
+          </div>
+          <div>
+            <dt>{s.dataPrice}</dt>
+            <dd>{oeffigo.beta.note[lang]}</dd>
+          </div>
+        </dl>
+      </section>
+
+      <section class="band" aria-labelledby="oeffigo-beta-title">
+        <div class="section-head">
+          <span class="section-num">04</span>
+          <h2 id="oeffigo-beta-title">{s.beta}</h2>
+        </div>
+        <div class="note-block" style="margin-top: 0">
+          <h3>{oeffigo.beta.headline[lang]}</h3>
+          <p>{oeffigo.beta.body[lang]}</p>
+          <div class="note-actions">
+            <a href={oeffigo.websiteUrl} rel="me">{oeffigo.beta.ctaLabel[lang]}</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <SiteFooter lang={isDe ? "de" : "en"} />
+    <SpeedInsights />
+  </body>
+</html>

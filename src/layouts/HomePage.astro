@@ -2,7 +2,16 @@
 import BaseHead from "@/components/BaseHead.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
-import { featuredShowcaseProjects, getProjectCopy, localizedStatusLabel, projectSections, publicProjects, statusClass, upcomingProjects } from "@/data/projects";
+import SocialLinks from "@/components/SocialLinks.astro";
+import {
+  featuredShowcaseProjects,
+  getProjectCopy,
+  localizedStatusLabel,
+  projectSections,
+  publicProjects,
+  statusClass,
+  upcomingProjects,
+} from "@/data/projects";
 import type { Project, ProjectLang, ProjectStatus } from "@/data/projects";
 import { getProjectGitHubInfo } from "@/data/github";
 import { oeffigo } from "@/data/oeffigo";
@@ -18,9 +27,11 @@ interface Props {
 
 const { content, canonicalPath } = Astro.props;
 const isDe = content.lang !== "en";
+const lang: ProjectLang = isDe ? "de" : "en";
+const localePrefix = isDe ? "/de" : "";
 
-// Build-time live GitHub data for the project cards (stars, latest release,
-// total downloads). Falls back gracefully when the API is unavailable.
+// Build-time live GitHub data for the index rows (version, stars, downloads).
+// Falls back gracefully when the API is unavailable.
 const githubInfoBySlug = new Map(
   await Promise.all(publicProjects.map(async (project) => [project.slug, await getProjectGitHubInfo(project)] as const))
 );
@@ -28,60 +39,110 @@ const githubInfoBySlug = new Map(
 const compactCount = (value: number) =>
   value >= 1000 ? `${(value / 1000).toFixed(value >= 10000 ? 0 : 1).replace(/\.0$/, "")}k` : String(value);
 
-// Small, locale-aware live stat chips shown on each project card.
-const liveStats = (slug: string) => {
-  const info = githubInfoBySlug.get(slug);
-  if (!info) {
-    return [];
-  }
-  const stats: string[] = [];
-  // Only show a version chip for real version numbers — skip status words
-  // like "unreleased" or "archived" so we never render e.g. "varchived".
-  if (info.version && /\d/.test(info.version)) {
-    stats.push(/^v/i.test(info.version) ? info.version : `v${info.version}`);
-  }
-  if (info.stars > 0) {
-    stats.push(`★ ${info.stars}`);
-  }
-  if (info.downloads > 0) {
-    stats.push(`↓ ${compactCount(info.downloads)}`);
-  }
-  return stats;
-};
-
-// Locale-aware project copy, links, and status labels for the cards.
-const lang: ProjectLang = isDe ? "de" : "en";
-const copy = (project: Project) => getProjectCopy(project, lang);
-const localizedStatus = (status: ProjectStatus) => localizedStatusLabel(status, lang);
-const projectHref = (slug: string) => `${isDe ? "/de" : ""}/projects/${slug}/`;
-
-// Only advertise a WebP <source> when the asset is actually WebP — otherwise
-// the browser fetches a PNG that was mislabeled as image/webp.
-const isWebp = (src?: string): src is string => Boolean(src && src.endsWith(".webp"));
-
-// Hero spotlight: the strongest shipped app, screenshot-forward.
-const spotlight = publicProjects.find((project) => project.slug === "briskedit") ?? featuredShowcaseProjects[0];
-const spotlightImage = spotlight?.showcase[0];
-const spotlightImageSrc = spotlightImage?.cardSrc ?? spotlightImage?.src;
-
-// Normalize a version-ish string to a "vX.Y.Z" chip, or null if it isn't one.
+// Normalize a version-ish string to a "vX.Y.Z" chip, or null if it isn't one —
+// status words like "unreleased" must never render as "vunreleased".
 const versionChip = (value?: string) => {
   if (!value || !/\d/.test(value)) {
     return null;
   }
+
   return /^v/i.test(value) ? value : `v${value}`;
 };
 
-// Only count what is actually out in public — a planned project is not shipped.
+const liveStats = (slug: string) => {
+  const info = githubInfoBySlug.get(slug);
+
+  if (!info) {
+    return [];
+  }
+
+  const stats: string[] = [];
+  const version = versionChip(info.version);
+
+  if (version) {
+    stats.push(version);
+  }
+
+  if (info.stars > 0) {
+    stats.push(`★ ${info.stars}`);
+  }
+
+  if (info.downloads > 0) {
+    stats.push(`↓ ${compactCount(info.downloads)}`);
+  }
+
+  return stats;
+};
+
+interface IndexRow {
+  num: string;
+  name: string;
+  href?: string;
+  description: string;
+  stack: string[];
+  status: ProjectStatus;
+  stats: string[];
+}
+
+const projectRow = (project: Project): Omit<IndexRow, "num"> => ({
+  name: project.name,
+  href: `${localePrefix}/projects/${project.slug}/`,
+  description: getProjectCopy(project, lang).tagline,
+  stack: project.stack,
+  status: project.status,
+  stats: liveStats(project.slug),
+});
+
+// ÖffiGo is not a repo-backed entry, so it gets a hand-built row that points at
+// its own page instead of a project detail page.
+const oeffigoRow: Omit<IndexRow, "num"> = {
+  name: oeffigo.name,
+  href: `${localePrefix}/oeffigo/`,
+  description: oeffigo.tagline[lang],
+  stack: ["Swift", "SwiftUI", "iOS 17+"],
+  status: "beta",
+  stats: [],
+};
+
+const rawGroups: { title: string; rows: Omit<IndexRow, "num">[] }[] = [
+  {
+    title: content.projects.highlights,
+    rows: [oeffigoRow, ...featuredShowcaseProjects.map(projectRow)],
+  },
+  ...projectSections.map((section) => ({
+    title: isDe ? section.de.title : section.title,
+    rows: section.projects.map(projectRow),
+  })),
+  {
+    title: content.projects.comingSoon,
+    rows: upcomingProjects.map((project) => ({
+      name: project.name,
+      description: isDe && project.de ? project.de.description : project.description,
+      stack: project.stack,
+      status: project.status,
+      stats: [],
+    })),
+  },
+];
+
+// One continuous run of numbers across every group, so the index reads as a
+// single catalogue rather than as separate widgets.
+let runningNumber = 0;
+const indexGroups = rawGroups.map((group) => ({
+  title: group.title,
+  rows: group.rows.map((row) => ({ ...row, num: String(++runningNumber).padStart(2, "0") })),
+}));
+
 const shippedProjectCount = publicProjects.filter((project) => project.visibility === "public").length;
 
-// "Now shipping" ticker — real release versions, newest projects first.
-const shippedReleases = publicProjects
-  .map((project) => {
-    const info = githubInfoBySlug.get(project.slug);
-    return { name: project.name, version: versionChip(info?.version ?? project.fallbackVersion) };
-  })
-  .filter((release): release is { name: string; version: string } => release.version !== null);
+// Split the headline around its accent word here rather than in the template:
+// interpolating three expressions across separate JSX lines re-introduces the
+// whitespace that would show up as a gap before the following punctuation.
+const accentWord = content.hero.titleAccent;
+const accentAt = accentWord ? content.hero.title.indexOf(accentWord) : -1;
+const titleLead = accentAt >= 0 ? content.hero.title.slice(0, accentAt) : content.hero.title;
+const titleAccent = accentAt >= 0 && accentWord ? accentWord : "";
+const titleTail = accentAt >= 0 && accentWord ? content.hero.title.slice(accentAt + accentWord.length) : "";
 
 const hreflangAlternates = [
   { hreflang: "en", href: toCanonicalUrl("/") },
@@ -109,17 +170,13 @@ const profileSchema = {
     },
     url: toCanonicalUrl("/"),
     email: "contact@johannesgrof.me",
-    sameAs: [
-      "https://github.com/jx-grxf",
-      "https://www.linkedin.com/in/johannes-grof",
-      "https://x.com/jx_grxf",
-    ],
+    sameAs: ["https://github.com/jx-grxf", "https://www.linkedin.com/in/johannes-grof", "https://x.com/jx_grxf"],
     affiliation: {
       "@type": "EducationalOrganization",
       name: "HTL Kaindorf",
       url: "https://www.htl-kaindorf.at/",
     },
-    knowsAbout: ["TypeScript", "Swift", "Python", "Astro", "macOS apps", "AI automation", "developer tools", "web development", "web hosting", "domain management", "website maintenance", "electronics repair", "technical support"],
+    knowsAbout: ["TypeScript", "Swift", "Python", "Astro", "macOS apps", "developer tools", "web development", "web hosting", "domain management", "website maintenance", "electronics repair", "technical support"],
   },
 };
 
@@ -136,38 +193,6 @@ const faqSchema = {
     },
   })),
 };
-
-// The app is an unreleased closed beta with no decided pricing, so this
-// deliberately carries no `offers` — nothing here is purchasable yet.
-const oeffigoSchema = {
-  "@context": "https://schema.org",
-  "@type": "SoftwareApplication",
-  "@id": `${oeffigo.websiteUrl}/#app`,
-  name: oeffigo.name,
-  applicationCategory: "TravelApplication",
-  operatingSystem: "iOS 17.0",
-  url: oeffigo.websiteUrl,
-  sameAs: [oeffigo.websiteUrl, oeffigo.liveUrl, oeffigo.statusUrl],
-  image: toCanonicalUrl(oeffigo.icon),
-  description: oeffigo.lead[lang],
-  inLanguage: ["de-AT", "en"],
-  author: { "@id": "https://www.johannesgrof.me/#person" },
-  creator: { "@id": "https://www.johannesgrof.me/#person" },
-  publisher: { "@id": "https://www.johannesgrof.me/#person" },
-  subjectOf: [
-    {
-      "@type": "WebPage",
-      name: "ÖffiGo Live",
-      url: oeffigo.liveUrl,
-      description: oeffigo.liveProof.body[lang],
-    },
-    {
-      "@type": "WebPage",
-      name: "ÖffiGo Status",
-      url: oeffigo.statusUrl,
-    },
-  ],
-};
 ---
 
 <!doctype html>
@@ -181,346 +206,141 @@ const oeffigoSchema = {
       hreflangAlternates={hreflangAlternates}
     />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(profileSchema)} />
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(oeffigoSchema)} />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />
   </head>
   <body>
+    <a class="skip-link" href="#projects">{isDe ? "Zum Inhalt springen" : "Skip to content"}</a>
     <SiteHeader navItems={content.nav} homeHref={canonicalPath} langSwitch={content.langSwitch} />
 
     <main>
       <section class="hero section-shell" aria-labelledby="hero-title">
-        <div class="hero-copy">
-          <p class="eyebrow">{content.hero.eyebrow}</p>
-          <h1 id="hero-title">{
-            content.hero.titleAccent && content.hero.title.includes(content.hero.titleAccent) ? (
-              <Fragment>
-                {content.hero.title.slice(0, content.hero.title.indexOf(content.hero.titleAccent))}
-                <span class="display-em">{content.hero.titleAccent}</span>
-                {content.hero.title.slice(content.hero.title.indexOf(content.hero.titleAccent) + content.hero.titleAccent.length)}
-              </Fragment>
-            ) : (
-              content.hero.title
-            )
-          }</h1>
-          <p class="hero-text">{content.hero.body}</p>
-          <div class="hero-actions">
-            <a class="button primary" href="#projects">{content.hero.primaryAction}</a>
-            <a class="button secondary" href="#services">{content.hero.secondaryAction}</a>
-            <a class="button secondary" href="#contact">{content.hero.contactAction}</a>
-            <a class="button secondary icon-button" href="https://github.com/jx-grxf" target="_blank" rel="noreferrer" aria-label="Johannes Grof on GitHub">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path
-                  fill="currentColor"
-                  d="M12 2C6.48 2 2 6.58 2 12.26c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49v-1.9c-2.78.62-3.37-1.22-3.37-1.22-.45-1.19-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.57 2.36 1.12 2.94.86.09-.67.35-1.12.63-1.38-2.22-.26-4.56-1.14-4.56-5.07 0-1.12.39-2.04 1.03-2.76-.1-.26-.45-1.3.1-2.72 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 6.95c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.42.2 2.46.1 2.72.64.72 1.03 1.64 1.03 2.76 0 3.94-2.34 4.8-4.57 5.06.36.32.68.95.68 1.92v2.85c0 .27.18.59.69.49A10.05 10.05 0 0 0 22 12.26C22 6.58 17.52 2 12 2Z"
-                />
-              </svg>
-              {content.hero.githubAction}
-            </a>
-          </div>
-          <p class="hero-proof">{shippedProjectCount} {content.lang === "en" ? "shipped projects" : "veröffentlichte Projekte"} · {content.hero.proof}</p>
+        <p class="eyebrow">
+          {content.hero.eyebrow}<span class="cursor" aria-hidden="true"></span>
+        </p>
+        <h1 id="hero-title">{titleLead}<span class="display-em">{titleAccent}</span>{titleTail}</h1>
+        <p class="hero-text">{content.hero.body}</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#projects">{content.hero.primaryAction}</a>
+          <a class="button secondary" href="#services">{content.hero.secondaryAction}</a>
+          <a class="button secondary" href="#contact">{content.hero.contactAction}</a>
         </div>
-
-        {
-          spotlight && (
-            <aside class="hero-spotlight">
-              <div class="spotlight-stack">
-                <div class="spotlight-slot spotlight-slot--back">
-                  <a
-                    class="spotlight-card spotlight-card--oeffigo"
-                    href="#oeffigo"
-                    style={`--ogreen:${oeffigo.brand.green};--ogreen-bright:${oeffigo.brand.greenBright}`}
-                    aria-label={`${oeffigo.name} — ${oeffigo.tagline[lang]}`}
-                  >
-                    <div class="spotlight-media spotlight-media--oeffigo">
-                      <picture>
-                        <source srcset="/projects/oeffigo/showcase.webp" type="image/webp" />
-                        <img class="spotlight-phone" src="/projects/oeffigo/showcase.png" alt={`${oeffigo.name} — ${oeffigo.tagline[lang]}`} width="1000" height="2054" loading="lazy" decoding="async" />
-                      </picture>
-                      <span class="spotlight-flag spotlight-flag--oeffigo">{oeffigo.eyebrow[lang]}</span>
-                      <picture>
-                        <source srcset="/projects/oeffigo/icon.webp" type="image/webp" />
-                        <img class="spotlight-logo" src={oeffigo.icon} alt="" width="60" height="60" aria-hidden="true" loading="lazy" decoding="async" />
-                      </picture>
-                    </div>
-                    <div class="spotlight-body">
-                      <h2>{oeffigo.name}</h2>
-                      <p>{oeffigo.tagline[lang]}</p>
-                      <div class="spotlight-meta spotlight-meta--oeffigo">
-                        <span>iOS 17+</span>
-                        <span>{content.lang === "en" ? "TestFlight beta" : "TestFlight-Beta"}</span>
-                      </div>
-                      <div
-                        class="spotlight-stores"
-                        role="group"
-                        aria-label={content.lang === "en" ? "Not in the stores yet: App Store first, Android planned" : "Noch in keinem Store: zuerst App Store, Android geplant"}
-                      >
-                        <picture>
-                          <source srcset="/projects/oeffigo/appstore.webp" type="image/webp" />
-                          <img class="spotlight-store--soon" src="/projects/oeffigo/appstore.png" alt={content.lang === "en" ? "App Store (not released yet)" : "App Store (noch nicht veröffentlicht)"} width="81" height="24" loading="lazy" decoding="async" />
-                        </picture>
-                        <picture>
-                          <source srcset="/projects/oeffigo/googleplay.webp" type="image/webp" />
-                          <img class="spotlight-store--soon" src="/projects/oeffigo/googleplay.png" alt={content.lang === "en" ? "Google Play (planned)" : "Google Play (geplant)"} width="81" height="24" loading="lazy" decoding="async" />
-                        </picture>
-                      </div>
-                    </div>
-                  </a>
-                </div>
-
-                <div class="spotlight-slot spotlight-slot--front">
-                  <a class="spotlight-card spotlight-card--front" href={projectHref(spotlight.slug)} aria-label={`${spotlight.name} — ${content.lang === "en" ? "latest project" : "neuestes Projekt"}`}>
-                    <div class="spotlight-media">
-                      {spotlightImageSrc ? (
-                        <img src={spotlightImageSrc} alt={spotlightImage?.alt ?? spotlight.name} width={spotlightImage?.width} height={spotlightImage?.height} loading="eager" decoding="async" />
-                      ) : (
-                        <div class="featured-card-placeholder" aria-hidden="true">
-                          <span class="featured-card-placeholder-mark">{spotlight.name}</span>
-                        </div>
-                      )}
-                      <span class="spotlight-flag">{content.lang === "en" ? "now shipping" : "frisch live"}</span>
-                      {spotlight.logo && (
-                        <picture>
-                          {isWebp(spotlight.logo.src) && spotlight.logo.fallbackSrc && <source srcset={spotlight.logo.src} type="image/webp" />}
-                          <img class="spotlight-logo" src={spotlight.logo.fallbackSrc ?? spotlight.logo.src} alt="" width={spotlight.logo.width} height={spotlight.logo.height} aria-hidden="true" loading="lazy" decoding="async" />
-                        </picture>
-                      )}
-                    </div>
-                    <div class="spotlight-body">
-                      <h2>{spotlight.name}</h2>
-                      <p>{copy(spotlight).tagline}</p>
-                      {liveStats(spotlight.slug).length > 0 && (
-                        <div class="spotlight-meta">
-                          {liveStats(spotlight.slug).map((stat) => <span>{stat}</span>)}
-                        </div>
-                      )}
-                    </div>
-                  </a>
-                </div>
-              </div>
-            </aside>
-          )
-        }
+        <ul class="hero-facts">
+          <li><strong>{shippedProjectCount}</strong> {content.hero.factsCountLabel}</li>
+          {content.hero.facts.map((fact) => <li>{fact}</li>)}
+        </ul>
       </section>
 
-      {
-        shippedReleases.length > 0 && (
-          <div class="ship-ticker" role="group" aria-label={content.lang === "en" ? "Recent releases" : "Aktuelle Releases"}>
-            <div class="ship-track">
-              {[0, 1].map((pass) =>
-                shippedReleases.map((release) => (
-                  <span class="ship-item" aria-hidden={pass === 1 ? "true" : undefined}>
-                    {release.name} <em>{release.version}</em>
-                  </span>
-                ))
-              )}
-            </div>
+      <section id="oeffigo" class="oeffigo-band" aria-labelledby="oeffigo-title">
+        <div class="section-shell">
+          <div class="section-head">
+            <span class="section-num">01</span>
+            <h2>{content.oeffigo.eyebrow}</h2>
           </div>
-        )
-      }
-
-      <section id="oeffigo" class="oeffigo-band" aria-labelledby="oeffigo-title" style={`--ogreen:${oeffigo.brand.green};--ogreen-bright:${oeffigo.brand.greenBright}`}>
-        <div class="section-shell oeffigo-layout">
-          <div class="oeffigo-intro reveal">
-            <p class="eyebrow oeffigo-eyebrow">{oeffigo.eyebrow[lang]}</p>
-            <div class="oeffigo-headline">
-              <img class="oeffigo-icon" src={oeffigo.icon} alt="ÖffiGo app icon" width="120" height="120" loading="lazy" decoding="async" />
-              <div>
-                <h2 id="oeffigo-title">{oeffigo.name}</h2>
-                <p class="oeffigo-tagline">{oeffigo.tagline[lang]}</p>
+          <div class="oeffigo-layout">
+            <div>
+              <div class="oeffigo-headline">
+                <img class="oeffigo-icon" src={oeffigo.icon} alt="ÖffiGo app icon" width="120" height="120" loading="lazy" decoding="async" />
+                <div>
+                  <h2 id="oeffigo-title">{oeffigo.name}</h2>
+                  <p class="oeffigo-tagline">{oeffigo.tagline[lang]}</p>
+                </div>
               </div>
-            </div>
-            <p class="oeffigo-lead">{oeffigo.lead[lang]}</p>
-            <ul class="oeffigo-meta" aria-label={content.lang === "en" ? "ÖffiGo platform and status" : "ÖffiGo Plattform und Status"}>
-              <li>{oeffigo.platform[lang]}</li>
-              <li>{oeffigo.status[lang]}</li>
-            </ul>
-            <div class="oeffigo-promo">
-              <span class="promo-badge" aria-hidden="true">&beta;</span>
-              <div class="promo-copy">
-                <strong>{oeffigo.beta.headline[lang]}</strong>
-                <p>{oeffigo.beta.body[lang]}</p>
-                <p class="promo-note">
-                  {oeffigo.beta.note[lang]}{" "}
-                  <a href={oeffigo.websiteUrl} rel="me">{oeffigo.beta.ctaLabel[lang]} &rarr;</a>
-                </p>
-              </div>
-            </div>
-            <p class="oeffigo-datanote">{oeffigo.dataNote[lang]}</p>
-            <aside class="oeffigo-live-proof" aria-label={oeffigo.liveProof.title[lang]}>
-              <p class="oeffigo-live-eyebrow">{oeffigo.liveProof.eyebrow[lang]}</p>
-              <h3>{oeffigo.liveProof.title[lang]}</h3>
-              <p>{oeffigo.liveProof.body[lang]}</p>
-              <ul>
-                {oeffigo.liveProof.stats.map((stat) => <li>{stat[lang]}</li>)}
+              <p class="oeffigo-lead">{oeffigo.lead[lang]}</p>
+              <ul class="oeffigo-meta">
+                <li>{oeffigo.platform[lang]}</li>
+                <li>{oeffigo.status[lang]}</li>
               </ul>
-              <div class="oeffigo-live-actions">
-                <a href={oeffigo.liveUrl} rel="me">
-                  {oeffigo.liveProof.liveLabel[lang]}
-                  <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9" /></svg>
-                </a>
-                <a href={oeffigo.statusUrl} rel="me">
-                  {oeffigo.liveProof.statusLabel[lang]}
-                  <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9" /></svg>
-                </a>
+              <div class="oeffigo-actions">
+                <a class="button primary" href={`${localePrefix}/oeffigo/`}>{content.oeffigo.detailCta}</a>
+                <a class="button secondary" href={oeffigo.websiteUrl} rel="me">oeffigo.app</a>
               </div>
-            </aside>
-            <p class="oeffigo-actions">
-              <a class="oeffigo-site-link" href={oeffigo.websiteUrl} rel="me">
-                {lang === "en" ? "Visit oeffigo.app" : "Zu oeffigo.app"}
-                <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M8 7h9v9" /></svg>
-              </a>
-            </p>
-          </div>
-          <div class="oeffigo-features">
-            {oeffigo.features.map((feature) => (
-              <article class="oeffigo-feature reveal">
-                <span class="oeffigo-feature-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d={feature.icon} /></svg>
-                </span>
-                <h3>{feature.title[lang]}</h3>
-                <p>{feature.body[lang]}</p>
-              </article>
-            ))}
+
+              <div class="note-block">
+                <p class="eyebrow">{oeffigo.liveProof.eyebrow[lang]}</p>
+                <h3>{oeffigo.liveProof.title[lang]}</h3>
+                <p>{oeffigo.liveProof.body[lang]}</p>
+                <div class="note-actions">
+                  <a href={oeffigo.liveUrl} rel="me">{oeffigo.liveProof.liveLabel[lang]}</a>
+                  <a href={oeffigo.statusUrl} rel="me">{oeffigo.liveProof.statusLabel[lang]}</a>
+                </div>
+              </div>
+            </div>
+
+            <ul class="oeffigo-features">
+              {
+                oeffigo.features.slice(0, 4).map((feature) => (
+                  <li class="oeffigo-feature">
+                    <span class="oeffigo-feature-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d={feature.icon} /></svg>
+                    </span>
+                    <h3>{feature.title[lang]}</h3>
+                    <p>{feature.body[lang]}</p>
+                  </li>
+                ))
+              }
+            </ul>
           </div>
         </div>
       </section>
 
-      <section id="projects" class="section-shell">
-        <div class="section-heading project-subheading reveal">
-          <p class="eyebrow">highlights</p>
-          <h2>{content.lang === "en" ? "Highlighted Projects" : "Ausgewählte Projekte"}</h2>
-        </div>
-        <div class="featured-project-grid">
-          {
-            featuredShowcaseProjects.map((project, index) => {
-              const heroImage = project.showcase[0];
-              const cardImageSrc = heroImage?.cardSrc ?? heroImage?.src;
-              const c = copy(project);
-
-              return (
-                <a class="project-card featured-project-card reveal" style={`--reveal-delay: ${index * 80}ms`} href={projectHref(project.slug)}>
-                  <div class="featured-card-media">
-                    {cardImageSrc ? (
-                      <picture>
-                        {isWebp(cardImageSrc) && <source srcset={cardImageSrc} type="image/webp" />}
-                        <img class="featured-card-image" src={heroImage.fallbackSrc ?? cardImageSrc} alt={heroImage.alt} width={heroImage.width} height={heroImage.height} loading={index === 0 ? "eager" : "lazy"} decoding="async" />
-                      </picture>
-                    ) : (
-                      <div class="featured-card-placeholder" aria-hidden="true">
-                        <span class="featured-card-placeholder-mark">{project.name}</span>
-                        <span class="featured-card-placeholder-tagline">{c.tagline}</span>
-                      </div>
-                    )}
-                    {project.logo && (
-                      <picture>
-                        {isWebp(project.logo.src) && project.logo.fallbackSrc && <source srcset={project.logo.src} type="image/webp" />}
-                        <img class="featured-card-logo" src={project.logo.fallbackSrc ?? project.logo.src} alt="" width={project.logo.width} height={project.logo.height} aria-hidden="true" loading="lazy" decoding="async" />
-                      </picture>
-                    )}
-                  </div>
-                  <div class="featured-card-body">
-                    <div class="card-topline">
-                      <h3>{project.name}</h3>
-                      <span class={`status ${statusClass(project.status)}`}>{localizedStatus(project.status)}</span>
-                    </div>
-                    {liveStats(project.slug).length > 0 && (
-                      <ul class="live-stats" aria-label={`${project.name} ${content.lang === "en" ? "GitHub stats" : "GitHub-Werte"}`}>
-                        {liveStats(project.slug).map((stat) => <li>{stat}</li>)}
-                      </ul>
-                    )}
-                    {c.proofLabels && (
-                      <ul class="proof-chip-list" aria-label={`${project.name} ${content.lang === "en" ? "proof points" : "Belege"}`}>
-                        {c.proofLabels.map((label) => <li>{label}</li>)}
-                      </ul>
-                    )}
-                    <p>{c.description}</p>
-                    <p class="project-result">{c.result}</p>
-                    <ul>
-                      {project.stack.map((item) => (
-                        <li>{item}</li>
-                      ))}
-                    </ul>
-                  </div>
-                </a>
-              );
-            })
-          }
+      <section id="projects" class="band section-shell" aria-labelledby="projects-title">
+        <div class="section-head">
+          <span class="section-num">02</span>
+          <h2 id="projects-title">{content.projects.title}</h2>
+          <p class="section-aside">{runningNumber} {content.projects.countLabel}</p>
         </div>
 
         {
-          projectSections.map((section, sectionIndex) => (
-            <section class="project-category" aria-labelledby={`project-category-${sectionIndex}`}>
-              <div class="section-heading project-subheading reveal">
-                <p class="eyebrow">{isDe ? section.de.eyebrow : section.eyebrow}</p>
-                <h2 id={`project-category-${sectionIndex}`}>{isDe ? section.de.title : section.title}</h2>
-              </div>
-              <div class="project-grid">
-                {section.projects.map((project, index) => {
-                  const c = copy(project);
+          indexGroups.map((group) => (
+            <div class="index-group">
+              <p class="eyebrow">{group.title}</p>
+              <ol class="index-list">
+                {group.rows.map((row) => {
+                  const inner = (
+                    <Fragment>
+                      <span class="index-num">{row.num}</span>
+                      <h3>{row.name}</h3>
+                      <p class="index-desc">{row.description}</p>
+                      <span class="index-stack">{row.stack.join(" · ")}</span>
+                      <span class="index-meta">
+                        <span class={`status ${statusClass(row.status)}`}>{localizedStatusLabel(row.status, lang)}</span>
+                        {row.stats.length > 0 && (
+                          <ul class="index-stats">
+                            {row.stats.map((stat) => <li>{stat}</li>)}
+                          </ul>
+                        )}
+                      </span>
+                    </Fragment>
+                  );
 
                   return (
-                    <a class="project-card reveal" style={`--reveal-delay: ${index * 70}ms`} href={projectHref(project.slug)}>
-                      <div class="card-topline">
-                        <h3>{project.name}</h3>
-                        <span class={`status ${statusClass(project.status)}`}>{localizedStatus(project.status)}</span>
-                      </div>
-                      {liveStats(project.slug).length > 0 && (
-                        <ul class="live-stats" aria-label={`${project.name} ${content.lang === "en" ? "GitHub stats" : "GitHub-Werte"}`}>
-                          {liveStats(project.slug).map((stat) => <li>{stat}</li>)}
-                        </ul>
+                    <li>
+                      {row.href ? (
+                        <a class="index-row" href={row.href}>{inner}</a>
+                      ) : (
+                        <div class="index-row index-row--muted">{inner}</div>
                       )}
-                      {c.proofLabels && (
-                        <ul class="proof-chip-list" aria-label={`${project.name} ${content.lang === "en" ? "proof points" : "Belege"}`}>
-                          {c.proofLabels.map((label) => <li>{label}</li>)}
-                        </ul>
-                      )}
-                      <p>{c.description}</p>
-                      <p class="project-audience">{c.audience}</p>
-                      <p class="project-result">{c.result}</p>
-                      <ul>
-                        {project.stack.map((item) => (
-                          <li>{item}</li>
-                        ))}
-                      </ul>
-                    </a>
+                    </li>
                   );
                 })}
-              </div>
-            </section>
+              </ol>
+            </div>
           ))
         }
-        <div class="coming-soon-group reveal" aria-labelledby="coming-soon-title">
-          <h3 id="coming-soon-title">{isDe ? "bald verfügbar" : "coming soon"}</h3>
-          <div class="upcoming-list">
-            {
-              upcomingProjects.map((project, index) => (
-                <article class="upcoming-project reveal" style={`--reveal-delay: ${index * 70}ms`}>
-                  <div>
-                    <h4>{project.name}</h4>
-                    <p>{isDe && project.de ? project.de.description : project.description}</p>
-                  </div>
-                  <span class={`status ${statusClass(project.status)}`}>{localizedStatus(project.status)}</span>
-                </article>
-              ))
-            }
-          </div>
-        </div>
       </section>
 
-      <section id="skills" class="section-shell skills-section reveal">
-        <div class="section-heading">
-          <p class="eyebrow">{content.skills.eyebrow}</p>
-          <h2>{content.skills.title}</h2>
+      <section id="skills" class="band section-shell" aria-labelledby="skills-title">
+        <div class="section-head">
+          <span class="section-num">03</span>
+          <h2 id="skills-title">{content.skills.title}</h2>
         </div>
-        <div class="skills-grid">
+        <div class="column-grid">
           {
-            content.skills.groups.map((group, index) => (
-              <article class="skill-group" style={`--reveal-delay: ${index * 70}ms`}>
+            content.skills.groups.map((group) => (
+              <article class="skill-group">
                 <h3>{group.title}</h3>
                 <ul>
-                  {group.items.map((item) => (
-                    <li>{item}</li>
-                  ))}
+                  {group.items.map((item) => <li>{item}</li>)}
                 </ul>
               </article>
             ))
@@ -528,30 +348,38 @@ const oeffigoSchema = {
         </div>
       </section>
 
-      <section id="services" class="services-band">
-        <div class="section-shell services-layout reveal">
-          <div class="services-intro">
-            <p class="eyebrow">{content.services.eyebrow}</p>
-            <h2>{content.services.title}</h2>
-            <p class="services-lead">{content.services.lead}</p>
+      <section id="services" class="band band--tint" aria-labelledby="services-title">
+        <div class="section-shell">
+          <div class="section-head">
+            <span class="section-num">04</span>
+            <h2 id="services-title">{content.services.title}</h2>
           </div>
-          <ul class="service-list">
+          <p class="services-lead">{content.services.lead}</p>
+          <div class="column-grid">
             {
               content.services.items.map((service) => (
-                <li class="service-item">
+                <article class="service-item">
                   <h3>{service.title}</h3>
                   <p>{service.body}</p>
-                </li>
+                </article>
               ))
             }
-          </ul>
+          </div>
         </div>
       </section>
 
-      <section id="faq" class="section-shell faq-section reveal">
-        <div class="section-heading">
-          <p class="eyebrow">{content.faq.eyebrow}</p>
-          <h2>{content.faq.title}</h2>
+      <section id="about" class="band section-shell split-section" aria-labelledby="about-title">
+        <div>
+          <p class="eyebrow">{content.about.eyebrow}</p>
+          <h2 id="about-title">{content.about.title}</h2>
+        </div>
+        <p>{content.about.body}</p>
+      </section>
+
+      <section id="faq" class="band section-shell" aria-labelledby="faq-title">
+        <div class="section-head">
+          <span class="section-num">05</span>
+          <h2 id="faq-title">{content.faq.title}</h2>
         </div>
         <div class="faq-list">
           {
@@ -569,21 +397,17 @@ const oeffigoSchema = {
         </div>
       </section>
 
-      <section id="about" class="section-shell split-section reveal">
-        <div>
-          <p class="eyebrow">{content.about.eyebrow}</p>
-          <h2>{content.about.title}</h2>
-        </div>
-        <p>{content.about.body}</p>
-      </section>
-
-      <section id="contact" class="section-shell contact-section reveal">
+      <section id="contact" class="band section-shell contact-section" aria-labelledby="contact-title">
         <div>
           <p class="eyebrow">{content.contact.eyebrow}</p>
-          <h2>{content.contact.title}</h2>
+          <h2 id="contact-title">{content.contact.title}</h2>
           <p class="contact-note">{content.contact.note}</p>
+          <p class="contact-note">
+            <a class="text-link" href="mailto:contact@johannesgrof.me">contact@johannesgrof.me</a>
+          </p>
+          <SocialLinks />
         </div>
-        <div class="contact-panel">
+
         <form class="contact-form" id="contact-form" novalidate>
           <div class="contact-field">
             <label for="contact-name">{content.contact.form.nameLabel}</label>
@@ -601,60 +425,16 @@ const oeffigoSchema = {
           <button type="submit" class="contact-submit" data-label={content.contact.form.submit} data-sending={content.contact.form.sending}>{content.contact.form.submit}</button>
           <p class="contact-status" role="status" aria-live="polite" data-success={content.contact.form.success} data-error={content.contact.form.error} data-rate-limited={content.contact.form.rateLimited}></p>
           <p class="contact-privacy-note">
-            {content.lang === "en" ? "By sending you agree to the " : "Mit dem Absenden stimmst du der "}
-            <a href="/datenschutz/">{content.lang === "en" ? "privacy policy" : "Datenschutzerklärung"}</a>{content.lang === "en" ? "." : " zu."}
+            {isDe ? "Mit dem Absenden stimmen Sie der " : "By sending you agree to the "}
+            <a href="/datenschutz/">{isDe ? "Datenschutzerklärung" : "privacy policy"}</a>{isDe ? " zu." : "."}
           </p>
         </form>
-        <div class="contact-actions">
-          <a class="contact-btn contact-btn--email contact-btn--icon-only" href="mailto:contact@johannesgrof.me" aria-label="E-Mail">
-            <svg class="contact-btn-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="5" width="18" height="14" rx="2" />
-              <path d="m3 7 9 6 9-6" />
-            </svg>
-          </a>
-          <a class="contact-btn contact-btn--github contact-btn--icon-only" href="https://github.com/jx-grxf" target="_blank" rel="noreferrer" aria-label="GitHub">
-            <svg class="contact-btn-icon" viewBox="0 -0.5 25 25" width="20" height="20" aria-hidden="true" fill="currentColor">
-              <path d="m12.301 0h.093c2.242 0 4.34.613 6.137 1.68l-.055-.031c1.871 1.094 3.386 2.609 4.449 4.422l.031.058c1.04 1.769 1.654 3.896 1.654 6.166 0 5.406-3.483 10-8.327 11.658l-.087.026c-.063.02-.135.031-.209.031-.162 0-.312-.054-.433-.144l.002.001c-.128-.115-.208-.281-.208-.466 0-.005 0-.01 0-.014v.001q0-.048.008-1.226t.008-2.154c.007-.075.011-.161.011-.249 0-.792-.323-1.508-.844-2.025.618-.061 1.176-.163 1.718-.305l-.076.017c.573-.16 1.073-.373 1.537-.642l-.031.017c.508-.28.938-.636 1.292-1.058l.006-.007c.372-.476.663-1.036.84-1.645l.009-.035c.209-.683.329-1.468.329-2.281 0-.045 0-.091-.001-.136v.007c0-.022.001-.047.001-.072 0-1.248-.482-2.383-1.269-3.23l.003.003c.168-.44.265-.948.265-1.479 0-.649-.145-1.263-.404-1.814l.011.026c-.115-.022-.246-.035-.381-.035-.334 0-.649.078-.929.216l.012-.005c-.568.21-1.054.448-1.512.726l.038-.022-.609.384c-.922-.264-1.981-.416-3.075-.416s-2.153.152-3.157.436l.081-.02q-.256-.176-.681-.433c-.373-.214-.814-.421-1.272-.595l-.066-.022c-.293-.154-.64-.244-1.009-.244-.124 0-.246.01-.364.03l.013-.002c-.248.524-.393 1.139-.393 1.788 0 .531.097 1.04.275 1.509l-.01-.029c-.785.844-1.266 1.979-1.266 3.227 0 .025 0 .051.001.076v-.004c-.001.039-.001.084-.001.13 0 .809.12 1.591.344 2.327l-.015-.057c.189.643.476 1.202.85 1.693l-.009-.013c.354.435.782.793 1.267 1.062l.022.011c.432.252.933.465 1.46.614l.046.011c.466.125 1.024.227 1.595.284l.046.004c-.431.428-.718 1-.784 1.638l-.001.012c-.207.101-.448.183-.699.236l-.021.004c-.256.051-.549.08-.85.08-.022 0-.044 0-.066 0h.003c-.394-.008-.756-.136-1.055-.348l.006.004c-.371-.259-.671-.595-.881-.986l-.007-.015c-.198-.336-.459-.614-.768-.827l-.009-.006c-.225-.169-.49-.301-.776-.38l-.016-.004-.32-.048c-.023-.002-.05-.003-.077-.003-.14 0-.273.028-.394.077l.007-.003q-.128.072-.08.184c.039.086.087.16.145.225l-.001-.001c.061.072.13.135.205.19l.003.002.112.08c.283.148.516.354.693.603l.004.006c.191.237.359.505.494.792l.01.024.16.368c.135.402.38.738.7.981l.005.004c.3.234.662.402 1.057.478l.016.002c.33.064.714.104 1.106.112h.007c.045.002.097.002.15.002.261 0 .517-.021.767-.062l-.027.004.368-.064q0 .609.008 1.418t.008.873v.014c0 .185-.08.351-.208.466h-.001c-.119.089-.268.143-.431.143-.075 0-.147-.011-.214-.032l.005.001c-4.929-1.689-8.409-6.283-8.409-11.69 0-2.268.612-4.393 1.681-6.219l-.032.058c1.094-1.871 2.609-3.386 4.422-4.449l.058-.031c1.739-1.034 3.835-1.645 6.073-1.645h.098-.005z" />
-            </svg>
-          </a>
-          <a class="contact-btn contact-btn--linkedin contact-btn--icon-only" href="https://www.linkedin.com/in/johannes-grof" target="_blank" rel="noreferrer" aria-label="LinkedIn">
-            <svg class="contact-btn-icon" viewBox="0 0 382 382" width="20" height="20" aria-hidden="true" fill="currentColor">
-              <path d="M347.445,0H34.555C15.471,0,0,15.471,0,34.555v312.889C0,366.529,15.471,382,34.555,382h312.889C366.529,382,382,366.529,382,347.444V34.555C382,15.471,366.529,0,347.445,0z M118.207,329.844c0,5.554-4.502,10.056-10.056,10.056H65.345c-5.554,0-10.056-4.502-10.056-10.056V150.403c0-5.554,4.502-10.056,10.056-10.056h42.806c5.554,0,10.056,4.502,10.056,10.056V329.844z M86.748,123.432c-22.459,0-40.666-18.207-40.666-40.666S64.289,42.1,86.748,42.1s40.666,18.207,40.666,40.666S109.208,123.432,86.748,123.432z M341.91,330.654c0,5.106-4.14,9.246-9.246,9.246H286.73c-5.106,0-9.246-4.14-9.246-9.246v-84.168c0-12.556,3.683-55.021-32.813-55.021c-28.309,0-34.051,29.066-35.204,42.11v97.079c0,5.106-4.139,9.246-9.246,9.246h-44.426c-5.106,0-9.246-4.14-9.246-9.246V149.593c0-5.106,4.14-9.246,9.246-9.246h44.426c5.106,0,9.246,4.14,9.246,9.246v15.655c10.497-15.753,26.097-27.912,59.312-27.912c73.552,0,73.131,68.716,73.131,106.472L341.91,330.654L341.91,330.654z" />
-            </svg>
-          </a>
-        </div>
-        </div>
       </section>
     </main>
+
     <SiteFooter lang={isDe ? "de" : "en"} />
+
     <script>
-      const revealElements = document.querySelectorAll(".reveal");
-
-      document.documentElement.classList.add("motion-ready");
-
-      if (!("IntersectionObserver" in window)) {
-        revealElements.forEach((element) => element.classList.add("is-visible"));
-      } else {
-        const revealObserver = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (!entry.isIntersecting) {
-                return;
-              }
-
-              entry.target.classList.add("is-visible");
-              revealObserver.unobserve(entry.target);
-            });
-          },
-          {
-            rootMargin: "0px 0px -12% 0px",
-            threshold: 0.12,
-          }
-        );
-
-        revealElements.forEach((element) => revealObserver.observe(element));
-      }
-
       // Async contact-form submission so the page never reloads.
       const contactForm = document.querySelector<HTMLFormElement>("#contact-form");
       if (contactForm) {
