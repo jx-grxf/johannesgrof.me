@@ -75,9 +75,9 @@ export interface Project {
 export const statusLabel = (status: ProjectStatus) => {
   const labels: Record<ProjectStatus, string> = {
     active: "active",
-    beta: "beta release",
-    experimental: "active experiment",
-    preview: "shipped preview",
+    beta: "beta",
+    experimental: "experimental",
+    preview: "preview",
     "in development": "in development",
     "coming soon": "coming soon",
     archived: "archived",
@@ -91,8 +91,8 @@ export type ProjectLang = "en" | "de";
 // German status labels for the project badge.
 export const statusLabelDe: Record<ProjectStatus, string> = {
   active: "aktiv",
-  beta: "beta-release",
-  experimental: "aktives experiment",
+  beta: "beta",
+  experimental: "experimentell",
   preview: "preview",
   "in development": "in entwicklung",
   "coming soon": "bald verfügbar",
@@ -752,7 +752,9 @@ export const featuredProjects: Project[] = [
         "Frühere Projektdateien dürfen nicht gespiegelt, neu verpackt, weiterverbreitet oder angefragt werden.",
       ],
     },
-    stack: ["Archived"],
+    // Deliberately empty: the archived status already carries this, and
+    // "Archived" is not a technology.
+    stack: [],
     featuredTier: "project",
     repo: "jx-grxf/Digi2PDF",
     githubUrl: "https://github.com/jx-grxf/Digi2PDF",

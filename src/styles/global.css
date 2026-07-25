@@ -1700,6 +1700,7 @@ summary:focus-visible,
   /* The nav is long enough to wrap on a phone, so the header stacks and the
      language switch anchors to the right edge of the last nav line. */
   .site-header {
+    position: relative;
     flex-direction: column;
     align-items: flex-start;
     gap: 14px;
@@ -1712,12 +1713,18 @@ summary:focus-visible,
     font-size: 0.72rem;
   }
 
-  .site-nav .nav-divider {
+  /* The socials cost a whole nav row on a phone and are repeated in the contact
+     block and the footer, so the header drops them. */
+  .site-nav .nav-divider,
+  .site-nav .nav-socials {
     display: none;
   }
 
+  /* Parked on the wordmark's line instead of wrapping to a row of its own. */
   .lang-switch {
-    margin-left: auto;
+    position: absolute;
+    top: 28px;
+    right: 0;
   }
 
   .column-grid > *,

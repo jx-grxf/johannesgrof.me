@@ -104,7 +104,7 @@ export const oeffigo: OeffigoContent = {
       title: { en: "Live departure board", de: "Live-Abfahrtstafel" },
       body: {
         en: "Your nearest stop, departures for every mode, and realtime where it's available — including delays, platform changes and disruptions. For the Vienna subway it even overlays Wiener Linien realtime where VAO ships only a schedule.",
-        de: "Deine nächste Haltestelle, Abfahrten für alle Öffis und Echtzeit dort, wo sie verfügbar ist — inklusive Verspätungen, Steigwechseln und Störungen. Für die Wiener U-Bahn blendet sie sogar die Wiener-Linien-Echtzeit ein, wo die VAO nur den Fahrplan liefert.",
+        de: "Die nächste Haltestelle, Abfahrten für alle Öffis und Echtzeit dort, wo sie verfügbar ist — inklusive Verspätungen, Steigwechseln und Störungen. Für die Wiener U-Bahn blendet sie sogar die Wiener-Linien-Echtzeit ein, wo die VAO nur den Fahrplan liefert.",
       },
     },
     {
@@ -112,7 +112,7 @@ export const oeffigo: OeffigoContent = {
       title: { en: "Journey planner", de: "Routenplaner" },
       body: {
         en: "Plan your route with all transfers, the walk to the first stop, and a depart-at or arrive-by time.",
-        de: "Plane deine Route mit allen Umstiegen, Fußweg zur ersten Haltestelle und Abfahrts- oder Ankunftszeit.",
+        de: "Routenplanung mit allen Umstiegen, Fußweg zur ersten Haltestelle und wahlweise Abfahrts- oder Ankunftszeit.",
       },
     },
     {
@@ -120,7 +120,7 @@ export const oeffigo: OeffigoContent = {
       title: { en: "Live map & nearby stops", de: "Live-Karte & Haltestellen in der Nähe" },
       body: {
         en: "Stops around you on the map, plus live vehicle positions where they are available — a beta capability that fetches sparingly instead of polling the network.",
-        de: "Haltestellen rund um dich auf der Karte, dazu Live-Fahrzeugpositionen, wo es sie gibt — eine Beta-Funktion, die sparsam abruft statt dauerhaft zu pollen.",
+        de: "Haltestellen in der Umgebung auf der Karte, dazu Live-Fahrzeugpositionen, wo es sie gibt — eine Beta-Funktion, die sparsam abruft statt dauerhaft zu pollen.",
       },
     },
     {
@@ -144,7 +144,7 @@ export const oeffigo: OeffigoContent = {
       title: { en: "Favorites & saved routes", de: "Favoriten & gespeicherte Routen" },
       body: {
         en: "Save home, work, the stops you use, and your usual routes.",
-        de: "Speichere Zuhause, Arbeit, wichtige Haltestellen und deine üblichen Wege.",
+        de: "Zuhause, Arbeit, wichtige Haltestellen und die üblichen Wege lassen sich speichern.",
       },
     },
   ],
@@ -152,7 +152,7 @@ export const oeffigo: OeffigoContent = {
     headline: { en: "Testers wanted, spots are limited", de: "Testerinnen und Tester gesucht, Plätze sind begrenzt" },
     body: {
       en: "ÖffiGo runs as an internal iOS TestFlight beta. You can ask for a spot on oeffigo.app — it's a request, not an automatic invite, and you get exactly one email when a suitable place opens.",
-      de: "ÖffiGo läuft als interne iOS-TestFlight-Beta. Einen Platz kannst du auf oeffigo.app anfragen — das ist eine Anfrage, keine automatische Zusage, und du bekommst genau eine E-Mail, sobald ein passender Platz frei wird.",
+      de: "ÖffiGo läuft als interne iOS-TestFlight-Beta. Ein Platz lässt sich auf oeffigo.app anfragen — das ist eine Anfrage, keine automatische Zusage, und es kommt genau eine E-Mail, sobald ein passender Platz frei wird.",
     },
     note: {
       en: "Free during the beta. There is no paid offering yet, and the scope and price of a later Pro tier are not decided.",

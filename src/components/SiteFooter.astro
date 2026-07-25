@@ -22,12 +22,12 @@ const isEn = lang === "en";
     </p>
     <SocialLinks variant="icons" />
     <p class="footer-links">
-      <a href="/impressum/">{isEn ? "Imprint" : "Impressum"}</a>
-      <a href="/datenschutz/">{isEn ? "Privacy" : "Datenschutz"}</a>
+      {/* Both legal pages are German-only, so the English footer says so up front. */}
+      <a href="/impressum/">{isEn ? "Imprint (DE)" : "Impressum"}</a>
+      <a href="/datenschutz/">{isEn ? "Privacy (DE)" : "Datenschutz"}</a>
     </p>
   </div>
   <div class="footer-bottom">
     <p>© {new Date().getFullYear()} Johannes Grof</p>
-    <p>{isEn ? "Built with Astro, hosted on Vercel" : "Gebaut mit Astro, gehostet auf Vercel"}</p>
   </div>
 </footer>

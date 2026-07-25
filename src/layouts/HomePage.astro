@@ -93,36 +93,31 @@ const projectRow = (project: Project): Omit<IndexRow, "num"> => ({
   stats: liveStats(project.slug),
 });
 
-// ÖffiGo is not a repo-backed entry, so it gets a hand-built row that points at
-// its own page instead of a project detail page.
-const oeffigoRow: Omit<IndexRow, "num"> = {
-  name: oeffigo.name,
-  href: `${localePrefix}/oeffigo/`,
-  description: oeffigo.tagline[lang],
-  stack: ["Swift", "SwiftUI", "iOS 17+"],
-  status: "beta",
-  stats: [],
-};
-
+// ÖffiGo deliberately has no index row: its own band sits directly above this
+// section, so listing it again would name the same project three times inside
+// one screen.
 const rawGroups: { title: string; rows: Omit<IndexRow, "num">[] }[] = [
   {
     title: content.projects.highlights,
-    rows: [oeffigoRow, ...featuredShowcaseProjects.map(projectRow)],
+    rows: featuredShowcaseProjects.map(projectRow),
   },
-  ...projectSections.map((section) => ({
+  ...projectSections.map((section, sectionIndex) => ({
     title: isDe ? section.de.title : section.title,
-    rows: section.projects.map(projectRow),
+    rows: [
+      ...section.projects.map(projectRow),
+      // A single unreleased project does not deserve a section of its own, so
+      // it rides along at the end of the last group with its own status.
+      ...(sectionIndex === projectSections.length - 1
+        ? upcomingProjects.map((project) => ({
+            name: project.name,
+            description: isDe && project.de ? project.de.description : project.description,
+            stack: project.stack,
+            status: project.status,
+            stats: [] as string[],
+          }))
+        : []),
+    ],
   })),
-  {
-    title: content.projects.comingSoon,
-    rows: upcomingProjects.map((project) => ({
-      name: project.name,
-      description: isDe && project.de ? project.de.description : project.description,
-      stack: project.stack,
-      status: project.status,
-      stats: [],
-    })),
-  },
 ];
 
 // One continuous run of numbers across every group, so the index reads as a
@@ -219,7 +214,6 @@ const faqSchema = {
         <p class="hero-text">{content.hero.body}</p>
         <div class="hero-actions">
           <a class="button primary" href="#projects">{content.hero.primaryAction}</a>
-          <a class="button secondary" href="#services">{content.hero.secondaryAction}</a>
           <a class="button secondary" href="#contact">{content.hero.contactAction}</a>
         </div>
         <ul class="hero-facts">
@@ -285,7 +279,6 @@ const faqSchema = {
         <div class="section-head">
           <span class="section-num">02</span>
           <h2 id="projects-title">{content.projects.title}</h2>
-          <p class="section-aside">{runningNumber} {content.projects.countLabel}</p>
         </div>
 
         {
