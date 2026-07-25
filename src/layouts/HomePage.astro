@@ -214,10 +214,8 @@ const faqSchema = {
 
     <main>
       <section class="hero section-shell" aria-labelledby="hero-title">
-        <p class="eyebrow">
-          {content.hero.eyebrow}<span class="cursor" aria-hidden="true"></span>
-        </p>
-        <h1 id="hero-title">{titleLead}<span class="display-em">{titleAccent}</span>{titleTail}</h1>
+        <p class="eyebrow">{content.hero.eyebrow}</p>
+        <h1 id="hero-title" data-typewriter><span class="type-text">{titleLead}<span class="display-em">{titleAccent}</span>{titleTail}</span><span class="cursor" aria-hidden="true"></span></h1>
         <p class="hero-text">{content.hero.body}</p>
         <div class="hero-actions">
           <a class="button primary" href="#projects">{content.hero.primaryAction}</a>
@@ -435,6 +433,69 @@ const faqSchema = {
     <SiteFooter lang={isDe ? "de" : "en"} />
 
     <script>
+      // Type the headline out on arrival. The full text is server-rendered, so
+      // search engines and screen readers get it either way — this only clears
+      // and refills the existing nodes, keeping the accent span intact.
+      const headline = document.querySelector<HTMLElement>("[data-typewriter]");
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (headline && !prefersReducedMotion) {
+        const target = headline.querySelector<HTMLElement>(".type-text");
+        const segments = target
+          ? Array.from(target.childNodes)
+              .map((node) => ({ node, text: node.textContent ?? "" }))
+              .filter((segment) => segment.text.length > 0)
+          : [];
+
+        const run = () => {
+          // Lock in the finished height first, otherwise every new line pushes
+          // the rest of the page down while the text arrives.
+          headline.style.minHeight = `${headline.offsetHeight}px`;
+          headline.classList.add("is-typing");
+          segments.forEach((segment) => {
+            segment.node.textContent = "";
+          });
+
+          let segmentIndex = 0;
+          let charIndex = 0;
+
+          const step = () => {
+            const segment = segments[segmentIndex];
+
+            if (!segment) {
+              headline.classList.remove("is-typing");
+              headline.style.minHeight = "";
+              return;
+            }
+
+            charIndex += 1;
+            segment.node.textContent = segment.text.slice(0, charIndex);
+
+            const justTyped = segment.text[charIndex - 1];
+
+            if (charIndex >= segment.text.length) {
+              segmentIndex += 1;
+              charIndex = 0;
+            }
+
+            // Punctuation gets a beat, the way a person typing would pause.
+            window.setTimeout(step, justTyped === "," || justTyped === "." ? 150 : 32);
+          };
+
+          step();
+        };
+
+        if (segments.length > 0) {
+          // Measure only once the display face is in: locking the height against
+          // fallback metrics would leave the headline a line short or long.
+          if (document.fonts?.ready) {
+            document.fonts.ready.then(run);
+          } else {
+            run();
+          }
+        }
+      }
+
       // Async contact-form submission so the page never reloads.
       const contactForm = document.querySelector<HTMLFormElement>("#contact-form");
       if (contactForm) {
