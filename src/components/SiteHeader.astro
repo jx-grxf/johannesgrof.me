@@ -18,9 +18,17 @@ interface Props {
   ariaLabel?: string;
   homeHref?: string;
   langSwitch?: LangSwitch;
+  lang?: "en" | "de";
 }
 
-const { navItems, ariaLabel = "Primary navigation", homeHref = "/", langSwitch } = Astro.props;
+const { navItems, ariaLabel = "Primary navigation", homeHref = "/", langSwitch, lang = "en" } = Astro.props;
+
+// Server-rendered for the default (dark) stock; theme.ts corrects it as soon as
+// it runs if the reader is on the light one.
+const themeLabels = {
+  toDark: lang === "de" ? "Auf dunkles Papier umschalten" : "Switch to dark paper",
+  toLight: lang === "de" ? "Auf helles Papier umschalten" : "Switch to light paper",
+};
 ---
 
 <header class="site-header">
@@ -42,12 +50,31 @@ const { navItems, ariaLabel = "Primary navigation", homeHref = "/", langSwitch }
     }
     <span class="nav-divider" aria-hidden="true"></span>
     <SocialLinks variant="icons" class="nav-socials" />
-    {
-      langSwitch && (
-        <a class="lang-switch" href={langSwitch.href} aria-label={langSwitch.ariaLabel}>
-          {langSwitch.label}
-        </a>
-      )
-    }
+    <span class="header-utils">
+      <button
+        class="theme-toggle"
+        type="button"
+        data-theme-toggle
+        data-label-to-dark={themeLabels.toDark}
+        data-label-to-light={themeLabels.toLight}
+        aria-label={themeLabels.toLight}
+      >
+        <span class="theme-toggle-swatch" aria-hidden="true"></span>
+        <span class="theme-toggle-label" aria-hidden="true">
+          <span data-theme-word="dark">Dark</span><span data-theme-word="light">Light</span>
+        </span>
+      </button>
+      {
+        langSwitch && (
+          <a class="lang-switch" href={langSwitch.href} aria-label={langSwitch.ariaLabel}>
+            {langSwitch.label}
+          </a>
+        )
+      }
+    </span>
   </nav>
 </header>
+
+<script>
+  import "@/scripts/theme";
+</script>

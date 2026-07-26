@@ -205,7 +205,7 @@ const faqSchema = {
   </head>
   <body>
     <a class="skip-link" href="#projects">{isDe ? "Zum Inhalt springen" : "Skip to content"}</a>
-    <SiteHeader navItems={content.nav} homeHref={canonicalPath} langSwitch={content.langSwitch} />
+    <SiteHeader navItems={content.nav} homeHref={canonicalPath} langSwitch={content.langSwitch} lang={isDe ? "de" : "en"} />
 
     <main>
       <section class="hero section-shell" aria-labelledby="hero-title">

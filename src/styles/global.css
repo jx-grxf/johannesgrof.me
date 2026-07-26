@@ -6,13 +6,57 @@
 /* ---------------------------------------------------------------------------
    Editorial design system.
 
-   Warm paper, near-black ink, hairline rules and one signal red. Type carries
-   the hierarchy: a tightly tracked grotesque for display, mono for every label,
+   Paper stock, ink, hairline rules and one signal red. Type carries the
+   hierarchy: a tightly tracked grotesque for display, mono for every label,
    number and status. No gradients, no glass, no glow, no border radius —
    nothing here should date the way a landing-page effect does.
+
+   Two stocks, one system. Dark paper is the default; the light stock is opt-in
+   via data-theme="light" on <html>, written before first paint by the inline
+   script in BaseHead. Every colour below is a token — no component may reach
+   for a literal, or it will only be right in one of the two themes.
    --------------------------------------------------------------------------- */
 
 :root {
+  color-scheme: dark;
+
+  --paper: #12110f;
+  --paper-2: #191713;
+  --paper-3: #221f1a;
+  --ink: #f1eee5;
+  --ink-2: #c6c0b2;
+  --mute: #948d7e;
+  --faint: #8a8374;
+  /* Clearly above the grid line below, or the printed rules and the paper
+     texture read as the same thing and the page turns into noise. */
+  --rule: #3b352c;
+  --rule-2: #544d40;
+  /* Lifted off the print red: #cf3a20 only reaches 2.5:1 on dark paper. */
+  --signal: #ff6a4d;
+  --signal-ink: #ff8b73;
+  --signal-line: rgb(255 106 77 / 42%);
+  --grid-line: rgb(241 238 229 / 2.4%);
+
+  --font-display: "Geist Variable", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  --font-sans: "Geist Variable", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", sans-serif;
+  --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Consistent label treatment: mono, small, wide, uppercase. */
+  --label-size: 0.72rem;
+  --label-track: 0.14em;
+
+  /* The printed grid the whole site sits on. Fixed, so every sheet lines up. */
+  --grid-size: 28px;
+  --grid-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+
+  --shell: min(1180px, calc(100% - 64px));
+  --smooth: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  font-family: var(--font-sans);
+}
+
+:root[data-theme="light"] {
   color-scheme: light;
 
   --paper: #f4f2ed;
@@ -26,19 +70,8 @@
   --rule-2: #c3bfb2;
   --signal: #cf3a20;
   --signal-ink: #a82c15;
-
-  --font-display: "Geist Variable", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", sans-serif;
-  --font-sans: "Geist Variable", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", sans-serif;
-  --font-mono: "Geist Mono Variable", ui-monospace, SFMono-Regular, Menlo, monospace;
-
-  /* Consistent label treatment: mono, small, wide, uppercase. */
-  --label-size: 0.72rem;
-  --label-track: 0.14em;
-
-  --shell: min(1180px, calc(100% - 64px));
-  --smooth: cubic-bezier(0.2, 0.7, 0.2, 1);
-
-  font-family: var(--font-sans);
+  --signal-line: rgb(207 58 32 / 40%);
+  --grid-line: rgb(20 19 15 / 2.8%);
 }
 
 * {
@@ -53,10 +86,16 @@ html {
 body {
   min-width: 320px;
   margin: 0;
-  background: var(--paper);
+  background-color: var(--paper);
+  background-image: var(--grid-image);
+  background-size: var(--grid-size) var(--grid-size);
+  background-attachment: fixed;
   color: var(--ink);
   font-size: 17px;
   line-height: 1.55;
+  /* Print habit: versions, stars, download counts and dates line up in a
+     column instead of shifting with every digit. */
+  font-variant-numeric: tabular-nums lining-nums;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -124,18 +163,25 @@ summary:focus-visible,
   text-transform: uppercase;
 }
 
+/* The numbered print header: a set-in number block, the title, and a hairline
+   under the whole thing — the one device that repeats on every section. */
 .section-head {
   display: flex;
   align-items: baseline;
-  gap: 20px;
-  margin: 0 0 40px;
+  gap: 16px;
+  margin: 0 0 36px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--rule-2);
 }
 
 .section-head .section-num {
-  color: var(--signal);
+  flex: none;
+  padding: 2px 7px;
+  background: var(--ink);
+  color: var(--paper);
   font-family: var(--font-mono);
   font-size: var(--label-size);
-  letter-spacing: var(--label-track);
+  letter-spacing: 0.1em;
 }
 
 .section-head h2 {
@@ -164,8 +210,14 @@ summary:focus-visible,
   border-top: 1px solid var(--rule);
 }
 
-.band--tint {
-  background: var(--paper-2);
+/* Tinted bands read as a second sheet laid on the first. They carry the same
+   fixed grid so the ruling runs straight through the seam. */
+.band--tint,
+.oeffigo-band {
+  background-color: var(--paper-2);
+  background-image: var(--grid-image);
+  background-size: var(--grid-size) var(--grid-size);
+  background-attachment: fixed;
 }
 
 .display-em {
@@ -295,12 +347,74 @@ summary:focus-visible,
   background: var(--rule-2);
 }
 
+/* Paper stock and language: the two controls that change the page rather than
+   navigate it, kept together at the end of the nav row. */
+.header-utils {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 18px;
+}
+
 .lang-switch {
   color: var(--mute);
 }
 
 .lang-switch:hover {
   color: var(--ink);
+}
+
+.theme-toggle {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  padding: 0;
+  background: none;
+  color: var(--mute);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 160ms ease;
+}
+
+.theme-toggle:hover {
+  color: var(--ink);
+}
+
+/* The control is only as tall as its type, so the thumb gets a 44px target
+   without the label moving. */
+.theme-toggle::before {
+  content: "";
+  position: absolute;
+  inset: -15px -6px;
+}
+
+/* Half-filled square: the printed way to say "two stocks". The filled half
+   swaps sides with the theme, so the mark itself shows which one is loaded. */
+.theme-toggle-swatch {
+  width: 10px;
+  height: 10px;
+  border: 1px solid currentcolor;
+  background: linear-gradient(to right, currentcolor 50%, transparent 50%);
+}
+
+:root[data-theme="light"] .theme-toggle-swatch {
+  background: linear-gradient(to left, currentcolor 50%, transparent 50%);
+}
+
+/* Both words are in the markup and CSS picks one, so the label is right in the
+   very first frame — the script only ever fixes the aria-label. */
+.theme-toggle-label [data-theme-word="light"],
+:root[data-theme="light"] .theme-toggle-label [data-theme-word="dark"] {
+  display: none;
+}
+
+:root[data-theme="light"] .theme-toggle-label [data-theme-word="light"] {
+  display: inline;
 }
 
 /* ---------------------------------------------------------------------------
@@ -360,7 +474,7 @@ summary:focus-visible,
 
 .text-link--signal {
   color: var(--signal);
-  border-bottom-color: rgb(207 58 32 / 40%);
+  border-bottom-color: var(--signal-line);
 }
 
 .text-link--signal:hover {
@@ -438,9 +552,11 @@ summary:focus-visible,
   list-style: none;
 }
 
+/* The last track has to hold "v1.2.2 ★ 12 ↓ 866" on one line — at 116px the
+   stats broke into a second, ragged line and the row lost its baseline. */
 .index-row {
   display: grid;
-  grid-template-columns: 54px minmax(0, 0.9fr) minmax(0, 1.5fr) 148px 116px;
+  grid-template-columns: 54px minmax(0, 0.9fr) minmax(0, 1.5fr) 136px 158px;
   align-items: baseline;
   gap: 8px 24px;
   padding: 22px 0;
@@ -528,6 +644,7 @@ summary:focus-visible,
 
 .index-stats {
   display: flex;
+  justify-content: flex-end;
   gap: 12px;
   margin: 0;
   padding: 0;
@@ -536,6 +653,7 @@ summary:focus-visible,
   font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.04em;
+  white-space: nowrap;
 }
 
 /* Coming-soon entries: same rhythm, no link affordance. */
@@ -560,7 +678,6 @@ summary:focus-visible,
   padding: clamp(64px, 8vw, 100px) 0;
   border-top: 1px solid var(--ink);
   border-bottom: 1px solid var(--ink);
-  background: var(--paper-2);
 }
 
 .oeffigo-layout {
@@ -1049,6 +1166,16 @@ summary:focus-visible,
 .contact-field textarea:focus {
   outline: none;
   border-bottom-color: var(--signal);
+}
+
+/* Chrome paints autofilled fields on its own pale blue, which lands as a bright
+   slab on dark paper. The inset shadow is the only way to override it. */
+.contact-field input:-webkit-autofill,
+.contact-field input:-webkit-autofill:hover,
+.contact-field input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--ink);
+  box-shadow: 0 0 0 1000px var(--paper) inset;
+  caret-color: var(--ink);
 }
 
 .contact-honeypot {
@@ -1720,11 +1847,12 @@ summary:focus-visible,
     display: none;
   }
 
-  /* Parked on the wordmark's line instead of wrapping to a row of its own. */
-  .lang-switch {
+  /* Parked on the wordmark's line instead of wrapping to a row of their own. */
+  .header-utils {
     position: absolute;
-    top: 28px;
+    top: 26px;
     right: 0;
+    gap: 16px;
   }
 
   .column-grid > *,
@@ -1781,6 +1909,12 @@ summary:focus-visible,
 }
 
 @media (max-width: 560px) {
+  /* Next to the wordmark there is no room for the word as well — the swatch
+     already says which stock is loaded, and the aria-label says the rest. */
+  .theme-toggle-label {
+    display: none;
+  }
+
   .hero-actions .button,
   .oeffigo-actions .button,
   .project-actions .button {
