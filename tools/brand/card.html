@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>og card</title>
+    <!--
+      The link-preview card, 1200x630. Open it directly in a browser to iterate,
+      or render it with `npm run brand`. Append ?lang=de for the German card.
+
+      Every value below is lifted from src/styles/global.css — if a token moves
+      there, move it here too. The headline copy mirrors the hero in
+      src/data/siteContent.ts.
+    -->
+    <style>
+      /* The token below is swapped by render.mjs for the Geist woff2 files
+         inlined as data URIs, so the page makes no external request and renders
+         the same whether it is opened from disk or driven by headless Chrome.
+         Opened raw in a browser it falls back to the system stack, which is
+         fine for checking layout but not for judging the type. */
+      __FONTS__
+
+      :root {
+        --paper: #12110f;
+        --ink: #f1eee5;
+        --ink-2: #c6c0b2;
+        --mute: #948d7e;
+        --rule: #3b352c;
+        --signal: #ff6a4d;
+        /* The site runs this at 2.4%. At card scale it is quantised away by
+           PNG encoding and the downscale every feed applies, so it is lifted
+           just enough to survive. */
+        --grid-line: rgb(241 238 229 / 4.5%);
+        --grid-size: 28px;
+
+        --font-display: "Geist Card", sans-serif;
+        --font-mono: "Geist Mono Card", monospace;
+        --label-track: 0.14em;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background-color: var(--paper);
+        background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+        background-size: var(--grid-size) var(--grid-size);
+        color: var(--ink);
+        font-family: var(--font-display);
+        font-variant-numeric: tabular-nums lining-nums;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+      }
+
+      .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 1200px;
+        height: 630px;
+        padding: 72px;
+      }
+
+      .eyebrow {
+        margin: 0;
+        color: var(--mute);
+        font-family: var(--font-mono);
+        font-size: 22px;
+        font-weight: 400;
+        letter-spacing: var(--label-track);
+        text-transform: uppercase;
+      }
+
+      /* Matches .hero h1 in global.css. */
+      .headline {
+        max-width: 15ch;
+        margin: 0;
+        font-size: 88px;
+        font-weight: 700;
+        line-height: 0.94;
+        letter-spacing: -0.045em;
+      }
+
+      .accent {
+        color: var(--signal);
+      }
+
+      /* The site's caret, held steady rather than blinking. */
+      .caret {
+        display: inline-block;
+        width: 0.24em;
+        height: 0.6em;
+        margin-left: 0.14em;
+        background: var(--signal);
+        vertical-align: baseline;
+      }
+
+      .foot {
+        margin: 0;
+        padding-top: 28px;
+        border-top: 1px solid var(--rule);
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        color: var(--mute);
+        font-family: var(--font-mono);
+        font-size: 22px;
+        letter-spacing: 0.08em;
+      }
+
+      .site {
+        color: var(--ink-2);
+      }
+
+      /* The same prompt that sits in front of the name in the site header. */
+      .prompt {
+        margin-right: 0.5em;
+        color: var(--signal);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <p class="eyebrow" data-eyebrow></p>
+      <h1 class="headline" data-headline></h1>
+      <p class="foot">
+        <span data-facts></span>
+        <span class="site"><span class="prompt">$</span>johannesgrof.me</span>
+      </p>
+    </div>
+
+    <script>
+      // Kept in step with the hero in src/data/siteContent.ts. `accent` is the
+      // substring the site renders in the signal colour.
+      const COPY = {
+        en: {
+          eyebrow: "software developer / styria, austria",
+          headline: "Software that does one thing, properly.",
+          accent: "one thing",
+          facts: "macOS · iOS · CLI",
+        },
+        de: {
+          eyebrow: "softwareentwickler / südost-steiermark",
+          headline: "Software, die eine Sache richtig macht.",
+          accent: "eine Sache",
+          facts: "macOS · iOS · CLI",
+        },
+      };
+
+      const lang = new URLSearchParams(location.search).get("lang") === "de" ? "de" : "en";
+      const copy = COPY[lang];
+      document.documentElement.lang = lang;
+
+      document.querySelector("[data-eyebrow]").textContent = copy.eyebrow;
+      document.querySelector("[data-facts]").textContent = copy.facts;
+
+      const [lead, tail] = copy.headline.split(copy.accent);
+      const headline = document.querySelector("[data-headline]");
+      headline.append(lead);
+      const accent = document.createElement("span");
+      accent.className = "accent";
+      accent.textContent = copy.accent;
+      headline.append(accent, tail);
+      const caret = document.createElement("span");
+      caret.className = "caret";
+      headline.append(caret);
+    </script>
+  </body>
+</html>
