@@ -1,5 +1,30 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" rx="14" fill="#101113"/>
-  <path d="M17 38c4 5 10 8 16 8 9 0 16-6 16-15 0-8-6-14-14-14-5 0-10 3-13 7" fill="none" stroke="#4df1d2" stroke-width="5" stroke-linecap="round"/>
-  <path d="M22 26h18" stroke="#e7a07c" stroke-width="5" stroke-linecap="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="jg">
+  <!--
+    jg, set in Geist Mono at wght 700 and converted to outlines — an SVG favicon
+    cannot load a webfont, so <text> would fall back to whatever monospace face
+    the browser happens to default to. Regenerate with tools/brand/glyphs.py;
+    the pair is tracked in off the mono advance so it reads as one mark at 16px.
+
+    Two paper stocks, same as the site: dark by default, light when the reader's
+    system is. Square, no corner radius — the design system has none.
+  -->
+  <style>
+    :root {
+      --paper: #12110f;
+      --mark: #ff6a4d;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --paper: #f4f2ed;
+        /* The print red. #ff6a4d is the version lifted for dark paper only. */
+        --mark: #cf3a20;
+      }
+    }
+  </style>
+  <rect width="64" height="64" fill="var(--paper)"/>
+  <g fill="var(--mark)" transform="translate(3.58 45.48) scale(0.048327 -0.048327)">
+    <path d="M98.00 -150.00V-42.40H248.00Q291.80 -42.40 312.50 -22.40Q333.20 -2.40 333.20 44.40V486.20L391.00 428.40H102.60V536.00H468.80V39.60Q468.80 -52.60 416.90 -101.30Q365.00 -150.00 261.60 -150.00ZM331.20 601.60V720.00H468.40V601.60Z"/>
+    <path d="M826.40 -162.00Q761.00 -162.00 712.60 -143.00Q664.20 -124.00 633.50 -89.30Q602.80 -54.60 591.20 -8.00L733.20 0.40Q741.60 -24.00 763.70 -38.00Q785.80 -52.00 826.40 -52.00Q883.40 -52.00 912.90 -26.30Q942.40 -0.60 942.40 48.40V110.40Q924.00 73.20 887.10 50.60Q850.20 28.00 794.00 28.00Q730.00 28.00 679.60 60.40Q629.20 92.80 600.60 150.50Q572.00 208.20 572.00 283.20Q572.00 364.00 600.10 423.30Q628.20 482.60 677.60 515.30Q727.00 548.00 791.20 548.00Q845.40 548.00 884.50 523.50Q923.60 499.00 944.00 454.40L946.40 536.00H1078.00V64.80Q1078.00 -10.40 1047.00 -60.90Q1016.00 -111.40 959.50 -136.70Q903.00 -162.00 826.40 -162.00ZM828.00 136.80Q878.60 136.80 910.30 174.40Q942.00 212.00 942.40 286.20Q942.80 335.80 928.50 369.60Q914.20 403.40 888.10 420.70Q862.00 438.00 828.00 438.00Q773.00 438.00 742.90 399.20Q712.80 360.40 712.80 286.20Q712.80 212.00 743.30 174.40Q773.80 136.80 828.00 136.80Z"/>
+  </g>
 </svg>

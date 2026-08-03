@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>icon</title>
+    <!--
+      The PNG icon tile. The mark itself is not duplicated here — render.mjs
+      lifts it straight out of public/favicon.svg, so the tab icon and every
+      app icon are the same paths by construction.
+
+      ?coverage=0.58 is the maskable-safe pair width for the manifest icons;
+      the Apple touch icon runs wider because iOS rounds the tile instead of
+      cropping into it.
+    -->
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+
+      body {
+        /* The mark is lifted out of favicon.svg, which resolves its colours
+           through custom properties — and unlike the favicon, an app icon is
+           always the dark stock. The manifest's background_color agrees. */
+        --paper: #12110f;
+        --mark: #ff6a4d;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+        background: var(--paper);
+      }
+
+      svg {
+        display: block;
+        width: 100vw;
+        height: 100vw;
+      }
+    </style>
+  </head>
+  <body>
+    <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">__MARK__</svg>
+
+    <script>
+      // favicon.svg targets 0.74 coverage; rescale the mark about the tile
+      // centre for the icon sizes without touching the committed path data.
+      const coverage = Number(new URLSearchParams(location.search).get("coverage") || 0.74);
+      const factor = coverage / 0.74;
+      const mark = document.querySelector("svg > g");
+      mark.setAttribute(
+        "transform",
+        `translate(32 32) scale(${factor}) translate(-32 -32) ${mark.getAttribute("transform")}`
+      );
+    </script>
+  </body>
+</html>
