@@ -267,8 +267,8 @@ const de: LocaleContent = {
     ],
   },
   services: {
-    title: "Womit ich Ihnen helfen kann",
-    lead: "Neben meinen eigenen Projekten helfe ich Menschen und kleinen Betrieben in der Umgebung bei alltäglicher Technik. Vor Ort in der Südost-Steiermark, sonst österreichweit remote.",
+    title: "Womit ich dir helfen kann",
+    lead: "Neben meinen eigenen Projekten helfe ich Menschen und kleinen Betrieben in der Umgebung bei alltäglicher Technik. Vor Ort in der Südost-Steiermark, sonst weltweit remote.",
     items: [
       {
         title: "Website-Erstellung & Hosting",
@@ -292,19 +292,19 @@ const de: LocaleContent = {
     title: "Häufige Fragen",
     items: [
       {
-        q: "Was bauen Sie?",
+        q: "Was baust du?",
         a: "Ich bin Johannes Grof, Softwareentwickler und Schüler an der HTL Kaindorf in Österreich. Ich baue macOS- und iOS-Apps, Developer-Tools und Websites und helfe außerdem bei Elektronik-Reparatur und technischem Support.",
       },
       {
-        q: "Arbeiten Sie auch vor Ort in der Steiermark?",
-        a: "Ja. Reparatur und Geräte-Einrichtung mache ich vor Ort in der Südost-Steiermark. Websites, Tools und Support gehen auch österreichweit remote.",
+        q: "Arbeitest du auch vor Ort in der Steiermark?",
+        a: "Ja. Reparatur und Geräte-Einrichtung mache ich vor Ort in der Südost-Steiermark. Websites, Tools und Support gehen auch weltweit remote.",
       },
       {
         q: "Was kostet eine Website?",
-        a: "Das hängt vom Umfang ab – Hosting, Domain und Wartung können alles dabei sein. Schreiben Sie mir kurz, was Sie brauchen, und ich melde mich.",
+        a: "Das hängt vom Umfang ab – Hosting, Domain und Wartung können alles dabei sein. Schreib mir kurz, was du brauchst, und ich melde mich.",
       },
       {
-        q: "Wie erreiche ich Sie?",
+        q: "Wie erreiche ich dich?",
         a: "Per E-Mail an contact@johannesgrof.me oder über LinkedIn und GitHub.",
       },
     ],
@@ -316,18 +316,18 @@ const de: LocaleContent = {
   },
   contact: {
     eyebrow: "kontakt",
-    title: "Melden Sie sich.",
-    note: "Sie brauchen eine Website, eine Reparatur, technischen Support oder ein kleines individuelles Tool? Schreiben Sie mir direkt hier oder per E-Mail.",
+    title: "Melde dich.",
+    note: "Du brauchst eine Website, eine Reparatur, technischen Support oder ein kleines individuelles Tool? Schreib mir direkt hier oder per E-Mail.",
     form: {
       nameLabel: "Name",
-      namePlaceholder: "Ihr Name",
+      namePlaceholder: "Dein Name",
       emailLabel: "E-Mail",
-      emailPlaceholder: "sie@beispiel.at",
+      emailPlaceholder: "du@beispiel.at",
       messageLabel: "Nachricht",
-      messagePlaceholder: "Wobei kann ich Ihnen helfen?",
+      messagePlaceholder: "Wobei kann ich dir helfen?",
       submit: "Nachricht senden",
       sending: "Wird gesendet…",
-      success: "Danke – Ihre Nachricht ist unterwegs. Ich melde mich bald.",
+      success: "Danke – deine Nachricht ist unterwegs. Ich melde mich bald.",
       error: "Etwas ist schiefgelaufen. Bitte erneut versuchen oder an contact@johannesgrof.me schreiben.",
       rateLimited: "Zu viele Anfragen. Bitte ein paar Minuten warten oder an contact@johannesgrof.me schreiben.",
     },

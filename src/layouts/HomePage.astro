@@ -204,10 +204,9 @@ const faqSchema = {
     <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />
   </head>
   <body>
-    <a class="skip-link" href="#projects">{isDe ? "Zum Inhalt springen" : "Skip to content"}</a>
     <SiteHeader navItems={content.nav} homeHref={canonicalPath} langSwitch={content.langSwitch} lang={isDe ? "de" : "en"} />
 
-    <main>
+    <main id="main">
       <section class="hero section-shell" aria-labelledby="hero-title">
         <p class="eyebrow">{content.hero.eyebrow}</p>
         <h1 id="hero-title" data-typewriter><span class="type-text">{titleLead}<span class="display-em">{titleAccent}</span>{titleTail}</span><span class="cursor" aria-hidden="true"></span></h1>
@@ -433,58 +432,77 @@ const faqSchema = {
       const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       if (headline && !prefersReducedMotion) {
-        const target = headline.querySelector<HTMLElement>(".type-text");
-        const segments = target
-          ? Array.from(target.childNodes)
-              .map((node) => ({ node, text: node.textContent ?? "" }))
-              .filter((segment) => segment.text.length > 0)
-          : [];
+        let typewriterPlayed = false;
 
-        const run = () => {
-          // Lock in the finished height first, otherwise every new line pushes
-          // the rest of the page down while the text arrives.
-          headline.style.minHeight = `${headline.offsetHeight}px`;
-          headline.classList.add("is-typing");
-          segments.forEach((segment) => {
-            segment.node.textContent = "";
-          });
+        try {
+          typewriterPlayed = sessionStorage.getItem("typewriter-played") === "1";
+        } catch {
+          // Storage blocked — treat as a fresh visit.
+        }
 
-          let segmentIndex = 0;
-          let charIndex = 0;
+        if (typewriterPlayed) {
+          // Repeat visit in the same session: the full headline is already
+          // server-rendered, so just drop the blinking caret.
+          headline.querySelector(".cursor")?.remove();
+        } else {
+          const target = headline.querySelector<HTMLElement>(".type-text");
+          const segments = target
+            ? Array.from(target.childNodes)
+                .map((node) => ({ node, text: node.textContent ?? "" }))
+                .filter((segment) => segment.text.length > 0)
+            : [];
 
-          const step = () => {
-            const segment = segments[segmentIndex];
+          const run = () => {
+            // Lock in the finished height first, otherwise every new line pushes
+            // the rest of the page down while the text arrives.
+            headline.style.minHeight = `${headline.offsetHeight}px`;
+            headline.classList.add("is-typing");
+            segments.forEach((segment) => {
+              segment.node.textContent = "";
+            });
 
-            if (!segment) {
-              headline.classList.remove("is-typing");
-              headline.style.minHeight = "";
-              return;
-            }
+            let segmentIndex = 0;
+            let charIndex = 0;
 
-            charIndex += 1;
-            segment.node.textContent = segment.text.slice(0, charIndex);
+            const step = () => {
+              const segment = segments[segmentIndex];
 
-            const justTyped = segment.text[charIndex - 1];
+              if (!segment) {
+                headline.classList.remove("is-typing");
+                headline.style.minHeight = "";
+                try {
+                  sessionStorage.setItem("typewriter-played", "1");
+                } catch {
+                  // Storage blocked — the animation simply replays next visit.
+                }
+                return;
+              }
 
-            if (charIndex >= segment.text.length) {
-              segmentIndex += 1;
-              charIndex = 0;
-            }
+              charIndex += 1;
+              segment.node.textContent = segment.text.slice(0, charIndex);
 
-            // Punctuation gets a beat, the way a person typing would pause.
-            window.setTimeout(step, justTyped === "," || justTyped === "." ? 260 : 52);
+              const justTyped = segment.text[charIndex - 1];
+
+              if (charIndex >= segment.text.length) {
+                segmentIndex += 1;
+                charIndex = 0;
+              }
+
+              // Punctuation gets a beat, the way a person typing would pause.
+              window.setTimeout(step, justTyped === "," || justTyped === "." ? 160 : 30);
+            };
+
+            step();
           };
 
-          step();
-        };
-
-        if (segments.length > 0) {
-          // Measure only once the display face is in: locking the height against
-          // fallback metrics would leave the headline a line short or long.
-          if (document.fonts?.ready) {
-            document.fonts.ready.then(run);
-          } else {
-            run();
+          if (segments.length > 0) {
+            // Type on arrival instead of waiting for the display face — the CSS
+            // swaps the font in with font-display: swap once it arrives anyway.
+            if (document.readyState === "loading") {
+              document.addEventListener("DOMContentLoaded", run);
+            } else {
+              run();
+            }
           }
         }
       }

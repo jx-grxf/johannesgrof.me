@@ -42,12 +42,6 @@ export interface OeffigoContent {
     note: { en: string; de: string };
     ctaLabel: { en: string; de: string };
   };
-  // The real app brand palette, lifted from the app's own theme.
-  brand: {
-    green: string;
-    greenBright: string;
-    ink: string;
-  };
 }
 
 // 24x24 line-icon paths (Lucide-style), so the section needs no image deps.
@@ -58,6 +52,7 @@ const ICONS = {
   spark: "M12 3v3m0 12v3m9-9h-3M6 12H3m13.5-6.5-2 2m-9 9-2 2m0-13 2 2m9 9 2 2",
   star: "M12 3.5 14.6 9l6 .8-4.4 4.2 1.1 6L12 17.2 6.7 20l1.1-6L3.4 9.8 9.4 9 12 3.5Z",
   bell: "M6 9a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8m4.3 12a2 2 0 0 0 3.4 0",
+  signpost: "M12 13v8M12 3v3M2.354 10.354a1.207 1.207 0 0 1 0-1.708l2.06-2.06A2 2 0 0 1 5.828 6h12.344a2 2 0 0 1 1.414.586l2.06 2.06a1.207 1.207 0 0 1 0 1.708l-2.06 2.06a2 2 0 0 1-1.414.586H5.828a2 2 0 0 1-1.414-.586Z",
 } as const;
 
 export const oeffigo: OeffigoContent = {
@@ -81,7 +76,7 @@ export const oeffigo: OeffigoContent = {
   websiteUrl: "https://oeffigo.app",
   liveUrl: "https://oeffigo.app/live",
   statusUrl: "https://oeffigo.app/status",
-  icon: "/projects/oeffigo/icon.png",
+  icon: "/projects/oeffigo/icon.webp",
   liveProof: {
     eyebrow: { en: "live positions · beta", de: "live-positionen · beta" },
     title: { en: "An honest label beats a confident guess.", de: "Ehrlich beschriftet schlägt selbstsicher geraten." },
@@ -124,7 +119,7 @@ export const oeffigo: OeffigoContent = {
       },
     },
     {
-      icon: ICONS.route,
+      icon: ICONS.signpost,
       title: { en: "Indoor station guidance", de: "Wegweisung im Bahnhof" },
       body: {
         en: "At mapped major stations, transfers can use OpenStreetMap indoor data for stairs, escalators and lifts.",
@@ -159,10 +154,5 @@ export const oeffigo: OeffigoContent = {
       de: "Während der Beta kostenlos. Es gibt noch kein kostenpflichtiges Angebot, und Umfang und Preis eines späteren Pro-Tarifs sind nicht entschieden.",
     },
     ctaLabel: { en: "Request a beta spot", de: "Beta-Platz anfragen" },
-  },
-  brand: {
-    green: "#56c441",
-    greenBright: "#7be25a",
-    ink: "#0a0b0c",
   },
 };

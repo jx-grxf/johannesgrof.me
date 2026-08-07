@@ -3,7 +3,6 @@ export type ProjectStatus = "active" | "beta" | "experimental" | "preview" | "in
 export interface ShowcaseImage {
   src: string;
   kind?: "image" | "video";
-  cardSrc?: string;
   fallbackSrc?: string;
   posterSrc?: string;
   alt: string;
@@ -94,7 +93,7 @@ export const statusLabelDe: Record<ProjectStatus, string> = {
   beta: "beta",
   experimental: "experimentell",
   preview: "preview",
-  "in development": "in entwicklung",
+  "in development": "In Entwicklung",
   "coming soon": "bald verfügbar",
   archived: "archiviert",
 };
@@ -163,6 +162,24 @@ export const featuredProjects: Project[] = [
       built: "I built a native Swift menu bar app that scans listening TCP ports, links each one to its process, repo, and agent, and gates process control behind precise actions.",
       result: "PortPirate keeps localhost visible from the menu bar, without taking over your screen.",
     },
+    de: {
+      tagline: "Menüleisten-Steuerung für lokale Dev-Ports auf macOS.",
+      description:
+        "Eine Swift-Menüleisten-App, die jeden lauschenden Port seinem Prozess, seinem Repository und dem AI-Agenten zuordnet, der ihn gestartet hat — damit localhost sichtbar bleibt und einzelne Prozesse aus einer nativen Oberfläche gestoppt werden können.",
+      audience: "Für Mac-Entwickler, die den Zustand von localhost, Runtime-Warnungen und sichere Prozesskontrolle haben wollen, ohne durch Terminals zu wühlen.",
+      result: "Zeigt, welcher Prozess, welches Repo und welcher Agent jeden localhost-Port besitzt, und stoppt den richtigen direkt aus der Menüleiste.",
+      caseStudy: {
+        problem: "Lokale Dev-Server laufen weiter, Ports kollidieren, und es ist schwer zu erkennen, welchem Prozess, Repository oder Agent ein Listener gehört.",
+        built: "Ich habe eine native Swift-Menüleisten-App gebaut, die lauschende TCP-Ports scannt, jeden Port seinem Prozess, Repo und Agent zuordnet und Prozesskontrolle hinter präzise Aktionen legt.",
+        result: "PortPirate hält localhost sichtbar in der Menüleiste, ohne deinen Bildschirm zu übernehmen.",
+      },
+      proofLabels: ["Native macOS-App", "Menüleisten-Utility"],
+      highlights: [
+        "Läuft als native macOS-Menüleisten-Utility mit eigenem Runtime-Browser.",
+        "Ordnet jeden lauschenden TCP-Port seinem Prozess, Repository und dem Agenten zu, der ihn gestartet hat.",
+        "Öffnet localhost-URLs und stoppt exakte PIDs statt mit groben Prozessbefehlen.",
+      ],
+    },
     stack: ["Swift", "macOS", "Menu Bar"],
     featuredTier: "featured",
     repo: "jx-grxf/PortPirate",
@@ -179,7 +196,6 @@ export const featuredProjects: Project[] = [
     showcase: [
       {
         src: "/projects/portpirate/showcase.webp",
-        cardSrc: "/projects/portpirate/showcase-card.webp",
         fallbackSrc: "/projects/portpirate/showcase.png",
         alt: "PortPirate menu bar runtime panel with localhost runtimes, warnings, and diagnostics",
         fit: "contain",
@@ -575,7 +591,6 @@ export const featuredProjects: Project[] = [
     showcase: [
       {
         src: "/projects/caruso-reborn/hero.webp",
-        cardSrc: "/projects/caruso-reborn/hero-card.webp",
         fallbackSrc: "/projects/caruso-reborn/hero.png",
         alt: "Caruso Reborn dashboard",
         fit: "cover",
@@ -827,7 +842,6 @@ export const featuredProjects: Project[] = [
     showcase: [
       {
         src: "/projects/slamx/monitor-dash.webp",
-        cardSrc: "/projects/slamx/monitor-dash-card.webp",
         fallbackSrc: "/projects/slamx/monitor-dash.jpeg",
         alt: "SlamX live dashboard",
         fit: "contain",

@@ -26,7 +26,7 @@
   --ink: #f1eee5;
   --ink-2: #c6c0b2;
   --mute: #948d7e;
-  --faint: #8a8374;
+  --faint: #948d7d;
   /* Clearly above the grid line below, or the printed rules and the paper
      texture read as the same thing and the page turns into noise. */
   --rule: #3b352c;
@@ -65,7 +65,7 @@
   --ink: #14130f;
   --ink-2: #3d3a31;
   --mute: #6e6a5f;
-  --faint: #94907f;
+  --faint: #6d695c;
   --rule: #d5d1c6;
   --rule-2: #c3bfb2;
   --signal: #cf3a20;
@@ -89,7 +89,7 @@ body {
   background-color: var(--paper);
   background-image: var(--grid-image);
   background-size: var(--grid-size) var(--grid-size);
-  background-attachment: fixed;
+  background-attachment: scroll;
   color: var(--ink);
   font-size: 17px;
   line-height: 1.55;
@@ -98,6 +98,12 @@ body {
   font-variant-numeric: tabular-nums lining-nums;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body {
+    background-attachment: fixed;
+  }
 }
 
 a {
@@ -192,18 +198,6 @@ summary:focus-visible,
   text-transform: uppercase;
 }
 
-.section-head .section-aside {
-  margin: 0 0 0 auto;
-  color: var(--mute);
-  font-family: var(--font-mono);
-  font-size: var(--label-size);
-  letter-spacing: 0.06em;
-}
-
-.section-head .section-aside a:hover {
-  color: var(--signal);
-}
-
 /* Sections are separated by a hairline, not by cards or shadows. */
 .band {
   padding: clamp(56px, 7vw, 88px) 0;
@@ -217,7 +211,14 @@ summary:focus-visible,
   background-color: var(--paper-2);
   background-image: var(--grid-image);
   background-size: var(--grid-size) var(--grid-size);
-  background-attachment: fixed;
+  background-attachment: scroll;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .band--tint,
+  .oeffigo-band {
+    background-attachment: fixed;
+  }
 }
 
 .display-em {
@@ -323,22 +324,6 @@ summary:focus-visible,
 
 .site-nav a:hover {
   border-bottom-color: var(--ink);
-}
-
-.site-nav .nav-social {
-  display: inline-flex;
-  align-items: center;
-  color: var(--mute);
-}
-
-.site-nav .nav-social:hover {
-  color: var(--ink);
-  border-bottom-color: transparent;
-}
-
-.site-nav .nav-social svg {
-  width: 16px;
-  height: 16px;
 }
 
 .site-nav .nav-divider {
@@ -794,6 +779,10 @@ summary:focus-visible,
   background: var(--paper);
 }
 
+.note-block--flush {
+  margin-top: 0;
+}
+
 .note-block h3 {
   margin: 8px 0 0;
   font-family: var(--font-display);
@@ -944,11 +933,12 @@ summary:focus-visible,
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 0;
+  margin-left: -30px;
   border-top: 1px solid var(--ink);
 }
 
 .column-grid > * {
-  padding: 26px 30px 34px 0;
+  padding: 26px 30px 34px 30px;
   border-right: 1px solid var(--rule);
 }
 
@@ -1143,12 +1133,12 @@ summary:focus-visible,
   width: 100%;
   border: 0;
   border-bottom: 1px solid var(--rule-2);
-  padding: 10px 0;
+  padding: 12px 0;
   background: transparent;
   color: var(--ink);
   font-family: var(--font-sans);
   font-size: 1rem;
-  transition: border-color 160ms ease;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
 .contact-field textarea {
@@ -1166,6 +1156,7 @@ summary:focus-visible,
 .contact-field textarea:focus {
   outline: none;
   border-bottom-color: var(--signal);
+  box-shadow: 0 2px 0 0 var(--signal);
 }
 
 /* Chrome paints autofilled fields on its own pale blue, which lands as a bright
@@ -1280,6 +1271,7 @@ summary:focus-visible,
 
 .social-row--icons a {
   color: var(--mute);
+  padding: 10px;
 }
 
 .social-row--icons a:hover {
@@ -1486,6 +1478,8 @@ summary:focus-visible,
   left: 0;
   display: none;
   min-width: 280px;
+  max-height: min(60vh, 480px);
+  overflow-y: auto;
   border: 1px solid var(--ink);
   background: var(--paper);
 }
@@ -1813,6 +1807,10 @@ summary:focus-visible,
   .project-meta-panel {
     max-width: 480px;
   }
+
+  .download-options {
+    right: 0;
+  }
 }
 
 @media (max-width: 860px) {
@@ -1840,6 +1838,10 @@ summary:focus-visible,
     font-size: 0.72rem;
   }
 
+  .site-nav a {
+    padding: 10px 6px;
+  }
+
   /* The socials cost a whole nav row on a phone and are repeated in the contact
      block and the footer, so the header drops them. */
   .site-nav .nav-divider,
@@ -1861,6 +1863,14 @@ summary:focus-visible,
     padding-right: 0;
     border-right: 0;
     border-bottom: 1px solid var(--rule);
+  }
+
+  .column-grid {
+    margin-left: 0;
+  }
+
+  .column-grid > * {
+    padding-left: 0;
   }
 
   .case-study-panel article {
@@ -1906,6 +1916,13 @@ summary:focus-visible,
     grid-template-columns: minmax(0, 1fr);
     gap: 6px;
   }
+
+  .back-link,
+  .note-actions a,
+  .footer-links a,
+  .social-row a {
+    padding-block: 8px;
+  }
 }
 
 @media (max-width: 560px) {
@@ -1913,6 +1930,15 @@ summary:focus-visible,
      already says which stock is loaded, and the aria-label says the rest. */
   .theme-toggle-label {
     display: none;
+  }
+
+  .theme-toggle,
+  .lang-switch {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .hero-actions .button,

@@ -12,7 +12,7 @@ interface Props {
 
 const { title, description, canonicalPath } = Astro.props;
 
-const navItems = [{ label: "Start", href: "/" }];
+const navItems = [{ label: "Start", href: "/de/" }];
 ---
 
 <!doctype html>
@@ -21,9 +21,9 @@ const navItems = [{ label: "Start", href: "/" }];
     <BaseHead title={title} description={description} canonicalPath={canonicalPath} ogLocale="de_AT" />
   </head>
   <body>
-    <SiteHeader navItems={navItems} ariaLabel="Seitennavigation" homeHref="/" lang="de" />
+    <SiteHeader navItems={navItems} ariaLabel="Seitennavigation" homeHref="/de/" lang="de" />
 
-    <main class="legal-page section-shell">
+    <main id="main" class="legal-page section-shell">
       <slot />
     </main>
 

@@ -1,5 +1,7 @@
 ---
 import { author, canonicalOrigin, personSameAs, socialCard, toCanonicalUrl } from "@/data/siteMetadata";
+import geistLatin from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url";
+import geistMonoLatin from "@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url";
 
 interface HreflangAlternate {
   hreflang: string;
@@ -75,6 +77,10 @@ const websiteLd = {
 <meta name="description" content={description} />
 <meta name="author" content="Johannes Grof" />
 <meta name="theme-color" content="#12110f" />
+{/* Preload the self-hosted display faces so they swap in before the headline
+    renders and the typewriter measures its height. */}
+<link rel="preload" href={geistLatin} as="font" type="font/woff2" crossorigin />
+<link rel="preload" href={geistMonoLatin} as="font" type="font/woff2" crossorigin />
 {/* Runs before the first paint, so a reader who chose the light stock never
     sees the dark one flash first. No stored choice means dark. */}
 <script is:inline>

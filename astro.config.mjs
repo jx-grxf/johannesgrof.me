@@ -6,9 +6,10 @@ export default defineConfig({
   devToolbar: {
     enabled: false,
   },
-  adapter: vercel({
-    webAnalytics: {
-      enabled: true,
+  image: {
+    service: {
+      entrypoint: "astro/assets/services/noop",
     },
-  }),
+  },
+  adapter: vercel(),
 });

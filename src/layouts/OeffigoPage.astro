@@ -125,7 +125,7 @@ const oeffigoSchema = {
   <body>
     <SiteHeader navItems={navItems} ariaLabel={s.navLabel} homeHref={isDe ? "/de/" : "/"} langSwitch={langSwitch} lang={lang} />
 
-    <main class="section-shell">
+    <main id="main" class="section-shell">
       <div class="project-detail">
         <a class="back-link" href={isDe ? "/de/" : "/"}>{s.back}</a>
       </div>
@@ -180,7 +180,7 @@ const oeffigoSchema = {
           <span class="section-num">02</span>
           <h2 id="oeffigo-live-title">{oeffigo.liveProof.eyebrow[lang]}</h2>
         </div>
-        <div class="note-block" style="margin-top: 0">
+        <div class="note-block note-block--flush">
           <h3>{oeffigo.liveProof.title[lang]}</h3>
           <p>{oeffigo.liveProof.body[lang]}</p>
           <ul>
@@ -223,7 +223,7 @@ const oeffigoSchema = {
           <span class="section-num">04</span>
           <h2 id="oeffigo-beta-title">{s.beta}</h2>
         </div>
-        <div class="note-block" style="margin-top: 0">
+        <div class="note-block note-block--flush">
           <h3>{oeffigo.beta.headline[lang]}</h3>
           <p>{oeffigo.beta.body[lang]}</p>
           <div class="note-actions">
