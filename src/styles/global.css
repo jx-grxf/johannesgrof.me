@@ -1587,12 +1587,15 @@ summary:focus-visible,
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 0;
-  margin: clamp(36px, 5vw, 56px) 0 0 -30px;
-  border-top: 1px solid var(--ink);
+  /* No rule of its own: the hero (or the showcase) already closes with one
+     directly above, and a second heavy line 56px below it read as a mistake.
+     The columns hang off that rule instead, the way a table body hangs off
+     its header. */
+  margin: 0 0 0 -30px;
 }
 
 .case-study-panel article {
-  padding: 26px 30px 34px 30px;
+  padding: 30px 30px 34px 30px;
   border-right: 1px solid var(--rule);
 }
 
