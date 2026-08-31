@@ -1587,13 +1587,12 @@ summary:focus-visible,
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 0;
-  padding: clamp(36px, 5vw, 56px) 0 0;
-  border-top: 0;
+  margin: clamp(36px, 5vw, 56px) 0 0 -30px;
+  border-top: 1px solid var(--ink);
 }
 
 .case-study-panel article {
-  padding: 24px 28px 30px 0;
-  border-top: 1px solid var(--ink);
+  padding: 26px 30px 34px 30px;
   border-right: 1px solid var(--rule);
 }
 
@@ -1865,20 +1864,14 @@ summary:focus-visible,
     border-bottom: 1px solid var(--rule);
   }
 
-  .column-grid {
+  .column-grid,
+  .case-study-panel {
     margin-left: 0;
   }
 
-  .column-grid > * {
-    padding-left: 0;
-  }
-
+  .column-grid > *,
   .case-study-panel article {
-    border-top: 0;
-  }
-
-  .case-study-panel article:first-child {
-    border-top: 1px solid var(--ink);
+    padding-left: 0;
   }
 
   .index-row {
