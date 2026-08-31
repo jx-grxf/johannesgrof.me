@@ -48,6 +48,8 @@ export interface Project {
   repo: `jx-grxf/${string}`;
   githubUrl: string;
   releaseUrl: string;
+  /** Deployed, publicly usable version of the project, when there is one. */
+  liveUrl?: string;
   fallbackVersion: string;
   npmPackage?: string;
   downloadsDisabled?: boolean;
@@ -368,7 +370,7 @@ export const featuredProjects: Project[] = [
   {
     name: "OpenClaw-Discord-Voice",
     slug: "openclaw-discord-voice",
-    status: "active",
+    status: "archived",
     tagline: "Talk to a local OpenClaw agent through a Discord voice channel.",
     description:
       "Join a voice channel, speak one turn, and the bridge transcribes it locally with Whisper, hands it to your local OpenClaw session, and plays the reply back. The whole pipeline stays on your machine and in view.",
@@ -390,7 +392,7 @@ export const featuredProjects: Project[] = [
         built: "Eine self-hosted Discord.js-Bridge: Opus-Decode, ffmpeg zu WAV, lokale whisper-cli-Transkription, eine Session pro Guild und umschaltbare Stimmen (Piper, macOS say oder ElevenLabs).",
         result: "Die Sprache bleibt auf deinem Rechner, die Session gehört dir, und jeder Schritt der Pipeline ist einsehbar.",
       },
-      proofLabels: ["GitHub-Release", "TypeScript-Bridge"],
+      proofLabels: ["Archiviert", "TypeScript-Bridge"],
       highlights: [
         "Nimmt einen gesprochenen Zug auf und transkribiert ihn lokal mit whisper-cli — kein Cloud-STT.",
         "Verbindet direkt mit deiner lokalen OpenClaw-Session, eine pro Discord-Guild.",
@@ -402,10 +404,11 @@ export const featuredProjects: Project[] = [
     featuredTier: "project",
     repo: "jx-grxf/OpenClaw-Discord-Voice",
     githubUrl: "https://github.com/jx-grxf/OpenClaw-Discord-Voice",
-    releaseUrl: "https://github.com/jx-grxf/OpenClaw-Discord-Voice/releases/tag/v1.0.4",
-    fallbackVersion: "v1.0.4",
+    releaseUrl: "https://github.com/jx-grxf/OpenClaw-Discord-Voice",
+    fallbackVersion: "archived",
+    downloadsDisabled: true,
     platformLabels: ["Node.js", "Discord"],
-    proofLabels: ["GitHub release", "TypeScript bridge"],
+    proofLabels: ["Archived", "TypeScript bridge"],
     highlights: [
       "Captures one spoken turn and transcribes it locally with whisper-cli — no cloud STT.",
       "Bridges straight into your local OpenClaw session, one per Discord guild.",
@@ -422,7 +425,7 @@ export const featuredProjects: Project[] = [
         height: 900,
       },
     ],
-    visibility: "public",
+    visibility: "private",
   },
   {
     name: "HealthKit-MCP",
@@ -477,7 +480,7 @@ export const featuredProjects: Project[] = [
   {
     name: "DocxToPDF",
     slug: "docxtopdf",
-    status: "active",
+    status: "archived",
     tagline: "Batch-convert DOCX to PDF using Word itself as the engine.",
     description:
       "A keyboard-driven macOS tool that Spotlight-searches your whole Mac for DOCX files, lets you tick the ones you want, and exports them all in one Word session — so the PDFs match Word's own output, not a parser's guess.",
@@ -771,9 +774,9 @@ export const featuredProjects: Project[] = [
     // "Archived" is not a technology.
     stack: [],
     featuredTier: "project",
-    repo: "jx-grxf/Digi2PDF",
-    githubUrl: "https://github.com/jx-grxf/Digi2PDF",
-    releaseUrl: "https://github.com/jx-grxf/Digi2PDF",
+    repo: "jx-grxf/Digi2PDF-archived",
+    githubUrl: "https://github.com/jx-grxf/Digi2PDF-archived",
+    releaseUrl: "https://github.com/jx-grxf/Digi2PDF-archived",
     fallbackVersion: "archived",
     downloadsDisabled: true,
     highlights: [
@@ -787,7 +790,7 @@ export const featuredProjects: Project[] = [
   {
     name: "SlamX",
     slug: "slamx",
-    status: "active",
+    status: "archived",
     logo: {
       src: "/projects/slamx/logo.webp",
       fallbackSrc: "/projects/slamx/logo.png",
@@ -912,21 +915,21 @@ export const featuredProjects: Project[] = [
     featuredTier: "featured",
     repo: "jx-grxf/BriskEdit",
     githubUrl: "https://github.com/jx-grxf/BriskEdit",
-    releaseUrl: "https://github.com/jx-grxf/BriskEdit/releases/tag/v0.5.1",
-    fallbackVersion: "v0.5.1",
+    releaseUrl: "https://github.com/jx-grxf/BriskEdit/releases/tag/v0.5.2",
+    fallbackVersion: "v0.5.2",
     platformLabels: ["macOS"],
     proofLabels: ["Swift 6", "SwiftUI + AppKit", "Source available"],
     fallbackDownloads: [
       {
-        assetName: "BriskEdit-0.5.1.dmg",
-        assetUrl: "https://github.com/jx-grxf/BriskEdit/releases/download/v0.5.1/BriskEdit-0.5.1.dmg",
-        size: 8237929,
+        assetName: "BriskEdit-0.5.2.dmg",
+        assetUrl: "https://github.com/jx-grxf/BriskEdit/releases/download/v0.5.2/BriskEdit-0.5.2.dmg",
+        size: 8339840,
         kind: "macos",
       },
       {
-        assetName: "BriskEdit-0.5.1.zip",
-        assetUrl: "https://github.com/jx-grxf/BriskEdit/releases/download/v0.5.1/BriskEdit-0.5.1.zip",
-        size: 8333161,
+        assetName: "BriskEdit-0.5.2.zip",
+        assetUrl: "https://github.com/jx-grxf/BriskEdit/releases/download/v0.5.2/BriskEdit-0.5.2.zip",
+        size: 8423038,
         kind: "archive",
       },
     ],
@@ -961,7 +964,7 @@ export const featuredProjects: Project[] = [
   {
     name: "Hermes-Discord-Voice",
     slug: "hermes-discord-voice",
-    status: "in development",
+    status: "archived",
     tagline: "Self-hosted voice for the Hermes agent, straight in a Discord call.",
     description:
       "The bot joins your Discord voice channel, captures a spoken turn, transcribes it locally with Whisper, sends the text to Hermes, and speaks the reply back through the TTS voice you pick. Personal servers only — no hosted service in the middle.",
@@ -1142,7 +1145,7 @@ export const featuredProjects: Project[] = [
   {
     name: "NotchTray",
     slug: "notchtray",
-    status: "in development",
+    status: "active",
     tagline: "Recover the menu bar icons the MacBook notch swallows.",
     description:
       "A native macOS utility that surfaces status items hidden behind the MacBook notch and shows them in a Dynamic Island-style dropdown, so overflow menu bar icons stay reachable instead of disappearing under the camera housing.",
@@ -1164,27 +1167,35 @@ export const featuredProjects: Project[] = [
         built: "Ein Swift-Menüleisten-Tool, das überzählige Status-Items erkennt und sie in einem an der Notch verankerten Dropdown im Dynamic-Island-Stil anzeigt.",
         result: "Versteckte Icons werden wieder erreichbar — ohne Apps zu entfernen oder die ganze Menüleiste umzusortieren.",
       },
-      proofLabels: ["Swift", "macOS", "In Entwicklung"],
+      proofLabels: ["GitHub-Release", "Swift", "macOS"],
       highlights: [
         "Erkennt Status-Items, die hinter die MacBook-Notch geschoben wurden.",
         "Zeigt sie in einem Dropdown im Dynamic-Island-Stil, verankert an der Notch.",
         "Hält überzählige Menüleisten-Icons erreichbar, ohne Apps zu entfernen.",
-        "Natives Swift-Tool, aktuell in Entwicklung.",
+        "Natives Swift-Tool, seit v1.0.0 als signiertes DMG.",
       ],
     },
     stack: ["Swift", "macOS", "Menu Bar"],
     featuredTier: "project",
     repo: "jx-grxf/NotchTray",
     githubUrl: "https://github.com/jx-grxf/NotchTray",
-    releaseUrl: "https://github.com/jx-grxf/NotchTray/releases",
-    fallbackVersion: "unreleased",
+    releaseUrl: "https://github.com/jx-grxf/NotchTray/releases/tag/v1.0.0",
+    fallbackVersion: "v1.0.0",
     platformLabels: ["macOS"],
-    proofLabels: ["Swift", "macOS", "In development"],
+    proofLabels: ["GitHub release", "Swift", "macOS"],
+    fallbackDownloads: [
+      {
+        assetName: "NotchTray-1.0.0.dmg",
+        assetUrl: "https://github.com/jx-grxf/NotchTray/releases/download/v1.0.0/NotchTray-1.0.0.dmg",
+        size: 1863258,
+        kind: "macos",
+      },
+    ],
     highlights: [
       "Detects status items pushed behind the MacBook notch.",
       "Presents them in a Dynamic Island-style dropdown anchored to the notch.",
       "Keeps overflow menu bar icons reachable without removing apps.",
-      "Native Swift utility, currently in development.",
+      "Native Swift utility, shipping as a signed DMG since v1.0.0.",
     ],
     showcase: [],
     visibility: "public",
@@ -1226,8 +1237,8 @@ export const featuredProjects: Project[] = [
     featuredTier: "project",
     repo: "jx-grxf/agent-presence",
     githubUrl: "https://github.com/jx-grxf/agent-presence",
-    releaseUrl: "https://github.com/jx-grxf/agent-presence/releases/tag/v0.2.1",
-    fallbackVersion: "v0.2.1",
+    releaseUrl: "https://github.com/jx-grxf/agent-presence/releases/tag/v0.2.3",
+    fallbackVersion: "v0.2.3",
     platformLabels: ["macOS", "Windows", "Linux"],
     proofLabels: ["GitHub release", "Rust", "Single binary"],
     highlights: [
@@ -1235,6 +1246,107 @@ export const featuredProjects: Project[] = [
       "One static Rust binary — no bot token, no hosted service.",
       "Privacy-safe defaults: you control what surfaces in your status.",
       "Runs on macOS, Windows, and Linux with signed release artifacts.",
+    ],
+    showcase: [],
+    visibility: "public",
+  },
+  {
+    name: "CCrab",
+    slug: "ccrab",
+    status: "experimental",
+    tagline: "A desktop companion for Claude Code that costs zero idle CPU.",
+    description:
+      "A native macOS desktop companion for Claude Code: a pixel crab on a floating panel that reacts to what your agent sessions are doing, plus a menu bar item with your 5-hour and weekly usage bars, every live session, and recent projects. Written in Swift against AppKit and Core Animation — no Electron, no WebView.",
+    audience: "For developers running Claude Code all day who want ambient session state and usage limits without another Electron window.",
+    result: "You can tell at a glance what your agent is doing and how much of your window is left, and the app costs nothing while it sits there.",
+    caseStudy: {
+      problem: "Ambient status for a coding agent normally means either a browser tab or an Electron app, and both burn CPU permanently for a widget you only glance at.",
+      built: "Every animation is a Core Animation keyframe over layer contents, so the render server owns the timeline and the process gets no per-frame wakeups. The resting pose is parsed from vector rects into CALayers instead of decoded bitmaps, and animations are removed — not paused — the moment the panel is occluded, the display sleeps, or the screen locks.",
+      result: "0.0% CPU whether idle or playing a 60-frame sprite loop, with a bounded three-animation decode cache that is purged entirely whenever the renderer parks.",
+    },
+    de: {
+      tagline: "Ein Desktop-Begleiter für Claude Code, der im Leerlauf null CPU kostet.",
+      description:
+        "Ein nativer macOS-Desktop-Begleiter für Claude Code: eine Pixel-Krabbe auf einem schwebenden Panel, die darauf reagiert, was deine Agent-Sessions gerade tun — dazu ein Menüleisten-Item mit 5-Stunden- und Wochen-Verbrauchsbalken, allen aktiven Sessions und zuletzt genutzten Projekten. In Swift gegen AppKit und Core Animation geschrieben — kein Electron, kein WebView.",
+      audience: "Für Entwickler, die den ganzen Tag Claude Code laufen lassen und Session-Status und Limits im Blick haben wollen — ohne ein weiteres Electron-Fenster.",
+      result: "Du siehst auf einen Blick, was der Agent tut und wie viel vom Fenster noch übrig ist — und die App kostet nichts, während sie einfach dasteht.",
+      caseStudy: {
+        problem: "Ambienter Status für einen Coding-Agenten heißt sonst Browser-Tab oder Electron-App — beide verbrennen dauerhaft CPU für ein Widget, auf das man nur kurz schaut.",
+        built: "Jede Animation ist eine Core-Animation-Keyframe-Animation über Layer-Contents, damit der Render-Server die Zeitachse besitzt und der Prozess keine Wakeups pro Frame bekommt. Die Ruhepose wird aus Vektor-Rects in CALayer geparst statt als Bitmap dekodiert, und Animationen werden entfernt — nicht pausiert —, sobald das Panel verdeckt ist, das Display schläft oder der Bildschirm sperrt.",
+        result: "0,0 % CPU, egal ob im Leerlauf oder bei einer 60-Frame-Sprite-Schleife, mit einem auf drei Animationen begrenzten Decode-Cache, der beim Parken des Renderers komplett geleert wird.",
+      },
+      proofLabels: ["0,0 % CPU im Leerlauf", "Swift 6", "AppKit + Core Animation"],
+      highlights: [
+        "0,0 % CPU im Leerlauf und während der Animation — Core Animation besitzt die Zeitachse, kein Timer, kein Draw-Loop.",
+        "Menüleiste mit 5-Stunden- und Wochen-Verbrauchsbalken, Reset-Countdown und jeder aktiven Session.",
+        "Status kommt über Claude-Code-Hooks an einen Loopback-Endpunkt — kein Polling, keine zusätzlichen API-Aufrufe, kein Token wird gelesen.",
+        "Der Verbinden-Schritt sichert deine settings.json vorher weg und lässt fremde Hook-Einträge unangetastet.",
+      ],
+    },
+    stack: ["Swift", "AppKit", "Core Animation"],
+    featuredTier: "project",
+    repo: "jx-grxf/CCrab",
+    githubUrl: "https://github.com/jx-grxf/CCrab",
+    releaseUrl: "https://github.com/jx-grxf/CCrab",
+    fallbackVersion: "unreleased",
+    platformLabels: ["macOS 14+"],
+    proofLabels: ["0.0% idle CPU", "Swift 6", "AppKit + Core Animation"],
+    highlights: [
+      "0.0% CPU idle and while animating — Core Animation owns the timeline, so there is no timer and no draw loop.",
+      "Menu bar with 5-hour and weekly usage bars, reset countdowns, and every live session.",
+      "State arrives over Claude Code hooks on a loopback endpoint — nothing polls, no extra API calls, no token is read.",
+      "Connecting backs up your settings.json first and leaves other tools' hook entries alone.",
+    ],
+    showcase: [],
+    visibility: "public",
+  },
+  {
+    name: "Tools",
+    slug: "tools",
+    status: "active",
+    tagline: "Merge, split, rotate and convert PDFs and images — entirely in your browser.",
+    description:
+      "A small web app that does the everyday PDF and image jobs without an upload: merge, split, extract or delete pages, rotate, PDF to images, images to PDF, and format conversion. Every file is processed in the browser, so nothing is sent anywhere and there is no size limit beyond your own memory.",
+    audience: "For anyone who needs to fix a PDF quickly and would rather not hand the file to a random website.",
+    result: "Drop the file in, get the result back, and the file never leaves the machine it was on.",
+    caseStudy: {
+      problem: "Free online PDF tools want an upload, which is the one thing you do not want for a contract, a payslip or a scan.",
+      built: "Vite and TypeScript with no UI framework, conversions written as pure functions with no DOM access so they can be unit tested in Node, and a tool registry that makes adding a new operation a one-entry change. pdf-lib writes, pdf.js reads and renders, fflate zips — all bundled, nothing loaded from a CDN at runtime.",
+      result: "Runs on a t4g.nano behind Cloudflare, deployed from GitHub Actions over OIDC and SSM with no long-lived AWS key and no inbound port open for the deploy.",
+    },
+    de: {
+      tagline: "PDFs und Bilder zusammenführen, teilen, drehen und konvertieren — komplett im Browser.",
+      description:
+        "Eine kleine Web-App für die alltäglichen PDF- und Bild-Aufgaben, ganz ohne Upload: zusammenführen, teilen, Seiten extrahieren oder löschen, drehen, PDF zu Bildern, Bilder zu PDF und Formatkonvertierung. Jede Datei wird im Browser verarbeitet — es wird nichts verschickt, und es gibt kein Größenlimit außer deinem eigenen Arbeitsspeicher.",
+      audience: "Für alle, die schnell ein PDF richten müssen und die Datei ungern einer beliebigen Website geben.",
+      result: "Datei reinziehen, Ergebnis zurückbekommen — und die Datei verlässt das Gerät nie.",
+      caseStudy: {
+        problem: "Kostenlose Online-PDF-Tools wollen einen Upload — genau das, was man bei einem Vertrag, einer Lohnabrechnung oder einem Scan nicht will.",
+        built: "Vite und TypeScript ohne UI-Framework, die Konvertierungen als reine Funktionen ohne DOM-Zugriff geschrieben, damit sie in Node testbar sind, und eine Tool-Registry, in der ein neues Werkzeug ein einziger Eintrag ist. pdf-lib schreibt, pdf.js liest und rendert, fflate zippt — alles gebündelt, zur Laufzeit wird nichts von einem CDN geladen.",
+        result: "Läuft auf einer t4g.nano hinter Cloudflare, deployt aus GitHub Actions über OIDC und SSM — ohne langlebigen AWS-Key und ohne offenen eingehenden Port für das Deployment.",
+      },
+      proofLabels: ["Live", "Kein Upload", "TypeScript"],
+      highlights: [
+        "Zusammenführen, teilen, Seiten extrahieren und löschen, drehen, PDF zu Bildern, Bilder zu PDF, Bildformate konvertieren.",
+        "Alles läuft im Browser — keine Datei wird hochgeladen, kein Konto, kein Größenlimit außer dem Arbeitsspeicher.",
+        "Ergebnisse einzeln oder als ZIP; die Grenzen (kein OCR, keine verschlüsselten PDFs) stehen offen im README.",
+        "Deployment aus GitHub Actions über OIDC und SSM, ohne langlebigen AWS-Key im Repository.",
+      ],
+    },
+    stack: ["TypeScript", "Vite", "pdf-lib"],
+    featuredTier: "project",
+    repo: "jx-grxf/tools",
+    githubUrl: "https://github.com/jx-grxf/tools",
+    releaseUrl: "https://github.com/jx-grxf/tools",
+    liveUrl: "https://tools.johannesgrof.me",
+    fallbackVersion: "unreleased",
+    platformLabels: ["Web"],
+    proofLabels: ["Live", "No upload", "TypeScript"],
+    highlights: [
+      "Merge, split, extract and delete pages, rotate, PDF to images, images to PDF, and image format conversion.",
+      "Everything runs in the browser — no upload, no account, no size limit beyond your own memory.",
+      "Results download individually or as a ZIP, and the limits (no OCR, no encrypted PDFs) are stated openly in the README.",
+      "Deployed from GitHub Actions over OIDC and SSM, with no long-lived AWS key in the repository.",
     ],
     showcase: [],
     visibility: "public",
@@ -1273,7 +1385,7 @@ export const projectSections: ProjectSection[] = [
       eyebrow: "mac-apps",
       title: "Mac-Apps",
     },
-    projects: orderedProjects(["bottlelite", "slamx", "poise", "claude-swap-bar", "notchtray", "portpirate"]),
+    projects: orderedProjects(["bottlelite", "poise", "claude-swap-bar", "notchtray", "ccrab", "portpirate", "slamx"]),
   },
   {
     eyebrow: "agents & tools",
@@ -1291,7 +1403,7 @@ export const projectSections: ProjectSection[] = [
       eyebrow: "mehr",
       title: "Weitere Projekte",
     },
-    projects: orderedProjects(["caruso-reborn", "ip-multitool", "docxtopdf", "digi2pdf"]),
+    projects: orderedProjects(["tools", "caruso-reborn", "ip-multitool", "docxtopdf", "digi2pdf"]),
   },
 ];
 

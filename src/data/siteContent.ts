@@ -131,7 +131,7 @@ const en: LocaleContent = {
     groups: [
       {
         title: "Native and web",
-        items: ["Swift", "SwiftUI", "AppKit", "TypeScript", "Python", "Astro"],
+        items: ["Swift", "SwiftUI", "AppKit", "TypeScript", "Rust", "Python", "Astro"],
       },
       {
         title: "Automation",
@@ -139,7 +139,7 @@ const en: LocaleContent = {
       },
       {
         title: "Shipping",
-        items: ["GitHub releases", "DMG packaging", "Notarization", "Sparkle update feeds", "Static hosting & deploys"],
+        items: ["GitHub releases", "DMG packaging", "Notarization", "Sparkle update feeds", "GitHub Actions CI", "Static hosting & deploys"],
       },
     ],
   },
@@ -254,7 +254,7 @@ const de: LocaleContent = {
     groups: [
       {
         title: "Native und Web",
-        items: ["Swift", "SwiftUI", "AppKit", "TypeScript", "Python", "Astro"],
+        items: ["Swift", "SwiftUI", "AppKit", "TypeScript", "Rust", "Python", "Astro"],
       },
       {
         title: "Automatisierung",
@@ -262,7 +262,7 @@ const de: LocaleContent = {
       },
       {
         title: "Ausliefern",
-        items: ["GitHub-Releases", "DMG-Packaging", "Notarisierung", "Sparkle-Update-Feeds", "Static Hosting & Deploys"],
+        items: ["GitHub-Releases", "DMG-Packaging", "Notarisierung", "Sparkle-Update-Feeds", "GitHub Actions CI", "Static Hosting & Deploys"],
       },
     ],
   },

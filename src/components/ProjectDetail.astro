@@ -47,6 +47,8 @@ const s = isDe
       installNpmError: "Kopieren fehlgeschlagen",
       openSource: "Quelltext öffnen",
       githubArchive: "GitHub-Archiv",
+      openLive: "Live öffnen",
+      live: "Live",
       comingSoonNote: "Öffentliches Release in Kürze — dieser Build ist noch in privater Entwicklung.",
       problem: "Problem",
       built: "Was ich gebaut habe",
@@ -92,6 +94,8 @@ const s = isDe
       installNpmError: "Copy failed",
       openSource: "Open source",
       githubArchive: "GitHub archive",
+      openLive: "Open live",
+      live: "Live",
       comingSoonNote: "Public release coming soon — this build is still in private development.",
       problem: "Problem",
       built: "What I built",
@@ -118,6 +122,7 @@ const s = isDe
 const localePrefix = isDe ? "/de" : "";
 const navItems = [
   { label: s.projects, href: `${isDe ? "/de/" : "/"}#projects` },
+  ...(project.liveUrl ? [{ label: s.live, href: project.liveUrl, external: true }] : []),
   ...(isPublicRepo ? [{ label: "GitHub", href: project.githubUrl, external: true }] : []),
   ...(hasRelease ? [{ label: s.release, href: github.releaseUrl, external: true }] : []),
 ];
@@ -204,6 +209,7 @@ const downloadLabel = project.downloadsDisabled
     : s.source;
 const metaItems = [
   hasRelease ? { label: s.latestRelease, value: github.version } : undefined,
+  project.liveUrl ? { label: s.live, value: new URL(project.liveUrl).host } : undefined,
   { label: s.platform, value: platformValue },
   { label: downloadLabel, value: downloadValue },
   github.updatedAt ? { label: s.updated, value: formatDate(github.updatedAt) } : undefined,
@@ -320,9 +326,19 @@ const hreflangAlternates = [
                 </a>
               )
             )}
+            {project.liveUrl && (
+              downloads.length > 0 ? (
+                <a class="button secondary" href={project.liveUrl} target="_blank" rel="noreferrer">{s.openLive}</a>
+              ) : (
+                <a class="button download-button release" href={project.liveUrl} target="_blank" rel="noreferrer">
+                  <span>{s.openLive}</span>
+                  <small>{new URL(project.liveUrl).host}</small>
+                </a>
+              )
+            )}
             {isPublicRepo && <a class="button secondary" href={project.githubUrl} target="_blank" rel="noreferrer">{project.downloadsDisabled ? s.githubArchive : s.openSource}</a>}
             {hasRelease && <a class="button secondary" href={github.releaseUrl} target="_blank" rel="noreferrer">{s.latestRelease}</a>}
-            {!isPublicRepo && !hasRelease && !github.downloadGroup && !npmInstallCommand && (
+            {!isPublicRepo && !hasRelease && !github.downloadGroup && !npmInstallCommand && !project.liveUrl && project.status !== "archived" && (
               <p class="actions-note">{s.comingSoonNote}</p>
             )}
           </div>
