@@ -11,7 +11,5 @@ DerivedData/
 output/
 .playwright-cli/
 .codexignore
-.vercel
-.codexignore
 AGENTS.md
 .env*

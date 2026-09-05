@@ -33,6 +33,16 @@
       ],
       "destination": "https://www.johannesgrof.me/:path*",
       "permanent": true
+    },
+    {
+      "source": "/projects/digi2pdf",
+      "destination": "/#projects",
+      "permanent": true
+    },
+    {
+      "source": "/de/projects/digi2pdf",
+      "destination": "/de/#projects",
+      "permanent": true
     }
   ],
   "headers": [
@@ -58,7 +68,7 @@
       ]
     },
     {
-      "source": "/projects/(.*)",
+      "source": "/projects/(.*)\\.(webp|png|jpg|jpeg|svg|mp4)",
       "headers": [
         {
           "key": "Cache-Control",
