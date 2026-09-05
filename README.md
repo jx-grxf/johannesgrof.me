@@ -93,7 +93,7 @@ The site is deployed with Vercel. Production builds use:
 npm run build
 ```
 
-The canonical host is `johannesgrof.me`. Permanent host redirects (including `www`) are managed in `vercel.json`, so leave domain redirects unset in Vercel project settings to avoid conflicting rules. Both apex and `www` domains must remain assigned to the project.
+The canonical host is `johannesgrof.me`. In Vercel project settings, the apex domain must have no redirect and `www.johannesgrof.me` must redirect to `johannesgrof.me` with status 308. Keep the matching host rules in `vercel.json` aligned with these settings. Both domains must remain assigned to the project.
 
 ### Build environment
 
