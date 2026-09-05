@@ -1,0 +1,48 @@
+---
+import ErrorMascot from "@/components/ErrorMascot.astro";
+import { contactMessages } from "@/data/contactMessages";
+import type { ContactFormContent, Locale } from "@/data/siteContent";
+
+interface Props { content: ContactFormContent; lang: Locale }
+const { content, lang } = Astro.props;
+const copy = contactMessages[lang];
+const sitekey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+---
+
+<form class="contact-form" id="contact-form" data-lang={lang} novalidate>
+  <div class="contact-field">
+    <label for="contact-name">{content.nameLabel}</label>
+    <input type="text" id="contact-name" name="name" autocomplete="name" maxlength="120" placeholder={content.namePlaceholder} required />
+  </div>
+  <div class="contact-field">
+    <label for="contact-email">{content.emailLabel}</label>
+    <input type="email" id="contact-email" name="email" autocomplete="email" maxlength="320" placeholder={content.emailPlaceholder} required />
+  </div>
+  <div class="contact-field">
+    <label for="contact-message">{content.messageLabel}</label>
+    <textarea id="contact-message" name="message" rows="5" maxlength="5000" placeholder={content.messagePlaceholder} required></textarea>
+  </div>
+  <input type="text" name="company" class="contact-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
+  <div class="contact-verification" aria-labelledby="verification-title">
+    <div class="verification-heading"><span class="verification-dot" aria-hidden="true"></span><h3 id="verification-title">{copy.verification}</h3><span class="verification-provider">Cloudflare</span></div>
+    <div class="cf-turnstile" data-sitekey={sitekey} data-action="turnstile-spin-v2"></div>
+    <p class="verification-status" aria-live="polite">{copy.checking}</p>
+    <button class="verification-retry" type="button" hidden>{copy.retry}</button>
+  </div>
+  <div class="contact-actions">
+    <button type="submit" class="contact-submit" data-label={content.submit} data-sending={content.sending} disabled>{content.submit}<span aria-hidden="true">↗</span></button>
+    <a class="contact-email-alternative" href="mailto:contact@johannesgrof.me">{copy.email}</a>
+  </div>
+  <div class="contact-status" role="status" aria-live="polite" aria-atomic="true">
+    <div class="contact-status-card" hidden>
+      <ErrorMascot />
+      <div><p class="contact-status-title"></p><p class="contact-status-body"></p></div>
+    </div>
+  </div>
+  <noscript><p class="contact-privacy-note">{copy.noScript}</p></noscript>
+  <p class="contact-privacy-note"><a href="/datenschutz/">{copy.privacy}</a></p>
+</form>
+
+<script>
+  import "@/scripts/contact";
+</script>

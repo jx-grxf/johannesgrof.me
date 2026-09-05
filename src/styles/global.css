@@ -45,7 +45,7 @@
   --label-size: 0.72rem;
   --label-track: 0.14em;
 
-  /* The printed grid the whole site sits on. Fixed, so every sheet lines up. */
+  /* Keep the grid on the scrolling surface so the browser can reuse its paint. */
   --grid-size: 28px;
   --grid-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
     linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
@@ -98,12 +98,6 @@ body {
   font-variant-numeric: tabular-nums lining-nums;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  body {
-    background-attachment: fixed;
-  }
 }
 
 a {
@@ -204,21 +198,13 @@ summary:focus-visible,
   border-top: 1px solid var(--rule);
 }
 
-/* Tinted bands read as a second sheet laid on the first. They carry the same
-   fixed grid so the ruling runs straight through the seam. */
+/* Tinted bands carry the same grid; fixed backgrounds would repaint on scroll. */
 .band--tint,
 .oeffigo-band {
   background-color: var(--paper-2);
   background-image: var(--grid-image);
   background-size: var(--grid-size) var(--grid-size);
   background-attachment: scroll;
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .band--tint,
-  .oeffigo-band {
-    background-attachment: fixed;
-  }
 }
 
 .display-em {
@@ -546,12 +532,21 @@ summary:focus-visible,
   gap: 8px 24px;
   padding: 22px 0;
   border-bottom: 1px solid var(--rule);
-  transition: padding-left 220ms var(--smooth), border-color 200ms ease;
+  transition: border-color 200ms ease;
 }
 
 .index-row:hover {
-  padding-left: 14px;
   border-bottom-color: var(--ink);
+}
+
+.index-row > * {
+  transition: transform 220ms var(--smooth);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .index-row:hover > * {
+    transform: translateX(10px);
+  }
 }
 
 .index-num {
@@ -1226,18 +1221,145 @@ summary:focus-visible,
   cursor: progress;
 }
 
-.contact-status {
-  margin: 0;
-  min-height: 1.2em;
-  font-size: 0.92rem;
+/* Verification and delivery share one quiet, bordered surface. */
+.contact-verification {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--rule-2);
+  background: var(--paper-2);
 }
 
-.contact-status.is-success {
+.verification-heading {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 16px;
+}
+
+.verification-heading h3 {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+.verification-dot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  background: var(--mute);
+}
+
+.verification-provider {
+  margin-left: auto;
+  color: var(--mute);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+}
+
+.cf-turnstile {
+  min-height: 65px;
+  min-width: 0;
+}
+
+.verification-status {
+  margin: 12px 0 0;
+  color: var(--mute);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.contact-verification[data-state="verified"] .verification-dot {
+  background: var(--signal);
+}
+
+.contact-verification[data-state="error"] {
+  border-color: var(--signal);
+}
+
+.verification-retry {
+  margin-top: 10px;
+  padding: 4px 0;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  color: var(--ink);
+  background: none;
+  font: inherit;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.contact-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+.contact-submit {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.contact-submit:disabled {
+  cursor: not-allowed;
+}
+
+.contact-form[aria-busy="true"] .contact-submit {
+  cursor: progress;
+}
+
+.contact-email-alternative {
+  color: var(--mute);
+  font-size: 0.8rem;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.contact-email-alternative:hover {
   color: var(--ink);
 }
 
-.contact-status.is-error {
-  color: var(--signal-ink);
+.contact-status {
+  margin: 0;
+}
+
+.contact-status:has([hidden]) {
+  display: none;
+}
+
+.contact-status-card {
+  display: grid;
+  grid-template-columns: 68px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
+  border: 1px solid var(--rule-2);
+  padding: 18px;
+  background: var(--paper-2);
+}
+
+.contact-status-card[hidden], .verification-retry[hidden] {
+  display: none;
+}
+
+.contact-status-title {
+  margin: 0;
+  color: var(--ink);
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: -0.02em;
+}
+
+.contact-status-body {
+  margin: 7px 0 0;
+  color: var(--ink-2);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.contact-status-card .error-mascot {
+  width: 68px;
 }
 
 .contact-privacy-note {
@@ -1756,7 +1878,7 @@ summary:focus-visible,
 .project-pager-link {
   display: grid;
   gap: 6px;
-  transition: padding 220ms var(--smooth);
+  transition: transform 220ms var(--smooth);
 }
 
 .project-pager-link--next {
@@ -1771,11 +1893,11 @@ summary:focus-visible,
 /* The same hover indent the project index uses, mirrored so each side leans
    towards the project it points at. */
 .project-pager-link--prev:hover {
-  padding-left: 10px;
+  transform: translateX(10px);
 }
 
 .project-pager-link--next:hover {
-  padding-right: 10px;
+  transform: translateX(-10px);
 }
 
 .project-pager-link span {
@@ -1884,56 +2006,244 @@ summary:focus-visible,
    404
    --------------------------------------------------------------------------- */
 
+.error-page {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
 .notfound {
-  max-width: 720px;
-  margin-inline: auto;
-  padding-block: clamp(56px, 9vw, 104px);
+  width: var(--shell);
+  max-width: 850px;
+  margin: auto;
+  padding-block: clamp(36px, 6vw, 72px);
 }
 
-/* The miss reported the way a shell would report it — same prompt colour as the
-   brand mark in the header, so the two read as one voice. */
-.notfound-shell {
-  margin: 22px 0 40px;
-  border: 1px solid var(--rule-2);
-  padding: 18px 20px;
-  overflow-x: auto;
-  background: var(--paper-2);
-  color: var(--ink-2);
+.notfound-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.notfound-topline .eyebrow {
+  margin: 0;
+}
+
+.error-language {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--mute);
   font-family: var(--font-mono);
-  font-size: 0.86rem;
-  line-height: 1.7;
+  font-size: 0.72rem;
 }
 
-.notfound-prompt {
+.error-language button {
+  border: 0;
+  background: transparent;
+  color: var(--mute);
+  padding: 10px 5px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.error-language button[aria-pressed="true"] {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
+.error-page [data-error-lang="de"], html[lang="de"] .error-page [data-error-lang="en"] {
+  display: none;
+}
+
+html[lang="de"] .error-page [data-error-lang="de"] {
+  display: block;
+}
+
+.notfound-scene {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  gap: 0.08em;
+  padding: 20px 0 45px;
+  margin: 15px auto 40px;
+  max-width: 650px;
+  font-family: var(--font-mono);
+  font-size: clamp(7.5rem, 24vw, 15rem);
+  font-weight: 600;
+  line-height: 1.1;
+  user-select: none;
+}
+
+.notfound-digit {
+  color: var(--rule-2);
+}
+
+.notfound-zero {
+  display: block;
   color: var(--signal);
+  transform: translateY(-14px) rotate(-10deg);
+  animation: zero-lift 7s ease-in-out infinite;
+}
+
+.notfound-searcher {
+  position: absolute;
+  width: 20%;
+  max-width: 112px;
+  bottom: 0;
+  left: 47%;
+  transform: rotate(-7deg);
+}
+
+.notfound-floor {
+  position: absolute;
+  bottom: 3px;
+  left: 6%;
+  right: 6%;
+  border-bottom: 1px dashed var(--rule-2);
 }
 
 .notfound h1 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4.4vw, 3rem);
+  font-size: clamp(2rem, 5vw, 3.4rem);
   font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1.05;
+  letter-spacing: -0.045em;
+  line-height: 1.08;
+  text-wrap: balance;
 }
 
 .notfound-text {
-  max-width: 52ch;
-  margin: 20px 0 0;
+  margin: 18px 0 0;
   color: var(--ink-2);
   line-height: 1.6;
-}
-
-.notfound-text--de {
-  color: var(--mute);
-  font-size: 0.94rem;
 }
 
 .notfound-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin: 36px 0 0;
+  margin: 30px 0 0;
+}
+
+.notfound-actions .primary {
+  gap: 24px;
+}
+
+.notfound-path {
+  display: flex;
+  gap: 10px;
+  margin: 34px 0 0;
+  color: var(--mute);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.notfound-path code {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.error-mascot {
+  display: block;
+  width: 100%;
+  overflow: visible;
+  color: var(--signal);
+}
+
+.mascot-shadow {
+  stroke: var(--rule-2);
+  stroke-width: 2;
+}
+
+.mascot-limbs, .mascot-antenna {
+  stroke: var(--signal);
+  stroke-width: 5;
+  stroke-linejoin: round;
+}
+
+.mascot-body {
+  fill: var(--signal);
+}
+
+.mascot-eyes, .mascot-mouth {
+  stroke: var(--paper);
+  stroke-width: 4;
+  stroke-linecap: square;
+}
+
+.mascot-eyes {
+  animation: mascot-blink 7s step-end infinite;
+  transform-origin: 50px 49px;
+}
+
+.mascot-envelope, .mascot-clock, .mascot-gear {
+  fill: var(--paper-2);
+  stroke: var(--signal);
+  stroke-width: 3;
+  stroke-linejoin: round;
+}
+
+.mascot-cable {
+  stroke: var(--signal);
+  stroke-width: 4;
+}
+
+.mascot-cable, .mascot-clock, .mascot-gear {
+  display: none;
+}
+
+[data-state="offline"] .mascot-envelope, [data-state="timeout"] .mascot-envelope, [data-state="limited"] .mascot-envelope, [data-state="server"] .mascot-envelope {
+  display: none;
+}
+
+[data-state="offline"] .mascot-cable, [data-state="timeout"] .mascot-clock, [data-state="limited"] .mascot-clock, [data-state="server"] .mascot-gear {
+  display: block;
+}
+
+[data-state="success"] .mascot-envelope {
+  transform: translate(8px, -15px) rotate(-8deg);
+  transform-origin: center;
+}
+
+@keyframes zero-lift {
+  0%, 20%, 80%, 100% {
+    transform: translateY(-14px) rotate(-10deg);
+  }
+  40%, 60% {
+    transform: translateY(-23px) rotate(-14deg);
+  }
+}
+
+@keyframes mascot-blink {
+  0%, 43%, 47%, 100% {
+    transform: scaleY(1);
+  }
+  45% {
+    transform: scaleY(0.1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notfound-zero, .mascot-eyes {
+    animation: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .contact-verification {
+    padding: 12px 8px;
+  }
+  .contact-status-card {
+    grid-template-columns: 48px minmax(0, 1fr);
+    padding: 12px;
+    gap: 12px;
+  }
+  .contact-status-card .error-mascot {
+    width: 48px;
+  }
 }
 
 /* ---------------------------------------------------------------------------
@@ -2069,6 +2379,7 @@ summary:focus-visible,
   .index-meta {
     grid-column: 2;
     flex-direction: row;
+    flex-wrap: wrap;
     align-items: baseline;
     gap: 14px;
     text-align: left;

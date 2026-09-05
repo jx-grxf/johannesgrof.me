@@ -99,7 +99,13 @@ npm run build
 | --- | --- |
 | `GITHUB_TOKEN` | Build-time GitHub lookups. Without it the build is limited to 60 requests an hour and logs a warning and falls back to the checked-in metadata; use a fine-grained token with read-only access to public repositories. |
 | `RESEND_API_KEY` | Sending contact-form mail. |
+| `PUBLIC_TURNSTILE_SITE_KEY` | Public Cloudflare Turnstile widget key, embedded at build time. |
+| `TURNSTILE_SECRET` | Server-only Turnstile verification secret. Required before contact messages can be sent. |
 | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Per-IP rate limiting on the contact endpoint. Production refuses submissions when they are missing. |
+
+The contact widget uses managed mode and the `turnstile-spin-v2` action. Register the production hostname and the exact preview branch hostname in Cloudflare; deployment-specific Vercel URLs need their own hostname registration. The backend verifies the token, hostname, and action before calling Resend. Keep the secret in Vercel's secret store and an ignored local environment file.
+
+For browser automation, use [Cloudflare's official test sitekeys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/) locally and mock mail delivery. Never put test keys in production. Run `npm test` for token-validation regression tests and `npm run build` before deploying.
 
 ## License
 

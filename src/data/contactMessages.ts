@@ -1,0 +1,46 @@
+export const contactMessages = {
+  en: {
+    verification: "One quick check.",
+    checking: "Checking your connection…",
+    verified: "Verified. Ready to send.",
+    verifyFailed: "The check couldn’t finish. Try again, or send an email.",
+    verifyExpired: "The check expired. Please verify again.",
+    retry: "Try again",
+    email: "Send an email instead",
+    privacy: "How your data is handled",
+    noScript: "This form needs JavaScript. You can also reach me by email.",
+    statuses: {
+      sending: { title: "On its way.", body: "Sending your message…" },
+      success: { title: "Delivered.", body: "Your message has been sent. I’ll get back to you soon." },
+      error: { title: "Still here.", body: "Your message wasn’t sent. Your text stays in the form. Please try again." },
+      server: { title: "This probably belongs somewhere.", body: "Something went wrong on the server. Your text stays here. Please try again later." },
+      offline: { title: "Connection lost.", body: "We’ll be here. Your text stays in the form until you’re back online." },
+      timeout: { title: "That’s taking too long.", body: "We couldn’t confirm delivery. Your text stays here; please wait a moment before trying again." },
+      limited: { title: "One at a time.", body: "Too many attempts. Please wait a few minutes before sending again." },
+      verification: { title: "One more check.", body: "Please complete the security check before sending your message." },
+    },
+  },
+  de: {
+    verification: "Ein kurzer Check.",
+    checking: "Deine Verbindung wird geprüft…",
+    verified: "Bestätigt. Bereit zum Senden.",
+    verifyFailed: "Die Prüfung konnte nicht abgeschlossen werden. Versuche es erneut oder schreib eine E-Mail.",
+    verifyExpired: "Die Prüfung ist abgelaufen. Bitte bestätige sie erneut.",
+    retry: "Erneut versuchen",
+    email: "Stattdessen per E-Mail",
+    privacy: "So werden deine Daten verarbeitet",
+    noScript: "Dieses Formular benötigt JavaScript. Du erreichst mich auch per E-Mail.",
+    statuses: {
+      sending: { title: "Unterwegs.", body: "Deine Nachricht wird gesendet…" },
+      success: { title: "Angekommen.", body: "Deine Nachricht wurde gesendet. Ich melde mich bald." },
+      error: { title: "Noch hier.", body: "Deine Nachricht wurde nicht gesendet. Dein Text bleibt im Formular. Bitte versuche es erneut." },
+      server: { title: "Das gehört vermutlich irgendwo rein.", body: "Auf dem Server ist etwas schiefgelaufen. Dein Text bleibt hier. Bitte versuche es später erneut." },
+      offline: { title: "Verbindung verloren.", body: "Wir warten hier. Dein Text bleibt im Formular, bis du wieder online bist." },
+      timeout: { title: "Das dauert zu lange.", body: "Der Versand konnte nicht bestätigt werden. Dein Text bleibt hier. Warte kurz, bevor du es erneut versuchst." },
+      limited: { title: "Eins nach dem anderen.", body: "Zu viele Versuche. Bitte warte ein paar Minuten, bevor du erneut sendest." },
+      verification: { title: "Noch ein kurzer Check.", body: "Bitte schließe die Sicherheitsprüfung ab, bevor du deine Nachricht sendest." },
+    },
+  },
+} as const;
+
+export type ContactStatus = keyof typeof contactMessages.en.statuses;
