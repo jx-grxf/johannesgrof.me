@@ -9,7 +9,7 @@
           "value": "johannesgrof.com"
         }
       ],
-      "destination": "https://www.johannesgrof.me/:path*",
+      "destination": "https://johannesgrof.me/:path*",
       "permanent": true
     },
     {
@@ -20,7 +20,7 @@
           "value": "www.johannesgrof.com"
         }
       ],
-      "destination": "https://www.johannesgrof.me/:path*",
+      "destination": "https://johannesgrof.me/:path*",
       "permanent": true
     },
     {
@@ -28,10 +28,10 @@
       "has": [
         {
           "type": "host",
-          "value": "johannesgrof.me"
+          "value": "www.johannesgrof.me"
         }
       ],
-      "destination": "https://www.johannesgrof.me/:path*",
+      "destination": "https://johannesgrof.me/:path*",
       "permanent": true
     },
     {

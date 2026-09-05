@@ -1,4 +1,4 @@
-export const canonicalOrigin = "https://www.johannesgrof.me";
+export const canonicalOrigin = "https://johannesgrof.me";
 
 // The branded link-preview cards, one per locale — both 1200×630, both built
 // from tools/brand/card.html. A project page with a usable screenshot passes

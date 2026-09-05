@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { verifyTurnstile, TURNSTILE_ACTION } from "../src/lib/turnstile.ts";
 
-const input = { token: "issued-token", secret: "server-secret", hostname: "www.johannesgrof.me", remoteip: "192.0.2.1" };
+const input = { token: "issued-token", secret: "server-secret", hostname: "johannesgrof.me", remoteip: "192.0.2.1" };
 const valid = { success: true, hostname: input.hostname, action: TURNSTILE_ACTION };
 const respond = (body: unknown, status = 200): typeof fetch => async () => new Response(JSON.stringify(body), { status });
 
