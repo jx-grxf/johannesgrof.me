@@ -91,9 +91,9 @@ const oeffigoSchema = {
   image: toCanonicalUrl(oeffigo.icon),
   description: oeffigo.lead[lang],
   inLanguage: ["de-AT", "en"],
-  author: { "@id": "https://www.johannesgrof.me/#person" },
-  creator: { "@id": "https://www.johannesgrof.me/#person" },
-  publisher: { "@id": "https://www.johannesgrof.me/#person" },
+  author: { "@id": toCanonicalUrl("/#person") },
+  creator: { "@id": toCanonicalUrl("/#person") },
+  publisher: { "@id": toCanonicalUrl("/#person") },
   subjectOf: [
     {
       "@type": "WebPage",

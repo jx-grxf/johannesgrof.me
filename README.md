@@ -10,7 +10,7 @@ Personal website and project portfolio.
 [![Website](https://img.shields.io/badge/website-johannesgrof.me-111111?style=flat-square)](https://johannesgrof.me)
 [![License](https://img.shields.io/badge/license-all%20rights%20reserved-lightgrey?style=flat-square)](#license)
 
-[Website](https://www.johannesgrof.me) · [GitHub](https://github.com/jx-grxf)
+[Website](https://johannesgrof.me) · [GitHub](https://github.com/jx-grxf)
 
 </div>
 
@@ -32,12 +32,12 @@ This repository contains the source for my personal portfolio website: a small, 
 
 | Project | Public proof |
 | --- | --- |
-| [PatchPilot](https://www.johannesgrof.me/projects/patchpilot/) | npm package and coding-agent TUI release. |
-| [BriskEdit](https://www.johannesgrof.me/projects/briskedit/) | Native macOS developer text editor with a DMG release. |
-| [MacPhone](https://www.johannesgrof.me/projects/macphone/) | Native macOS companion app with a GitHub release. |
-| [CCrab](https://www.johannesgrof.me/projects/ccrab/) | Claude Code desktop companion at 0% idle CPU. |
-| [Caruso-Reborn](https://www.johannesgrof.me/projects/caruso-reborn/) | Local playback dashboard with GitHub release. |
-| [Tools](https://www.johannesgrof.me/projects/tools/) | Browser-only PDF and image toolkit, live at tools.johannesgrof.me. |
+| [PatchPilot](https://johannesgrof.me/projects/patchpilot/) | npm package and coding-agent TUI release. |
+| [BriskEdit](https://johannesgrof.me/projects/briskedit/) | Native macOS developer text editor with a DMG release. |
+| [MacPhone](https://johannesgrof.me/projects/macphone/) | Native macOS companion app with a GitHub release. |
+| [CCrab](https://johannesgrof.me/projects/ccrab/) | Claude Code desktop companion at 0% idle CPU. |
+| [Caruso-Reborn](https://johannesgrof.me/projects/caruso-reborn/) | Local playback dashboard with GitHub release. |
+| [Tools](https://johannesgrof.me/projects/tools/) | Browser-only PDF and image toolkit, live at tools.johannesgrof.me. |
 
 ## Stack
 
@@ -92,6 +92,8 @@ The site is deployed with Vercel. Production builds use:
 ```bash
 npm run build
 ```
+
+The canonical host is `johannesgrof.me`. Permanent host redirects (including `www`) are managed in `vercel.json`, so leave domain redirects unset in Vercel project settings to avoid conflicting rules. Both apex and `www` domains must remain assigned to the project.
 
 ### Build environment
 
