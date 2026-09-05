@@ -4,7 +4,7 @@
 
 Personal website and project portfolio.
 
-[![Astro](https://img.shields.io/badge/Astro-6.x-ff5d01?style=flat-square&logo=astro&logoColor=white)](https://astro.build)
+[![Astro](https://img.shields.io/badge/Astro-7.x-ff5d01?style=flat-square&logo=astro&logoColor=white)](https://astro.build)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178c6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![Vercel](https://img.shields.io/badge/deployed%20on-Vercel-000000?style=flat-square&logo=vercel&logoColor=white)](https://vercel.com)
 [![Website](https://img.shields.io/badge/website-johannesgrof.me-111111?style=flat-square)](https://johannesgrof.me)
@@ -16,7 +16,7 @@ Personal website and project portfolio.
 
 ## Overview
 
-This repository contains the source for my personal portfolio website. It is built as a small, fast Astro site with a focused project showcase, skills section, contact surface, and static deployment on Vercel, using Cloudflare as DNS.
+This repository contains the source for my personal portfolio website: a small, fast Astro site with a bilingual project catalogue and a contact form. Everything is prerendered except the contact endpoint, which runs as a single on-demand function on Vercel. DNS is Cloudflare.
 
 ## Highlights
 
@@ -26,6 +26,7 @@ This repository contains the source for my personal portfolio website. It is bui
 | Case studies | Each project page explains the problem, build approach, result, and audience. |
 | Static-first build | Astro renders the portfolio as a fast static site with Vercel deployment. |
 | GitHub metadata | Build-time GitHub API data enriches release, update, and download surfaces with safe fallbacks. |
+| Bilingual | Portfolio pages exist in English and German with hreflang alternates; legal pages are German-only. |
 
 ## Featured Projects
 
@@ -34,9 +35,9 @@ This repository contains the source for my personal portfolio website. It is bui
 | [PatchPilot](https://www.johannesgrof.me/projects/patchpilot/) | npm package and coding-agent TUI release. |
 | [BriskEdit](https://www.johannesgrof.me/projects/briskedit/) | Native macOS developer text editor with a DMG release. |
 | [MacPhone](https://www.johannesgrof.me/projects/macphone/) | Native macOS companion app with a GitHub release. |
-| [SlamX](https://www.johannesgrof.me/projects/slamx/) | Sensor-only macOS experiment with release assets. |
+| [CCrab](https://www.johannesgrof.me/projects/ccrab/) | Claude Code desktop companion at 0% idle CPU. |
 | [Caruso-Reborn](https://www.johannesgrof.me/projects/caruso-reborn/) | Local playback dashboard with GitHub release. |
-| [PortPirate](https://www.johannesgrof.me/projects/portpirate/) | macOS menu bar app for local dev ports — not released yet. |
+| [Tools](https://www.johannesgrof.me/projects/tools/) | Browser-only PDF and image toolkit, live at tools.johannesgrof.me. |
 
 ## Stack
 
@@ -45,6 +46,7 @@ This repository contains the source for my personal portfolio website. It is bui
 | Framework | Astro |
 | Language | TypeScript |
 | Styling | CSS |
+| Contact form | Vercel function, Resend, Upstash rate limiting |
 | Deployment | Vercel |
 | DNS | Cloudflare |
 
@@ -90,6 +92,14 @@ The site is deployed with Vercel. Production builds use:
 ```bash
 npm run build
 ```
+
+### Build environment
+
+| Variable | Needed for |
+| --- | --- |
+| `GITHUB_TOKEN` | Build-time GitHub lookups. Without it the build is limited to 60 requests an hour and logs a warning and falls back to the checked-in metadata; use a fine-grained token with read-only access to public repositories. |
+| `RESEND_API_KEY` | Sending contact-form mail. |
+| `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Per-IP rate limiting on the contact endpoint. Production refuses submissions when they are missing. |
 
 ## License
 

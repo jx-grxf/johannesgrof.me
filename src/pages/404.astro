@@ -1,0 +1,70 @@
+---
+import BaseHead from "@/components/BaseHead.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import "@/styles/global.css";
+
+// One static 404 serves both language trees, so the copy carries English and
+// German side by side rather than guessing from a path Vercel already lost.
+const navItems = [
+  { label: "Projects", href: "/#projects" },
+  { label: "Contact", href: "/#contact" },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead
+      title="404 · Johannes Grof"
+      description="This page does not exist."
+      canonicalPath="/404"
+      noindex
+    />
+  </head>
+  <body>
+    <SiteHeader navItems={navItems} ariaLabel="Site navigation" homeHref="/" lang="en" />
+
+    <main id="main" class="notfound section-shell">
+      <p class="eyebrow">error 404</p>
+
+      {/* The header already opens with a `$` prompt, so the miss is reported the
+          way the shell would report it. The path is filled in by the script
+          below; without JS the line still reads correctly. */}
+      <pre class="notfound-shell" aria-label="Shell transcript"><code><span class="notfound-prompt">$</span> cd <span data-notfound-path>/</span>
+cd: no such file or directory<span class="cursor" aria-hidden="true"></span></code></pre>
+
+      <h1>This page does not exist.</h1>
+      <p class="notfound-text">
+        The link is either wrong or the page has moved. The project index is the
+        best place to pick things up again.
+      </p>
+      <p class="notfound-text notfound-text--de" lang="de-AT">
+        Diese Seite gibt es nicht — entweder stimmt der Link nicht, oder die
+        Seite ist umgezogen. Am besten weiter über die Projektübersicht.
+      </p>
+
+      <div class="notfound-actions">
+        <a class="button primary" href="/#projects">See the projects</a>
+        <a class="button secondary" href="/de/">Deutsche Startseite</a>
+      </div>
+    </main>
+
+    <SiteFooter lang="en" />
+
+    <script>
+      // Report the path the visitor actually asked for. Rejected outright if it
+      // is not a plain same-origin pathname, so a crafted URL can never write
+      // markup or a foreign address into the transcript.
+      const target = document.querySelector<HTMLElement>("[data-notfound-path]");
+
+      if (target) {
+        const path = window.location.pathname;
+
+        if (/^\/[\w\-./]*$/.test(path) && !path.includes("..")) {
+          target.textContent = path;
+        }
+      }
+    </script>
+  </body>
+</html>
