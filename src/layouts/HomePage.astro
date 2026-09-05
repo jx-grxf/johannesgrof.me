@@ -319,29 +319,15 @@ const faqSchema = {
         }
       </section>
 
-      <section id="skills" class="band section-shell" aria-labelledby="skills-title">
-        <div class="section-head">
-          <span class="section-num">03</span>
-          <h2 id="skills-title">{content.skills.title}</h2>
-        </div>
-        <div class="column-grid">
-          {
-            content.skills.groups.map((group) => (
-              <article class="skill-group">
-                <h3>{group.title}</h3>
-                <ul>
-                  {group.items.map((item) => <li>{item}</li>)}
-                </ul>
-              </article>
-            ))
-          }
-        </div>
-      </section>
-
+      {/* Services and the stack used to be two full bands, roughly two screens
+          between the project index and the about line. They answer the same
+          question — what this person can be handed — so they share one band.
+          Both legacy anchors still resolve: #services is the band, #skills the
+          stack strip inside it. */}
       <section id="services" class="band band--tint" aria-labelledby="services-title">
         <div class="section-shell">
           <div class="section-head">
-            <span class="section-num">04</span>
+            <span class="section-num">03</span>
             <h2 id="services-title">{content.services.title}</h2>
           </div>
           <p class="services-lead">{content.services.lead}</p>
@@ -354,6 +340,20 @@ const faqSchema = {
                 </article>
               ))
             }
+          </div>
+
+          <div id="skills" class="stack-strip">
+            <p class="eyebrow">{content.skills.title}</p>
+            <dl>
+              {
+                content.skills.groups.map((group) => (
+                  <div>
+                    <dt>{group.title}</dt>
+                    <dd>{group.items.join(" · ")}</dd>
+                  </div>
+                ))
+              }
+            </dl>
           </div>
         </div>
       </section>
@@ -368,7 +368,7 @@ const faqSchema = {
 
       <section id="faq" class="band section-shell" aria-labelledby="faq-title">
         <div class="section-head">
-          <span class="section-num">05</span>
+          <span class="section-num">04</span>
           <h2 id="faq-title">{content.faq.title}</h2>
         </div>
         <div class="faq-list">
