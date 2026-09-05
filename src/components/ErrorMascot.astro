@@ -1,0 +1,19 @@
+---
+interface Props { searching?: boolean }
+const { searching = false } = Astro.props;
+---
+
+<svg class:list={["error-mascot", { "error-mascot--searching": searching }]} viewBox="0 0 100 110" fill="none" aria-hidden="true">
+  <path class="mascot-shadow" d="M12 103h76" />
+  <g class="mascot-person">
+    <path class="mascot-limbs" d="M35 78v19H24m41-19v19h11M23 51l-12 9v13m66-22 12 9V36" />
+    <path class="mascot-antenna" d="M50 26V15h10" />
+    <rect class="mascot-body" x="23" y="27" width="54" height="53" rx="5" />
+    <g class="mascot-eyes"><path d="M36 46v6m26-6v6" /></g>
+    <path class="mascot-mouth" d="M43 64h14" />
+    {!searching && <g class="mascot-envelope"><rect x="48" y="63" width="39" height="27" rx="2" /><path d="m49 65 18 13 19-13" /></g>}
+    {!searching && <g class="mascot-cable"><path d="M7 69h24m-1-7v14m39-7h24m-23-7v14m-39-13h5m-5 10h5" /></g>}
+    {!searching && <g class="mascot-clock"><circle cx="72" cy="76" r="18" /><path d="M72 64v13h10" /></g>}
+    {!searching && <g class="mascot-gear"><path d="m72 58 5 7 9-1 2 9 7 5-6 7 1 9-9 2-5 7-7-6-9 1-2-9-7-5 6-7-1-9 9-2Z" /><circle cx="73" cy="81" r="7" /></g>}
+  </g>
+</svg>

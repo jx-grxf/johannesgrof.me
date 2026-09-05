@@ -83,9 +83,6 @@ export interface ContactFormContent {
   messagePlaceholder: string;
   submit: string;
   sending: string;
-  success: string;
-  error: string;
-  rateLimited: string;
 }
 
 const en: LocaleContent = {
@@ -169,20 +166,16 @@ const en: LocaleContent = {
     title: "Frequently asked questions",
     items: [
       {
-        q: "What do you build?",
-        a: "I'm Johannes Grof, a software developer and student at HTL Kaindorf in Austria. I build macOS and iOS apps, developer tools, and websites, and I also help with electronics repair and technical support.",
-      },
-      {
         q: "Do you work remotely?",
-        a: "Yes. Websites, tools, and tech support can be done remotely worldwide. On-site repair and setup is available in south-east Styria, Austria.",
+        a: "Websites, tools and support: yes, anywhere. Repairs and device setup happen on site in south-east Styria.",
       },
       {
         q: "How much does a website cost?",
-        a: "It depends on scope — hosting, domain, and maintenance can all be part of it. Send me a short message about what you need and I'll get back to you.",
+        a: "It depends on what it has to do, and whether hosting, domain and maintenance come with it. Write me two sentences about the project and you get a number back.",
       },
       {
         q: "How can I reach you?",
-        a: "By email at contact@johannesgrof.me, or via LinkedIn and GitHub.",
+        a: "contact@johannesgrof.me, or the form below. LinkedIn and GitHub work too.",
       },
     ],
   },
@@ -204,9 +197,6 @@ const en: LocaleContent = {
       messagePlaceholder: "What can I help you with?",
       submit: "Send message",
       sending: "Sending…",
-      success: "Thanks — your message is on its way. I'll get back to you soon.",
-      error: "Something went wrong. Please try again or email contact@johannesgrof.me.",
-      rateLimited: "Too many requests. Please wait a few minutes, or email contact@johannesgrof.me.",
     },
   },
 };
@@ -292,20 +282,16 @@ const de: LocaleContent = {
     title: "Häufige Fragen",
     items: [
       {
-        q: "Was baust du?",
-        a: "Ich bin Johannes Grof, Softwareentwickler und Schüler an der HTL Kaindorf in Österreich. Ich baue macOS- und iOS-Apps, Developer-Tools und Websites und helfe außerdem bei Elektronik-Reparatur und technischem Support.",
-      },
-      {
         q: "Arbeitest du auch vor Ort in der Steiermark?",
-        a: "Ja. Reparatur und Geräte-Einrichtung mache ich vor Ort in der Südost-Steiermark. Websites, Tools und Support gehen auch weltweit remote.",
+        a: "Reparatur und Geräte-Einrichtung mache ich vor Ort in der Südost-Steiermark. Websites, Tools und Support gehen überall remote.",
       },
       {
         q: "Was kostet eine Website?",
-        a: "Das hängt vom Umfang ab – Hosting, Domain und Wartung können alles dabei sein. Schreib mir kurz, was du brauchst, und ich melde mich.",
+        a: "Kommt darauf an, was sie können muss und ob Hosting, Domain und Wartung dabei sind. Schreib mir zwei Sätze zum Vorhaben, dann bekommst du eine Zahl.",
       },
       {
         q: "Wie erreiche ich dich?",
-        a: "Per E-Mail an contact@johannesgrof.me oder über LinkedIn und GitHub.",
+        a: "contact@johannesgrof.me oder das Formular unten. LinkedIn und GitHub gehen auch.",
       },
     ],
   },
@@ -327,9 +313,6 @@ const de: LocaleContent = {
       messagePlaceholder: "Wobei kann ich dir helfen?",
       submit: "Nachricht senden",
       sending: "Wird gesendet…",
-      success: "Danke – deine Nachricht ist unterwegs. Ich melde mich bald.",
-      error: "Etwas ist schiefgelaufen. Bitte erneut versuchen oder an contact@johannesgrof.me schreiben.",
-      rateLimited: "Zu viele Anfragen. Bitte ein paar Minuten warten oder an contact@johannesgrof.me schreiben.",
     },
   },
 };

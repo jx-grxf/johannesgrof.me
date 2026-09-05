@@ -264,7 +264,7 @@ const buildFallbackInfo = (project: Project): ProjectGitHubInfo => {
     language: project.stack[0] ?? "Code",
     updatedAt: "",
     downloadGroup,
-    commands: buildCommands(project, project.releaseUrl, downloadGroup),
+    commands: buildCommands(project),
   };
 };
 
@@ -302,57 +302,32 @@ const buildDownloadGroup = (releases: GitHubRelease[]): ProjectReleaseGroup | un
   };
 };
 
-const buildCommands = (project: Project, releaseUrl: string, downloadGroup?: ProjectReleaseGroup): ProjectCommand[] => {
+// Only the commands someone would actually type. This used to emit up to seven
+// blocks per project — git clone and gh repo clone for the same job, `open` on
+// a release URL that is already a button, and a `gh release download` naming
+// the exact asset the download button hands over. That is documentation-shaped
+// filler, not documentation.
+const buildCommands = (project: Project): ProjectCommand[] => {
   const repoName = normalizeRepoName(project.repo);
   const commands: ProjectCommand[] = [];
 
-  // Planned/private repos have no clonable source or release yet — skip the
-  // clone/download commands so the page never points at a 404.
+  // Planned/private repos have no clonable source yet — skip the clone command
+  // so the page never points at a 404.
   if (project.downloadsDisabled || project.visibility !== "public") {
     return commands;
   }
 
   if (project.npmPackage) {
-    commands.push(
-      {
-        label: "install CLI with npm",
-        command: `npm install -g ${project.npmPackage}`,
-      },
-      {
-        label: "update CLI with npm",
-        command: `npm update -g ${project.npmPackage}`,
-      }
-    );
-  }
-
-  commands.push(
-    {
-      label: "source without GitHub CLI",
-      command: `git clone https://github.com/${project.repo}.git && cd ${repoName}`,
-    },
-    {
-      label: "source with GitHub CLI",
-      command: `gh repo clone ${project.repo} && cd ${repoName}`,
-    }
-  );
-
-  if (!project.downloadsDisabled) {
     commands.push({
-      label: "latest release",
-      command: `open ${releaseUrl}`,
+      label: "install",
+      command: `npm install -g ${project.npmPackage}`,
     });
   }
 
-  const downloads = downloadGroup?.stableDownloads.length
-    ? downloadGroup.stableDownloads
-    : downloadGroup?.prereleases.slice(0, 1) ?? [];
-
-  for (const download of downloads) {
-    commands.push({
-      label: `download ${download.prerelease ? "pre-release" : "stable"} ${download.kind} with GitHub CLI`,
-      command: `gh release download ${download.tag} -R ${project.repo} -p '${download.assetName}'`,
-    });
-  }
+  commands.push({
+    label: "clone",
+    command: `git clone https://github.com/${project.repo}.git && cd ${repoName}`,
+  });
 
   return commands;
 };
@@ -425,7 +400,7 @@ async function fetchProjectGitHubInfo(project: Project): Promise<ProjectGitHubIn
       language: repo.language ?? fallback.language,
       updatedAt: repo.pushed_at,
       downloadGroup,
-      commands: buildCommands(project, releaseUrl, downloadGroup),
+      commands: buildCommands(project),
     };
   } catch (error) {
     const reason = error instanceof Error ? error.message : "unknown GitHub data error";

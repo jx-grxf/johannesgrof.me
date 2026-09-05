@@ -6,7 +6,7 @@ import SpeedInsights from "@vercel/speed-insights/astro";
 import type { ProjectReleaseDownload } from "@/data/github";
 import { getProjectGitHubInfo } from "@/data/github";
 import type { Project, ProjectLang } from "@/data/projects";
-import { getProjectCopy, localizedStatusLabel, statusClass } from "@/data/projects";
+import { adjacentProjects, getProjectCopy, localizedStatusLabel, statusClass } from "@/data/projects";
 import { toCanonicalUrl } from "@/data/siteMetadata";
 import "@/styles/global.css";
 
@@ -52,8 +52,6 @@ const s = isDe
       comingSoonNote: "Öffentliches Release in Kürze — dieser Build ist noch in privater Entwicklung.",
       problem: "Problem",
       built: "Was ich gebaut habe",
-      resultLabel: "Ergebnis",
-      audience: "Zielgruppe",
       developerSetup: "Entwickler-Setup",
       highlights: "Highlights",
       packageArchive: "Paket-Archiv",
@@ -68,6 +66,10 @@ const s = isDe
       notePartial: "Live-Repository-Daten geladen; Release-Assets nutzen bei Bedarf Fallback-Daten.",
       noteFallback: "Es werden geprüfte Fallback-Daten angezeigt, weil die GitHub-Metadaten beim Build nicht verfügbar waren.",
       navLabel: "Projekt-Navigation",
+      pagerLabel: "Weitere Projekte",
+      previousProject: "Vorheriges",
+      nextProject: "Nächstes",
+      allProjects: "Alle Projekte",
       langSwitchLabel: "EN",
       langSwitchAria: "View this project page in English",
     }
@@ -99,8 +101,6 @@ const s = isDe
       comingSoonNote: "Public release coming soon — this build is still in private development.",
       problem: "Problem",
       built: "What I built",
-      resultLabel: "Result",
-      audience: "Audience",
       developerSetup: "Developer setup",
       highlights: "Highlights",
       packageArchive: "Package archive",
@@ -115,6 +115,10 @@ const s = isDe
       notePartial: "Live repository data loaded; release assets use fallback data where needed.",
       noteFallback: "Showing verified fallback data because GitHub metadata was unavailable during build.",
       navLabel: "Project navigation",
+      pagerLabel: "More projects",
+      previousProject: "Previous",
+      nextProject: "Next",
+      allProjects: "All projects",
       langSwitchLabel: "DE",
       langSwitchAria: "Diese Projektseite auf Deutsch ansehen",
     };
@@ -133,6 +137,7 @@ const langSwitch = {
   href: `${isDe ? "" : "/de"}/projects/${project.slug}/`,
   ariaLabel: s.langSwitchAria,
 };
+const { previous, next } = adjacentProjects(project.slug);
 const [heroImage, ...galleryImages] = project.showcase;
 const stableDownloads = github.downloadGroup?.stableDownloads ?? (github.downloadGroup?.stable ? [github.downloadGroup.stable] : []);
 const downloads = [...stableDownloads, ...(github.downloadGroup?.prereleases ?? [])].filter(
@@ -207,15 +212,22 @@ const downloadLabel = project.downloadsDisabled
   : project.npmPackage || github.downloadGroup
     ? s.download
     : s.source;
+// A deployed project behind a private repo is already described by its Live
+// row; without this it also claimed "Availability: coming soon", which is the
+// opposite of true for something you can open right now.
+const hidesAvailabilityRow = !isPublicRepo && Boolean(project.liveUrl) && !github.downloadGroup && !project.npmPackage;
 const metaItems = [
   hasRelease ? { label: s.latestRelease, value: github.version } : undefined,
   project.liveUrl ? { label: s.live, value: new URL(project.liveUrl).host } : undefined,
   { label: s.platform, value: platformValue },
-  { label: downloadLabel, value: downloadValue },
+  hidesAvailabilityRow ? undefined : { label: downloadLabel, value: downloadValue },
   github.updatedAt ? { label: s.updated, value: formatDate(github.updatedAt) } : undefined,
 ].filter((item): item is { label: string; value: string } => Boolean(item));
+// A private or planned repo has no public metadata to fetch, so its fallback is
+// the normal case, not a failed build — saying "GitHub metadata was
+// unavailable" there reads as an error the reader cannot act on.
 const metadataNote =
-  github.metadataState === "live"
+  github.metadataState === "live" || !isPublicRepo
     ? undefined
     : github.metadataState === "partial"
       ? s.notePartial
@@ -344,7 +356,10 @@ const hreflangAlternates = [
           </div>
         </div>
 
-        <aside class="project-meta-panel" aria-label={`${project.name} GitHub summary`}>
+        {/* A region, not an aside: this summarises the project it sits next to,
+            and a complementary landmark nested inside <main> is flagged as a
+            landmark error. */}
+        <section class="project-meta-panel" aria-label={`${project.name} GitHub summary`}>
           <dl class="project-meta-grid">
             {metaItems.map((item) => (
               <div>
@@ -354,7 +369,7 @@ const hreflangAlternates = [
             ))}
           </dl>
           {metadataNote && <p class="metadata-note">{metadataNote}</p>}
-        </aside>
+        </section>
       </section>
 
       {heroImage && (
@@ -370,6 +385,9 @@ const hreflangAlternates = [
         </section>
       )}
 
+      {/* Two columns, not four. "Result" and "Audience" were restatements of
+          the problem in almost every project — the outcomes that are actually
+          measurable live in the meta panel as numbers instead. */}
       <section class="case-study-panel" aria-label={`${project.name} case study`}>
         <article>
           <span>{s.problem}</span>
@@ -378,14 +396,6 @@ const hreflangAlternates = [
         <article>
           <span>{s.built}</span>
           <p>{c.caseStudy.built}</p>
-        </article>
-        <article>
-          <span>{s.resultLabel}</span>
-          <p>{c.caseStudy.result}</p>
-        </article>
-        <article>
-          <span>{s.audience}</span>
-          <p>{c.audience}</p>
         </article>
       </section>
 
@@ -427,7 +437,9 @@ const hreflangAlternates = [
           {galleryImages.map((image) => (
             <figure>
               {isVideoShowcase(image) ? (
-                <video class={`showcase-image ${image.fit ?? "cover"}`} src={image.src} poster={image.posterSrc ?? image.fallbackSrc} width={image.width} height={image.height} controls muted loop playsinline preload="metadata" aria-label={image.alt} data-showcase-video></video>
+                /* preload="none" below the fold: the BriskEdit promo alone is
+                   881 kB, and it was being fetched on every page load. */
+                <video class={`showcase-image ${image.fit ?? "cover"}`} src={image.src} poster={image.posterSrc ?? image.fallbackSrc} width={image.width} height={image.height} controls muted loop playsinline preload="none" aria-label={image.alt} data-showcase-video></video>
               ) : (
                 <picture>
                   {image.fallbackSrc && <source srcset={image.src} type="image/webp" />}
@@ -438,6 +450,29 @@ const hreflangAlternates = [
           ))}
         </section>
       )}
+
+      {/* A detail page used to end on a screenshot and nothing else. The reader
+          is now handed the neighbouring projects and a way back into the
+          catalogue instead of a dead end above the footer. */}
+      <nav class="project-pager" aria-label={s.pagerLabel}>
+        {previous ? (
+          <a class="project-pager-link project-pager-link--prev" href={`${localePrefix}/projects/${previous.slug}/`} rel="prev">
+            <span>← {s.previousProject}</span>
+            <strong>{previous.name}</strong>
+          </a>
+        ) : (
+          <span></span>
+        )}
+        <a class="project-pager-index" href={`${isDe ? "/de/" : "/"}#projects`}>{s.allProjects}</a>
+        {next ? (
+          <a class="project-pager-link project-pager-link--next" href={`${localePrefix}/projects/${next.slug}/`} rel="next">
+            <span>{s.nextProject} →</span>
+            <strong>{next.name}</strong>
+          </a>
+        ) : (
+          <span></span>
+        )}
+      </nav>
     </main>
     <SiteFooter lang={isDe ? "de" : "en"} />
     <script>

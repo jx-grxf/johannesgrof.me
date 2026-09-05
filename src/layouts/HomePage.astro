@@ -1,4 +1,5 @@
 ---
+import ContactForm from "@/components/ContactForm.astro";
 import BaseHead from "@/components/BaseHead.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
@@ -319,29 +320,15 @@ const faqSchema = {
         }
       </section>
 
-      <section id="skills" class="band section-shell" aria-labelledby="skills-title">
-        <div class="section-head">
-          <span class="section-num">03</span>
-          <h2 id="skills-title">{content.skills.title}</h2>
-        </div>
-        <div class="column-grid">
-          {
-            content.skills.groups.map((group) => (
-              <article class="skill-group">
-                <h3>{group.title}</h3>
-                <ul>
-                  {group.items.map((item) => <li>{item}</li>)}
-                </ul>
-              </article>
-            ))
-          }
-        </div>
-      </section>
-
+      {/* Services and the stack used to be two full bands, roughly two screens
+          between the project index and the about line. They answer the same
+          question — what this person can be handed — so they share one band.
+          Both legacy anchors still resolve: #services is the band, #skills the
+          stack strip inside it. */}
       <section id="services" class="band band--tint" aria-labelledby="services-title">
         <div class="section-shell">
           <div class="section-head">
-            <span class="section-num">04</span>
+            <span class="section-num">03</span>
             <h2 id="services-title">{content.services.title}</h2>
           </div>
           <p class="services-lead">{content.services.lead}</p>
@@ -354,6 +341,20 @@ const faqSchema = {
                 </article>
               ))
             }
+          </div>
+
+          <div id="skills" class="stack-strip">
+            <p class="eyebrow">{content.skills.title}</p>
+            <dl>
+              {
+                content.skills.groups.map((group) => (
+                  <div>
+                    <dt>{group.title}</dt>
+                    <dd>{group.items.join(" · ")}</dd>
+                  </div>
+                ))
+              }
+            </dl>
           </div>
         </div>
       </section>
@@ -368,7 +369,7 @@ const faqSchema = {
 
       <section id="faq" class="band section-shell" aria-labelledby="faq-title">
         <div class="section-head">
-          <span class="section-num">05</span>
+          <span class="section-num">04</span>
           <h2 id="faq-title">{content.faq.title}</h2>
         </div>
         <div class="faq-list">
@@ -398,27 +399,7 @@ const faqSchema = {
           <SocialLinks />
         </div>
 
-        <form class="contact-form" id="contact-form" novalidate>
-          <div class="contact-field">
-            <label for="contact-name">{content.contact.form.nameLabel}</label>
-            <input type="text" id="contact-name" name="name" autocomplete="name" maxlength="120" placeholder={content.contact.form.namePlaceholder} required />
-          </div>
-          <div class="contact-field">
-            <label for="contact-email">{content.contact.form.emailLabel}</label>
-            <input type="email" id="contact-email" name="email" autocomplete="email" maxlength="320" placeholder={content.contact.form.emailPlaceholder} required />
-          </div>
-          <div class="contact-field">
-            <label for="contact-message">{content.contact.form.messageLabel}</label>
-            <textarea id="contact-message" name="message" rows="4" maxlength="5000" placeholder={content.contact.form.messagePlaceholder} required></textarea>
-          </div>
-          <input type="text" name="company" class="contact-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
-          <button type="submit" class="contact-submit" data-label={content.contact.form.submit} data-sending={content.contact.form.sending}>{content.contact.form.submit}</button>
-          <p class="contact-status" role="status" aria-live="polite" data-success={content.contact.form.success} data-error={content.contact.form.error} data-rate-limited={content.contact.form.rateLimited}></p>
-          <p class="contact-privacy-note">
-            {isDe ? "Mit dem Absenden stimmen Sie der " : "By sending you agree to the "}
-            <a href="/datenschutz/">{isDe ? "Datenschutzerklärung" : "privacy policy"}</a>{isDe ? " zu." : "."}
-          </p>
-        </form>
+        <ContactForm content={content.contact.form} lang={isDe ? "de" : "en"} />
       </section>
     </main>
 
@@ -505,56 +486,6 @@ const faqSchema = {
             }
           }
         }
-      }
-
-      // Async contact-form submission so the page never reloads.
-      const contactForm = document.querySelector<HTMLFormElement>("#contact-form");
-      if (contactForm) {
-        const submitButton = contactForm.querySelector<HTMLButtonElement>(".contact-submit");
-        const status = contactForm.querySelector<HTMLParagraphElement>(".contact-status");
-
-        contactForm.addEventListener("submit", async (event) => {
-          event.preventDefault();
-          if (!submitButton || !status) {
-            return;
-          }
-          if (!contactForm.reportValidity()) {
-            return;
-          }
-
-          submitButton.disabled = true;
-          submitButton.textContent = submitButton.dataset.sending ?? "Sending…";
-          status.textContent = "";
-          status.classList.remove("is-error", "is-success");
-
-          try {
-            const payload = Object.fromEntries(new FormData(contactForm).entries());
-            const response = await fetch("/api/contact", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload),
-            });
-
-            if (response.status === 429) {
-              status.textContent = status.dataset.rateLimited ?? "Too many requests. Please wait a few minutes.";
-              status.classList.add("is-error");
-              return;
-            }
-            if (!response.ok) {
-              throw new Error(`Request failed: ${response.status}`);
-            }
-
-            contactForm.reset();
-            status.textContent = status.dataset.success ?? "Sent.";
-            status.classList.add("is-success");
-          } catch {
-            status.textContent = status.dataset.error ?? "Something went wrong.";
-            status.classList.add("is-error");
-          } finally {
-            submitButton.disabled = false;
-            submitButton.textContent = submitButton.dataset.label ?? "Send message";
-          }
-        });
       }
 
       // Keep the details content mounted until the closing transition finishes.

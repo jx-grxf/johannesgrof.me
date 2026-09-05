@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { Resend } from "resend";
+import { MAX_TURNSTILE_TOKEN_LENGTH, verifyTurnstile } from "@/lib/turnstile";
 
 // Runs as an on-demand Vercel function rather than being prerendered.
 export const prerender = false;
@@ -49,7 +50,7 @@ const getClientIp = (request: Request, fallback: string) => {
 const json = (status: number, body: Record<string, unknown>) =>
   new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "Cache-Control": "no-store" },
   });
 
 const escapeHtml = (value: string) =>
@@ -60,12 +61,6 @@ const escapeHtml = (value: string) =>
     .replaceAll('"', "&quot;");
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
-  const apiKey = env("RESEND_API_KEY");
-  if (!apiKey) {
-    console.error("Contact form: RESEND_API_KEY is not configured.");
-    return json(500, { ok: false, error: "server_misconfigured" });
-  }
-
   // Reject cross-site POSTs: a browser sets Origin on cross-origin requests, so
   // a mismatch against our own host means the request came from another site.
   // Comparing to the request host (not a hard-coded domain) keeps preview
@@ -85,20 +80,6 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
     }
   }
 
-  const limiter = getRatelimit();
-  if (limiter) {
-    const ip = getClientIp(request, clientAddress);
-    const { success } = await limiter.limit(ip);
-    if (!success) {
-      return json(429, { ok: false, error: "rate_limited" });
-    }
-  } else if (env("NODE_ENV") === "production" || env("VERCEL_ENV") === "production") {
-    // Fail closed: never accept unthrottled submissions in production. Missing
-    // Upstash env vars are a misconfiguration, not a reason to drop the limit.
-    console.error("Contact form: rate-limit backend is not configured in production.");
-    return json(503, { ok: false, error: "server_misconfigured" });
-  }
-
   let payload: Record<string, unknown>;
   try {
     const contentType = request.headers.get("content-type") ?? "";
@@ -108,6 +89,10 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
       payload = Object.fromEntries((await request.formData()).entries());
     }
   } catch {
+    return json(400, { ok: false, error: "invalid_body" });
+  }
+
+  if (!payload || typeof payload !== "object" || Array.isArray(payload)) {
     return json(400, { ok: false, error: "invalid_body" });
   }
 
@@ -128,6 +113,42 @@ export const POST: APIRoute = async ({ request, clientAddress }) => {
   }
   if (name.length > 120 || message.length > 5000) {
     return json(400, { ok: false, error: "too_long" });
+  }
+
+  const token = payload["cf-turnstile-response"];
+  if (typeof token !== "string" || !token || token.length > MAX_TURNSTILE_TOKEN_LENGTH) {
+    return json(403, { ok: false, error: "verification_failed" });
+  }
+  const secret = env("TURNSTILE_SECRET");
+  if (!secret) {
+    console.error("Contact form: TURNSTILE_SECRET is not configured.");
+    return json(503, { ok: false, error: "server_misconfigured" });
+  }
+
+  const ip = getClientIp(request, clientAddress);
+  try {
+    const limiter = getRatelimit();
+    if (limiter) {
+      const { success } = await limiter.limit(ip);
+      if (!success) return json(429, { ok: false, error: "rate_limited" });
+    } else if (env("NODE_ENV") === "production" || env("VERCEL_ENV")) {
+      console.error("Contact form: rate-limit backend is not configured.");
+      return json(503, { ok: false, error: "server_misconfigured" });
+    }
+  } catch {
+    console.error("Contact form: rate-limit backend unavailable.");
+    return json(503, { ok: false, error: "server_unavailable" });
+  }
+
+  const verification = await verifyTurnstile({ token, secret, hostname: new URL(request.url).hostname, remoteip: ip });
+  if (!verification.ok) {
+    return json(verification.error === "verification_failed" ? 403 : 503, { ok: false, error: verification.error });
+  }
+
+  const apiKey = env("RESEND_API_KEY");
+  if (!apiKey) {
+    console.error("Contact form: RESEND_API_KEY is not configured.");
+    return json(500, { ok: false, error: "server_misconfigured" });
   }
 
   const resend = new Resend(apiKey);

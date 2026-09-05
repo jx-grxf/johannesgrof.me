@@ -1,0 +1,58 @@
+---
+import BaseHead from "@/components/BaseHead.astro";
+import ErrorMascot from "@/components/ErrorMascot.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import "@/styles/global.css";
+
+const navItems = [
+  { label: "Projects", href: "/#projects" },
+  { label: "Contact", href: "/#contact" },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title="404 · Johannes Grof" description="This page has moved or doesn’t exist." canonicalPath="/404" noindex />
+    <script is:inline>
+      document.documentElement.lang = window.location.pathname.startsWith("/de/") ? "de" : "en";
+    </script>
+  </head>
+  <body class="error-page">
+    <SiteHeader navItems={navItems} ariaLabel="Site navigation" homeHref="/" lang="en" />
+    <main id="main" class="notfound section-shell">
+      <div class="notfound-topline">
+        <p class="eyebrow">404 / page not found</p>
+        <div class="error-language" role="group" aria-label="Language / Sprache">
+          <button type="button" data-error-language="en" aria-pressed="true">EN</button>
+          <span aria-hidden="true">/</span>
+          <button type="button" data-error-language="de" aria-pressed="false">DE</button>
+        </div>
+      </div>
+      <div class="notfound-scene" aria-hidden="true">
+        <span class="notfound-digit">4</span>
+        <span class="notfound-zero">0</span>
+        <span class="notfound-digit">4</span>
+        <div class="notfound-searcher"><ErrorMascot searching /></div>
+        <span class="notfound-floor"></span>
+      </div>
+      <div data-error-lang="en" lang="en">
+        <h1>Something should be here.</h1>
+        <p class="notfound-text">This page has moved or doesn’t exist.</p>
+        <div class="notfound-actions"><a class="button primary" href="/">Back home <span aria-hidden="true">↗</span></a><a class="button secondary" href="/#projects">Browse projects</a></div>
+      </div>
+      <div data-error-lang="de" lang="de">
+        <h1>Hier sollte etwas sein.</h1>
+        <p class="notfound-text">Die Seite wurde verschoben oder existiert nicht.</p>
+        <div class="notfound-actions"><a class="button primary" href="/de/">Zur Startseite <span aria-hidden="true">↗</span></a><a class="button secondary" href="/de/#projects">Projekte ansehen</a></div>
+      </div>
+      <p class="notfound-path"><span aria-hidden="true">↳</span> <code data-notfound-path>/404</code></p>
+      <noscript><p class="notfound-text" lang="de">Hier sollte etwas sein. Die Seite wurde verschoben oder existiert nicht. <a href="/de/">Zur deutschen Startseite</a></p></noscript>
+    </main>
+    <SiteFooter lang="en" />
+    <script>
+      import "@/scripts/notfound";
+    </script>
+  </body>
+</html>
