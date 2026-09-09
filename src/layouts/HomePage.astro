@@ -23,10 +23,16 @@ import SpeedInsights from "@vercel/speed-insights/astro";
 
 interface Props {
   content: LocaleContent;
+  /** Where search engines should send readers. The reading view and the
+   *  desktop carry the same copy, so /classic/ points at / rather than
+   *  competing with it for the same queries. */
   canonicalPath: string;
+  /** Where this page's own logo links. Not the canonical URL: a reader who
+   *  chose the reading view should stay in it. */
+  homeHref?: string;
 }
 
-const { content, canonicalPath } = Astro.props;
+const { content, canonicalPath, homeHref = canonicalPath } = Astro.props;
 const isDe = content.lang !== "en";
 const lang: ProjectLang = isDe ? "de" : "en";
 const localePrefix = isDe ? "/de" : "";
@@ -87,7 +93,7 @@ interface IndexRow {
 
 const projectRow = (project: Project): Omit<IndexRow, "num"> => ({
   name: project.name,
-  href: `${localePrefix}/projects/${project.slug}/`,
+  href: `${localePrefix}/classic/projects/${project.slug}/`,
   description: getProjectCopy(project, lang).tagline,
   stack: project.stack,
   status: project.status,
@@ -150,7 +156,7 @@ const profileSchema = {
   "@context": "https://schema.org",
   "@type": "ProfilePage",
   name: "Johannes Grof",
-  url: toCanonicalUrl(canonicalPath),
+  url: toCanonicalUrl(homeHref),
   inLanguage: content.lang,
   description: content.meta.description,
   mainEntity: {
@@ -205,7 +211,7 @@ const faqSchema = {
     <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />
   </head>
   <body>
-    <SiteHeader navItems={content.nav} homeHref={canonicalPath} langSwitch={content.langSwitch} lang={isDe ? "de" : "en"} />
+    <SiteHeader navItems={content.nav} homeHref={homeHref} langSwitch={content.langSwitch} lang={isDe ? "de" : "en"} />
 
     <main id="main">
       <section class="hero section-shell" aria-labelledby="hero-title">
