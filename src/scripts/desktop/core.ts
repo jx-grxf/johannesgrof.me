@@ -90,6 +90,26 @@ export function front(win: HTMLElement, focus = false) {
   if (focus) win.focus({ preventScroll: true });
 }
 
+export const NOTE_KEY = "jg-desktop-note-v1";
+
+/** The note is restored by the shell, not by the editor module.
+ *
+ *  The textarea is server-rendered with a default text, and the editor module
+ *  only loads when its window opens. Leaving the restore there meant a reload
+ *  showed the default over a saved note until the chunk arrived — and kept
+ *  showing it, editable, if the chunk never arrived at all. */
+export function restoreNote() {
+  const editor = maybe<HTMLTextAreaElement>("[data-editor]");
+  if (!editor) return;
+
+  try {
+    const stored = localStorage.getItem(NOTE_KEY);
+    if (stored !== null) editor.value = stored;
+  } catch {
+    /* The default text stays; the editor module reports the blocked storage. */
+  }
+}
+
 /** App modules are loaded the first time their window opens, so a visitor who
  *  never touches the terminal never downloads it. */
 const loaders: Record<string, () => Promise<{ init: () => void }>> = {

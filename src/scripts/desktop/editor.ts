@@ -1,9 +1,7 @@
-import { maybe, t, toast } from "./core";
+import { maybe, NOTE_KEY, t, toast } from "./core";
 
 /** TextEdit. Notes go to this browser's storage or to a file the visitor asked
  *  for, and nowhere else — there is no upload path in this module at all. */
-
-const NOTE_KEY = "jg-desktop-note-v1";
 
 let storageAvailable = true;
 /** Bumped on every save, so a slow file read cannot overwrite something typed
@@ -17,9 +15,10 @@ export function init() {
   const editor = maybe<HTMLTextAreaElement>("[data-editor]");
   if (!editor) return;
 
+  // core.restoreNote() has already put the saved note in place; this only
+  // establishes whether saving is going to work at all.
   try {
-    const stored = localStorage.getItem(NOTE_KEY);
-    if (stored !== null) editor.value = stored;
+    localStorage.getItem(NOTE_KEY);
   } catch {
     storageAvailable = false;
   }

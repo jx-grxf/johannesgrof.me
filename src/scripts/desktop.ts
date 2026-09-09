@@ -9,6 +9,7 @@ import {
   maybe,
   openProject,
   openWindow,
+  restoreNote,
   syncWindows,
   t,
   toast,
@@ -301,6 +302,7 @@ applyPreferences();
 
 initMenubar();
 initWidgets();
+restoreNote();
 syncWindows();
 
 // The Finder catalogue is server-rendered, so its module is needed as soon as

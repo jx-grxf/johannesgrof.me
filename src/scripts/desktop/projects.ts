@@ -43,7 +43,27 @@ async function fetchDetail(slug: string): Promise<boolean> {
   }
 }
 
+/** The project window's failure state. A dropped packet should cost the visitor
+ *  one button press, not every window they have open. */
+function showError(slug: string) {
+  const panel = maybe("[data-project-error]");
+  if (!panel) return;
+
+  const link = maybe<HTMLAnchorElement>("[data-project-fallback]");
+  if (link) link.href = `${de ? "/de" : ""}/projects/${encodeURIComponent(slug)}/`;
+
+  panel.dataset.slug = slug;
+  panel.hidden = false;
+}
+
+function clearError() {
+  const panel = maybe("[data-project-error]");
+  if (panel) panel.hidden = true;
+}
+
 function show(slug: string) {
+  clearError();
+
   const entries = $$("[data-project-detail]");
   entries.forEach((el) => {
     el.hidden = el.dataset.projectDetail !== slug;
@@ -67,20 +87,21 @@ function openProject(slug: string, trigger?: HTMLElement, writeHistory = true) {
   if (known) {
     show(slug);
   } else {
+    clearError();
     setBusy(true);
+
+    // One request per slug, however many times it is clicked.
     const request = pending.get(slug) ?? fetchDetail(slug);
     pending.set(slug, request);
 
     void request.then((ok) => {
       setBusy(false);
+      // Either way this attempt is over: a success is served from the DOM after
+      // this, and a failure has to be retryable.
+      pending.delete(slug);
+
       if (ok) show(slug);
-      else {
-        pending.delete(slug);
-        // The full page for this project is a normal URL, so a failed fetch has
-        // an honest way out rather than an empty window.
-        toast(t("That project could not be loaded. Opening the full page instead.", "Das Projekt ließ sich nicht laden. Ich öffne die ganze Seite."));
-        location.href = `${de ? "/de" : ""}/projects/${encodeURIComponent(slug)}/`;
-      }
+      else showError(slug);
     });
   }
 
@@ -130,6 +151,11 @@ export function init() {
   });
 
   applyFilter();
+
+  maybe("[data-project-retry]")?.addEventListener("click", () => {
+    const slug = maybe("[data-project-error]")?.dataset.slug;
+    if (slug) openProject(slug, undefined, false);
+  });
 
   // Copy buttons live inside project markup, which can arrive later, so this
   // listens on the window rather than on each button.

@@ -207,6 +207,10 @@ const isFeed = (value: unknown): value is WorkshopFeed =>
 
 let inFlight = false;
 let loadedAt = 0;
+/** Whether anything is currently rendered, from either source. A restored
+ *  snapshot counts: without this, a failed refresh reported "GitHub is not
+ *  reachable" over a window that was visibly full of commits. */
+let showing = false;
 
 async function load(force = false) {
   if (inFlight || (!force && Date.now() - loadedAt < REFRESH_AFTER)) return;
@@ -224,6 +228,7 @@ async function load(force = false) {
     if (!isFeed(data)) throw new Error("shape");
 
     loadedAt = Date.now();
+    showing = true;
     render(data, false);
 
     try {
@@ -232,7 +237,19 @@ async function load(force = false) {
       /* The in-memory copy still serves this visit. */
     }
   } catch {
-    setStatus(loadedAt ? t("Saved snapshot · refresh failed", "Gespeicherter Stand · Aktualisierung fehlgeschlagen") : t("GitHub is not reachable right now.", "GitHub ist gerade nicht erreichbar."));
+    if (showing) {
+      setStatus(t("Saved snapshot · refresh failed", "Gespeicherter Stand · Aktualisierung fehlgeschlagen"));
+    } else {
+      setStatus(t("GitHub is not reachable right now.", "GitHub ist gerade nicht erreichbar."));
+
+      // With nothing to show, the desktop widget would otherwise sit on its
+      // server-rendered "loading the last commit…" placeholder forever, next to
+      // a footnote saying the opposite.
+      const headline = maybe("[data-latest-project]");
+      const detail = maybe("[data-latest-description]");
+      if (headline) headline.textContent = "GitHub";
+      if (detail) detail.textContent = t("Not reachable right now.", "Gerade nicht erreichbar.");
+    }
   } finally {
     inFlight = false;
     if (refresh) refresh.disabled = false;
@@ -252,6 +269,7 @@ function restoreSnapshot() {
     const age = Date.now() - Date.parse(data.fetchedAt);
     if (!Number.isFinite(age) || age < 0 || age > SNAPSHOT_MAX_AGE) return;
 
+    showing = true;
     render(data, true);
   } catch {
     /* An unreadable snapshot is simply not used. */

@@ -212,7 +212,15 @@ export function init() {
   if (menus[0]) setRovingFocus(menus[0]);
 
   document.addEventListener("pointerdown", (event) => {
-    if (!(event.target as Element).closest("[data-menu-button], [data-menu-list]")) closeAll();
+    if ((event.target as Element).closest("[data-menu-button], [data-menu-list]")) return;
+
+    // Escape hands focus back to the menu title; dismissing by clicking away has
+    // to as well, or a keyboard user is left focused on an item that is now
+    // display:none and has no visible focus ring anywhere on the page. Focus
+    // moves here on pointerdown, before the browser focuses whatever was
+    // actually clicked, so a click on another control still wins.
+    const focusInsideMenu = menus.some((menu) => isOpen(menu) && menu.list.contains(document.activeElement));
+    closeAll(focusInsideMenu);
   });
 
   document.addEventListener("keydown", (event) => {
