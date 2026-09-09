@@ -13,3 +13,6 @@ output/
 .codexignore
 AGENTS.md
 .env*
+
+# Safety copy of the pre-rework desktop; not part of the site.
+.backup-original-desktop/
