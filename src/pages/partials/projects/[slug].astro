@@ -1,0 +1,20 @@
+---
+import DesktopProjectArticle from "@/components/DesktopProjectArticle.astro";
+import { publicProjects } from "@/data/projects";
+
+// Markup-only route, fetched by the desktop when a project window opens.
+// Rendering all seventeen case studies into the home page cost 158 KB of HTML
+// for content most visitors never reach; this ships one at a time instead.
+// Kept out of the sitemap and disallowed in robots.txt — the readable page for
+// a project is /projects/:slug/, and that is what the canonical URL points at.
+export async function getStaticPaths() {
+  return publicProjects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+---
+
+<DesktopProjectArticle project={project} lang="en" />
