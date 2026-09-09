@@ -1,0 +1,52 @@
+---
+/**
+ * Every app tile, defined once. Rendered near the top of the desktop body; the
+ * tiles themselves are <use> references into it.
+ */
+import { APP_ICONS, ICON_SOURCE, SQUIRCLE } from "@/lib/appIcons";
+
+// Nothing references the symbols while the Apple icons are in use, so the
+// sprite is left out of the document entirely rather than shipped unused.
+const render = ICON_SOURCE === "drawn";
+---
+
+{render && (
+
+<svg class="app-icon-sprite" aria-hidden="true" focusable="false" width="0" height="0">
+  <defs>
+    {
+      Object.entries(APP_ICONS).map(([id, design]) => (
+        <>
+          <linearGradient id={`app-${id}-fill`} x1="0" y1="0" x2="0.35" y2="1">
+            <stop offset="0" stop-color={design.from} />
+            <stop offset="1" stop-color={design.to} />
+          </linearGradient>
+          <clipPath id={`app-${id}-clip`}>
+            <path d={SQUIRCLE} />
+          </clipPath>
+        </>
+      ))
+    }
+  </defs>
+  {
+    Object.entries(APP_ICONS).map(([id, design]) => (
+      <symbol id={`app-${id}`} viewBox="0 0 100 100">
+        <g clip-path={`url(#app-${id}-clip)`}>
+          <path d={SQUIRCLE} fill={`url(#app-${id}-fill)`} />
+          {/* One soft highlight across the top, the way a physical tile catches light. */}
+          <path d="M0 0h100v46C74 34 26 34 0 46Z" fill="#fff" opacity="0.16" />
+        </g>
+        <path d={SQUIRCLE} fill="none" stroke="#000" stroke-opacity="0.14" stroke-width="1.5" />
+        <path
+          d={design.glyph}
+          fill="none"
+          stroke={design.ink ?? "#fff"}
+          stroke-width={design.width ?? 4}
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </symbol>
+    ))
+  }
+</svg>
+)}
