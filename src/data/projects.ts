@@ -769,20 +769,20 @@ export const featuredProjects: Project[] = [
     featuredTier: "featured",
     repo: "jx-grxf/BriskEdit",
     githubUrl: "https://github.com/jx-grxf/BriskEdit",
-    releaseUrl: "https://github.com/jx-grxf/BriskEdit/releases/tag/v0.5.2",
-    fallbackVersion: "v0.5.2",
+    releaseUrl: "https://github.com/jx-grxf/BriskEdit/releases/tag/v0.6.0",
+    fallbackVersion: "v0.6.0",
     platformLabels: ["macOS"],
     fallbackDownloads: [
       {
-        assetName: "BriskEdit-0.5.2.dmg",
-        assetUrl: "https://github.com/jx-grxf/BriskEdit/releases/download/v0.5.2/BriskEdit-0.5.2.dmg",
-        size: 8339840,
+        assetName: "BriskEdit-0.6.0.dmg",
+        assetUrl: "https://github.com/jx-grxf/BriskEdit/releases/download/v0.6.0/BriskEdit-0.6.0.dmg",
+        size: 8720797,
         kind: "macos",
       },
       {
-        assetName: "BriskEdit-0.5.2.zip",
-        assetUrl: "https://github.com/jx-grxf/BriskEdit/releases/download/v0.5.2/BriskEdit-0.5.2.zip",
-        size: 8423038,
+        assetName: "BriskEdit-0.6.0.zip",
+        assetUrl: "https://github.com/jx-grxf/BriskEdit/releases/download/v0.6.0/BriskEdit-0.6.0.zip",
+        size: 8803651,
         kind: "archive",
       },
     ],
@@ -868,6 +868,7 @@ export const featuredProjects: Project[] = [
   {
     name: "poise",
     slug: "poise",
+    logo: { src: "/projects/poise/logo.png", alt: "poise app icon", width: 256, height: 256 },
     status: "active",
     tagline: "Turn your AirPods into a posture coach — fully on-device.",
     description:
@@ -974,6 +975,7 @@ export const featuredProjects: Project[] = [
   {
     name: "NotchTray",
     slug: "notchtray",
+    logo: { src: "/projects/notchtray/logo.png", alt: "NotchTray app icon", width: 256, height: 256 },
     status: "active",
     tagline: "Recover the menu bar icons the MacBook notch swallows.",
     description:
