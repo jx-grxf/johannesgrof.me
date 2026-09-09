@@ -193,11 +193,12 @@ export const featuredProjects: Project[] = [
     slug: "bottlelite",
     status: "preview",
     logo: {
-      src: "/projects/bottlelite/logo.png",
+      src: "/projects/bottlelite/logo.webp",
+      fallbackSrc: "/projects/bottlelite/logo.png",
       alt: "BottleLite app icon",
       fit: "contain",
-      width: 1024,
-      height: 1024,
+      width: 256,
+      height: 256,
     },
     tagline: "A lightweight native macOS runner for Windows apps.",
     description:
@@ -250,7 +251,8 @@ export const featuredProjects: Project[] = [
     ],
     showcase: [
       {
-        src: "/projects/bottlelite/logo.png",
+        src: "/projects/bottlelite/showcase.webp",
+        fallbackSrc: "/projects/bottlelite/logo.png",
         alt: "BottleLite app icon",
         fit: "contain",
         width: 1024,
@@ -868,7 +870,7 @@ export const featuredProjects: Project[] = [
   {
     name: "poise",
     slug: "poise",
-    logo: { src: "/projects/poise/logo.png", alt: "poise app icon", width: 256, height: 256 },
+    logo: { src: "/projects/poise/logo.webp", fallbackSrc: "/projects/poise/logo.png", alt: "poise app icon", width: 256, height: 256 },
     status: "active",
     tagline: "Turn your AirPods into a posture coach — fully on-device.",
     description:
@@ -975,7 +977,7 @@ export const featuredProjects: Project[] = [
   {
     name: "NotchTray",
     slug: "notchtray",
-    logo: { src: "/projects/notchtray/logo.png", alt: "NotchTray app icon", width: 256, height: 256 },
+    logo: { src: "/projects/notchtray/logo.webp", fallbackSrc: "/projects/notchtray/logo.png", alt: "NotchTray app icon", width: 256, height: 256 },
     status: "active",
     tagline: "Recover the menu bar icons the MacBook notch swallows.",
     description:
