@@ -5,19 +5,34 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 
-const base = process.env.DESKTOP_TEST_URL || "http://127.0.0.1:4321";
+// localhost, not 127.0.0.1: Astro's dev server binds to [::1] on some setups,
+// where the IPv4 literal is refused outright while localhost resolves to
+// whichever family is actually listening.
+const base = process.env.DESKTOP_TEST_URL || "http://localhost:4321";
 if (!["127.0.0.1", "localhost"].includes(new URL(base).hostname)) {
   throw new Error("Browser checks must run against a local preview.");
 }
+// agent-browser drives the machine's real Chrome rather than a private
+// instance, so this run shares it with anything else automating that browser.
+// Run the check on its own: with a second automation session active, commands
+// land on whichever tab is in front and steps fail with "element not found" at
+// arbitrary points, which looks exactly like a bug in the page and is not one.
 const session = `jg-desktop-check-${process.pid}`;
 const artifacts = mkdtempSync(join(tmpdir(), "jg-desktop-check-"));
+// agent-browser directly rather than through a shell proxy: this already asks
+// for --json and parses it, so a filtering wrapper can only add a failure mode,
+// and it means the check needs nothing beyond agent-browser to run.
 const browser = (...args) => {
   const result = JSON.parse(
-    execFileSync(
-      "rtk",
-      ["proxy", "agent-browser", "--session", session, "--json", ...args],
-      { encoding: "utf8", timeout: 30_000, maxBuffer: 4_000_000 },
-    ),
+    execFileSync("agent-browser", ["--session", session, "--json", ...args], {
+      encoding: "utf8",
+      // Each call spawns its own CLI process that reconnects to the browser, and
+      // there are a few hundred of them in a run. 30s was tight enough to time
+      // out on a loaded machine while every individual command still answered in
+      // milliseconds when run by hand.
+      timeout: 60_000,
+      maxBuffer: 4_000_000,
+    }),
   );
   if (!result.success)
     throw new Error(result.error || `Browser command failed: ${args[0]}`);
