@@ -110,3 +110,41 @@ test("a release tag is escaped into its URL", () => {
 
   assert.equal(release!.url, "https://github.com/jx-grxf/Tools/releases/tag/v1.0%20beta");
 });
+
+test("merge commits and bots are skipped in favour of the newest real commit", () => {
+  const merge = {
+    sha: "1111111111111111111111111111111111111111",
+    parents: [{ sha: "a" }, { sha: "b" }],
+    commit: { message: "Merge pull request #52 from jx-grxf/dependabot/npm_and_yarn/promo", author: { date: "2026-09-09T10:00:00Z" } },
+  };
+  const bot = {
+    sha: "2222222222222222222222222222222222222222",
+    author: { login: "dependabot[bot]" },
+    commit: { message: "bump nanoid from 3.3.7 to 3.3.18", author: { date: "2026-09-08T10:00:00Z" } },
+  };
+  const real = {
+    sha: "3333333333333333333333333333333333333333",
+    commit: { message: "fix(editor): keep the caret visible while wrapping", author: { date: "2026-09-07T10:00:00Z" } },
+  };
+
+  const [entry] = parseCommits([{ repo: "BriskEdit", data: [merge, bot, real] }], "jx-grxf");
+
+  assert.equal(entry!.message, "fix(editor): keep the caret visible while wrapping");
+  assert.ok(entry!.url.endsWith("/commit/3333333333333333333333333333333333333333"));
+});
+
+test("a repository with nothing but merges still appears", () => {
+  const merge = (sha: string, date: string) => ({
+    sha,
+    parents: [{ sha: "a" }, { sha: "b" }],
+    commit: { message: `Merge branch 'main' into ${sha}`, author: { date } },
+  });
+
+  const [entry] = parseCommits(
+    [{ repo: "homebrew-tap", data: [merge("4444444444444444444444444444444444444444", "2026-09-09T10:00:00Z"), merge("5555555555555555555555555555555555555555", "2026-09-01T10:00:00Z")] }],
+    "jx-grxf",
+  );
+
+  assert.equal(entry!.repo, "homebrew-tap");
+  assert.ok(entry!.message.startsWith("Merge branch"));
+});

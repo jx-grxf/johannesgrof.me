@@ -62,8 +62,10 @@ export const GET: APIRoute = async () => {
 
   // Which repos to ask for commits is only known once the repo list is sorted
   // by push date, so this is a second wave rather than part of the fan-out above.
+  // A handful per repo rather than one, so a run of merge commits cannot hide
+  // the last commit that actually says something.
   const recent = repos.slice(0, COMMIT_REPOS);
-  const commitData = await Promise.all(recent.map((repo) => fetchJson(`https://api.github.com/repos/${OWNER}/${repo.name}/commits?per_page=1`)));
+  const commitData = await Promise.all(recent.map((repo) => fetchJson(`https://api.github.com/repos/${OWNER}/${repo.name}/commits?per_page=8`)));
   const commits = parseCommits(
     recent.map((repo, index) => ({ repo: repo.name, data: commitData[index] })),
     OWNER,

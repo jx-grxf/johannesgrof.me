@@ -46,6 +46,24 @@ const isoDate = (value: unknown) =>
  *  hrefs, so anything with a surprise in it is dropped rather than escaped. */
 const isRepoName = (value: unknown): value is string => typeof value === "string" && /^[\w.-]{1,100}$/.test(value);
 
+const MERGE_OR_BOT = /^(?:merge (?:pull request|branch|remote-tracking)|bump |chore\(deps\)|revert ")/i;
+
+/** Whether a commit is worth putting in front of a reader. */
+function isWorthShowing(commit: Record<string, unknown> | null): boolean {
+  if (!commit) return false;
+
+  const detail = asRecord(commit.commit);
+  const message = text(detail?.message, 300).split("\n")[0]!.trim();
+  if (!message || MERGE_OR_BOT.test(message)) return false;
+
+  // A merge commit has more than one parent, whatever its message says.
+  if (Array.isArray(commit.parents) && commit.parents.length > 1) return false;
+
+  const author = asRecord(commit.author);
+  const login = text(author?.login, 80).toLowerCase();
+  return !login.endsWith("[bot]");
+}
+
 /** Public, non-fork, non-archived repositories, newest push first. */
 export function parseRepos(data: unknown, owner: string): FeedRepo[] {
   if (!Array.isArray(data)) return [];
@@ -85,7 +103,11 @@ export function parseCommits(entries: { repo: string; data: unknown }[], owner: 
   const commits = entries.flatMap(({ repo, data }) => {
     if (!Array.isArray(data) || !isRepoName(repo)) return [];
 
-    const newest = asRecord(data[0]);
+    // "Merge pull request #52 from jx-grxf/dependabot/npm_and_yarn/…" is a true
+    // answer to "what did he push last" and a useless one to read. Prefer the
+    // newest commit that says something; fall back to the newest of any kind so
+    // a repo that only ever merges still appears.
+    const newest = asRecord(data.find((entry) => isWorthShowing(asRecord(entry))) ?? data[0]);
     if (!newest) return [];
 
     const sha = text(newest.sha, 40);
