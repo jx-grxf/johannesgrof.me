@@ -51,7 +51,7 @@
       "headers": [
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; base-uri 'self'; connect-src 'self' https://api.github.com https://vitals.vercel-insights.com; frame-ancestors 'none'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://vercel.live https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; form-action 'self'"
+          "value": "default-src 'self'; base-uri 'self'; connect-src 'self' https://vitals.vercel-insights.com; frame-ancestors 'none'; img-src 'self' data: https:; script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://vercel.live https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; form-action 'self'"
         },
         {
           "key": "Referrer-Policy",
@@ -82,6 +82,19 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=86400, s-maxage=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/(de/)?partials/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, s-maxage=86400, stale-while-revalidate=604800"
         }
       ]
     }

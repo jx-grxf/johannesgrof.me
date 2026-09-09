@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+# Markup fragments the desktop fetches for its project windows. The readable
+# page for a project is /projects/:slug/.
+Disallow: /partials/
+Disallow: /de/partials/
+Disallow: /api/
 
 Sitemap: https://johannesgrof.me/sitemap.xml
