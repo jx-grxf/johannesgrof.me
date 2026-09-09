@@ -90,6 +90,9 @@ function initContactForm(form: HTMLFormElement) {
     updateButton();
   };
   const renderWidget = () => {
+    // Desktop windows can be minimized while the verification script loads.
+    // Wait for a visible surface rather than rendering a zero-width challenge.
+    if (widget.clientWidth === 0) return;
     clearVerification();
     renderedTheme = theme;
     renderedSize = widgetSize();
@@ -113,7 +116,7 @@ function initContactForm(form: HTMLFormElement) {
     if (!widgetId) verificationFailed();
   };
   const startVerification = async () => {
-    if (loading || widgetId) return;
+    if (loading || widgetId || widget.clientWidth === 0) return;
     if (!widget.dataset.sitekey) { verificationFailed(); return; }
     loading = true;
     clearVerification();
@@ -161,14 +164,16 @@ function initContactForm(form: HTMLFormElement) {
     const next = document.documentElement.dataset.theme === "light" ? "light" : "dark";
     if (theme === next) return;
     theme = next;
-    if (widgetId && !sending) {
+    if (widgetId && !sending && widget.clientWidth > 0) {
       window.turnstile?.remove(widgetId);
       renderWidget();
     }
   }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
 
   new ResizeObserver(() => {
-    if (widgetId && !sending && renderedSize !== widgetSize()) {
+    if (widget.clientWidth === 0) return;
+    if (!widgetId) { void startVerification(); return; }
+    if (!sending && (renderedSize !== widgetSize() || renderedTheme !== theme)) {
       window.turnstile?.remove(widgetId);
       renderWidget();
     }
