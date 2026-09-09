@@ -6,7 +6,7 @@ import ContactForm from "@/components/ContactForm.astro";
 import DesktopProjectArticle from "@/components/DesktopProjectArticle.astro";
 import Icon from "@/components/DesktopIcon.astro";
 import Window from "@/components/DesktopWindow.astro";
-import { getProjectCopy, localizedStatusLabel, publicProjects } from "@/data/projects";
+import { featuredShowcaseProjects, getProjectCopy, localizedStatusLabel, publicProjects } from "@/data/projects";
 import type { LocaleContent } from "@/data/siteContent";
 import { toCanonicalUrl } from "@/data/siteMetadata";
 import "@/styles/desktop.css";
@@ -34,9 +34,15 @@ const projects = publicProjects.map((project) => ({
       : "tools",
 }));
 
-const featured = ["briskedit", "macphone", "patchpilot"].map((slug) => projects.find((p) => p.slug === slug)).filter((p) => p !== undefined);
+// The reading view and the desktop show the same three, from one list.
+const featured = featuredShowcaseProjects.map((project) => projects.find((p) => p.slug === project.slug)).filter((p) => p !== undefined);
 
 const archived = projects.filter((project) => project.status === "archived");
+
+// The reading view's hero counts the ones with a public repository, which is a
+// smaller number than the catalogue. Both appear in the Finder's status bar so
+// the two pages cannot look like they disagree.
+const shipped = projects.filter((project) => project.visibility === "public").length;
 
 // Screenshots the Preview window flips through. Only projects that actually
 // have a picture; a gallery of placeholders is worse than a shorter gallery.
@@ -421,7 +427,7 @@ const editorText = t(
             <p class="empty-state" data-project-empty hidden>{t("Nothing matches that.", "Dazu gibt es nichts.")}</p>
             <footer class="finder-status">
               <span data-project-count>{projects.length} {t("projects", "Projekte")}</span>
-              <span>github.com/jx-grxf</span>
+              <span>{shipped} {t("of them public", "davon öffentlich")}</span>
             </footer>
           </div>
         </div>
@@ -458,6 +464,13 @@ const editorText = t(
           </article>
         </div>
         <p class="window-loading" aria-live="polite">{t("Loading…", "Wird geladen…")}</p>
+        <div class="window-error" data-project-error hidden role="alert">
+          <p>{t("That project did not load.", "Das Projekt ist nicht geladen.")}</p>
+          <div>
+            <button class="secondary-button" data-project-retry>{t("Try again", "Nochmal versuchen")}</button>
+            <a class="secondary-button" data-project-fallback href="/">{t("Open the full page", "Ganze Seite öffnen")} ↗</a>
+          </div>
+        </div>
       </Window>
 
       <Window id="preview" title="Screenshots" subtitle={t("Preview", "Vorschau")} lang={lang}>
@@ -515,12 +528,12 @@ const editorText = t(
 
       <Window id="terminal" title="johannes — zsh" subtitle="Terminal" lang={lang}>
         <div class="terminal-surface">
-          <pre class="terminal-banner">   _               _
-  (_) ___         | | _____  __
-  | |/ _ \   __ _ | |/ _ \ \/ /
-  | | (_) | | (_| || |  __/&gt;  &lt;
- _/ |\___/   \__, ||_|\___/_/\_\
-|__/         |___/</pre>
+          <pre class="terminal-banner">   _        
+  (_)  __ _ 
+  | | / _` |
+  | || (_| |
+ _/ | \__, |
+|__/  |___/ </pre>
           <p>{t("Type help to see what works.", "Tipp help, dann siehst du was geht.")}</p>
           <div data-terminal-output role="log" aria-live="polite"></div>
           <form data-terminal-form>
