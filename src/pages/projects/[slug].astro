@@ -1,5 +1,6 @@
 ---
-import ProjectDetail from "@/components/ProjectDetail.astro";
+import DesktopPage from "@/layouts/DesktopPage.astro";
+import { siteContentByLocale } from "@/data/siteContent";
 import { publicProjects } from "@/data/projects";
 
 export async function getStaticPaths() {
@@ -12,4 +13,4 @@ export async function getStaticPaths() {
 const { project } = Astro.props;
 ---
 
-<ProjectDetail project={project} lang="en" />
+<DesktopPage content={siteContentByLocale.en} canonicalPath={`/projects/${project.slug}/`} initialProject={project.slug} />
