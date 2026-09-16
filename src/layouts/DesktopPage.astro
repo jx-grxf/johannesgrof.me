@@ -8,6 +8,7 @@ import Icon from "@/components/DesktopIcon.astro";
 import Window from "@/components/DesktopWindow.astro";
 import { featuredShowcaseProjects, getProjectCopy, localizedStatusLabel, publicProjects } from "@/data/projects";
 import type { LocaleContent } from "@/data/siteContent";
+import { oeffigo } from "@/data/oeffigo";
 import { toCanonicalUrl } from "@/data/siteMetadata";
 import "@/styles/desktop.css";
 import SpeedInsights from "@vercel/speed-insights/astro";
@@ -80,8 +81,8 @@ const repoCatalogue = [...projects.map((project) => project.repo.split("/")[1]),
 const projectIndex = projects.map((project) => ({ name: project.name, slug: project.slug }));
 
 const editorText = t(
-  "Scratch pad.\n\nType whatever you want in here — it stays in this browser and\nnever leaves your machine. Download it if you want to keep it.\n\n— Johannes",
-  "Notizblock.\n\nSchreib hier rein was du willst — bleibt in diesem Browser und\ngeht nirgendwohin. Wenn du es behalten willst, lad es runter.\n\n— Johannes",
+  "Scratch pad.\n\nType whatever you want in here. It stays in this browser and\nnever leaves your machine. Download it if you want to keep it.\n\n— Johannes",
+  "Notizblock.\n\nSchreib hier rein, was du willst. Es bleibt in diesem Browser und\ngeht nirgendwohin. Wenn du es behalten willst, lad es runter.\n\n— Johannes",
 );
 ---
 
@@ -280,7 +281,7 @@ const editorText = t(
         <button data-open="project" data-project="oeffigo">
           <img src="/projects/oeffigo/icon.webp" width="62" height="62" alt="" />
           <span>ÖffiGo</span>
-          <small>{t("iOS · Android", "iOS · Android")}</small>
+          <small>{t("iPhone · Watch", "iPhone · Watch")}</small>
         </button>
         <button data-open="editor">
           <AppIcon app="editor" size={62} />
@@ -314,7 +315,7 @@ const editorText = t(
           <div class="welcome-main">
             <div class="hello-kicker"><span class="status-dot"></span>{t("SOUTH-EAST STYRIA, AUSTRIA", "SÜDOST-STEIERMARK")}</div>
             <h1>{t("Hey, I'm", "Hey, ich bin")}<br />Johannes<span class="orange-period">.</span></h1>
-            <p class="welcome-lead">{t("I build Mac apps, developer tools and websites.", "Ich bau Mac-Apps, Developer-Tools und Websites.")}</p>
+            <p class="welcome-lead">{t("I build apps for the Mac and the iPhone, developer tools and websites.", "Ich bau Apps für Mac und iPhone, Developer-Tools und Websites.")}</p>
             <p class="welcome-description">
               {
                 t(
@@ -329,7 +330,36 @@ const editorText = t(
             </div>
 
             <div class="section-label">
-              <span>{t("THREE THAT ARE RUNNING", "DREI, DIE LAUFEN")}</span>
+              <span>{t("WHERE MOST OF MY TIME GOES", "WO DIE MEISTE ZEIT HINGEHT")}</span>
+            </div>
+            <a class="flagship-card" href={`${prefix}/oeffigo/`} data-open="project" data-project="oeffigo">
+              <div class="flagship-copy">
+                <div class="flagship-title">
+                  <img src={oeffigo.icon} width="52" height="52" alt="" />
+                  <div>
+                    <strong>ÖffiGo</strong>
+                    <span>{oeffigo.eyebrow[lang]}</span>
+                  </div>
+                </div>
+                <p class="flagship-claim">{oeffigo.tagline[lang]}</p>
+                <p>
+                  {
+                    t(
+                      "A public-transport app for all of Austria, on the iPhone and the Apple Watch. Every time on the board says whether it is live, from the operator or only the timetable.",
+                      "Eine Öffi-App für ganz Österreich, am iPhone und an der Apple Watch. Jede Zeit auf der Tafel sagt, ob sie live ist, vom Betreiber kommt oder nur aus dem Fahrplan.",
+                    )
+                  }
+                </p>
+                <span class="flagship-more">{t("Open ÖffiGo", "ÖffiGo öffnen")} <span aria-hidden="true">→</span></span>
+              </div>
+              <div class="flagship-phones" aria-hidden="true">
+                <img src={oeffigo.shots[1].src} width="675" height="1380" alt="" loading="lazy" />
+                <img src={oeffigo.shots[0].src} width="675" height="1380" alt="" loading="lazy" />
+              </div>
+            </a>
+
+            <div class="section-label section-label-spaced">
+              <span>{t("ALSO RUNNING", "AUCH IN BETRIEB")}</span>
               <button data-open="finder">{t("All of them", "Alle")} ↗</button>
             </div>
             <div class="featured-apps">
@@ -439,27 +469,59 @@ const editorText = t(
       <Window id="project" title={initial?.name ?? t("Project", "Projekt")} open={!!initialProject} lang={lang}>
         <div class="project-detail-content">
           {initial && <DesktopProjectArticle project={initial} lang={lang} initial />}
-          <article data-project-detail="oeffigo" hidden>
+          <article data-project-detail="oeffigo" class="oeffigo-detail" hidden>
             <div class="project-detail-heading">
-              <img src="/projects/oeffigo/icon.webp" width="76" height="76" alt="" />
+              <img src={oeffigo.icon} width="76" height="76" alt="" />
               <div>
-                <span class="eyebrow">iOS · Android · Österreich</span>
+                <span class="eyebrow">{oeffigo.eyebrow[lang].toUpperCase()}</span>
                 <h3>ÖffiGo</h3>
+                <span class="project-status">{oeffigo.status[lang]}</span>
               </div>
             </div>
-            <p class="project-tagline">{t("Austria's public transport, done properly.", "Österreichs Öffis, ordentlich gemacht.")}</p>
-            <img class="project-hero-image" src="/projects/oeffigo/showcase.webp" width="1000" height="600" loading="lazy" alt={t("ÖffiGo app preview", "Vorschau der ÖffiGo-App")} />
-            <p>
-              {
-                t(
-                  "Departures, journeys and nearby stops in one app, with every time labelled as either live from the operator or straight from the timetable.",
-                  "Abfahrten, Routen und Haltestellen in einer App — und jede Zeit ist beschriftet, ob sie live vom Betreiber kommt oder aus dem Fahrplan.",
-                )
-              }
-            </p>
+            <p class="project-tagline">{oeffigo.tagline[lang]}</p>
+            <ul class="oeffigo-phones">
+              {oeffigo.shots.map((shot) => (
+                <li>
+                  <img src={shot.src} width="675" height="1380" alt={shot.alt[lang]} loading="lazy" />
+                  <span>{shot.caption[lang]}</span>
+                </li>
+              ))}
+            </ul>
+            <p>{oeffigo.lead[lang]}</p>
+
+            <h4>{oeffigo.liveProof.title[lang]}</h4>
+            <ul class="time-labels">
+              {oeffigo.liveProof.stats.map((stat) => {
+                const [label, ...rest] = stat[lang].split(": ");
+                return (
+                  <li>
+                    <strong>{label}</strong>
+                    <span>{rest.join(": ").replace(/^./, (c) => c.toUpperCase())}.</span>
+                  </li>
+                );
+              })}
+            </ul>
+
+            <h4>{t("What it does", "Was sie kann")}</h4>
+            <ul class="oeffigo-feature-list">
+              {oeffigo.features.map((feature) => (
+                <li>
+                  <strong>{feature.title[lang]}</strong>
+                  <span>{feature.body[lang]}</span>
+                </li>
+              ))}
+            </ul>
+
+            <dl class="oeffigo-facts">
+              <div><dt>{t("Platform", "Plattform")}</dt><dd>{oeffigo.platform[lang]}</dd></div>
+              <div><dt>{t("Data", "Daten")}</dt><dd>{oeffigo.dataNote[lang]}</dd></div>
+              <div><dt>Beta</dt><dd>{oeffigo.beta.body[lang]} {oeffigo.beta.note[lang]}</dd></div>
+            </dl>
+
             <div class="project-links">
-              <a class="primary-button" href={`${prefix}/oeffigo/`}>{t("ÖffiGo in detail", "ÖffiGo im Detail")} ↗</a>
-              <a class="secondary-button" href="https://oeffigo.app" target="_blank" rel="noreferrer">oeffigo.app ↗</a>
+              <a class="primary-button" href={oeffigo.websiteUrl} target="_blank" rel="noreferrer">{oeffigo.beta.ctaLabel[lang]} ↗</a>
+              <a class="secondary-button" href={oeffigo.liveUrl} target="_blank" rel="noreferrer">{oeffigo.liveProof.liveLabel[lang]} ↗</a>
+              <a class="secondary-button" href={`${prefix}/oeffigo/`}>{t("Reading view", "Leseansicht")} ↗</a>
             </div>
           </article>
         </div>
@@ -725,6 +787,11 @@ const editorText = t(
             </button>
           ))
         }
+        <button data-open="project" data-project="oeffigo" data-spotlight-item={`öffigo oeffigo ${oeffigo.tagline[lang]}`.toLowerCase()}>
+          <img src={oeffigo.icon} width="21" height="21" alt="" loading="lazy" />
+          <span>ÖffiGo</span>
+          <small>{t("Project", "Projekt")} ↵</small>
+        </button>
         {
           projects.map((project) => (
             <button data-open="project" data-project={project.slug} data-spotlight-item={`${project.name} ${project.copy.tagline}`.toLowerCase()}>

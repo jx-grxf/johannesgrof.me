@@ -51,9 +51,9 @@ const Title = initial ? "h1" : "h3";
   <div class="project-links">
     {
       p.liveUrl && (
-        <button class="primary-button" data-browser-url={p.liveUrl}>
-          {t("Open website", "Website öffnen")} ↗
-        </button>
+        <a class="primary-button" href={p.liveUrl} target="_blank" rel="noreferrer">
+          {new URL(p.liveUrl).hostname} ↗
+        </a>
       )
     }
     {
