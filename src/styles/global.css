@@ -881,7 +881,38 @@ summary:focus-visible,
   height: auto;
   max-width: 300px;
   margin-inline: auto;
-  border: 1px solid var(--rule-2);
+}
+
+/* The shots already carry their device frame, so no border or radius here. */
+.oeffigo-screens {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px;
+  margin: 0;
+  padding: 8px 0 0;
+  list-style: none;
+}
+
+.oeffigo-screens img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.oeffigo-screens span {
+  display: block;
+  margin-top: 12px;
+  color: var(--ink-2);
+  font-family: var(--font-mono, "Geist Mono Variable", monospace);
+  font-size: 0.78rem;
+  text-align: center;
+}
+
+@media (max-width: 760px) {
+  .oeffigo-screens {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+  }
 }
 
 /* Column gaps instead of vertical rules: the track count changes with the
