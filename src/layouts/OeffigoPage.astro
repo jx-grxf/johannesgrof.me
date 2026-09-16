@@ -25,9 +25,9 @@ const s = isDe
       navLabel: "Seitennavigation",
       langLabel: "EN",
       langAria: "View this page in English",
-      title: `${oeffigo.name} — Öffi fahren, ohne zu raten`,
+      title: `${oeffigo.name} — Österreichs Öffis, wirklich nativ`,
       description:
-        "ÖffiGo: Abfahrten, Routen und Zielführung für ganz Österreich, am iPhone und an der Apple Watch. Eine App von Johannes Grof, derzeit in geschlossener TestFlight-Beta.",
+        "ÖffiGo: Echtzeit-Abfahrten, Routenplanung und Live-Störungen für ganz Österreich. Native iOS-App von Johannes Grof, derzeit in geschlossener TestFlight-Beta.",
       features: "Funktionen",
       data: "Daten & Quellen",
       dataPlatform: "Plattform",
@@ -36,7 +36,7 @@ const s = isDe
       dataPrice: "Kosten",
       beta: "Beta",
       visit: "Zu oeffigo.app",
-      screens: "Screens aus der aktuellen Beta",
+      screenshotAlt: "ÖffiGo App-Screenshot",
     }
   : {
       back: "Back to the home page",
@@ -45,9 +45,9 @@ const s = isDe
       navLabel: "Page navigation",
       langLabel: "DE",
       langAria: "Diese Seite auf Deutsch ansehen",
-      title: `${oeffigo.name} — transit, without the guesswork`,
+      title: `${oeffigo.name} — Austria's public transport, truly native`,
       description:
-        "ÖffiGo: departures, routes and guidance for all of Austria, on the iPhone and the Apple Watch. An app by Johannes Grof, currently in a closed TestFlight beta.",
+        "ÖffiGo: real-time departures, journey planning and live disruptions for all of Austria. A native iOS app by Johannes Grof, currently in closed TestFlight beta.",
       features: "Features",
       data: "Data & sources",
       dataPlatform: "Platform",
@@ -56,7 +56,7 @@ const s = isDe
       dataPrice: "Cost",
       beta: "Beta",
       visit: "Visit oeffigo.app",
-      screens: "Screens from the current beta",
+      screenshotAlt: "ÖffiGo app screenshot",
     };
 
 const navItems = [
@@ -148,30 +148,16 @@ const oeffigoSchema = {
             </div>
           </div>
 
-          <img class="oeffigo-shot" src={oeffigo.shots[0].src} alt={oeffigo.shots[0].alt[lang]} width="675" height="1380" loading="eager" decoding="async" />
+          <picture>
+            <source srcset="/projects/oeffigo/showcase.webp" type="image/webp" />
+            <img class="oeffigo-shot" src="/projects/oeffigo/showcase.png" alt={s.screenshotAlt} width="1000" height="2054" loading="eager" decoding="async" />
+          </picture>
         </div>
-      </section>
-
-      <section class="band" aria-labelledby="oeffigo-screens-title">
-        <div class="section-head">
-          <span class="section-num">01</span>
-          <h2 id="oeffigo-screens-title">{s.screens}</h2>
-        </div>
-        <ul class="oeffigo-screens">
-          {
-            oeffigo.shots.map((shot) => (
-              <li>
-                <img src={shot.src} alt={shot.alt[lang]} width="675" height="1380" loading="lazy" decoding="async" />
-                <span>{shot.caption[lang]}</span>
-              </li>
-            ))
-          }
-        </ul>
       </section>
 
       <section class="band" aria-labelledby="oeffigo-features-title">
         <div class="section-head">
-          <span class="section-num">02</span>
+          <span class="section-num">01</span>
           <h2 id="oeffigo-features-title">{s.features}</h2>
         </div>
         <ul class="oeffigo-features oeffigo-feature-grid">
@@ -191,7 +177,7 @@ const oeffigoSchema = {
 
       <section class="band" aria-labelledby="oeffigo-live-title">
         <div class="section-head">
-          <span class="section-num">03</span>
+          <span class="section-num">02</span>
           <h2 id="oeffigo-live-title">{oeffigo.liveProof.eyebrow[lang]}</h2>
         </div>
         <div class="note-block note-block--flush">
@@ -209,7 +195,7 @@ const oeffigoSchema = {
 
       <section class="band" aria-labelledby="oeffigo-data-title">
         <div class="section-head">
-          <span class="section-num">04</span>
+          <span class="section-num">03</span>
           <h2 id="oeffigo-data-title">{s.data}</h2>
         </div>
         <dl class="data-list">
@@ -234,7 +220,7 @@ const oeffigoSchema = {
 
       <section class="band" aria-labelledby="oeffigo-beta-title">
         <div class="section-head">
-          <span class="section-num">05</span>
+          <span class="section-num">04</span>
           <h2 id="oeffigo-beta-title">{s.beta}</h2>
         </div>
         <div class="note-block note-block--flush">

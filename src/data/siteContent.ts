@@ -109,7 +109,7 @@ const en: LocaleContent = {
     eyebrow: "software developer / styria, austria",
     title: "Software that does one thing, properly.",
     titleAccent: "one thing",
-    body: "I'm a developer from south-east Styria and a student at HTL Kaindorf. I build apps for the Mac and the iPhone, developer tools and automations, and I help people nearby with websites, repairs and everyday technology.",
+    body: "I'm a developer from south-east Styria and a student at HTL Kaindorf. I build macOS and iOS apps, developer tools and automations — and I help people nearby with websites, repairs and everyday technology.",
     factsCountLabel: "projects in public",
     facts: ["macOS · iOS · CLI", "TypeScript · Swift · Python", "Styria, Austria"],
     primaryAction: "See the projects",
@@ -146,7 +146,7 @@ const en: LocaleContent = {
     items: [
       {
         title: "Website development & hosting",
-        body: "Websites for people, small businesses and clubs, including hosting, the domain and keeping it up to date afterwards.",
+        body: "Modern, fast portfolio, business, and club websites — built with hosting, domain setup, and ongoing maintenance in mind, so everything runs from one place.",
       },
       {
         title: "Electronics repair & setup",
@@ -154,7 +154,7 @@ const en: LocaleContent = {
       },
       {
         title: "Technical support / IT help",
-        body: "Fixing everyday tech problems, backups and updates, explained in plain words.",
+        body: "Fixing everyday tech problems, backups, updates, and clear advice without the jargon.",
       },
       {
         title: "Custom tools & automation",
@@ -171,7 +171,7 @@ const en: LocaleContent = {
       },
       {
         q: "How much does a website cost?",
-        a: "It depends on what it has to do, and whether hosting, domain and maintenance come with it. Write me two sentences about what you have in mind and we'll talk it through.",
+        a: "It depends on what it has to do, and whether hosting, domain and maintenance come with it. Write me two sentences about the project and you get a number back.",
       },
       {
         q: "How can I reach you?",
@@ -225,7 +225,7 @@ const de: LocaleContent = {
     eyebrow: "softwareentwickler / südost-steiermark",
     title: "Software, die eine Sache richtig macht.",
     titleAccent: "eine Sache",
-    body: "Ich bin Entwickler aus der Südost-Steiermark und Schüler an der HTL Kaindorf. Ich baue Apps für Mac und iPhone, Developer-Tools und Automatisierungen und helfe in der Umgebung bei Websites, Reparaturen und alltäglicher Technik.",
+    body: "Ich bin Entwickler aus der Südost-Steiermark und Schüler an der HTL Kaindorf. Ich baue macOS- und iOS-Apps, Developer-Tools und Automatisierungen — und helfe in der Umgebung bei Websites, Reparaturen und alltäglicher Technik.",
     factsCountLabel: "veröffentlichte Projekte",
     facts: ["macOS · iOS · CLI", "TypeScript · Swift · Python", "Steiermark, Österreich"],
     primaryAction: "Projekte ansehen",
@@ -258,11 +258,11 @@ const de: LocaleContent = {
   },
   services: {
     title: "Womit ich dir helfen kann",
-    lead: "Neben meinen eigenen Projekten helfe ich Menschen und kleinen Betrieben in der Umgebung bei alltäglicher Technik. Vor Ort in der Südost-Steiermark, sonst remote.",
+    lead: "Neben meinen eigenen Projekten helfe ich Menschen und kleinen Betrieben in der Umgebung bei alltäglicher Technik. Vor Ort in der Südost-Steiermark, sonst weltweit remote.",
     items: [
       {
         title: "Website-Erstellung & Hosting",
-        body: "Websites für Leute, kleine Betriebe und Vereine, inklusive Hosting, Domain und Pflege danach.",
+        body: "Moderne, schnelle Portfolio-, Business- und Vereinsseiten — gleich mit Hosting, Domain und laufender Wartung gedacht, damit alles aus einer Hand läuft.",
       },
       {
         title: "Elektronik-Reparatur & Einrichtung",
@@ -270,7 +270,7 @@ const de: LocaleContent = {
       },
       {
         title: "Technischer Support / IT-Hilfe",
-        body: "Alltägliche Technik-Probleme lösen, Backups und Updates, so erklärt, dass man es versteht.",
+        body: "Alltägliche Technik-Probleme lösen, Backups, Updates und verständliche Beratung ohne Fachchinesisch.",
       },
       {
         title: "Individuelle Tools & Automatisierung",
@@ -287,7 +287,7 @@ const de: LocaleContent = {
       },
       {
         q: "Was kostet eine Website?",
-        a: "Kommt darauf an, was sie können muss und ob Hosting, Domain und Wartung dabei sind. Schreib mir zwei Sätze zum Vorhaben, dann reden wir drüber.",
+        a: "Kommt darauf an, was sie können muss und ob Hosting, Domain und Wartung dabei sind. Schreib mir zwei Sätze zum Vorhaben, dann bekommst du eine Zahl.",
       },
       {
         q: "Wie erreiche ich dich?",
@@ -298,7 +298,7 @@ const de: LocaleContent = {
   about: {
     eyebrow: "über mich",
     title: "Die Kurzfassung.",
-    body: "Ich lebe in der Südost-Steiermark und besuche die HTL Kaindorf. Das meiste, was ich baue, fängt als eigenes Problem an: ein Ablauf mit zu vielen Schritten, ein Gerät, das nicht will, eine App, die es geben sollte und nicht gibt. Ich arbeite mit TypeScript, Swift und Python , aber wichtiger als der Stack ist, ob das fertige Ding am Ende wirklich verwendet wird.",
+    body: "Ich lebe in der Südost-Steiermark und besuche die HTL Kaindorf. Das meiste, was ich baue, fängt als eigenes Problem an: ein Ablauf mit zu vielen Schritten, ein Gerät, das nicht will, eine App, die es geben sollte und nicht gibt. Ich arbeite mit TypeScript, Swift und Python — wichtiger als der Stack ist aber, ob das fertige Ding am Ende wirklich verwendet wird.",
   },
   contact: {
     eyebrow: "kontakt",
