@@ -49,7 +49,7 @@ const s = isDe
       githubArchive: "GitHub-Archiv",
       openLive: "Live öffnen",
       live: "Live",
-      comingSoonNote: "Noch nicht veröffentlicht. Der Build ist derzeit privat.",
+      comingSoonNote: "Öffentliches Release in Kürze — dieser Build ist noch in privater Entwicklung.",
       problem: "Problem",
       built: "Was ich gebaut habe",
       developerSetup: "Entwickler-Setup",
@@ -98,7 +98,7 @@ const s = isDe
       githubArchive: "GitHub archive",
       openLive: "Open live",
       live: "Live",
-      comingSoonNote: "Not released yet. The build is private for now.",
+      comingSoonNote: "Public release coming soon — this build is still in private development.",
       problem: "Problem",
       built: "What I built",
       developerSetup: "Developer setup",
@@ -134,7 +134,7 @@ const navItems = [
 // language switch the homepage has.
 const langSwitch = {
   label: s.langSwitchLabel,
-  href: `${isDe ? "" : "/de"}/classic/projects/${project.slug}/`,
+  href: `${isDe ? "" : "/de"}/projects/${project.slug}/`,
   ariaLabel: s.langSwitchAria,
 };
 const { previous, next } = adjacentProjects(project.slug);
@@ -266,10 +266,10 @@ const hreflangAlternates = [
     />
   </head>
   <body>
-    <SiteHeader navItems={navItems} ariaLabel={s.navLabel} homeHref={isDe ? "/de/classic/" : "/classic/"} langSwitch={langSwitch} lang={lang} />
+    <SiteHeader navItems={navItems} ariaLabel={s.navLabel} homeHref={isDe ? "/de/" : "/"} langSwitch={langSwitch} lang={lang} />
 
     <main id="main" class="project-detail section-shell">
-      <a class="back-link" href={`${isDe ? "/de/classic/" : "/classic/"}#projects`}>{s.back}</a>
+      <a class="back-link" href={`${isDe ? "/de/" : "/"}#projects`}>{s.back}</a>
 
       <section class="project-detail-hero" aria-labelledby="project-title">
         <div class="project-detail-copy">
@@ -456,16 +456,16 @@ const hreflangAlternates = [
           catalogue instead of a dead end above the footer. */}
       <nav class="project-pager" aria-label={s.pagerLabel}>
         {previous ? (
-          <a class="project-pager-link project-pager-link--prev" href={`${localePrefix}/classic/projects/${previous.slug}/`} rel="prev">
+          <a class="project-pager-link project-pager-link--prev" href={`${localePrefix}/projects/${previous.slug}/`} rel="prev">
             <span>← {s.previousProject}</span>
             <strong>{previous.name}</strong>
           </a>
         ) : (
           <span></span>
         )}
-        <a class="project-pager-index" href={`${isDe ? "/de/classic/" : "/classic/"}#projects`}>{s.allProjects}</a>
+        <a class="project-pager-index" href={`${isDe ? "/de/" : "/"}#projects`}>{s.allProjects}</a>
         {next ? (
-          <a class="project-pager-link project-pager-link--next" href={`${localePrefix}/classic/projects/${next.slug}/`} rel="next">
+          <a class="project-pager-link project-pager-link--next" href={`${localePrefix}/projects/${next.slug}/`} rel="next">
             <span>{s.nextProject} →</span>
             <strong>{next.name}</strong>
           </a>
