@@ -168,6 +168,6 @@ export function init() {
     void navigator.clipboard
       .writeText(text)
       .then(() => toast(t("Copied.", "Kopiert.")))
-      .catch(() => toast(t("Clipboard is blocked — select the text instead.", "Zwischenablage ist blockiert — markier den Text stattdessen.")));
+      .catch(() => toast(t("Clipboard is blocked. Select the text instead.", "Zwischenablage ist blockiert. Markier den Text stattdessen.")));
   });
 }

@@ -128,8 +128,8 @@ async function run(command: string): Promise<string> {
 
     case "whoami":
       return t(
-        "Johannes Grof — developer, HTL Kaindorf, south-east Styria.\nSwift and TypeScript mostly. Mac apps, developer tools, and websites.",
-        "Johannes Grof — Entwickler, HTL Kaindorf, Südost-Steiermark.\nMeistens Swift und TypeScript. Mac-Apps, Developer-Tools und Websites.",
+        "Johannes Grof, developer, HTL Kaindorf, south-east Styria.\nSwift and TypeScript mostly. ÖffiGo, Mac apps, developer tools and websites.",
+        "Johannes Grof, Entwickler, HTL Kaindorf, Südost-Steiermark.\nMeistens Swift und TypeScript. ÖffiGo, Mac-Apps, Developer-Tools und Websites.",
       );
 
     case "contact":
