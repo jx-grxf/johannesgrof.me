@@ -48,13 +48,19 @@ const isRepoName = (value: unknown): value is string => typeof value === "string
 
 const MERGE_OR_BOT = /^(?:merge (?:pull request|branch|remote-tracking)|bump |chore\(deps\)|revert ")/i;
 
+/** The commit a hosting service writes when it creates a repository. Unlike a
+ *  merge it says nothing about the repo, so it is never used as a fallback. */
+const GENERATED = /^initial commit from /i;
+
+const summary = (commit: Record<string, unknown> | null) => text(asRecord(commit?.commit)?.message, 300).split("\n")[0]!.trim();
+
 /** Whether a commit is worth putting in front of a reader. */
 function isWorthShowing(commit: Record<string, unknown> | null): boolean {
   if (!commit) return false;
 
   const detail = asRecord(commit.commit);
   const message = text(detail?.message, 300).split("\n")[0]!.trim();
-  if (!message || MERGE_OR_BOT.test(message)) return false;
+  if (!message || MERGE_OR_BOT.test(message) || GENERATED.test(message)) return false;
 
   // A merge commit has more than one parent, whatever its message says.
   if (Array.isArray(commit.parents) && commit.parents.length > 1) return false;
@@ -108,7 +114,7 @@ export function parseCommits(entries: { repo: string; data: unknown }[], owner: 
     // newest commit that says something; fall back to the newest of any kind so
     // a repo that only ever merges still appears.
     const newest = asRecord(data.find((entry) => isWorthShowing(asRecord(entry))) ?? data[0]);
-    if (!newest) return [];
+    if (!newest || GENERATED.test(summary(newest))) return [];
 
     const sha = text(newest.sha, 40);
     if (!/^[0-9a-f]{7,40}$/.test(sha)) return [];

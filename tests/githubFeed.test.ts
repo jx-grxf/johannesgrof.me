@@ -148,3 +148,27 @@ test("a repository with nothing but merges still appears", () => {
   assert.equal(entry!.repo, "homebrew-tap");
   assert.ok(entry!.message.startsWith("Merge branch"));
 });
+
+test("a commit a hosting service wrote on repository creation is skipped", () => {
+  const generated = {
+    sha: "6666666666666666666666666666666666666666",
+    commit: { message: "Initial commit from Mintlify hosted docs", author: { date: "2026-09-16T14:46:29Z" } },
+  };
+  const real = {
+    sha: "7777777777777777777777777777777777777777",
+    commit: { message: "docs: describe the install steps", author: { date: "2026-09-16T15:00:00Z" } },
+  };
+
+  const [entry] = parseCommits([{ repo: "docs", data: [generated, real] }], "jx-grxf");
+
+  assert.equal(entry!.message, "docs: describe the install steps");
+});
+
+test("a repository holding only its generated first commit is left out", () => {
+  const generated = {
+    sha: "8888888888888888888888888888888888888888",
+    commit: { message: "Initial commit from Mintlify hosted docs", author: { date: "2026-09-16T14:46:29Z" } },
+  };
+
+  assert.equal(parseCommits([{ repo: "docs", data: [generated] }], "jx-grxf").length, 0);
+});
