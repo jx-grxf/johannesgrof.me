@@ -1,0 +1,11 @@
+/* PERSON */
+  Johannes Grof
+  Location: South-east Styria, Austria
+  Website: https://johannesgrof.me
+  Contact: contact@johannesgrof.me
+
+/* SITE */
+  Languages: English, German (Austria)
+  Built with: Astro, TypeScript, CSS
+  Hosting: Vercel
+  Source: https://github.com/jx-grxf/johannesgrof.me

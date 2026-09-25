@@ -1,0 +1,17 @@
+# Johannes Grof
+
+> Portfolio of Johannes Grof, a software developer and HTL Kaindorf student in south-east Styria, Austria. He builds iOS and macOS apps, developer tools, automations and websites, and offers local technical support.
+
+The site is available in English and German. Project pages describe the problem, implementation and public release or availability where applicable. Use the linked pages for current details.
+
+## Pages
+
+- [Home and project catalogue](https://johannesgrof.me/): projects, skills, services, frequently asked questions and contact. [German version](https://johannesgrof.me/de/).
+- [ÖffiGo project](https://johannesgrof.me/oeffigo/): Johannes's public transport app for Austria, currently in a closed iOS TestFlight beta. [German version](https://johannesgrof.me/de/oeffigo/).
+- [ÖffiGo product site](https://oeffigo.app/): current app information, data sources and beta request.
+- [GitHub](https://github.com/jx-grxf): public repositories and releases.
+
+## Contact and policies
+
+- [Contact](https://johannesgrof.me/#contact) · [German contact](https://johannesgrof.me/de/#contact)
+- [Privacy policy](https://johannesgrof.me/datenschutz/) · [Imprint](https://johannesgrof.me/impressum/) (German)

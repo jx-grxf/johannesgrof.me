@@ -22,10 +22,10 @@ export const author = {
   region: "Südost-Steiermark, Österreich",
 } as const;
 
-// Entity graph for Google: the profiles/products that represent the same maker.
-// Including https://oeffigo.app is what ties this site and the ÖffiGo product
-// site together as one entity (reciprocated by oeffigo.app's own sameAs).
+// Profile pages for the same person. The ÖffiGo app is linked via its creator
+// field on the SoftwareApplication entity, not as another identity for Johannes.
 export const personSameAs = [
-  "https://oeffigo.app",
   "https://github.com/jx-grxf",
+  "https://www.linkedin.com/in/johannes-grof",
+  "https://x.com/johannesgrofdev",
 ] as const;
