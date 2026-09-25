@@ -25,12 +25,12 @@
     "@upstash/ratelimit": "2.0.8",
     "@upstash/redis": "1.38.0",
     "@vercel/speed-insights": "^2.0.0",
-    "astro": "7.2.0",
+    "astro": "7.3.4",
     "resend": "6.12.4"
   },
   "overrides": {
     "@vercel/routing-utils": "6.2.0",
-    "devalue": "5.8.1",
+    "devalue": "5.9.1",
     "path-to-regexp": "6.3.0"
   },
   "devDependencies": {
