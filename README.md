@@ -28,6 +28,10 @@ This repository contains the source for my personal portfolio website: a small, 
 | GitHub metadata | Build-time GitHub API data enriches release, update, and download surfaces with safe fallbacks. |
 | Bilingual | Portfolio pages exist in English and German with hreflang alternates; legal pages are German-only. |
 
+## Discovery files
+
+`robots.txt` links to the sitemap. The sitemap lists the canonical English and German URLs and their hreflang pairs. It omits `lastmod` until page-level content change dates are available; build dates and GitHub push dates would misstate when a page changed. `llms.txt` offers a short page directory for services that read it, and `humans.txt` names the site author. Neither text file is a substitute for the HTML pages or a Google ranking signal.
+
 ## Featured Projects
 
 | Project | Public proof |

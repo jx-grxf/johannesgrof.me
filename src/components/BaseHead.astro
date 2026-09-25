@@ -45,8 +45,8 @@ const imageUrl = toCanonicalUrl(resolvedImage);
 // their own screenshots, so we omit the explicit size for those.
 const isDefaultImage = resolvedImage === socialCard.en.src || resolvedImage === socialCard.de.src;
 
-// Person is the same @id on every page; sameAs (incl. oeffigo.app) is the
-// entity bridge that tells Google this site and ÖffiGo share one maker.
+// Person has the same @id on every page. The ÖffiGo app references this ID
+// through its creator field, while sameAs lists Johannes's own profiles.
 const personId = `${canonicalOrigin}/#person`;
 const personLd = {
   "@context": "https://schema.org",
@@ -98,10 +98,11 @@ const websiteLd = {
     /* Storage blocked — the default stock is already correct. */
   }
 </script>
-{noindex && <meta name="robots" content="noindex, nofollow" />}
+{noindex && <meta name="robots" content="noindex" />}
 <title>{title}</title>
-<link rel="canonical" href={canonicalUrl} />
+{!noindex && <link rel="canonical" href={canonicalUrl} />}
 {hreflangAlternates.map((alt) => <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />)}
+<link rel="author" type="text/plain" href="/humans.txt" />
 <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="manifest" href="/site.webmanifest" />

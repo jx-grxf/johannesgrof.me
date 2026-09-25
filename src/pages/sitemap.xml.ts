@@ -1,4 +1,3 @@
-import { getProjectGitHubInfo } from "@/data/github";
 import { publicProjects } from "@/data/projects";
 import { toCanonicalUrl } from "@/data/siteMetadata";
 
@@ -17,42 +16,21 @@ const oeffigoAlternates = `
     <xhtml:link rel="alternate" hreflang="de-AT" href="${toCanonicalUrl("/de/oeffigo/")}" />
     <xhtml:link rel="alternate" hreflang="x-default" href="${toCanonicalUrl("/oeffigo/")}" />`;
 
-const toDay = (value: string) => value.split("T")[0]!;
-
-export async function GET() {
-  const buildDay = toDay(new Date().toISOString());
-
-  // A project page changes when its repository does, not when the site happens
-  // to rebuild. Stamping every URL with the build date told Google that all 40
-  // pages change daily, which makes the whole lastmod signal worthless. The
-  // GitHub lookups are memoised per repo across the build, so this adds no
-  // requests on top of what the pages already fetched.
-  const projectDays = new Map(
-    await Promise.all(
-      publicProjects.map(async (project) => {
-        const info = await getProjectGitHubInfo(project);
-
-        return [project.slug, info.updatedAt ? toDay(info.updatedAt) : buildDay] as const;
-      })
-    )
-  );
-
+export function GET() {
+  // Only publish modification dates when we can derive them from changes to
+  // each rendered page. Deploy dates and GitHub push dates are not that signal.
   const urls = [
-    { path: "/", priority: "1.0", lastmod: buildDay, alternates: homeAlternates },
-    { path: "/de/", priority: "1.0", lastmod: buildDay, alternates: homeAlternates },
-    { path: "/oeffigo/", priority: "0.9", lastmod: buildDay, alternates: oeffigoAlternates },
-    { path: "/de/oeffigo/", priority: "0.8", lastmod: buildDay, alternates: oeffigoAlternates },
-    ...publicProjects.flatMap((project) => {
-      const lastmod = projectDays.get(project.slug) ?? buildDay;
-
-      return [
-        { path: `/projects/${project.slug}/`, priority: "0.8", lastmod, alternates: projectAlternates(project.slug) },
-        { path: `/de/projects/${project.slug}/`, priority: "0.7", lastmod, alternates: projectAlternates(project.slug) },
-      ];
-    }),
+    { path: "/", alternates: homeAlternates },
+    { path: "/de/", alternates: homeAlternates },
+    { path: "/oeffigo/", alternates: oeffigoAlternates },
+    { path: "/de/oeffigo/", alternates: oeffigoAlternates },
+    ...publicProjects.flatMap((project) => [
+      { path: `/projects/${project.slug}/`, alternates: projectAlternates(project.slug) },
+      { path: `/de/projects/${project.slug}/`, alternates: projectAlternates(project.slug) },
+    ]),
     // German-only legal pages: indexable, but no locale alternates.
-    { path: "/impressum/", priority: "0.3", lastmod: buildDay, alternates: "" },
-    { path: "/datenschutz/", priority: "0.3", lastmod: buildDay, alternates: "" },
+    { path: "/impressum/", alternates: "" },
+    { path: "/datenschutz/", alternates: "" },
   ];
 
   const body = `<?xml version="1.0" encoding="UTF-8"?>
@@ -60,9 +38,7 @@ export async function GET() {
 ${urls
   .map(
     (url) => `  <url>
-    <loc>${toCanonicalUrl(url.path)}</loc>
-    <lastmod>${url.lastmod}</lastmod>
-    <priority>${url.priority}</priority>${url.alternates}
+    <loc>${toCanonicalUrl(url.path)}</loc>${url.alternates}
   </url>`
   )
   .join("\n")}
