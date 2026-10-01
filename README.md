@@ -32,10 +32,13 @@ This repository contains the source for my personal portfolio website: a small, 
 
 `robots.txt` links to the sitemap. The sitemap lists the canonical English and German URLs and their hreflang pairs. It omits `lastmod` until page-level content change dates are available; build dates and GitHub push dates would misstate when a page changed. `llms.txt` offers a short page directory for services that read it, and `humans.txt` names the site author. Neither text file is a substitute for the HTML pages or a Google ranking signal.
 
+Both homepages link directly to Kontobuch and describe it with `SoftwareApplication` structured data referencing Johannes as its creator. Kontobuch keeps its own canonical URL and sitemap on its subdomain.
+
 ## Featured Projects
 
 | Project | Public proof |
 | --- | --- |
+| [Kontobuch](https://kontobuch.johannesgrof.me/) | Free accounting notebook for HAK and HTL, featured below ÖffiGo on both homepages. |
 | [PatchPilot](https://johannesgrof.me/projects/patchpilot/) | npm package and coding-agent TUI release. |
 | [BriskEdit](https://johannesgrof.me/projects/briskedit/) | Native macOS developer text editor with a DMG release. |
 | [MacPhone](https://johannesgrof.me/projects/macphone/) | Native macOS companion app with a GitHub release. |

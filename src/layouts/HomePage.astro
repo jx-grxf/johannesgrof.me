@@ -16,6 +16,7 @@ import {
 import type { Project, ProjectLang, ProjectStatus } from "@/data/projects";
 import { getProjectGitHubInfo } from "@/data/github";
 import { oeffigo } from "@/data/oeffigo";
+import { kontobuch } from "@/data/kontobuch";
 import type { LocaleContent } from "@/data/siteContent";
 import { personSameAs, toCanonicalUrl } from "@/data/siteMetadata";
 import "@/styles/global.css";
@@ -146,6 +147,22 @@ const hreflangAlternates = [
   { hreflang: "x-default", href: toCanonicalUrl("/") },
 ];
 
+const kontobuchSchema = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "@id": `${kontobuch.websiteUrl}#app`,
+  name: kontobuch.name,
+  url: kontobuch.websiteUrl,
+  description: kontobuch.description[lang],
+  image: toCanonicalUrl(kontobuch.icon),
+  applicationCategory: "EducationalApplication",
+  operatingSystem: "macOS, Windows, Linux, Web",
+  inLanguage: "de-AT",
+  isAccessibleForFree: true,
+  offers: { "@type": "Offer", price: "0", priceCurrency: "EUR" },
+  creator: { "@id": toCanonicalUrl("/#person") },
+};
+
 const profileSchema = {
   "@context": "https://schema.org",
   "@type": "ProfilePage",
@@ -153,6 +170,7 @@ const profileSchema = {
   url: toCanonicalUrl(canonicalPath),
   inLanguage: content.lang,
   description: content.meta.description,
+  mentions: { "@id": kontobuchSchema["@id"] },
   mainEntity: {
     "@type": "Person",
     "@id": toCanonicalUrl("/#person"),
@@ -203,6 +221,7 @@ const faqSchema = {
       hreflangAlternates={hreflangAlternates}
     />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(profileSchema)} />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(kontobuchSchema)} />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />
   </head>
   <body>
@@ -273,6 +292,19 @@ const faqSchema = {
               }
             </ul>
           </div>
+
+          <article id="kontobuch" class="kontobuch-spotlight" aria-labelledby="kontobuch-title">
+            <img class="kontobuch-icon" src={kontobuch.icon} alt="" width="88" height="88" loading="lazy" decoding="async" />
+            <div class="kontobuch-copy">
+              <p class="eyebrow">{kontobuch.eyebrow[lang]}</p>
+              <h3 id="kontobuch-title">{kontobuch.name}</h3>
+              <p class="kontobuch-description">{kontobuch.description[lang]}</p>
+              <p class="kontobuch-availability">{kontobuch.availability[lang]}</p>
+            </div>
+            <a class="button secondary kontobuch-link" href={kontobuch.websiteUrl} rel="me">
+              {kontobuch.websiteLabel[lang]} <span aria-hidden="true">↗</span>
+            </a>
+          </article>
         </div>
       </section>
 
