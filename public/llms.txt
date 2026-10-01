@@ -9,6 +9,7 @@ The site is available in English and German. Project pages describe the problem,
 - [Home and project catalogue](https://johannesgrof.me/): projects, skills, services, frequently asked questions and contact. [German version](https://johannesgrof.me/de/).
 - [ÖffiGo project](https://johannesgrof.me/oeffigo/): Johannes's public transport app for Austria, currently in a closed iOS TestFlight beta. [German version](https://johannesgrof.me/de/oeffigo/).
 - [ÖffiGo product site](https://oeffigo.app/): current app information, data sources and beta request.
+- [Kontobuch](https://kontobuch.johannesgrof.me/): free digital accounting notebook for HAK and HTL, available for macOS, Windows, Linux and in the browser. Built by Johannes and featured on both portfolio homepages.
 - [GitHub](https://github.com/jx-grxf): public repositories and releases.
 
 ## Contact and policies

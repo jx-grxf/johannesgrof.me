@@ -771,6 +771,82 @@ summary:focus-visible,
   line-height: 1.5;
 }
 
+.kontobuch-spotlight {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  margin-top: clamp(40px, 5vw, 64px);
+  padding-top: 32px;
+  border-top: 1px solid var(--rule-2);
+  scroll-margin-top: 24px;
+}
+
+.kontobuch-icon {
+  display: block;
+  width: 88px;
+  height: 88px;
+}
+
+.kontobuch-copy .eyebrow {
+  margin: 0 0 8px;
+}
+
+.kontobuch-copy h3 {
+  margin: 0;
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+}
+
+.kontobuch-description {
+  max-width: 62ch;
+  margin: 10px 0 0;
+  color: var(--ink-2);
+  font-size: 0.96rem;
+}
+
+.kontobuch-availability {
+  margin: 12px 0 0;
+  color: var(--mute);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+@media (max-width: 860px) {
+  .kontobuch-spotlight {
+    grid-template-columns: 64px minmax(0, 1fr);
+    align-items: start;
+    gap: 20px;
+  }
+
+  .kontobuch-icon {
+    width: 64px;
+    height: 64px;
+  }
+
+  .kontobuch-link {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
+
+@media (max-width: 560px) {
+  .kontobuch-spotlight {
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .kontobuch-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .kontobuch-link {
+    grid-column: 1 / -1;
+  }
+}
+
 /* Live-proof and beta blocks: bordered notes, no glass panel. */
 .note-block {
   margin: 30px 0 0;
