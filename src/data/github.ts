@@ -1,4 +1,5 @@
 import type { Project } from "./projects";
+import { classifyDownload, type DownloadArchitecture, type DownloadPlatform } from "../lib/releases";
 
 interface GitHubAsset {
   name: string;
@@ -34,9 +35,9 @@ export interface ProjectReleaseDownload {
   url: string;
   assetName: string;
   assetUrl: string;
-  label: string;
-  detail: string;
-  kind: "macos" | "windows" | "archive" | "release";
+  size: number;
+  kind: DownloadPlatform;
+  architecture?: DownloadArchitecture;
   prerelease: boolean;
 }
 
@@ -58,16 +59,11 @@ export interface ProjectGitHubInfo {
   releaseUrl: string;
   stars: number;
   forks: number;
-  downloads: number;
   language: string;
   updatedAt: string;
   downloadGroup?: ProjectReleaseGroup;
   commands: ProjectCommand[];
 }
-
-// Total downloads across every release asset of a repo (a strong public proof).
-const sumReleaseDownloads = (releases: GitHubRelease[]) =>
-  releases.reduce((total, release) => total + release.assets.reduce((sum, asset) => sum + (asset.download_count ?? 0), 0), 0);
 
 const gitHubHeaders = () => {
   const token = import.meta.env.GITHUB_TOKEN ?? import.meta.env.GH_TOKEN;
@@ -89,37 +85,12 @@ const extractVersionBase = (value: string) => {
   return match?.[0] ?? value.toLowerCase();
 };
 
-const isSourceArchive = (assetName: string) => /(?:source|src)[-.].*\.(?:zip|tar\.gz|tgz)$/i.test(assetName);
-
-const isDownloadArchive = (assetName: string) => /\.(?:zip|tar\.gz|tgz)$/i.test(assetName) && !isSourceArchive(assetName);
-
-const isMacAppArchive = (assetName: string) => /\.app\.zip$/i.test(assetName);
-
-const isMacArchive = (assetName: string) =>
-  isDownloadArchive(assetName) && /(?:^|[-_.])(?:macos|darwin|osx)(?:[-_.]|$)/i.test(assetName);
-
-const classifyAsset = (assetName: string): ProjectReleaseDownload["kind"] | null => {
-  if (/\.(?:dmg|pkg)$/i.test(assetName) || isMacAppArchive(assetName) || isMacArchive(assetName)) {
-    return "macos";
-  }
-
-  if (/\.(?:exe|msi|msix)$/i.test(assetName)) {
-    return "windows";
-  }
-
-  if (isDownloadArchive(assetName)) {
-    return "archive";
-  }
-
-  return null;
-};
-
 const getAssetPriority = (asset: GitHubAsset) => {
   if (/\.dmg$/i.test(asset.name)) {
     return 0;
   }
 
-  if (isMacAppArchive(asset.name) || isMacArchive(asset.name)) {
+  if (classifyDownload(asset.name)?.kind === "macos") {
     return 1;
   }
 
@@ -131,33 +102,11 @@ const getAssetPriority = (asset: GitHubAsset) => {
     return 3;
   }
 
-  if (isDownloadArchive(asset.name)) {
+  if (classifyDownload(asset.name)?.kind === "archive") {
     return 4;
   }
 
   return 99;
-};
-
-const formatBytes = (bytes: number) => {
-  if (!bytes) {
-    return "GitHub release asset";
-  }
-
-  const mib = bytes / 1024 / 1024;
-  return `${mib >= 10 ? Math.round(mib) : mib.toFixed(1)} MB from GitHub Releases`;
-};
-
-const labelForAsset = (assetName: string, kind: ProjectReleaseDownload["kind"]) => {
-  if (kind === "macos") {
-    return "Download for Mac";
-  }
-
-  if (kind === "windows") {
-    return "Download for Windows";
-  }
-
-  const extension = assetName.match(/\.(tar\.gz|tgz|zip)$/i)?.[1]?.toUpperCase() ?? "Asset";
-  return `Download ${extension}`;
 };
 
 const warnFallback = (project: Project, reason: string) => {
@@ -202,10 +151,10 @@ const fetchGitHubJson = async <T>(url: string, project: Project, options: GitHub
   }
 };
 
-const toDownload = (release: GitHubRelease, asset: GitHubAsset): ProjectReleaseDownload | undefined => {
-  const kind = classifyAsset(asset.name);
+const toDownload = (release: GitHubRelease, asset: GitHubAsset, project: Project): ProjectReleaseDownload | undefined => {
+  const classification = classifyDownload(asset.name, project.npmPackage ? [] : project.platformLabels);
 
-  if (!kind) {
+  if (!classification) {
     return undefined;
   }
 
@@ -215,9 +164,8 @@ const toDownload = (release: GitHubRelease, asset: GitHubAsset): ProjectReleaseD
     url: release.html_url,
     assetName: asset.name,
     assetUrl: asset.browser_download_url,
-    label: labelForAsset(asset.name, kind),
-    detail: formatBytes(asset.size),
-    kind,
+    size: asset.size,
+    ...classification,
     prerelease: release.prerelease,
   };
 };
@@ -236,9 +184,8 @@ const buildFallbackDownloadGroup = (project: Project): ProjectReleaseGroup | und
       url: project.releaseUrl,
       assetName: fallbackDownload.assetName,
       assetUrl: fallbackDownload.assetUrl,
-      label: labelForAsset(fallbackDownload.assetName, fallbackDownload.kind),
-      detail: formatBytes(fallbackDownload.size),
-      kind: fallbackDownload.kind,
+      size: fallbackDownload.size,
+      ...(classifyDownload(fallbackDownload.assetName, project.platformLabels) ?? { kind: fallbackDownload.kind }),
       prerelease: false,
     }))
     .sort((a, b) => getAssetPriority({ name: a.assetName, browser_download_url: a.assetUrl, size: 0 }) - getAssetPriority({ name: b.assetName, browser_download_url: b.assetUrl, size: 0 }) || a.assetName.localeCompare(b.assetName));
@@ -260,7 +207,6 @@ const buildFallbackInfo = (project: Project): ProjectGitHubInfo => {
     releaseUrl: project.releaseUrl,
     stars: 0,
     forks: 0,
-    downloads: 0,
     language: project.stack[0] ?? "Code",
     updatedAt: "",
     downloadGroup,
@@ -268,15 +214,15 @@ const buildFallbackInfo = (project: Project): ProjectGitHubInfo => {
   };
 };
 
-const getReleaseDownloads = (release: GitHubRelease) =>
+const getReleaseDownloads = (release: GitHubRelease, project: Project) =>
   release.assets
-    .map((asset) => toDownload(release, asset))
+    .map((asset) => toDownload(release, asset, project))
     .filter((download): download is ProjectReleaseDownload => Boolean(download))
     .sort((a, b) => getAssetPriority({ name: a.assetName, browser_download_url: a.assetUrl, size: 0 }) - getAssetPriority({ name: b.assetName, browser_download_url: b.assetUrl, size: 0 }) || a.assetName.localeCompare(b.assetName));
 
-const buildDownloadGroup = (releases: GitHubRelease[]): ProjectReleaseGroup | undefined => {
+const buildDownloadGroup = (releases: GitHubRelease[], project: Project): ProjectReleaseGroup | undefined => {
   const releaseDownloads = releases
-    .flatMap((release) => getReleaseDownloads(release));
+    .flatMap((release) => getReleaseDownloads(release, project));
 
   const stable = releaseDownloads.find((download) => !download.prerelease);
   const prerelease = releaseDownloads.find((download) => download.prerelease);
@@ -386,7 +332,7 @@ async function fetchProjectGitHubInfo(project: Project): Promise<ProjectGitHubIn
     const releaseList = releases ?? [];
     const release = releaseList.find((item) => !item.prerelease) ?? releaseList[0];
     const releaseUrl = release?.html_url ?? fallback.releaseUrl;
-    const releaseDownloadGroup = buildDownloadGroup(releaseList);
+    const releaseDownloadGroup = buildDownloadGroup(releaseList, project);
     const downloadGroup = releaseDownloadGroup ?? fallback.downloadGroup;
     const metadataState = releases ? "live" : "partial";
 
@@ -396,7 +342,6 @@ async function fetchProjectGitHubInfo(project: Project): Promise<ProjectGitHubIn
       releaseUrl,
       stars: repo.stargazers_count,
       forks: repo.forks_count,
-      downloads: sumReleaseDownloads(releaseList),
       language: repo.language ?? fallback.language,
       updatedAt: repo.pushed_at,
       downloadGroup,

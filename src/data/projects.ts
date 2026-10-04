@@ -6,6 +6,7 @@ export interface ShowcaseImage {
   fallbackSrc?: string;
   posterSrc?: string;
   alt: string;
+  altDe?: string;
   fit?: "cover" | "contain" | "banner";
   width?: number;
   height?: number;
@@ -51,13 +52,13 @@ export interface Project {
     assetName: string;
     assetUrl: string;
     size: number;
-    kind: "macos" | "windows" | "archive";
+    kind: "macos" | "windows" | "linux" | "archive";
   };
   fallbackDownloads?: {
     assetName: string;
     assetUrl: string;
     size: number;
-    kind: "macos" | "windows" | "archive";
+    kind: "macos" | "windows" | "linux" | "archive";
   }[];
   highlights: string[];
   releaseHighlights?: string[];
@@ -249,16 +250,7 @@ export const featuredProjects: Project[] = [
       "Runs GUI apps quietly and console tools visibly in Terminal.app, with logs for each launch.",
       "Preview distribution includes a DMG, Sparkle appcast, and SHA256 checksums.",
     ],
-    showcase: [
-      {
-        src: "/projects/bottlelite/showcase.webp",
-        fallbackSrc: "/projects/bottlelite/logo.png",
-        alt: "BottleLite app icon",
-        fit: "contain",
-        width: 1024,
-        height: 1024,
-      },
-    ],
+    showcase: [],
     visibility: "public",
   },
   {
@@ -273,7 +265,7 @@ export const featuredProjects: Project[] = [
       width: 512,
       height: 512,
     },
-    tagline: "A native macOS device lab that bridges a real Bluetooth LE device into an emulator.",
+    tagline: "Test real Bluetooth devices through an emulator on your Mac.",
     description:
       "MacPhone runs and controls many Android emulators and iOS simulators from one Mac, and bridges a real Bluetooth LE device straight into an emulator. It mirrors the full GATT tree onto the emulator's virtual controller so on-device apps see the real services, characteristics, and advertisement with no dongle.",
     caseStudy: {
@@ -281,7 +273,7 @@ export const featuredProjects: Project[] = [
       built: "A SwiftUI app that manages AVDs and Xcode simulators, connects to a physical BLE device over CoreBluetooth, mirrors its full GATT tree, and re-broadcasts it on the Android emulator's netsim controller via a Bumble virtual peripheral, forwarding reads, writes, and notifications both ways.",
     },
     de: {
-      tagline: "Ein natives macOS-Device-Lab, das ein echtes Bluetooth-LE-Gerät in einen Emulator bridgt.",
+      tagline: "Echte Bluetooth-Geräte in einem Emulator am Mac testen.",
       description:
         "MacPhone startet und steuert viele Android-Emulatoren und iOS-Simulatoren von einem Mac aus und bridgt ein echtes Bluetooth-LE-Gerät direkt in einen Emulator. Es spiegelt den vollständigen GATT-Baum auf den virtuellen Controller des Emulators, sodass On-Device-Apps die echten Services, Characteristics und das Advertisement sehen, ganz ohne Dongle.",
       caseStudy: {
@@ -327,6 +319,7 @@ export const featuredProjects: Project[] = [
         src: "/projects/macphone/overview.webp",
         fallbackSrc: "/projects/macphone/overview.png",
         alt: "MacPhone overview dashboard listing connected Android emulators and iOS simulators",
+        altDe: "MacPhone mit verbundenen Android-Emulatoren und iOS-Simulatoren",
         fit: "cover",
         width: 2000,
         height: 1450,
@@ -482,7 +475,7 @@ export const featuredProjects: Project[] = [
   {
     name: "Caruso-Reborn",
     slug: "caruso-reborn",
-    status: "active",
+    status: "beta",
     logo: {
       src: "/projects/caruso-reborn/logo.webp",
       fallbackSrc: "/projects/caruso-reborn/logo.png",
@@ -519,7 +512,15 @@ export const featuredProjects: Project[] = [
     githubUrl: "https://github.com/jx-grxf/Caruso-Reborn",
     releaseUrl: "https://github.com/jx-grxf/Caruso-Reborn/releases/tag/v0.2.1",
     fallbackVersion: "v0.2.1",
-    platformLabels: ["Browser", "UPnP/DLNA"],
+    fallbackDownloads: [
+      {
+        assetName: "Caruso.Reborn.Beta-0.2.1-arm64.dmg",
+        assetUrl: "https://github.com/jx-grxf/Caruso-Reborn/releases/download/v0.2.1/Caruso.Reborn.Beta-0.2.1-arm64.dmg",
+        size: 135028808,
+        kind: "macos"
+      }
+    ],
+    platformLabels: ["macOS", "Web"],
     highlights: [
       "Turns your Mac into a UPnP/DLNA media server the Caruso can browse.",
       "Resolves playable streams from TuneIn, with a Radio Browser fallback.",
@@ -584,7 +585,7 @@ export const featuredProjects: Project[] = [
     name: "PatchPilot",
     slug: "patchpilot",
     status: "beta",
-    tagline: "A coding agent for your terminal that runs on local models and asks before it touches anything.",
+    tagline: "A terminal coding agent for local models, with configurable permissions.",
     description:
       "PatchPilot works inside a repository with a model you run yourself: Ollama, LM Studio, MLX, llama.cpp or vLLM. Every file edit and shell command shows up in the transcript first, and the risky ones wait for your approval. Since 2.0 there are no cloud providers and no API keys.",
     caseStudy: {
@@ -592,7 +593,7 @@ export const featuredProjects: Project[] = [
       built: "A TypeScript terminal UI with nine focused tools, native function calling plus a validated fallback for smaller models, isolated child agents with narrow permissions, and a context meter that shows when the window is about to fill up.",
     },
     de: {
-      tagline: "Ein Coding-Agent fürs Terminal, der auf lokalen Modellen läuft und fragt, bevor er etwas anfasst.",
+      tagline: "Ein Coding-Agent für lokale Modelle im Terminal, mit konfigurierbaren Berechtigungen.",
       description:
         "PatchPilot arbeitet direkt im Repository, mit einem Modell, das du selbst betreibst: Ollama, LM Studio, MLX, llama.cpp oder vLLM. Jede Dateiänderung und jeder Shell-Befehl steht zuerst im Transcript, die riskanten warten auf deine Freigabe. Seit 2.0 gibt es keine Cloud-Anbieter und keine API-Keys mehr.",
       caseStudy: {
@@ -617,6 +618,14 @@ export const featuredProjects: Project[] = [
     githubUrl: "https://github.com/jx-grxf/PatchPilot",
     releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v2.0.1",
     fallbackVersion: "v2.0.1",
+    fallbackDownloads: [
+      {
+        assetName: "jx-grxf-patchpilot-2.0.1.tgz",
+        assetUrl: "https://github.com/jx-grxf/PatchPilot/releases/download/v2.0.1/jx-grxf-patchpilot-2.0.1.tgz",
+        size: 347306,
+        kind: "archive"
+      }
+    ],
     npmPackage: "@jx-grxf/patchpilot",
     platformLabels: ["npm", "Terminal"],
     logo: {
@@ -690,6 +699,14 @@ export const featuredProjects: Project[] = [
     githubUrl: "https://github.com/jx-grxf/SlamX",
     releaseUrl: "https://github.com/jx-grxf/SlamX/releases/tag/v0.3.5",
     fallbackVersion: "v0.3.5",
+    fallbackDownloads: [
+      {
+        assetName: "SlamX-0.3.5.dmg",
+        assetUrl: "https://github.com/jx-grxf/SlamX/releases/download/v0.3.5/SlamX-0.3.5.dmg",
+        size: 5713557,
+        kind: "macos"
+      }
+    ],
     platformLabels: ["macOS"],
     highlights: [
       "Reads the MacBook's Apple SPU accelerometer directly over IOKit HID.",
@@ -737,23 +754,23 @@ export const featuredProjects: Project[] = [
       width: 256,
       height: 256,
     },
-    tagline: "A native macOS code editor that opens instantly, without the Electron bloat.",
+    tagline: "A native Mac editor with a terminal and Markdown preview.",
     description:
-      "A SwiftUI and AppKit editor, not Electron, that opens instantly, stays under 120 MB idle, and runs your code from one button that figures out the toolchain itself. No tasks.json, no extension host, no second runtime.",
+      "BriskEdit is a native editor built with SwiftUI and AppKit. It has an integrated terminal, Markdown preview and a Run button that finds the right toolchain for the file you are editing.",
     caseStudy: {
-      problem: "You open VS Code to fix one typo and watch 2 GB of RAM vanish, an extension host pin a core, and a folder index spin for thirty seconds before you can type.",
+      problem: "I wanted a Mac editor for small coding tasks, with a terminal and Markdown preview already built in.",
       built: "A native editor on TextKit 2 and AppKit with an integrated SwiftTerm terminal, a toolchain-discovering Run button, Markdown preview, gitignore-aware find, and LSP completion from the servers already on your machine. No Electron, no telemetry.",
     },
     de: {
-      tagline: "Ein nativer macOS-Editor, der sofort startet, ohne den Electron-Ballast.",
+      tagline: "Ein nativer Mac-Editor mit Terminal und Markdown-Vorschau.",
       description:
-        "Ein SwiftUI- und AppKit-Editor ohne Electron, der sofort öffnet, im Leerlauf unter 120 MB bleibt und deinen Code aus einem Knopf startet, der die Toolchain selbst findet. Kein tasks.json, kein Extension-Host, keine zweite Runtime.",
+        "BriskEdit ist ein nativer Editor auf SwiftUI und AppKit. Mit integriertem Terminal, Markdown-Vorschau und einem Run-Knopf, der die passende Toolchain für die geöffnete Datei findet.",
       caseStudy: {
-        problem: "Du öffnest VS Code für einen Tippfehler und siehst zu, wie 2 GB RAM verschwinden, ein Extension-Host einen Kern auslastet und ein Ordner-Index dreißig Sekunden dreht, bevor du tippen kannst.",
+        problem: "Ich wollte einen Mac-Editor für kleine Programmieraufgaben, mit Terminal und Markdown-Vorschau direkt dabei.",
         built: "Ein nativer Editor auf TextKit 2 und AppKit mit integriertem SwiftTerm-Terminal, einem toolchain-erkennenden Run-Knopf, Markdown-Vorschau, gitignore-bewusster Suche und LSP-Vervollständigung aus den Servern, die schon auf deinem Rechner sind. Kein Electron, keine Telemetrie.",
       },
       highlights: [
-        "Öffnet eine 100-MB-Datei sofort: TextKit 2, kein Indexieren beim Start.",
+        "Native Textbearbeitung mit TextKit 2 und AppKit.",
         "Ein Run-Knopf erkennt die Toolchain pro Datei (clang, swiftc, python3, node, cargo, go).",
         "Integriertes SwiftTerm-Terminal, Live-Markdown-Vorschau und gitignore-bewusste Suche im Ordner.",
         "LSP-Vervollständigung und Diagnosen aus deinen eigenen Language-Servern. Kein Extension-Marketplace, keine Telemetrie, kein Electron.",
@@ -781,7 +798,7 @@ export const featuredProjects: Project[] = [
       },
     ],
     highlights: [
-      "Opens a 100 MB file instantly: TextKit 2, no indexing at launch.",
+      "Native text editing with TextKit 2 and AppKit.",
       "One Run button discovers the toolchain per file (clang, swiftc, python3, node, cargo, go).",
       "Integrated SwiftTerm terminal, live Markdown preview, and gitignore-aware find-in-folder.",
       "LSP completion and diagnostics from your own language servers. No marketplace, no telemetry, no Electron.",
@@ -791,6 +808,7 @@ export const featuredProjects: Project[] = [
         src: "/projects/briskedit/hero.webp",
         fallbackSrc: "/projects/briskedit/hero.png",
         alt: "BriskEdit editing a Swift file with the file tree, tabs, and integrated terminal",
+        altDe: "BriskEdit mit Swift-Code, Dateibaum und integriertem Terminal",
         fit: "cover",
         width: 2000,
         height: 1176,
@@ -847,16 +865,7 @@ export const featuredProjects: Project[] = [
       "Replies through Piper, macOS say, ElevenLabs, or your own TTS command.",
       "Private by default: one session per guild with a speaker allowlist you control.",
     ],
-    showcase: [
-      {
-        src: "/projects/hermes-discord-voice/banner.webp",
-        fallbackSrc: "/projects/hermes-discord-voice/banner.png",
-        alt: "Hermes-Voice wordmark",
-        fit: "contain",
-        width: 1672,
-        height: 941,
-      },
-    ],
+    showcase: [],
     visibility: "public",
   },
   {
@@ -971,7 +980,7 @@ export const featuredProjects: Project[] = [
     slug: "notchtray",
     logo: { src: "/projects/notchtray/logo.webp", fallbackSrc: "/projects/notchtray/logo.png", alt: "NotchTray app icon", width: 256, height: 256 },
     status: "active",
-    tagline: "Recover the menu bar icons the MacBook notch swallows.",
+    tagline: "Reach menu bar icons hidden behind the notch on older macOS versions.",
     description:
       "A native macOS utility that surfaces status items hidden behind the MacBook notch and shows them in a Dynamic Island-style dropdown, so overflow menu bar icons stay reachable instead of disappearing under the camera housing.",
     caseStudy: {
@@ -979,7 +988,7 @@ export const featuredProjects: Project[] = [
       built: "A Swift menu bar utility that detects overflow status items and presents them in a Dynamic Island-style dropdown anchored to the notch.",
     },
     de: {
-      tagline: "Hol dir die Menüleisten-Icons zurück, die die MacBook-Notch verschluckt.",
+      tagline: "Menüleisten-Icons hinter der MacBook-Notch auf älteren macOS-Versionen erreichen.",
       description:
         "Ein natives macOS-Tool, das hinter der MacBook-Notch versteckte Status-Items sichtbar macht und sie in einem Dropdown im Dynamic-Island-Stil zeigt. So bleiben überzählige Menüleisten-Icons erreichbar, statt unter dem Kameragehäuse zu verschwinden.",
       caseStudy: {
@@ -1049,6 +1058,32 @@ export const featuredProjects: Project[] = [
     githubUrl: "https://github.com/jx-grxf/agent-presence",
     releaseUrl: "https://github.com/jx-grxf/agent-presence/releases/tag/v0.3.0",
     fallbackVersion: "v0.3.0",
+    fallbackDownloads: [
+      {
+        assetName: "agent-presence-v0.3.0-aarch64-apple-darwin.tar.gz",
+        assetUrl: "https://github.com/jx-grxf/agent-presence/releases/download/v0.3.0/agent-presence-v0.3.0-aarch64-apple-darwin.tar.gz",
+        size: 947663,
+        kind: "macos"
+      },
+      {
+        assetName: "agent-presence-v0.3.0-x86_64-apple-darwin.tar.gz",
+        assetUrl: "https://github.com/jx-grxf/agent-presence/releases/download/v0.3.0/agent-presence-v0.3.0-x86_64-apple-darwin.tar.gz",
+        size: 1006574,
+        kind: "macos"
+      },
+      {
+        assetName: "agent-presence-v0.3.0-x86_64-pc-windows-msvc.zip",
+        assetUrl: "https://github.com/jx-grxf/agent-presence/releases/download/v0.3.0/agent-presence-v0.3.0-x86_64-pc-windows-msvc.zip",
+        size: 910570,
+        kind: "windows"
+      },
+      {
+        assetName: "agent-presence-v0.3.0-x86_64-unknown-linux-gnu.tar.gz",
+        assetUrl: "https://github.com/jx-grxf/agent-presence/releases/download/v0.3.0/agent-presence-v0.3.0-x86_64-unknown-linux-gnu.tar.gz",
+        size: 1118610,
+        kind: "linux"
+      }
+    ],
     platformLabels: ["macOS", "Windows", "Linux"],
     highlights: [
       "Shows live in Discord what your Claude Code or Codex session is doing.",
@@ -1063,23 +1098,23 @@ export const featuredProjects: Project[] = [
     name: "CCrab",
     slug: "ccrab",
     status: "experimental",
-    tagline: "A desktop companion for Claude Code that costs zero idle CPU.",
+    tagline: "A small desktop companion that shows what Claude Code is doing.",
     description:
       "A native macOS desktop companion for Claude Code: a pixel crab on a floating panel that reacts to what your agent sessions are doing, plus a menu bar item with your 5-hour and weekly usage bars, every live session, and recent projects. Written in Swift against AppKit and Core Animation. No Electron, no WebView.",
     caseStudy: {
-      problem: "Ambient status for a coding agent normally means either a browser tab or an Electron app, and both burn CPU permanently for a widget you only glance at.",
+      problem: "I wanted to see when a coding agent is busy without keeping its terminal or a browser tab in front.",
       built: "Every animation is a Core Animation keyframe over layer contents, so the render server owns the timeline and the process gets no per-frame wakeups. The resting pose is parsed from vector rects into CALayers instead of decoded bitmaps, and animations are removed, not paused, the moment the panel is occluded, the display sleeps, or the screen locks.",
     },
     de: {
-      tagline: "Ein Desktop-Begleiter für Claude Code, der im Leerlauf null CPU kostet.",
+      tagline: "Ein kleiner Desktop-Begleiter, der zeigt, was Claude Code gerade macht.",
       description:
         "Ein nativer macOS-Desktop-Begleiter für Claude Code: eine Pixel-Krabbe auf einem schwebenden Panel, die darauf reagiert, was deine Agent-Sessions gerade tun, dazu ein Menüleisten-Eintrag mit 5-Stunden- und Wochen-Verbrauchsbalken, allen aktiven Sessions und zuletzt genutzten Projekten. In Swift mit AppKit und Core Animation geschrieben. Kein Electron, kein WebView.",
       caseStudy: {
-        problem: "Ambienter Status für einen Coding-Agenten heißt sonst Browser-Tab oder Electron-App, und beide verbrennen dauerhaft CPU für ein Widget, auf das man nur kurz schaut.",
+        problem: "Ich wollte sehen, wann ein Coding-Agent arbeitet, ohne ständig das Terminal oder einen Browser-Tab im Vordergrund zu haben.",
         built: "Jede Animation ist eine Core-Animation-Keyframe-Animation über Layer-Contents, damit der Render-Server die Zeitachse besitzt und der Prozess keine Wakeups pro Frame bekommt. Die Ruhepose wird aus Vektor-Rects in CALayer geparst statt als Bitmap dekodiert, und Animationen werden entfernt statt pausiert, sobald das Panel verdeckt ist, das Display schläft oder der Bildschirm sperrt.",
       },
       highlights: [
-        "0,0 % CPU im Leerlauf und während der Animation. Core Animation besitzt die Zeitachse, kein Timer, kein Draw-Loop.",
+        "Core Animation übernimmt die Animation, ohne einen eigenen Timer für jeden Frame.",
         "Menüleiste mit 5-Stunden- und Wochen-Verbrauchsbalken, Reset-Countdown und jeder aktiven Session.",
         "Status kommt über Claude-Code-Hooks an einen Loopback-Endpunkt: kein Polling, keine zusätzlichen API-Aufrufe, kein Token wird gelesen.",
         "Der Verbinden-Schritt sichert deine settings.json vorher weg und lässt fremde Hook-Einträge unangetastet.",
@@ -1093,7 +1128,7 @@ export const featuredProjects: Project[] = [
     fallbackVersion: "unreleased",
     platformLabels: ["macOS 14+"],
     highlights: [
-      "0.0% CPU idle and while animating. Core Animation owns the timeline, so there is no timer and no draw loop.",
+      "Core Animation handles the animation timeline, without an application timer for every frame.",
       "Menu bar with 5-hour and weekly usage bars, reset countdowns, and every live session.",
       "State arrives over Claude Code hooks on a loopback endpoint: nothing polls, no extra API calls, no token is read.",
       "Connecting backs up your settings.json first and leaves other tools' hook entries alone.",
@@ -1251,6 +1286,9 @@ const orderedProjects = (slugs: string[]) =>
 // rendered as the same text rows as every other group, just first. Each project
 // appears here OR in a section below, never both.
 export const featuredShowcaseProjects = orderedProjects(["patchpilot", "briskedit", "macphone"]);
+
+export const homepageProjects = orderedProjects(["briskedit", "macphone"]);
+export const homepageSmallProjects = orderedProjects(["poise", "agent-presence", "caruso-reborn"]);
 
 export const projectSections: ProjectSection[] = [
   {

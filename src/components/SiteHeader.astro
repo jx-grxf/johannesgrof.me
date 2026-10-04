@@ -33,7 +33,7 @@ const themeLabels = {
 
 <header class="site-header">
   <a class="skip-link" href="#main">{lang === "de" ? "Zum Inhalt springen" : "Skip to content"}</a>
-  <a class="brand" href={homeHref} aria-label="Johannes Grof home">
+  <a class="brand" href={homeHref} aria-label={lang === "de" ? "Johannes Grof – Startseite" : "Johannes Grof home"}>
     <span class="brand-prompt" aria-hidden="true">$</span>
     <span>Johannes Grof</span>
   </a>
@@ -62,7 +62,7 @@ const themeLabels = {
       >
         <span class="theme-toggle-swatch" aria-hidden="true"></span>
         <span class="theme-toggle-label" aria-hidden="true">
-          <span data-theme-word="dark">Light</span><span data-theme-word="light">Dark</span>
+          <span data-theme-word="dark">{lang === "de" ? "Hell" : "Light"}</span><span data-theme-word="light">{lang === "de" ? "Dunkel" : "Dark"}</span>
         </span>
       </button>
       {

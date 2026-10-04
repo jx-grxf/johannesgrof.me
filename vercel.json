@@ -43,6 +43,16 @@
       "source": "/de/projects/digi2pdf",
       "destination": "/de/#projects",
       "permanent": true
+    },
+    {
+      "source": "/projects/digi2pdf/",
+      "destination": "/#projects",
+      "permanent": true
+    },
+    {
+      "source": "/de/projects/digi2pdf/",
+      "destination": "/de/#projects",
+      "permanent": true
     }
   ],
   "headers": [

@@ -1,18 +1,35 @@
 # Johannes Grof
 
-> Portfolio of Johannes Grof, a software developer and HTL Kaindorf student in south-east Styria, Austria. He builds iOS and macOS apps, developer tools, automations and websites, and offers local technical support.
+> Software developer and HTL Kaindorf student in south-east Styria, Austria. Builds native Mac and iPhone apps, websites and small developer tools.
 
-The site is available in English and German. Project pages describe the problem, implementation and public release or availability where applicable. Use the linked pages for current details.
+The portfolio is available in English and German. Follow the project pages for release links, requirements and current availability. A public portfolio page does not necessarily mean its source code or beta is publicly available.
 
-## Pages
+## Portfolio
 
-- [Home and project catalogue](https://johannesgrof.me/): projects, skills, services, frequently asked questions and contact. [German version](https://johannesgrof.me/de/).
-- [ÖffiGo project](https://johannesgrof.me/oeffigo/): Johannes's public transport app for Austria, currently in a closed iOS TestFlight beta. [German version](https://johannesgrof.me/de/oeffigo/).
-- [ÖffiGo product site](https://oeffigo.app/): current app information, data sources and beta request.
-- [Kontobuch](https://kontobuch.johannesgrof.me/): free digital accounting notebook for HAK and HTL, available for macOS, Windows, Linux and in the browser. Built by Johannes and featured on both portfolio homepages.
-- [GitHub](https://github.com/jx-grxf): public repositories and releases.
+- [Home](https://johannesgrof.me/): selected work, background and contact. [Deutsch](https://johannesgrof.me/de/).
+- [All projects](https://johannesgrof.me/projects/): apps, tools, experiments and an archive. [Deutsch](https://johannesgrof.me/de/projects/).
+
+## Selected work
+
+- [ÖffiGo](https://johannesgrof.me/oeffigo/): public transport in Austria for iPhone and Apple Watch; currently in a closed TestFlight beta. [Deutsch](https://johannesgrof.me/de/oeffigo/). [Product website](https://oeffigo.app/).
+- [Kontobuch](https://kontobuch.johannesgrof.me/): free accounting notebook for HAK and HTL, available on macOS, Windows, Linux and the web.
+- [BriskEdit](https://johannesgrof.me/projects/briskedit/): native Mac editor with a terminal and Markdown preview. [Deutsch](https://johannesgrof.me/de/projects/briskedit/).
+- [MacPhone](https://johannesgrof.me/projects/macphone/): Bluetooth device testing through an emulator on a Mac. [Deutsch](https://johannesgrof.me/de/projects/macphone/).
+- [poise](https://johannesgrof.me/projects/poise/): posture coaching using AirPods motion sensors, processed on-device.
+- [agent-presence](https://johannesgrof.me/projects/agent-presence/): Discord Rich Presence for coding agents, available for macOS, Windows and Linux.
+- [Caruso-Reborn](https://johannesgrof.me/projects/caruso-reborn/): internet radio for first-generation T+A Caruso systems; packaged Mac app in beta.
+
+## More tools
+
+- [PatchPilot](https://johannesgrof.me/projects/patchpilot/): terminal coding agent for local models with configurable permissions.
+- [BottleLite](https://johannesgrof.me/projects/bottlelite/): native Mac interface for running Windows applications with Wine.
+- [claude-swap-bar](https://johannesgrof.me/projects/claude-swap-bar/): Claude Code account switching and usage information in the Mac menu bar.
+- [Tools](https://johannesgrof.me/projects/tools/): browser-based PDF and image tools.
+- [GitHub](https://github.com/jx-grxf): public repositories and release assets.
 
 ## Contact and policies
 
-- [Contact](https://johannesgrof.me/#contact) · [German contact](https://johannesgrof.me/de/#contact)
-- [Privacy policy](https://johannesgrof.me/datenschutz/) · [Imprint](https://johannesgrof.me/impressum/) (German)
+- [Contact](https://johannesgrof.me/#contact) · [Kontakt](https://johannesgrof.me/de/#contact)
+- [Privacy](https://johannesgrof.me/datenschutz/) · [Imprint](https://johannesgrof.me/impressum/) (German)
+
+This file is a directory for readers that support llms.txt. The HTML pages and their canonical URLs remain the primary source.

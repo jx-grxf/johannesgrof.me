@@ -9,6 +9,7 @@ import type { Project, ProjectLang } from "@/data/projects";
 import { adjacentProjects, getProjectCopy, localizedStatusLabel, statusClass } from "@/data/projects";
 import { toCanonicalUrl } from "@/data/siteMetadata";
 import "@/styles/global.css";
+import { downloadLabel as releaseDownloadLabel, downloadPlatformLabel, downloadSize } from "@/lib/releases";
 
 interface Props {
   project: Project;
@@ -63,8 +64,8 @@ const s = isDe
       stable: "Stabil",
       prerelease: "Vorabversion",
       recent: "kürzlich",
-      notePartial: "Live-Repository-Daten geladen; Release-Assets nutzen bei Bedarf Fallback-Daten.",
-      noteFallback: "Es werden geprüfte Fallback-Daten angezeigt, weil die GitHub-Metadaten beim Build nicht verfügbar waren.",
+      notePartial: "Die Downloaddaten können älter sein. Auf GitHub findest du den aktuellen Stand.",
+      noteFallback: "Die Angaben können älter sein. Prüfe das aktuelle Release auf GitHub.",
       navLabel: "Projekt-Navigation",
       pagerLabel: "Weitere Projekte",
       previousProject: "Vorheriges",
@@ -112,8 +113,8 @@ const s = isDe
       stable: "Stable",
       prerelease: "Pre-release",
       recent: "recent",
-      notePartial: "Live repository data loaded; release assets use fallback data where needed.",
-      noteFallback: "Showing verified fallback data because GitHub metadata was unavailable during build.",
+      notePartial: "Download information may be older. Check GitHub for the current release.",
+      noteFallback: "This information may be older. Check the current release on GitHub.",
       navLabel: "Project navigation",
       pagerLabel: "More projects",
       previousProject: "Previous",
@@ -125,7 +126,7 @@ const s = isDe
 
 const localePrefix = isDe ? "/de" : "";
 const navItems = [
-  { label: s.projects, href: `${isDe ? "/de/" : "/"}#projects` },
+  { label: s.projects, href: `${localePrefix}/projects/` },
   ...(project.liveUrl ? [{ label: s.live, href: project.liveUrl, external: true }] : []),
   ...(isPublicRepo ? [{ label: "GitHub", href: project.githubUrl, external: true }] : []),
   ...(hasRelease ? [{ label: s.release, href: github.releaseUrl, external: true }] : []),
@@ -147,39 +148,11 @@ const hasMultipleDownloads = downloads.length > 1;
 const downloadMenuId = `${project.slug}-download-menu`;
 const npmInstallCommand = project.npmPackage ? `npm install -g ${project.npmPackage}` : undefined;
 const downloadActionLabel = project.npmPackage ? s.packageArchive : s.download;
-const downloadButtonDetail = (() => {
-  if (project.npmPackage) {
-    return s.releaseTgz;
-  }
-
-  const hasMac = downloads.some((download) => download.kind === "macos");
-  const hasWindows = downloads.some((download) => download.kind === "windows");
-
-  if (hasMac && hasWindows) {
-    return s.macOrWindows;
-  }
-
-  if (hasMac) {
-    return s.macOnly;
-  }
-
-  if (hasWindows) {
-    return s.windowsOnly;
-  }
-
-  return s.releaseAssetsLabel;
-})();
-const platformLabel = (download: ProjectReleaseDownload) => {
-  if (download.kind === "macos") {
-    return "Mac";
-  }
-
-  if (download.kind === "windows") {
-    return "Windows";
-  }
-
-  return "Asset";
-};
+const downloadButtonDetail = [...new Set(downloads.map(download => download.kind))]
+  .map(kind => ({ macos: "macOS", windows: "Windows", linux: "Linux", archive: isDe ? "Paket" : "Package" })[kind]).join(" · ");
+const platformLabel = (download: ProjectReleaseDownload) => downloadPlatformLabel(download, lang);
+const assetLabel = (download: ProjectReleaseDownload) => releaseDownloadLabel(download, download.assetName, lang);
+const assetDetail = (download: ProjectReleaseDownload) => downloadSize(download.size, lang);
 
 const formatDate = (date: string) => {
   if (!date) {
@@ -193,6 +166,8 @@ const formatDate = (date: string) => {
   }).format(new Date(date));
 };
 
+const releaseVersionLabel = github.metadataState === "live" ? s.latestRelease : isDe ? "Bekannte Version" : "Known version";
+const releaseLinkLabel = github.metadataState === "live" ? s.latestRelease : isDe ? "Release auf GitHub" : "Release on GitHub";
 const platformValue = project.downloadsDisabled ? s.archived : project.platformLabels?.join(" / ") ?? github.language;
 const downloadValue = project.npmPackage
   ? s.npmPackageVal
@@ -203,7 +178,7 @@ const downloadValue = project.npmPackage
   : github.downloadGroup
     ? stableDownloads.length > 1
       ? s.releaseAssets(stableDownloads.length)
-      : stableDownloads[0]?.label ?? s.githubReleaseVal
+      : stableDownloads[0] ? assetLabel(stableDownloads[0]) : s.githubReleaseVal
     : s.githubRepository;
 const downloadLabel = project.downloadsDisabled
   ? s.access
@@ -217,7 +192,7 @@ const downloadLabel = project.downloadsDisabled
 // opposite of true for something you can open right now.
 const hidesAvailabilityRow = !isPublicRepo && Boolean(project.liveUrl) && !github.downloadGroup && !project.npmPackage;
 const metaItems = [
-  hasRelease ? { label: s.latestRelease, value: github.version } : undefined,
+  hasRelease ? { label: releaseVersionLabel, value: github.version } : undefined,
   project.liveUrl ? { label: s.live, value: new URL(project.liveUrl).host } : undefined,
   { label: s.platform, value: platformValue },
   hidesAvailabilityRow ? undefined : { label: downloadLabel, value: downloadValue },
@@ -255,7 +230,7 @@ const hreflangAlternates = [
 <html lang={isDe ? "de-AT" : "en"}>
   <head>
     <BaseHead
-      title={`${project.name} · Johannes Grof`}
+      title={`${project.name} – ${c.tagline.replace(/\.$/, "")} | Johannes Grof`}
       description={`${project.name}: ${c.tagline}`}
       canonicalPath={canonicalPath}
       image={socialImage}
@@ -269,7 +244,7 @@ const hreflangAlternates = [
     <SiteHeader navItems={navItems} ariaLabel={s.navLabel} homeHref={isDe ? "/de/" : "/"} langSwitch={langSwitch} lang={lang} />
 
     <main id="main" class="project-detail section-shell">
-      <a class="back-link" href={`${isDe ? "/de/" : "/"}#projects`}>{s.back}</a>
+      <a class="back-link" href={`${localePrefix}/projects/`}>{s.back}</a>
 
       <section class="project-detail-hero" aria-labelledby="project-title">
         <div class="project-detail-copy">
@@ -303,38 +278,40 @@ const hreflangAlternates = [
             )}
             {github.downloadGroup && (
               hasMultipleDownloads ? (
-                <div class="download-menu" data-download-menu>
-                  <button
+                <details class="download-menu" data-download-menu>
+                  <summary
                     class={`button download-button ${downloads[0]?.kind ?? "release"}`}
-                    type="button"
-                    aria-expanded="false"
+                    role="button"
+                    aria-label={`${downloadActionLabel} · ${downloadButtonDetail}`}
                     aria-controls={downloadMenuId}
                     data-download-trigger
                   >
                     <span>{downloadActionLabel}</span>
                     <small>{downloadButtonDetail}</small>
-                  </button>
-                  <div id={downloadMenuId} class="download-options" aria-hidden="true" data-download-options>
+                  </summary>
+                  <div id={downloadMenuId} class="download-options" data-download-options>
                     {stableDownloads.map((download) => (
                       <a href={download.assetUrl} target="_blank" rel="noreferrer">
                         <span class="download-option-meta">{s.stable} · {platformLabel(download)}</span>
-                        <strong>{download.label}</strong>
-                        <span>{download.tag} · {download.detail}</span>
+                        <strong>{assetLabel(download)}</strong>
+                        <span>{download.tag} · {assetDetail(download)}</span>
+                        <small class="download-filename">{download.assetName}</small>
                       </a>
                     ))}
                     {github.downloadGroup.prereleases.map((download) => (
                       <a href={download.assetUrl} target="_blank" rel="noreferrer">
                         <span class="download-option-meta">{s.prerelease} · {platformLabel(download)}</span>
-                        <strong>{download.label}</strong>
-                        <span>{download.tag} · {download.detail}</span>
+                        <strong>{assetLabel(download)}</strong>
+                        <span>{download.tag} · {assetDetail(download)}</span>
+                        <small class="download-filename">{download.assetName}</small>
                       </a>
                     ))}
                   </div>
-                </div>
+                </details>
               ) : (
                 <a class={`button download-button ${downloads[0]?.kind ?? "release"}`} href={downloads[0]?.assetUrl} target="_blank" rel="noreferrer">
-                  <span>{project.npmPackage ? s.packageArchive : downloads[0]?.label}</span>
-                  <small>{downloads[0]?.detail}</small>
+                  <span>{project.npmPackage ? s.packageArchive : downloads[0] ? assetLabel(downloads[0]) : s.download}</span>
+                  <small>{downloads[0] ? assetDetail(downloads[0]) : ""}</small>
                 </a>
               )
             )}
@@ -349,7 +326,7 @@ const hreflangAlternates = [
               )
             )}
             {isPublicRepo && <a class="button secondary" href={project.githubUrl} target="_blank" rel="noreferrer">{project.downloadsDisabled ? s.githubArchive : s.openSource}</a>}
-            {hasRelease && <a class="button secondary" href={github.releaseUrl} target="_blank" rel="noreferrer">{s.latestRelease}</a>}
+            {hasRelease && <a class="button secondary" href={github.releaseUrl} target="_blank" rel="noreferrer">{releaseLinkLabel}</a>}
             {!isPublicRepo && !hasRelease && !github.downloadGroup && !npmInstallCommand && !project.liveUrl && project.status !== "archived" && (
               <p class="actions-note">{s.comingSoonNote}</p>
             )}
@@ -359,7 +336,7 @@ const hreflangAlternates = [
         {/* A region, not an aside: this summarises the project it sits next to,
             and a complementary landmark nested inside <main> is flagged as a
             landmark error. */}
-        <section class="project-meta-panel" aria-label={`${project.name} GitHub summary`}>
+        <section class="project-meta-panel" aria-label={`${project.name} ${isDe ? "im Überblick" : "summary"}`}>
           <dl class="project-meta-grid">
             {metaItems.map((item) => (
               <div>
@@ -373,9 +350,9 @@ const hreflangAlternates = [
       </section>
 
       {heroImage && (
-        <section class="project-showcase" aria-label={`${project.name} showcase`}>
+        <section class="project-showcase" aria-label={`${project.name} ${isDe ? "in Bildern" : "in pictures"}`}>
           {isVideoShowcase(heroImage) ? (
-            <video class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.src} poster={heroImage.posterSrc ?? heroImage.fallbackSrc} width={heroImage.width} height={heroImage.height} controls muted loop playsinline preload="metadata" aria-label={heroImage.alt} data-showcase-video></video>
+            <video class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.src} poster={heroImage.posterSrc ?? heroImage.fallbackSrc} width={heroImage.width} height={heroImage.height} controls muted playsinline preload="metadata" aria-label={heroImage.alt} data-showcase-video></video>
           ) : (
             <picture>
               {heroImage.fallbackSrc && <source srcset={heroImage.src} type="image/webp" />}
@@ -388,7 +365,7 @@ const hreflangAlternates = [
       {/* Two columns, not four. "Result" and "Audience" were restatements of
           the problem in almost every project — the outcomes that are actually
           measurable live in the meta panel as numbers instead. */}
-      <section class="case-study-panel" aria-label={`${project.name} case study`}>
+      <section class="case-study-panel" aria-label={`${project.name} ${isDe ? "Hintergrund" : "background"}`}>
         <article>
           <span>{s.problem}</span>
           <p>{c.caseStudy.problem}</p>
@@ -402,7 +379,7 @@ const hreflangAlternates = [
       {c.releaseHighlights && (
         <section class="release-panel" aria-label={`${project.name} release highlights`}>
           <div>
-            <span>{s.latestRelease}</span>
+            <span>{releaseVersionLabel}</span>
             <h2>{github.version}</h2>
           </div>
           <ul>
@@ -411,7 +388,7 @@ const hreflangAlternates = [
         </section>
       )}
 
-      <section class="project-detail-grid" aria-label={`${project.name} details`}>
+      <section class="project-detail-grid" aria-label={`${project.name} ${isDe ? "Details" : "details"}`}>
         {github.commands.length > 0 && (
           <div class="command-panel">
             <h2>{s.developerSetup}</h2>
@@ -433,13 +410,13 @@ const hreflangAlternates = [
       </section>
 
       {galleryImages.length > 0 && (
-        <section class="showcase-gallery" aria-label={`${project.name} gallery`}>
+        <section class="showcase-gallery" aria-label={`${project.name} ${isDe ? "Galerie" : "gallery"}`}>
           {galleryImages.map((image) => (
             <figure>
               {isVideoShowcase(image) ? (
                 /* preload="none" below the fold: the BriskEdit promo alone is
                    881 kB, and it was being fetched on every page load. */
-                <video class={`showcase-image ${image.fit ?? "cover"}`} src={image.src} poster={image.posterSrc ?? image.fallbackSrc} width={image.width} height={image.height} controls muted loop playsinline preload="none" aria-label={image.alt} data-showcase-video></video>
+                <video class={`showcase-image ${image.fit ?? "cover"}`} src={image.src} poster={image.posterSrc ?? image.fallbackSrc} width={image.width} height={image.height} controls muted playsinline preload="none" aria-label={image.alt} data-showcase-video></video>
               ) : (
                 <picture>
                   {image.fallbackSrc && <source srcset={image.src} type="image/webp" />}
@@ -463,7 +440,7 @@ const hreflangAlternates = [
         ) : (
           <span></span>
         )}
-        <a class="project-pager-index" href={`${isDe ? "/de/" : "/"}#projects`}>{s.allProjects}</a>
+        <a class="project-pager-index" href={`${localePrefix}/projects/`}>{s.allProjects}</a>
         {next ? (
           <a class="project-pager-link project-pager-link--next" href={`${localePrefix}/projects/${next.slug}/`} rel="next">
             <span>{s.nextProject} →</span>
@@ -475,126 +452,7 @@ const hreflangAlternates = [
       </nav>
     </main>
     <SiteFooter lang={isDe ? "de" : "en"} />
-    <script>
-      const copyText = async (text: string) => {
-        if (!navigator.clipboard?.writeText) {
-          throw new Error("Clipboard API is unavailable");
-        }
-
-        await navigator.clipboard.writeText(text);
-      };
-
-      document.querySelectorAll<HTMLButtonElement>("[data-install-copy]").forEach((button) => {
-        const status = button.querySelector<HTMLElement>("[data-copy-status]");
-        let resetTimer: number | undefined;
-
-        button.addEventListener("click", async () => {
-          const command = button.dataset.copyCommand;
-
-          if (!command || !status) {
-            return;
-          }
-
-          window.clearTimeout(resetTimer);
-
-          try {
-            await copyText(command);
-            button.dataset.copyState = "success";
-            status.textContent = button.dataset.copySuccess ?? "Copied";
-          } catch {
-            button.dataset.copyState = "error";
-            status.textContent = button.dataset.copyError ?? "Copy failed";
-          }
-
-          resetTimer = window.setTimeout(() => {
-            delete button.dataset.copyState;
-            status.textContent = button.dataset.copyLabel ?? "Copy npm command";
-          }, 2400);
-        });
-      });
-
-      const downloadMenus = document.querySelectorAll<HTMLElement>("[data-download-menu]");
-
-      const closeDownloadMenu = (menu: HTMLElement) => {
-        const trigger = menu.querySelector("[data-download-trigger]");
-        const options = menu.querySelector("[data-download-options]");
-
-        menu.dataset.open = "false";
-        trigger?.setAttribute("aria-expanded", "false");
-        options?.setAttribute("aria-hidden", "true");
-      };
-
-      downloadMenus.forEach((menu) => {
-        const trigger = menu.querySelector("[data-download-trigger]");
-        const options = menu.querySelector("[data-download-options]");
-
-        menu.dataset.open = "false";
-
-        trigger?.addEventListener("click", () => {
-          const willOpen = menu.dataset.open !== "true";
-
-          downloadMenus.forEach((item) => {
-            if (item !== menu) {
-              closeDownloadMenu(item);
-            }
-          });
-
-          menu.dataset.open = String(willOpen);
-          trigger.setAttribute("aria-expanded", String(willOpen));
-          options?.setAttribute("aria-hidden", String(!willOpen));
-        });
-      });
-
-      document.addEventListener("click", (event) => {
-        const target = event.target;
-
-        if (!(target instanceof Node)) {
-          return;
-        }
-
-        downloadMenus.forEach((menu) => {
-          if (!menu.contains(target)) {
-            closeDownloadMenu(menu);
-          }
-        });
-      });
-
-      document.addEventListener("keydown", (event) => {
-        if (event.key !== "Escape") {
-          return;
-        }
-
-        downloadMenus.forEach(closeDownloadMenu);
-      });
-
-      const showcaseVideos = document.querySelectorAll<HTMLVideoElement>("[data-showcase-video]");
-
-      if ("IntersectionObserver" in window) {
-        const videoObserver = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              const video = entry.target;
-
-              if (!(video instanceof HTMLVideoElement)) {
-                return;
-              }
-
-              if (entry.intersectionRatio >= 0.55) {
-                video.play().catch(() => undefined);
-              } else {
-                video.pause();
-              }
-            });
-          },
-          { threshold: [0, 0.55, 1] },
-        );
-
-        showcaseVideos.forEach((video) => {
-          video.muted = true;
-          videoObserver.observe(video);
-        });
-      }
-    </script>
+    <script>import "@/scripts/project";</script>
     <SpeedInsights />
   </body>
 </html>

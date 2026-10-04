@@ -4,17 +4,9 @@ import BaseHead from "@/components/BaseHead.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import SocialLinks from "@/components/SocialLinks.astro";
-import {
-  featuredShowcaseProjects,
-  getProjectCopy,
-  localizedStatusLabel,
-  projectSections,
-  publicProjects,
-  statusClass,
-  upcomingProjects,
-} from "@/data/projects";
-import type { Project, ProjectLang, ProjectStatus } from "@/data/projects";
-import { getProjectGitHubInfo } from "@/data/github";
+import ProjectPreview from "@/components/ProjectPreview.astro";
+import { getProjectCopy, homepageProjects, homepageSmallProjects, localizedStatusLabel, statusClass } from "@/data/projects";
+import type { ProjectLang } from "@/data/projects";
 import { oeffigo } from "@/data/oeffigo";
 import { kontobuch } from "@/data/kontobuch";
 import type { LocaleContent } from "@/data/siteContent";
@@ -32,105 +24,8 @@ const isDe = content.lang !== "en";
 const lang: ProjectLang = isDe ? "de" : "en";
 const localePrefix = isDe ? "/de" : "";
 
-// Build-time live GitHub data for the index rows (version, stars, downloads).
-// Falls back gracefully when the API is unavailable.
-const githubInfoBySlug = new Map(
-  await Promise.all(publicProjects.map(async (project) => [project.slug, await getProjectGitHubInfo(project)] as const))
-);
-
-const compactCount = (value: number) =>
-  value >= 1000 ? `${(value / 1000).toFixed(value >= 10000 ? 0 : 1).replace(/\.0$/, "")}k` : String(value);
-
-// Normalize a version-ish string to a "vX.Y.Z" chip, or null if it isn't one —
-// status words like "unreleased" must never render as "vunreleased".
-const versionChip = (value?: string) => {
-  if (!value || !/\d/.test(value)) {
-    return null;
-  }
-
-  return /^v/i.test(value) ? value : `v${value}`;
-};
-
-const liveStats = (slug: string) => {
-  const info = githubInfoBySlug.get(slug);
-
-  if (!info) {
-    return [];
-  }
-
-  const stats: string[] = [];
-  const version = versionChip(info.version);
-
-  if (version) {
-    stats.push(version);
-  }
-
-  if (info.stars > 0) {
-    stats.push(`★ ${info.stars}`);
-  }
-
-  if (info.downloads > 0) {
-    stats.push(`↓ ${compactCount(info.downloads)}`);
-  }
-
-  return stats;
-};
-
-interface IndexRow {
-  num: string;
-  name: string;
-  href?: string;
-  description: string;
-  stack: string[];
-  status: ProjectStatus;
-  stats: string[];
-}
-
-const projectRow = (project: Project): Omit<IndexRow, "num"> => ({
-  name: project.name,
-  href: `${localePrefix}/projects/${project.slug}/`,
-  description: getProjectCopy(project, lang).tagline,
-  stack: project.stack,
-  status: project.status,
-  stats: liveStats(project.slug),
-});
-
-// ÖffiGo deliberately has no index row: its own band sits directly above this
-// section, so listing it again would name the same project three times inside
-// one screen.
-const rawGroups: { title: string; rows: Omit<IndexRow, "num">[] }[] = [
-  {
-    title: content.projects.highlights,
-    rows: featuredShowcaseProjects.map(projectRow),
-  },
-  ...projectSections.map((section, sectionIndex) => ({
-    title: isDe ? section.de.title : section.title,
-    rows: [
-      ...section.projects.map(projectRow),
-      // A single unreleased project does not deserve a section of its own, so
-      // it rides along at the end of the last group with its own status.
-      ...(sectionIndex === projectSections.length - 1
-        ? upcomingProjects.map((project) => ({
-            name: project.name,
-            description: isDe && project.de ? project.de.description : project.description,
-            stack: project.stack,
-            status: project.status,
-            stats: [] as string[],
-          }))
-        : []),
-    ],
-  })),
-];
-
-// One continuous run of numbers across every group, so the index reads as a
-// single catalogue rather than as separate widgets.
-let runningNumber = 0;
-const indexGroups = rawGroups.map((group) => ({
-  title: group.title,
-  rows: group.rows.map((row) => ({ ...row, num: String(++runningNumber).padStart(2, "0") })),
-}));
-
-const shippedProjectCount = publicProjects.filter((project) => project.visibility === "public").length;
+const selectedProjects = homepageProjects;
+const smallerProjects = homepageSmallProjects;
 
 // Split the headline around its accent word here rather than in the template:
 // interpolating three expressions across separate JSX lines re-introduces the
@@ -195,19 +90,6 @@ const profileSchema = {
   },
 };
 
-const faqSchema = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  inLanguage: content.lang,
-  mainEntity: content.faq.items.map((item) => ({
-    "@type": "Question",
-    name: item.q,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: item.a,
-    },
-  })),
-};
 ---
 
 <!doctype html>
@@ -222,136 +104,62 @@ const faqSchema = {
     />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(profileSchema)} />
     <script type="application/ld+json" is:inline set:html={JSON.stringify(kontobuchSchema)} />
-    <script type="application/ld+json" is:inline set:html={JSON.stringify(faqSchema)} />
   </head>
   <body>
-    <SiteHeader navItems={content.nav} homeHref={canonicalPath} langSwitch={content.langSwitch} lang={isDe ? "de" : "en"} />
+    <SiteHeader ariaLabel={isDe ? "Hauptnavigation" : "Primary navigation"} navItems={content.nav} homeHref={canonicalPath} langSwitch={content.langSwitch} lang={isDe ? "de" : "en"} />
 
     <main id="main">
       <section class="hero section-shell" aria-labelledby="hero-title">
         <p class="eyebrow">{content.hero.eyebrow}</p>
-        <h1 id="hero-title" data-typewriter><span class="type-text">{titleLead}<span class="display-em">{titleAccent}</span>{titleTail}</span><span class="cursor" aria-hidden="true"></span></h1>
+        <h1 id="hero-title">{titleLead}<span class="display-em">{titleAccent}</span>{titleTail}</h1>
         <p class="hero-text">{content.hero.body}</p>
         <div class="hero-actions">
           <a class="button primary" href="#projects">{content.hero.primaryAction}</a>
           <a class="button secondary" href="#contact">{content.hero.contactAction}</a>
         </div>
         <ul class="hero-facts">
-          <li><strong>{shippedProjectCount}</strong> {content.hero.factsCountLabel}</li>
           {content.hero.facts.map((fact) => <li>{fact}</li>)}
         </ul>
       </section>
 
-      <section id="oeffigo" class="oeffigo-band" aria-labelledby="oeffigo-title">
-        <div class="section-shell">
-          <div class="section-head">
-            <span class="section-num">01</span>
-            <h2>{content.oeffigo.eyebrow}</h2>
+      <div id="projects">
+        <section id="oeffigo" class="oeffigo-band" aria-labelledby="oeffigo-title">
+          <div class="section-shell">
+            <div class="section-head"><span class="section-num">01</span><h2>{content.oeffigo.eyebrow}</h2></div>
+            <div class="featured-product featured-product--phone">
+              <div class="featured-product-copy">
+                <div class="product-heading"><img src={oeffigo.icon} alt="" width="64" height="64" loading="lazy" /><h2 id="oeffigo-title">ÖffiGo</h2></div>
+                <p class="product-tagline">{oeffigo.tagline[lang]}</p>
+                <p>{isDe ? "ÖffiGo ist mein größtes Projekt: eine Öffi-App für Österreich. Sie zeigt Abfahrten, findet Verbindungen und begleitet dich am iPhone und an der Apple Watch. An jeder Zeit steht, ob sie vom Betreiber kommt, berechnet ist oder nur im Fahrplan steht." : "ÖffiGo is my largest project: a public transport app for Austria. It shows departures, plans journeys and follows your trip on iPhone and Apple Watch. Each time tells you whether it comes from the operator, is calculated or is just the timetable."}</p>
+                <p class="product-availability">{oeffigo.status[lang]}</p>
+                <div class="oeffigo-actions"><a class="button primary" href={`${localePrefix}/oeffigo/`}>{content.oeffigo.detailCta}</a><a class="button secondary" href={oeffigo.websiteUrl}>oeffigo.app ↗</a></div>
+                <p class="product-footnote"><a href={oeffigo.liveUrl}>{isDe ? "Pünktlichkeit nachschauen" : "Explore punctuality"} ↗</a><a href={oeffigo.statusUrl}>{isDe ? "Systemstatus" : "System status"} ↗</a></p>
+              </div>
+              <figure class="product-phone-preview"><img src={oeffigo.shots[0].src} alt={oeffigo.shots[0].alt[lang]} width="675" height="1380" loading="lazy" decoding="async" /><figcaption>{isDe ? "Die Heute-Ansicht am iPhone. Screenshot aus der Beta." : "Today on iPhone. Screenshot from the beta."}</figcaption></figure>
+            </div>
           </div>
-          <div class="oeffigo-layout">
-            <div>
-              <div class="oeffigo-headline">
-                <img class="oeffigo-icon" src={oeffigo.icon} alt="ÖffiGo app icon" width="120" height="120" loading="lazy" decoding="async" />
-                <div>
-                  <h2 id="oeffigo-title">{oeffigo.name}</h2>
-                  <p class="oeffigo-tagline">{oeffigo.tagline[lang]}</p>
-                </div>
-              </div>
-              <p class="oeffigo-lead">{oeffigo.lead[lang]}</p>
-              <ul class="oeffigo-meta">
-                <li>{oeffigo.platform[lang]}</li>
-                <li>{oeffigo.status[lang]}</li>
-              </ul>
-              <div class="oeffigo-actions">
-                <a class="button primary" href={`${localePrefix}/oeffigo/`}>{content.oeffigo.detailCta}</a>
-                <a class="button secondary" href={oeffigo.websiteUrl} rel="me">oeffigo.app</a>
-              </div>
-
-              <div class="note-block">
-                <p class="eyebrow">{oeffigo.liveProof.eyebrow[lang]}</p>
-                <h3>{oeffigo.liveProof.title[lang]}</h3>
-                <p>{oeffigo.liveProof.body[lang]}</p>
-                <div class="note-actions">
-                  <a href={oeffigo.liveUrl} rel="me">{oeffigo.liveProof.liveLabel[lang]}</a>
-                  <a href={oeffigo.statusUrl} rel="me">{oeffigo.liveProof.statusLabel[lang]}</a>
-                </div>
-              </div>
+        </section>
+        <section id="kontobuch" class="band section-shell" aria-labelledby="kontobuch-title">
+          <div class="section-head"><span class="section-num">02</span><h2>{isDe ? "Für die Schule" : "For school"}</h2></div>
+          <div class="featured-product featured-product--notebook">
+            <div class="featured-product-copy">
+              <div class="product-heading"><img src={kontobuch.icon} alt="" width="64" height="64" loading="lazy" /><h2 id="kontobuch-title">Kontobuch</h2></div>
+              <p class="product-tagline">{isDe ? "Rechnungswesen, wie im Heft." : "Accounting, like a notebook."}</p>
+              <p>{kontobuch.description[lang]}</p>
+              <p>{isDe ? "Gebaut für HAK und HTL. Du kannst direkt im Browser anfangen oder die App installieren. Deine Hefte bleiben bei dir." : "Built for HAK and HTL students. Start in your browser or install the app. Your notebooks stay with you."}</p>
+              <p class="product-availability">{kontobuch.availability[lang]}</p>
+              <div class="oeffigo-actions"><a class="button primary" href={kontobuch.websiteUrl}>{kontobuch.websiteLabel[lang]} ↗</a></div>
             </div>
-
-            <ul class="oeffigo-features">
-              {
-                oeffigo.features.slice(0, 4).map((feature) => (
-                  <li class="oeffigo-feature">
-                    <span class="oeffigo-feature-icon" aria-hidden="true">
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d={feature.icon} /></svg>
-                    </span>
-                    <h3>{feature.title[lang]}</h3>
-                    <p>{feature.body[lang]}</p>
-                  </li>
-                ))
-              }
-            </ul>
+            <figure class="product-notebook-preview"><a href={kontobuch.websiteUrl} aria-label={isDe ? "Kontobuch ansehen" : "Explore Kontobuch"}><img src="/projects/kontobuch/notebook.jpg" alt={isDe ? "Kontobuch im Browser mit Heftseite, Beispielgeschäftsfall und Werkzeugen für T-Konten." : "Kontobuch in the browser, with a notebook page, an example transaction and T-account tools."} width="1280" height="850" loading="lazy" decoding="async" /></a><figcaption>{isDe ? "Eine Heftseite in der Web-App. Auf der Website kannst du selbst ausprobieren." : "A notebook page in the web app. Try it yourself on the website."}</figcaption></figure>
           </div>
-
-          <article id="kontobuch" class="kontobuch-spotlight" aria-labelledby="kontobuch-title">
-            <img class="kontobuch-icon" src={kontobuch.icon} alt="" width="88" height="88" loading="lazy" decoding="async" />
-            <div class="kontobuch-copy">
-              <p class="eyebrow">{kontobuch.eyebrow[lang]}</p>
-              <h3 id="kontobuch-title">{kontobuch.name}</h3>
-              <p class="kontobuch-description">{kontobuch.description[lang]}</p>
-              <p class="kontobuch-availability">{kontobuch.availability[lang]}</p>
-            </div>
-            <a class="button secondary kontobuch-link" href={kontobuch.websiteUrl} rel="me">
-              {kontobuch.websiteLabel[lang]} <span aria-hidden="true">↗</span>
-            </a>
-          </article>
-        </div>
-      </section>
-
-      <section id="projects" class="band section-shell" aria-labelledby="projects-title">
-        <div class="section-head">
-          <span class="section-num">02</span>
-          <h2 id="projects-title">{content.projects.title}</h2>
-        </div>
-
-        {
-          indexGroups.map((group) => (
-            <div class="index-group">
-              <p class="eyebrow">{group.title}</p>
-              <ol class="index-list">
-                {group.rows.map((row) => {
-                  const inner = (
-                    <Fragment>
-                      <span class="index-num">{row.num}</span>
-                      <h3>{row.name}</h3>
-                      <p class="index-desc">{row.description}</p>
-                      <span class="index-stack">{row.stack.join(" · ")}</span>
-                      <span class="index-meta">
-                        <span class={`status ${statusClass(row.status)}`}>{localizedStatusLabel(row.status, lang)}</span>
-                        {row.stats.length > 0 && (
-                          <ul class="index-stats">
-                            {row.stats.map((stat) => <li>{stat}</li>)}
-                          </ul>
-                        )}
-                      </span>
-                    </Fragment>
-                  );
-
-                  return (
-                    <li>
-                      {row.href ? (
-                        <a class="index-row" href={row.href}>{inner}</a>
-                      ) : (
-                        <div class="index-row index-row--muted">{inner}</div>
-                      )}
-                    </li>
-                  );
-                })}
-              </ol>
-            </div>
-          ))
-        }
-      </section>
+        </section>
+        <section class="band section-shell" aria-labelledby="selected-projects-title">
+          <div class="section-head"><span class="section-num">03</span><h2 id="selected-projects-title">{isDe ? "Weitere Arbeiten" : "More of my work"}</h2></div>
+          <div class="selected-work-grid">{selectedProjects.map(project => <ProjectPreview project={project} lang={lang} />)}</div>
+          <ul class="small-work-list">{smallerProjects.map(project => <li><a href={`${localePrefix}/projects/${project.slug}/`}><div><h3>{project.name} <span aria-hidden="true">↗</span></h3><p>{getProjectCopy(project, lang).tagline}</p></div><span class={`status ${statusClass(project.status)}`}>{localizedStatusLabel(project.status, lang)}</span></a></li>)}</ul>
+          <div class="catalogue-cta"><p>{isDe ? "Kleine Tools, Experimente und ältere Projekte findest du im Katalog." : "The smaller tools, experiments and older projects are in the catalogue."}</p><a class="button secondary" href={`${localePrefix}/projects/`}>{isDe ? "Alle Projekte" : "All projects"} <span aria-hidden="true">↗</span></a></div>
+        </section>
+      </div>
 
       {/* Services and the stack used to be two full bands, roughly two screens
           between the project index and the about line. They answer the same
@@ -361,7 +169,7 @@ const faqSchema = {
       <section id="services" class="band band--tint" aria-labelledby="services-title">
         <div class="section-shell">
           <div class="section-head">
-            <span class="section-num">03</span>
+            <span class="section-num">04</span>
             <h2 id="services-title">{content.services.title}</h2>
           </div>
           <p class="services-lead">{content.services.lead}</p>
@@ -402,14 +210,14 @@ const faqSchema = {
 
       <section id="faq" class="band section-shell" aria-labelledby="faq-title">
         <div class="section-head">
-          <span class="section-num">04</span>
+          <span class="section-num">05</span>
           <h2 id="faq-title">{content.faq.title}</h2>
         </div>
         <div class="faq-list">
           {
             content.faq.items.map((item) => (
               <details class="faq-item">
-                <summary aria-expanded="false">{item.q}</summary>
+                <summary>{item.q}</summary>
                 <div class="faq-answer">
                   <div>
                     <p>{item.a}</p>
@@ -438,152 +246,6 @@ const faqSchema = {
 
     <SiteFooter lang={isDe ? "de" : "en"} />
 
-    <script>
-      // Type the headline out on arrival. The full text is server-rendered, so
-      // search engines and screen readers get it either way — this only clears
-      // and refills the existing nodes, keeping the accent span intact.
-      const headline = document.querySelector<HTMLElement>("[data-typewriter]");
-      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      if (headline && !prefersReducedMotion) {
-        let typewriterPlayed = false;
-
-        try {
-          typewriterPlayed = sessionStorage.getItem("typewriter-played") === "1";
-        } catch {
-          // Storage blocked — treat as a fresh visit.
-        }
-
-        if (typewriterPlayed) {
-          // Repeat visit in the same session: the full headline is already
-          // server-rendered, so just drop the blinking caret.
-          headline.querySelector(".cursor")?.remove();
-        } else {
-          const target = headline.querySelector<HTMLElement>(".type-text");
-          const segments = target
-            ? Array.from(target.childNodes)
-                .map((node) => ({ node, text: node.textContent ?? "" }))
-                .filter((segment) => segment.text.length > 0)
-            : [];
-
-          const run = () => {
-            // Lock in the finished height first, otherwise every new line pushes
-            // the rest of the page down while the text arrives.
-            headline.style.minHeight = `${headline.offsetHeight}px`;
-            headline.classList.add("is-typing");
-            segments.forEach((segment) => {
-              segment.node.textContent = "";
-            });
-
-            let segmentIndex = 0;
-            let charIndex = 0;
-
-            const step = () => {
-              const segment = segments[segmentIndex];
-
-              if (!segment) {
-                headline.classList.remove("is-typing");
-                headline.style.minHeight = "";
-                try {
-                  sessionStorage.setItem("typewriter-played", "1");
-                } catch {
-                  // Storage blocked — the animation simply replays next visit.
-                }
-                return;
-              }
-
-              charIndex += 1;
-              segment.node.textContent = segment.text.slice(0, charIndex);
-
-              const justTyped = segment.text[charIndex - 1];
-
-              if (charIndex >= segment.text.length) {
-                segmentIndex += 1;
-                charIndex = 0;
-              }
-
-              // Punctuation gets a beat, the way a person typing would pause.
-              window.setTimeout(step, justTyped === "," || justTyped === "." ? 160 : 30);
-            };
-
-            step();
-          };
-
-          if (segments.length > 0) {
-            // Type on arrival instead of waiting for the display face — the CSS
-            // swaps the font in with font-display: swap once it arrives anyway.
-            if (document.readyState === "loading") {
-              document.addEventListener("DOMContentLoaded", run);
-            } else {
-              run();
-            }
-          }
-        }
-      }
-
-      // Keep the details content mounted until the closing transition finishes.
-      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-      document.querySelectorAll<HTMLDetailsElement>(".faq-item").forEach((details) => {
-        const summary = details.querySelector("summary");
-        const answer = details.querySelector<HTMLElement>(".faq-answer");
-        if (!summary || !answer) {
-          return;
-        }
-
-        let closeTimer: number | undefined;
-        let removeCloseListener: (() => void) | undefined;
-
-        const cancelPendingClose = () => {
-          window.clearTimeout(closeTimer);
-          removeCloseListener?.();
-          removeCloseListener = undefined;
-        };
-
-        const close = () => {
-          details.classList.remove("is-open");
-          summary.setAttribute("aria-expanded", "false");
-
-          const finish = () => {
-            cancelPendingClose();
-            details.open = false;
-          };
-          const onTransitionEnd = (event: TransitionEvent) => {
-            if (event.target === answer && event.propertyName === "grid-template-rows") {
-              finish();
-            }
-          };
-
-          answer.addEventListener("transitionend", onTransitionEnd);
-          removeCloseListener = () => answer.removeEventListener("transitionend", onTransitionEnd);
-          closeTimer = window.setTimeout(finish, 400);
-        };
-
-        const open = () => {
-          cancelPendingClose();
-          details.open = true;
-          summary.setAttribute("aria-expanded", "true");
-          window.requestAnimationFrame(() => details.classList.add("is-open"));
-        };
-
-        summary.addEventListener("click", (event) => {
-          event.preventDefault();
-
-          if (reduceMotion) {
-            details.open = !details.open;
-            details.classList.toggle("is-open", details.open);
-            summary.setAttribute("aria-expanded", String(details.open));
-            return;
-          }
-
-          if (details.classList.contains("is-open")) {
-            close();
-          } else {
-            open();
-          }
-        });
-      });
-    </script>
     <SpeedInsights />
   </body>
 </html>

@@ -1,5 +1,5 @@
 /* PERSON */
-  Johannes Grof
+  Author and developer: Johannes Grof
   Location: South-east Styria, Austria
   Website: https://johannesgrof.me
   Contact: contact@johannesgrof.me
@@ -7,5 +7,7 @@
 /* SITE */
   Languages: English, German (Austria)
   Built with: Astro, TypeScript, CSS
+  Fonts: Geist and Geist Mono, hosted locally
+  Project screenshots: actual app interfaces; Kontobuch shows a demonstration notebook
   Hosting: Vercel
   Source: https://github.com/jx-grxf/johannesgrof.me

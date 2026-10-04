@@ -22,29 +22,43 @@ This repository contains the source for my personal portfolio website: a small, 
 
 | Feature | Description |
 | --- | --- |
-| Project proof | Highlights shipped GitHub releases, npm packages, DMG builds, and Windows EXE assets. |
-| Case studies | Each project page explains the problem, build approach, result, and audience. |
+| Selected work | Real screenshots for ÖffiGo, Kontobuch, BriskEdit and MacPhone; smaller projects live in the complete catalogue. |
+| Project pages | Explain the problem and implementation, with release links and clear availability. |
 | Static-first build | Astro renders the portfolio as a fast static site with Vercel deployment. |
 | GitHub metadata | Build-time GitHub API data enriches release, update, and download surfaces with safe fallbacks. |
 | Bilingual | Portfolio pages exist in English and German with hreflang alternates; legal pages are German-only. |
 
 ## Discovery files
 
-`robots.txt` links to the sitemap. The sitemap lists the canonical English and German URLs and their hreflang pairs. It omits `lastmod` until page-level content change dates are available; build dates and GitHub push dates would misstate when a page changed. `llms.txt` offers a short page directory for services that read it, and `humans.txt` names the site author. Neither text file is a substitute for the HTML pages or a Google ranking signal.
+`robots.txt` links to the sitemap. The sitemap lists the canonical English and German URLs and their hreflang pairs. The sitemap records the 2026-10-04 content revision for the changed homepages, catalogue, project template and imprint. Advance that date only for a significant content or template change, never for a daily metadata rebuild. Unchanged pages omit `lastmod`. `llms.txt` offers a short page directory for services that read it, and `humans.txt` names the site author. Neither text file is a substitute for the HTML pages or a Google ranking signal.
 
-Both homepages link directly to Kontobuch and describe it with `SoftwareApplication` structured data referencing Johannes as its creator. Kontobuch keeps its own canonical URL and sitemap on its subdomain.
+Both homepages show Kontobuch as its own product section and describe it with `SoftwareApplication` structured data referencing Johannes as its creator. Kontobuch keeps its own canonical URL and sitemap on its subdomain.
 
-## Featured Projects
+## Selected Projects
 
-| Project | Public proof |
+| Project | Presentation |
 | --- | --- |
-| [Kontobuch](https://kontobuch.johannesgrof.me/) | Free accounting notebook for HAK and HTL, featured below ÖffiGo on both homepages. |
-| [PatchPilot](https://johannesgrof.me/projects/patchpilot/) | npm package and coding-agent TUI release. |
-| [BriskEdit](https://johannesgrof.me/projects/briskedit/) | Native macOS developer text editor with a DMG release. |
-| [MacPhone](https://johannesgrof.me/projects/macphone/) | Native macOS companion app with a GitHub release. |
-| [CCrab](https://johannesgrof.me/projects/ccrab/) | Claude Code desktop companion at 0% idle CPU. |
-| [Caruso-Reborn](https://johannesgrof.me/projects/caruso-reborn/) | Local playback dashboard with GitHub release. |
-| [Tools](https://johannesgrof.me/projects/tools/) | Browser-only PDF and image toolkit, live at tools.johannesgrof.me. |
+| [ÖffiGo](https://johannesgrof.me/oeffigo/) | Main iPhone and Apple Watch project, shown with a beta screenshot. |
+| [Kontobuch](https://kontobuch.johannesgrof.me/) | Free accounting notebook for HAK and HTL, shown with a real demonstration notebook. |
+| [BriskEdit](https://johannesgrof.me/projects/briskedit/) | Native Mac editor, with an interface capture and release links. |
+| [MacPhone](https://johannesgrof.me/projects/macphone/) | Bluetooth device testing through an emulator, with a real application capture. |
+| [poise](https://johannesgrof.me/projects/poise/) | AirPods posture coaching, included in the smaller selected work. |
+| [agent-presence](https://johannesgrof.me/projects/agent-presence/) | Cross-platform coding-agent presence, with platform and architecture choices. |
+| [Caruso-Reborn](https://johannesgrof.me/projects/caruso-reborn/) | Internet radio for older hi-fi hardware; packaged Mac application in beta. |
+
+Other projects retain their individual URLs and are listed in the complete catalogue.
+
+## Project catalogue and interactions
+
+The homepages show selected work. `/projects/` and `/de/projects/` keep the full catalogue, including experiments and archived work. Filtering uses the `q` query parameter so a selection can be linked and restored after navigation. The complete list and all project links remain visible without JavaScript.
+
+Download metadata separates the operating system, architecture and file format. Windows ZIPs and Linux tarballs are classified from their target names; Mac archives without a target use an explicit single-project platform. Source archives, updater feeds and checksums are excluded from application choices. No aggregate download count is shown: GitHub asset requests are not unique users or installations.
+
+FAQ and download choices use native `details` elements. Download menus restore keyboard focus on Escape. Demo videos play only on request, so reduced-motion preferences and a deliberate pause are respected. The original bilingual slogan remains unchanged and is fully visible on arrival. Project rows retain directional hover feedback; screenshots move subtly on desktop pointers. Reduced-motion mode keeps these interactions static.
+
+The Kontobuch screenshot is captured from its public demonstration mode using an example cash transfer. Product media should show an actual interface rather than a generated illustration. Keep the image dimensions and lazy loading when replacing captures.
+
+Dependency overrides keep the serializer and cache-policy packages on intentionally selected versions. Run the tests, build and production dependency audit when changing them. A clean package audit does not by itself establish an application vulnerability or its remediation.
 
 ## Stack
 
@@ -77,6 +91,7 @@ npm run dev
 | --- | --- |
 | `npm run dev` | Starts the Astro dev server. |
 | `npm run check` | Runs Astro and TypeScript diagnostics. |
+| `npm test` | Checks Turnstile verification and release asset classification. |
 | `npm run build` | Checks and builds the production site. |
 | `npm run preview` | Previews the production build locally. |
 
