@@ -77,8 +77,7 @@ const websiteLd = {
 <meta name="description" content={description} />
 <meta name="author" content="Johannes Grof" />
 <meta name="theme-color" content="#12110f" />
-{/* Preload the self-hosted display faces so they swap in before the headline
-    renders and the typewriter measures its height. */}
+{/* Preload the self-hosted Latin fonts used by the headline and navigation. */}
 <link rel="preload" href={geistLatin} as="font" type="font/woff2" crossorigin />
 <link rel="preload" href={geistMonoLatin} as="font" type="font/woff2" crossorigin />
 {/* Runs before the first paint, so a reader who chose the light stock never

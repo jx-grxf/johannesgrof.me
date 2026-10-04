@@ -30,8 +30,9 @@
   },
   "overrides": {
     "@vercel/routing-utils": "6.2.0",
-    "devalue": "5.9.1",
-    "path-to-regexp": "6.3.0"
+    "devalue": "5.9.4",
+    "path-to-regexp": "6.3.0",
+    "http-cache-semantics": "4.3.0"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",

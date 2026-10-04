@@ -34,8 +34,6 @@ export interface LocaleContent {
     /** Substring of `title` rendered in the signal colour. */
     titleAccent?: string;
     body: string;
-    /** Unit for the shipped-project counter, e.g. "projects in public". */
-    factsCountLabel: string;
     facts: string[];
     primaryAction: string;
     contactAction: string;
@@ -89,14 +87,14 @@ const en: LocaleContent = {
   lang: "en",
   ogLocale: "en_US",
   meta: {
-    title: "Johannes Grof - Student Developer in Austria",
+    title: "Johannes Grof | Apps, websites and developer tools",
     description:
       "Portfolio of Johannes Grof, an HTL Kaindorf student in Austria building iOS and macOS apps, developer tools, automations and websites, and offering tech support.",
   },
   nav: [
     { label: "Projects", href: "#projects" },
     { label: "ÖffiGo", href: "#oeffigo" },
-    { label: "Services", href: "#services" },
+    { label: "Tech", href: "#services" },
     { label: "About", href: "#about" },
     { label: "Contact", href: "#contact" },
   ],
@@ -106,17 +104,16 @@ const en: LocaleContent = {
     ariaLabel: "Diese Seite auf Deutsch ansehen",
   },
   hero: {
-    eyebrow: "software developer / styria, austria",
+    eyebrow: "Hi, I’m Johannes. Developer and HTL student.",
     title: "Software that does one thing, properly.",
     titleAccent: "one thing",
-    body: "I'm a developer from south-east Styria and a student at HTL Kaindorf. I build apps for the Mac and the iPhone, developer tools and automations, and I help people nearby with websites, repairs and everyday technology.",
-    factsCountLabel: "projects in public",
-    facts: ["macOS · iOS · CLI", "TypeScript · Swift · Python", "Styria, Austria"],
+    body: "I’m from south-east Styria and study at HTL Kaindorf. Most of my time goes into ÖffiGo and Kontobuch. I also build small tools for things I run into while working.",
+    facts: ["Styria, Austria", "Swift · TypeScript · Rust", "macOS · iOS · Web"],
     primaryAction: "See the projects",
     contactAction: "Contact",
   },
   oeffigo: {
-    eyebrow: "flagship",
+    eyebrow: "My main project",
     detailCta: "ÖffiGo in detail",
   },
   projects: {
@@ -142,11 +139,11 @@ const en: LocaleContent = {
   },
   services: {
     title: "What I can help with",
-    lead: "Alongside my own projects I help people and small businesses in the area with everyday technology. On-site nearby, remote everywhere else.",
+    lead: "Outside my software projects, I help people I know with websites, computers and everyday tech. These are the kinds of things I work on.",
     items: [
       {
         title: "Website development & hosting",
-        body: "Websites for people, small businesses and clubs, including hosting, the domain and keeping it up to date afterwards.",
+        body: "Building a website, connecting its domain and keeping it up to date.",
       },
       {
         title: "Electronics repair & setup",
@@ -170,8 +167,8 @@ const en: LocaleContent = {
         a: "Websites, tools and support: yes, anywhere. Repairs and device setup happen on site in south-east Styria.",
       },
       {
-        q: "How much does a website cost?",
-        a: "It depends on what it has to do, and whether hosting, domain and maintenance come with it. Write me two sentences about what you have in mind and we'll talk it through.",
+        q: "Can I try your apps?",
+        a: "Kontobuch runs in your browser and has desktop downloads. ÖffiGo is in a closed TestFlight beta; you can join the waitlist on its website. The other project pages show their current availability.",
       },
       {
         q: "How can I reach you?",
@@ -187,7 +184,7 @@ const en: LocaleContent = {
   contact: {
     eyebrow: "contact",
     title: "Get in touch.",
-    note: "Need a website, a repair, tech support, or a small custom tool? Send me a message below, or reach out by email.",
+    note: "Questions about a project, an idea or just something you want to tell me? Write here or send me an email.",
     form: {
       nameLabel: "Name",
       namePlaceholder: "Your name",
@@ -205,14 +202,14 @@ const de: LocaleContent = {
   lang: "de-AT",
   ogLocale: "de_AT",
   meta: {
-    title: "Johannes Grof - Softwareentwickler & Tech-Support aus der Südost-Steiermark",
+    title: "Johannes Grof | Apps, Websites und Entwickler-Tools",
     description:
       "Johannes Grof aus der Südost-Steiermark: Softwareentwickler und HTL-Kaindorf-Schüler. Websites, iOS- und macOS-Apps, individuelle Tools sowie Elektronik-Reparatur und technischer Support.",
   },
   nav: [
     { label: "Projekte", href: "#projects" },
     { label: "ÖffiGo", href: "#oeffigo" },
-    { label: "Leistungen", href: "#services" },
+    { label: "Technik", href: "#services" },
     { label: "Über mich", href: "#about" },
     { label: "Kontakt", href: "#contact" },
   ],
@@ -222,17 +219,16 @@ const de: LocaleContent = {
     ariaLabel: "View this page in English",
   },
   hero: {
-    eyebrow: "softwareentwickler / südost-steiermark",
+    eyebrow: "Servus, ich bin Johannes. Entwickler und HTL-Schüler.",
     title: "Software, die eine Sache richtig macht.",
     titleAccent: "eine Sache",
-    body: "Ich bin Entwickler aus der Südost-Steiermark und Schüler an der HTL Kaindorf. Ich baue Apps für Mac und iPhone, Developer-Tools und Automatisierungen und helfe in der Umgebung bei Websites, Reparaturen und alltäglicher Technik.",
-    factsCountLabel: "veröffentlichte Projekte",
-    facts: ["macOS · iOS · CLI", "TypeScript · Swift · Python", "Steiermark, Österreich"],
+    body: "Ich komme aus der Südost-Steiermark und besuche die HTL Kaindorf. Die meiste Zeit stecke ich in ÖffiGo und Kontobuch. Daneben baue ich kleine Tools für Dinge, die mir beim Arbeiten auffallen.",
+    facts: ["Südost-Steiermark", "Swift · TypeScript · Rust", "macOS · iOS · Web"],
     primaryAction: "Projekte ansehen",
     contactAction: "Kontakt",
   },
   oeffigo: {
-    eyebrow: "hauptprojekt",
+    eyebrow: "Mein größtes Projekt",
     detailCta: "ÖffiGo im Detail",
   },
   projects: {
@@ -258,11 +254,11 @@ const de: LocaleContent = {
   },
   services: {
     title: "Womit ich dir helfen kann",
-    lead: "Neben meinen eigenen Projekten helfe ich Menschen und kleinen Betrieben in der Umgebung bei alltäglicher Technik. Vor Ort in der Südost-Steiermark, sonst remote.",
+    lead: "Neben meinen Softwareprojekten helfe ich in meinem Umfeld auch bei Websites, Computern und alltäglicher Technik. Mit diesen Themen beschäftige ich mich.",
     items: [
       {
         title: "Website-Erstellung & Hosting",
-        body: "Websites für Leute, kleine Betriebe und Vereine, inklusive Hosting, Domain und Pflege danach.",
+        body: "Eine Website aufsetzen, die Domain verbinden und die Seite aktuell halten.",
       },
       {
         title: "Elektronik-Reparatur & Einrichtung",
@@ -286,8 +282,8 @@ const de: LocaleContent = {
         a: "Reparatur und Geräte-Einrichtung mache ich vor Ort in der Südost-Steiermark. Websites, Tools und Support gehen überall remote.",
       },
       {
-        q: "Was kostet eine Website?",
-        a: "Kommt darauf an, was sie können muss und ob Hosting, Domain und Wartung dabei sind. Schreib mir zwei Sätze zum Vorhaben, dann reden wir drüber.",
+        q: "Kann ich deine Apps ausprobieren?",
+        a: "Kontobuch läuft im Browser und hat Desktop-Downloads. ÖffiGo ist in einer geschlossenen TestFlight-Beta; auf der Website kannst du dich auf die Warteliste setzen. Bei den anderen Projekten steht die Verfügbarkeit auf der jeweiligen Seite.",
       },
       {
         q: "Wie erreiche ich dich?",
@@ -303,7 +299,7 @@ const de: LocaleContent = {
   contact: {
     eyebrow: "kontakt",
     title: "Melde dich.",
-    note: "Du brauchst eine Website, eine Reparatur, technischen Support oder ein kleines individuelles Tool? Schreib mir direkt hier oder per E-Mail.",
+    note: "Eine Frage zu einem Projekt, eine Idee oder einfach etwas, das du mir sagen möchtest? Schreib mir hier oder per E-Mail.",
     form: {
       nameLabel: "Name",
       namePlaceholder: "Dein Name",

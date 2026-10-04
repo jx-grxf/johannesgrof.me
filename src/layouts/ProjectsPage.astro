@@ -1,0 +1,71 @@
+---
+import BaseHead from "@/components/BaseHead.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import { publicProjects, getProjectCopy, localizedStatusLabel, statusClass, type ProjectLang } from "@/data/projects";
+import { toCanonicalUrl } from "@/data/siteMetadata";
+import "@/styles/global.css";
+
+interface Props { lang: ProjectLang }
+const { lang } = Astro.props;
+const de = lang === "de";
+const prefix = de ? "/de" : "";
+const home = de ? "/de/" : "/";
+const canonicalPath = `${prefix}/projects/`;
+const active = publicProjects.filter(project => project.status !== "archived");
+const archived = publicProjects.filter(project => project.status === "archived");
+const groups = [{ title: de ? "Apps und Tools" : "Apps and tools", items: active }, { title: de ? "Archiv" : "Archive", items: archived }];
+const s = de ? {
+  title: "Alle Projekte", description: "Apps für Mac und iPhone, Websites und kleine Werkzeuge von Johannes Grof. Mit öffentlichen Releases, privaten Experimenten und einem Archiv.",
+  intro: "Hier findest du auch die kleineren Tools und Experimente. Manche lassen sich herunterladen, andere sind noch in Arbeit. Was nicht weiterentwickelt wird, steht im Archiv.",
+  search: "Projekt suchen", placeholder: "Name, Plattform oder Thema", empty: "Dazu habe ich noch kein Projekt. Versuch einen anderen Suchbegriff.",
+} : {
+  title: "All projects", description: "Mac and iPhone apps, websites and small tools by Johannes Grof. Public releases, private experiments and an archive.",
+  intro: "The smaller tools and experiments live here too. Some are ready to download, others are still in progress. Projects I no longer develop are in the archive.",
+  search: "Find a project", placeholder: "Name, platform or topic", empty: "No project matches. Try another search term.",
+};
+---
+<!doctype html>
+<html lang={de ? "de-AT" : "en"}>
+  <head><BaseHead title={`${s.title} | Johannes Grof`} description={s.description} canonicalPath={canonicalPath} ogLocale={de ? "de_AT" : "en_US"} hreflangAlternates={[
+    { hreflang: "en", href: toCanonicalUrl("/projects/") },
+    { hreflang: "de-AT", href: toCanonicalUrl("/de/projects/") },
+    { hreflang: "x-default", href: toCanonicalUrl("/projects/") },
+  ]} /></head>
+  <body>
+    <SiteHeader lang={lang} homeHref={home} ariaLabel={de ? "Seitennavigation" : "Page navigation"} navItems={[
+      { label: de ? "Auswahl" : "Selected work", href: `${home}#projects` },
+      { label: de ? "Über mich" : "About", href: `${home}#about` },
+      { label: de ? "Kontakt" : "Contact", href: `${home}#contact` },
+    ]} langSwitch={{ label: de ? "EN" : "DE", href: `${de ? "" : "/de"}/projects/`, ariaLabel: de ? "View all projects in English" : "Alle Projekte auf Deutsch ansehen" }} />
+    <main id="main" class="catalogue section-shell">
+      <a class="back-link" href={`${home}#projects`}>← {de ? "Zur Auswahl" : "Selected work"}</a>
+      <h1>{s.title}</h1><p class="catalogue-intro">{s.intro}</p>
+      <div class="catalogue-products" data-project-group>
+        <a href={`${prefix}/oeffigo/`} data-project-item data-search="öffigo oeffigo österreich austria iphone ios apple watch öffis transit"><strong>ÖffiGo ↗</strong><span>{de ? "Öffis in Österreich · geschlossene Beta" : "Transit in Austria · closed beta"}</span></a>
+        <a href="https://kontobuch.johannesgrof.me/" data-project-item data-search="kontobuch hak htl rechnungswesen accounting macos windows linux web"><strong>Kontobuch ↗</strong><span>{de ? "Rechnungswesen für HAK und HTL · verfügbar" : "Accounting for HAK and HTL · available"}</span></a>
+      </div>
+      <form class="catalogue-search" role="search" action={canonicalPath} data-project-search>
+        <label for="project-query">{s.search}</label>
+        <div><input id="project-query" name="q" type="search" placeholder={s.placeholder} autocomplete="off" /><button class="button secondary" type="submit">{de ? "Suchen" : "Search"}</button></div>
+      </form>
+      <p data-project-results role="status" aria-live="polite" class="catalogue-results"></p>
+      <p data-project-empty hidden>{s.empty}</p>
+      {groups.map(group => <section class="catalogue-group" data-project-group>
+        <h2>{group.title}</h2>
+        <ul class="catalogue-list">{group.items.map(project => {
+          const copy = getProjectCopy(project, lang);
+          return <li data-project-item data-search={`${project.name} ${copy.tagline} ${project.stack.join(" ")} ${localizedStatusLabel(project.status, lang)}`.toLocaleLowerCase()}>
+            <a href={`${prefix}/projects/${project.slug}/`}>
+              <div><h3>{project.name}<span aria-hidden="true"> ↗</span></h3><p>{copy.tagline}</p></div>
+              <span class={`status ${statusClass(project.status)}`}>{localizedStatusLabel(project.status, lang)}</span>
+            </a>
+          </li>;
+        })}</ul>
+      </section>)}
+      <noscript><p>{de ? "Die vollständige Liste ist auch ohne JavaScript sichtbar. Du kannst die Seitensuche deines Browsers verwenden." : "The full list is visible without JavaScript. You can use your browser’s find command."}</p></noscript>
+    </main>
+    <SiteFooter lang={lang} />
+    <script>import "@/scripts/projects";</script>
+  </body>
+</html>

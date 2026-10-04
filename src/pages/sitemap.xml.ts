@@ -6,6 +6,11 @@ const homeAlternates = `
     <xhtml:link rel="alternate" hreflang="de-AT" href="${toCanonicalUrl("/de/")}" />
     <xhtml:link rel="alternate" hreflang="x-default" href="${toCanonicalUrl("/")}" />`;
 
+const catalogueAlternates = `
+    <xhtml:link rel="alternate" hreflang="en" href="${toCanonicalUrl("/projects/")}" />
+    <xhtml:link rel="alternate" hreflang="de-AT" href="${toCanonicalUrl("/de/projects/")}" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${toCanonicalUrl("/projects/")}" />`;
+
 const projectAlternates = (slug: string) => `
     <xhtml:link rel="alternate" hreflang="en" href="${toCanonicalUrl(`/projects/${slug}/`)}" />
     <xhtml:link rel="alternate" hreflang="de-AT" href="${toCanonicalUrl(`/de/projects/${slug}/`)}" />
@@ -17,19 +22,22 @@ const oeffigoAlternates = `
     <xhtml:link rel="alternate" hreflang="x-default" href="${toCanonicalUrl("/oeffigo/")}" />`;
 
 export function GET() {
-  // Only publish modification dates when we can derive them from changes to
-  // each rendered page. Deploy dates and GitHub push dates are not that signal.
+  // Updated when page content or its shared template changes significantly.
+  // Daily GitHub metadata rebuilds must not advance this date.
+  const contentRevision = "2026-10-04";
   const urls = [
-    { path: "/", alternates: homeAlternates },
-    { path: "/de/", alternates: homeAlternates },
+    { path: "/", alternates: homeAlternates, lastmod: contentRevision },
+    { path: "/de/", alternates: homeAlternates, lastmod: contentRevision },
     { path: "/oeffigo/", alternates: oeffigoAlternates },
     { path: "/de/oeffigo/", alternates: oeffigoAlternates },
+    { path: "/projects/", alternates: catalogueAlternates, lastmod: contentRevision },
+    { path: "/de/projects/", alternates: catalogueAlternates, lastmod: contentRevision },
     ...publicProjects.flatMap((project) => [
-      { path: `/projects/${project.slug}/`, alternates: projectAlternates(project.slug) },
-      { path: `/de/projects/${project.slug}/`, alternates: projectAlternates(project.slug) },
+      { path: `/projects/${project.slug}/`, alternates: projectAlternates(project.slug), lastmod: contentRevision },
+      { path: `/de/projects/${project.slug}/`, alternates: projectAlternates(project.slug), lastmod: contentRevision },
     ]),
     // German-only legal pages: indexable, but no locale alternates.
-    { path: "/impressum/", alternates: "" },
+    { path: "/impressum/", alternates: "", lastmod: contentRevision },
     { path: "/datenschutz/", alternates: "" },
   ];
 
@@ -38,7 +46,7 @@ export function GET() {
 ${urls
   .map(
     (url) => `  <url>
-    <loc>${toCanonicalUrl(url.path)}</loc>${url.alternates}
+    <loc>${toCanonicalUrl(url.path)}</loc>${url.lastmod ? `\n    <lastmod>${url.lastmod}</lastmod>` : ""}${url.alternates}
   </url>`
   )
   .join("\n")}
