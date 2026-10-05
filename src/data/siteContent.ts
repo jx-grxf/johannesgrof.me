@@ -87,9 +87,9 @@ const en: LocaleContent = {
   lang: "en",
   ogLocale: "en_US",
   meta: {
-    title: "Johannes Grof | Apps, websites and developer tools",
+    title: "Johannes Grof | Apps and developer tools",
     description:
-      "Portfolio of Johannes Grof, an HTL Kaindorf student in Austria building iOS and macOS apps, developer tools, automations and websites, and offering tech support.",
+      "Portfolio of Johannes Grof, an HTL Kaindorf student in Austria building iOS and macOS apps, web projects and developer tools.",
   },
   nav: [
     { label: "Projects", href: "#projects" },
@@ -138,24 +138,24 @@ const en: LocaleContent = {
     ],
   },
   services: {
-    title: "What I can help with",
-    lead: "Outside my software projects, I help people I know with websites, computers and everyday tech. These are the kinds of things I work on.",
+    title: "What I like to work on",
+    lead: "Besides my own projects, these are the topics I spend my time on. If you have an idea or a question, just send me an email and we'll take a look together.",
     items: [
       {
-        title: "Website development & hosting",
-        body: "Building a website, connecting its domain and keeping it up to date.",
+        title: "Apps for iPhone and Mac",
+        body: "Native apps in Swift and SwiftUI, from the first idea to a TestFlight build.",
       },
       {
-        title: "Electronics repair & setup",
-        body: "PC and Mac repair, setting up new devices, printers and peripherals, getting things running again.",
+        title: "Web projects",
+        body: "Websites and web apps in TypeScript and Astro, built cleanly and fast.",
       },
       {
-        title: "Technical support / IT help",
-        body: "Fixing everyday tech problems, backups and updates, explained in plain words.",
-      },
-      {
-        title: "Custom tools & automation",
+        title: "Tools & automation",
         body: "Small macOS utilities, scripts, and automations for when off-the-shelf software isn't enough.",
+      },
+      {
+        title: "Tech & hardware",
+        body: "Computers, networks and electronics interest me beyond the code, too.",
       },
     ],
   },
@@ -163,8 +163,8 @@ const en: LocaleContent = {
     title: "Frequently asked questions",
     items: [
       {
-        q: "Do you work remotely?",
-        a: "Websites, tools and support: yes, anywhere. Repairs and device setup happen on site in south-east Styria.",
+        q: "Can I ask you about a project?",
+        a: "Send your idea to contact@johannesgrof.me. Whether and how I can help, we'll work out together.",
       },
       {
         q: "Can I try your apps?",
@@ -191,7 +191,7 @@ const en: LocaleContent = {
       emailLabel: "Email",
       emailPlaceholder: "you@example.com",
       messageLabel: "Message",
-      messagePlaceholder: "What can I help you with?",
+      messagePlaceholder: "What’s it about?",
       submit: "Send message",
       sending: "Sending…",
     },
@@ -202,9 +202,9 @@ const de: LocaleContent = {
   lang: "de-AT",
   ogLocale: "de_AT",
   meta: {
-    title: "Johannes Grof | Apps, Websites und Entwickler-Tools",
+    title: "Johannes Grof | Apps und Entwickler-Tools",
     description:
-      "Johannes Grof aus der Südost-Steiermark: Softwareentwickler und HTL-Kaindorf-Schüler. Websites, iOS- und macOS-Apps, individuelle Tools sowie Elektronik-Reparatur und technischer Support.",
+      "Johannes Grof aus der Südost-Steiermark: Softwareentwickler und HTL-Kaindorf-Schüler. iOS- und macOS-Apps, Web-Projekte und Entwickler-Tools.",
   },
   nav: [
     { label: "Projekte", href: "#projects" },
@@ -253,24 +253,24 @@ const de: LocaleContent = {
     ],
   },
   services: {
-    title: "Womit ich dir helfen kann",
-    lead: "Neben meinen Softwareprojekten helfe ich in meinem Umfeld auch bei Websites, Computern und alltäglicher Technik. Mit diesen Themen beschäftige ich mich.",
+    title: "Woran ich gerne arbeite",
+    lead: "Neben meinen eigenen Projekten beschäftige ich mich mit diesen Themen. Wenn du eine Idee oder Frage hast, schreib mir einfach eine E-Mail, dann schauen wir gemeinsam.",
     items: [
       {
-        title: "Website-Erstellung & Hosting",
-        body: "Eine Website aufsetzen, die Domain verbinden und die Seite aktuell halten.",
+        title: "Apps für iPhone und Mac",
+        body: "Native Apps mit Swift und SwiftUI, von der ersten Idee bis zum TestFlight-Build.",
       },
       {
-        title: "Elektronik-Reparatur & Einrichtung",
-        body: "PC- und Mac-Reparatur, neue Geräte aufsetzen, Drucker und Zubehör einrichten, alles wieder zum Laufen bringen.",
+        title: "Web-Projekte",
+        body: "Websites und Web-Apps mit TypeScript und Astro, sauber gebaut und schnell.",
       },
       {
-        title: "Technischer Support / IT-Hilfe",
-        body: "Alltägliche Technik-Probleme lösen, Backups und Updates, so erklärt, dass man es versteht.",
-      },
-      {
-        title: "Individuelle Tools & Automatisierung",
+        title: "Tools & Automatisierung",
         body: "Kleine macOS-Tools, Skripte und Automatisierungen, wenn Standardsoftware nicht ausreicht.",
+      },
+      {
+        title: "Technik & Hardware",
+        body: "Computer, Netzwerke und Elektronik interessieren mich auch abseits vom Code.",
       },
     ],
   },
@@ -278,8 +278,8 @@ const de: LocaleContent = {
     title: "Häufige Fragen",
     items: [
       {
-        q: "Arbeitest du auch vor Ort in der Steiermark?",
-        a: "Reparatur und Geräte-Einrichtung mache ich vor Ort in der Südost-Steiermark. Websites, Tools und Support gehen überall remote.",
+        q: "Kann ich dich für ein Projekt anfragen?",
+        a: "Schreib mir deine Idee an contact@johannesgrof.me. Ob und wie ich mitmachen kann, klären wir dann gemeinsam.",
       },
       {
         q: "Kann ich deine Apps ausprobieren?",
@@ -306,7 +306,7 @@ const de: LocaleContent = {
       emailLabel: "E-Mail",
       emailPlaceholder: "du@beispiel.at",
       messageLabel: "Nachricht",
-      messagePlaceholder: "Wobei kann ich dir helfen?",
+      messagePlaceholder: "Worum geht’s?",
       submit: "Nachricht senden",
       sending: "Wird gesendet…",
     },
