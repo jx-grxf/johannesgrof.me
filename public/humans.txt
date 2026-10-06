@@ -1,13 +1,28 @@
-/* PERSON */
-  Author and developer: Johannes Grof
+/* TEAM */
+  Developer: Johannes Grof
+  Role: everything on this site, from the copy to the pixel train
+  School: HTL Kaindorf
   Location: South-east Styria, Austria
-  Website: https://johannesgrof.me
   Contact: contact@johannesgrof.me
+  GitHub: https://github.com/jx-grxf
+  LinkedIn: https://www.linkedin.com/in/johannes-grof
+  X: https://x.com/johannesgrofdev
 
 /* SITE */
+  Last update: 2026-10-06
   Languages: English, German (Austria)
-  Built with: Astro, TypeScript, CSS
-  Fonts: Geist and Geist Mono, hosted locally
-  Project screenshots: actual app interfaces; Kontobuch shows a demonstration notebook
-  Hosting: Vercel
+  Standards: HTML, CSS, TypeScript
+  Built with: Astro, hosted on Vercel, DNS at Cloudflare
+  Fonts: Geist and Geist Mono, self-hosted
+  Screenshots: real app interfaces, nothing generated
   Source: https://github.com/jx-grxf/johannesgrof.me
+
+/* THANKS */
+  Verkehrsauskunft Österreich, for supporting ÖffiGo as a school project
+  Everyone testing the ÖffiGo beta on TestFlight
+  The Astro team, for a framework that stays out of the way
+
+/* COLOPHON */
+  The train on the home page is 83 pixels long and drawn from text.
+  Somewhere on this site there is a terminal. The little screen
+  in the headline knows where.

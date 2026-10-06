@@ -1,4 +1,35 @@
+# johannesgrof.me
+# Everything public here may be crawled, indexed and cited, by search engines
+# and by AI assistants alike. Only the contact form endpoint is off limits.
+# A short page directory for language models lives at /llms.txt, the full
+# project texts at /llms-full.txt.
+
 User-agent: *
+Allow: /
+Disallow: /api/
+
+# Search engines
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: DuckDuckBot
+User-agent: Applebot
+Allow: /
+Disallow: /api/
+
+# AI assistants and their search crawlers
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: ClaudeBot
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+User-agent: Meta-ExternalAgent
+User-agent: MistralAI-User
+User-agent: CCBot
 Allow: /
 Disallow: /api/
 
