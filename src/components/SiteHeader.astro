@@ -1,5 +1,6 @@
 ---
 import SocialLinks from "@/components/SocialLinks.astro";
+import { getProjectCopy, localizedStatusLabel, publicProjects } from "@/data/projects";
 
 interface NavItem {
   label: string;
@@ -23,6 +24,20 @@ interface Props {
 
 const { navItems, ariaLabel = "Primary navigation", homeHref = "/", langSwitch, lang = "en" } = Astro.props;
 
+// What the hidden terminal (press ~) can list and open. Kept tiny: names,
+// one-liners and status, in the page's language.
+const terminalData = {
+  lang,
+  prefix: lang === "de" ? "/de" : "",
+  projects: publicProjects.map((project) => ({
+    slug: project.slug,
+    name: project.name,
+    tagline: getProjectCopy(project, lang).tagline,
+    status: localizedStatusLabel(project.status, lang),
+    stack: project.stack.join(", "),
+  })),
+};
+
 // Server-rendered for the default (dark) stock; theme.ts corrects it as soon as
 // it runs if the reader is on the light one.
 const themeLabels = {
@@ -33,25 +48,28 @@ const themeLabels = {
 
 <header class="site-header">
   <a class="skip-link" href="#main">{lang === "de" ? "Zum Inhalt springen" : "Skip to content"}</a>
-  <a class="brand" href={homeHref} aria-label={lang === "de" ? "Johannes Grof – Startseite" : "Johannes Grof home"}>
-    <span class="brand-prompt" aria-hidden="true">$</span>
-    <span>Johannes Grof</span>
-  </a>
-  <nav class="site-nav" aria-label={ariaLabel}>
-    {
-      navItems.map((item) => (
-        <a
-          href={item.href}
-          target={item.external ? "_blank" : undefined}
-          rel={item.external ? "noreferrer" : undefined}
-        >
-          {item.label}
-        </a>
-      ))
-    }
-    <span class="nav-divider" aria-hidden="true"></span>
+  <div class="site-header-bar">
+    <a class="brand" href={homeHref} aria-label={lang === "de" ? "Johannes Grof – Startseite" : "Johannes Grof home"}>
+      <span class="brand-prompt" aria-hidden="true">$</span>
+      <span>Johannes Grof</span>
+    </a>
+    <nav class="site-nav" aria-label={ariaLabel}>
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            target={item.external ? "_blank" : undefined}
+            rel={item.external ? "noreferrer" : undefined}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+    <span class="header-spacer" aria-hidden="true"></span>
     <SocialLinks variant="icons" class="nav-socials" />
     <span class="header-utils">
+      <span class="header-clock" data-header-clock hidden><time></time></span>
       <button
         class="theme-toggle"
         type="button"
@@ -73,9 +91,12 @@ const themeLabels = {
         )
       }
     </span>
-  </nav>
+  </div>
 </header>
+
+<script type="application/json" id="terminal-data" is:inline set:html={JSON.stringify(terminalData)} />
 
 <script>
   import "@/scripts/theme";
+  import "@/scripts/egg";
 </script>

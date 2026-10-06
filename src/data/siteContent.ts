@@ -1,13 +1,11 @@
 export type Locale = "en" | "de";
 
-export interface ServiceItem {
+/** One stack group, proven by the projects that use it. */
+export interface StackGroup {
   title: string;
-  body: string;
-}
-
-export interface FaqItem {
-  q: string;
-  a: string;
+  items: string[];
+  /** Project slugs, or "oeffigo" / "kontobuch" for the two products. */
+  proof: string[];
 }
 
 export interface NavItem {
@@ -34,30 +32,31 @@ export interface LocaleContent {
     /** Substring of `title` rendered in the signal colour. */
     titleAccent?: string;
     body: string;
-    facts: string[];
     primaryAction: string;
     contactAction: string;
+    status: {
+      now: string;
+      nowValue: string;
+      push: string;
+      stack: string;
+      stackValue: string;
+      clock: string;
+    };
   };
   oeffigo: {
     eyebrow: string;
     detailCta: string;
   };
-  projects: {
+  more: {
     title: string;
-    highlights: string;
+    catalogue: string;
+    catalogueAction: string;
   };
-  skills: {
-    title: string;
-    groups: { title: string; items: string[] }[];
-  };
-  services: {
+  stack: {
     title: string;
     lead: string;
-    items: ServiceItem[];
-  };
-  faq: {
-    title: string;
-    items: FaqItem[];
+    proofLabel: string;
+    groups: StackGroup[];
   };
   about: {
     eyebrow: string;
@@ -68,6 +67,7 @@ export interface LocaleContent {
     eyebrow: string;
     title: string;
     note: string;
+    elsewhere: string;
     form: ContactFormContent;
   };
 }
@@ -94,7 +94,7 @@ const en: LocaleContent = {
   nav: [
     { label: "Projects", href: "#projects" },
     { label: "ÖffiGo", href: "#oeffigo" },
-    { label: "Tech", href: "#services" },
+    { label: "Stack", href: "#services" },
     { label: "About", href: "#about" },
     { label: "Contact", href: "#contact" },
   ],
@@ -108,71 +108,50 @@ const en: LocaleContent = {
     title: "Software that does one thing, properly.",
     titleAccent: "one thing",
     body: "I’m from south-east Styria and study at HTL Kaindorf. Most of my time goes into ÖffiGo and Kontobuch. I also build small tools for things I run into while working.",
-    facts: ["Styria, Austria", "Swift · TypeScript · Rust", "macOS · iOS · Web"],
     primaryAction: "See the projects",
     contactAction: "Contact",
+    status: {
+      now: "Working on",
+      nowValue: "ÖffiGo, TestFlight beta",
+      push: "Last push",
+      stack: "Stack",
+      stackValue: "Swift · TypeScript · Rust",
+      clock: "Local time",
+    },
   },
   oeffigo: {
     eyebrow: "My main project",
     detailCta: "ÖffiGo in detail",
   },
-  projects: {
-    title: "Projects",
-    highlights: "highlights",
+  more: {
+    title: "More of my work",
+    catalogue: "Smaller tools, experiments and older projects are in the catalogue.",
+    catalogueAction: "All projects",
   },
-  skills: {
-    title: "What I work with",
+  stack: {
+    title: "Stack",
+    lead: "What I work with, and where you can see it. Every line links to a project that uses it.",
+    proofLabel: "Used in",
     groups: [
       {
-        title: "Native and web",
-        items: ["Swift", "SwiftUI", "AppKit", "TypeScript", "Rust", "Python", "Astro"],
+        title: "iPhone and Mac",
+        items: ["Swift", "SwiftUI", "AppKit", "Menu bar apps", "Bluetooth LE"],
+        proof: ["oeffigo", "briskedit", "macphone", "poise"],
       },
       {
-        title: "Automation",
-        items: ["CLI tools", "Browser automation", "Document workflows", "MCP servers", "Local-first agent tooling"],
+        title: "Web",
+        items: ["TypeScript", "Astro", "Vite", "Vercel", "Cloudflare"],
+        proof: ["kontobuch", "tools", "johannesgrof-me"],
+      },
+      {
+        title: "CLI and tools",
+        items: ["Rust", "Python", "Node", "Local LLMs"],
+        proof: ["agent-presence", "ip-multitool", "patchpilot"],
       },
       {
         title: "Shipping",
-        items: ["GitHub releases", "DMG packaging", "Notarization", "Sparkle update feeds", "GitHub Actions CI", "Static hosting & deploys"],
-      },
-    ],
-  },
-  services: {
-    title: "What I like to work on",
-    lead: "Besides my own projects, these are the topics I spend my time on. If you have an idea or a question, just send me an email and we'll take a look together.",
-    items: [
-      {
-        title: "Apps for iPhone and Mac",
-        body: "Native apps in Swift and SwiftUI, from the first idea to a TestFlight build.",
-      },
-      {
-        title: "Web projects",
-        body: "Websites and web apps in TypeScript and Astro, built cleanly and fast.",
-      },
-      {
-        title: "Tools & automation",
-        body: "Small macOS utilities, scripts, and automations for when off-the-shelf software isn't enough.",
-      },
-      {
-        title: "Tech & hardware",
-        body: "Computers, networks and electronics interest me beyond the code, too.",
-      },
-    ],
-  },
-  faq: {
-    title: "Frequently asked questions",
-    items: [
-      {
-        q: "Can I ask you about a project?",
-        a: "Send your idea to contact@johannesgrof.me. Whether and how I can help, we'll work out together.",
-      },
-      {
-        q: "Can I try your apps?",
-        a: "Kontobuch runs in your browser and has desktop downloads. ÖffiGo is in a closed TestFlight beta; you can join the waitlist on its website. The other project pages show their current availability.",
-      },
-      {
-        q: "How can I reach you?",
-        a: "contact@johannesgrof.me, or the form below. LinkedIn and GitHub work too.",
+        items: ["Code signing", "Notarisation", "Sparkle updates", "GitHub Actions"],
+        proof: ["briskedit", "bottlelite"],
       },
     ],
   },
@@ -185,6 +164,7 @@ const en: LocaleContent = {
     eyebrow: "contact",
     title: "Get in touch.",
     note: "Questions about a project, an idea or just something you want to tell me? Write here or send me an email.",
+    elsewhere: "Elsewhere",
     form: {
       nameLabel: "Name",
       namePlaceholder: "Your name",
@@ -209,7 +189,7 @@ const de: LocaleContent = {
   nav: [
     { label: "Projekte", href: "#projects" },
     { label: "ÖffiGo", href: "#oeffigo" },
-    { label: "Technik", href: "#services" },
+    { label: "Stack", href: "#services" },
     { label: "Über mich", href: "#about" },
     { label: "Kontakt", href: "#contact" },
   ],
@@ -223,71 +203,50 @@ const de: LocaleContent = {
     title: "Software, die eine Sache richtig macht.",
     titleAccent: "eine Sache",
     body: "Ich komme aus der Südost-Steiermark und besuche die HTL Kaindorf. Die meiste Zeit stecke ich in ÖffiGo und Kontobuch. Daneben baue ich kleine Tools für Dinge, die mir beim Arbeiten auffallen.",
-    facts: ["Südost-Steiermark", "Swift · TypeScript · Rust", "macOS · iOS · Web"],
     primaryAction: "Projekte ansehen",
     contactAction: "Kontakt",
+    status: {
+      now: "Gerade dran",
+      nowValue: "ÖffiGo, TestFlight-Beta",
+      push: "Zuletzt gepusht",
+      stack: "Stack",
+      stackValue: "Swift · TypeScript · Rust",
+      clock: "Uhrzeit bei mir",
+    },
   },
   oeffigo: {
     eyebrow: "Mein größtes Projekt",
     detailCta: "ÖffiGo im Detail",
   },
-  projects: {
-    title: "Projekte",
-    highlights: "auswahl",
+  more: {
+    title: "Weitere Arbeiten",
+    catalogue: "Kleine Tools, Experimente und ältere Projekte findest du im Katalog.",
+    catalogueAction: "Alle Projekte",
   },
-  skills: {
-    title: "Womit ich arbeite",
+  stack: {
+    title: "Stack",
+    lead: "Womit ich arbeite und wo man es sieht. Jede Zeile verlinkt ein Projekt, das es verwendet.",
+    proofLabel: "Steckt in",
     groups: [
       {
-        title: "Native und Web",
-        items: ["Swift", "SwiftUI", "AppKit", "TypeScript", "Rust", "Python", "Astro"],
+        title: "iPhone und Mac",
+        items: ["Swift", "SwiftUI", "AppKit", "Menüleisten-Apps", "Bluetooth LE"],
+        proof: ["oeffigo", "briskedit", "macphone", "poise"],
       },
       {
-        title: "Automatisierung",
-        items: ["CLI-Tools", "Browser-Automatisierung", "Dokument-Workflows", "MCP-Server", "Local-first Agent-Tooling"],
+        title: "Web",
+        items: ["TypeScript", "Astro", "Vite", "Vercel", "Cloudflare"],
+        proof: ["kontobuch", "tools", "johannesgrof-me"],
+      },
+      {
+        title: "CLI und Tools",
+        items: ["Rust", "Python", "Node", "Lokale LLMs"],
+        proof: ["agent-presence", "ip-multitool", "patchpilot"],
       },
       {
         title: "Ausliefern",
-        items: ["GitHub-Releases", "DMG-Packaging", "Notarisierung", "Sparkle-Update-Feeds", "GitHub Actions CI", "Static Hosting & Deploys"],
-      },
-    ],
-  },
-  services: {
-    title: "Woran ich gerne arbeite",
-    lead: "Neben meinen eigenen Projekten beschäftige ich mich mit diesen Themen. Wenn du eine Idee oder Frage hast, schreib mir einfach eine E-Mail, dann schauen wir gemeinsam.",
-    items: [
-      {
-        title: "Apps für iPhone und Mac",
-        body: "Native Apps mit Swift und SwiftUI, von der ersten Idee bis zum TestFlight-Build.",
-      },
-      {
-        title: "Web-Projekte",
-        body: "Websites und Web-Apps mit TypeScript und Astro, sauber gebaut und schnell.",
-      },
-      {
-        title: "Tools & Automatisierung",
-        body: "Kleine macOS-Tools, Skripte und Automatisierungen, wenn Standardsoftware nicht ausreicht.",
-      },
-      {
-        title: "Technik & Hardware",
-        body: "Computer, Netzwerke und Elektronik interessieren mich auch abseits vom Code.",
-      },
-    ],
-  },
-  faq: {
-    title: "Häufige Fragen",
-    items: [
-      {
-        q: "Kann ich dich für ein Projekt anfragen?",
-        a: "Schreib mir deine Idee an contact@johannesgrof.me. Ob und wie ich mitmachen kann, klären wir dann gemeinsam.",
-      },
-      {
-        q: "Kann ich deine Apps ausprobieren?",
-        a: "Kontobuch läuft im Browser und hat Desktop-Downloads. ÖffiGo ist in einer geschlossenen TestFlight-Beta; auf der Website kannst du dich auf die Warteliste setzen. Bei den anderen Projekten steht die Verfügbarkeit auf der jeweiligen Seite.",
-      },
-      {
-        q: "Wie erreiche ich dich?",
-        a: "contact@johannesgrof.me oder das Formular unten. LinkedIn und GitHub gehen auch.",
+        items: ["Code-Signing", "Notarisierung", "Sparkle-Updates", "GitHub Actions"],
+        proof: ["briskedit", "bottlelite"],
       },
     ],
   },
@@ -300,6 +259,7 @@ const de: LocaleContent = {
     eyebrow: "kontakt",
     title: "Melde dich.",
     note: "Eine Frage zu einem Projekt, eine Idee oder einfach etwas, das du mir sagen möchtest? Schreib mir hier oder per E-Mail.",
+    elsewhere: "Sonst findest du mich hier",
     form: {
       nameLabel: "Name",
       namePlaceholder: "Dein Name",
@@ -314,6 +274,3 @@ const de: LocaleContent = {
 };
 
 export const siteContentByLocale: Record<Locale, LocaleContent> = { en, de };
-
-// Backward-compatible default (English) for any importer that expects the old shape.
-export const siteContent = en;

@@ -38,7 +38,6 @@ export interface Project {
   };
   de?: ProjectCopy;
   stack: string[];
-  featuredTier: "featured" | "project";
   repo: `jx-grxf/${string}`;
   githubUrl: string;
   releaseUrl: string;
@@ -68,13 +67,13 @@ export interface Project {
 
 export const statusLabel = (status: ProjectStatus) => {
   const labels: Record<ProjectStatus, string> = {
-    active: "active",
-    beta: "beta",
-    experimental: "experimental",
-    preview: "preview",
-    "in development": "in development",
-    "coming soon": "coming soon",
-    archived: "archived",
+    active: "Active",
+    beta: "Beta",
+    experimental: "Experimental",
+    preview: "Preview",
+    "in development": "In development",
+    "coming soon": "Coming soon",
+    archived: "Archived",
   };
 
   return labels[status];
@@ -84,13 +83,13 @@ export type ProjectLang = "en" | "de";
 
 // German status labels for the project badge.
 export const statusLabelDe: Record<ProjectStatus, string> = {
-  active: "aktiv",
-  beta: "beta",
-  experimental: "experimentell",
-  preview: "preview",
+  active: "Aktiv",
+  beta: "Beta",
+  experimental: "Experimentell",
+  preview: "Vorschau",
   "in development": "In Entwicklung",
-  "coming soon": "bald verfügbar",
-  archived: "archiviert",
+  "coming soon": "Bald verfügbar",
+  archived: "Archiviert",
 };
 
 export const localizedStatusLabel = (status: ProjectStatus, lang: ProjectLang) =>
@@ -111,15 +110,6 @@ export const getProjectCopy = (project: Project, lang: ProjectLang): ProjectCopy
     releaseHighlights: project.releaseHighlights,
   };
 };
-
-export interface UpcomingProject {
-  name: string;
-  status: ProjectStatus;
-  description: string;
-  de?: { description: string };
-  stack: string[];
-  visibility: "public" | "private" | "planned";
-}
 
 export interface ProjectSection {
   eyebrow: string;
@@ -166,7 +156,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["Swift", "macOS", "Menu Bar"],
-    featuredTier: "featured",
     repo: "jx-grxf/PortPirate",
     githubUrl: "https://github.com/jx-grxf/PortPirate",
     releaseUrl: "https://github.com/jx-grxf/PortPirate/releases",
@@ -224,7 +213,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["Swift", "SwiftUI", "Wine"],
-    featuredTier: "featured",
     repo: "jx-grxf/BottleLite",
     githubUrl: "https://github.com/jx-grxf/BottleLite",
     releaseUrl: "https://github.com/jx-grxf/BottleLite/releases/tag/v0.2.0",
@@ -288,7 +276,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["Swift", "SwiftUI", "Bluetooth LE"],
-    featuredTier: "featured",
     repo: "jx-grxf/MacPhone",
     githubUrl: "https://github.com/jx-grxf/MacPhone",
     releaseUrl: "https://github.com/jx-grxf/MacPhone/releases/tag/v0.2.1",
@@ -354,7 +341,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["TypeScript", "Discord", "Voice"],
-    featuredTier: "project",
     repo: "jx-grxf/OpenClaw-Discord-Voice",
     githubUrl: "https://github.com/jx-grxf/OpenClaw-Discord-Voice",
     releaseUrl: "https://github.com/jx-grxf/OpenClaw-Discord-Voice",
@@ -406,7 +392,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["TypeScript", "MCP", "HealthKit"],
-    featuredTier: "project",
     repo: "jx-grxf/HealthKit-MCP",
     githubUrl: "https://github.com/jx-grxf/HealthKit-MCP",
     releaseUrl: "https://github.com/jx-grxf/HealthKit-MCP/releases",
@@ -448,7 +433,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["TypeScript", "macOS", "Word"],
-    featuredTier: "project",
     repo: "jx-grxf/DocxToPDF",
     githubUrl: "https://github.com/jx-grxf/DocxToPDF",
     releaseUrl: "https://github.com/jx-grxf/DocxToPDF/releases/tag/v0.1.0",
@@ -507,7 +491,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["TypeScript", "UPnP", "DLNA"],
-    featuredTier: "project",
     repo: "jx-grxf/Caruso-Reborn",
     githubUrl: "https://github.com/jx-grxf/Caruso-Reborn",
     releaseUrl: "https://github.com/jx-grxf/Caruso-Reborn/releases/tag/v0.2.1",
@@ -566,7 +549,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["Python", "CLI", "Networking"],
-    featuredTier: "project",
     repo: "jx-grxf/ip-multitool",
     githubUrl: "https://github.com/jx-grxf/ip-multitool",
     releaseUrl: "https://github.com/jx-grxf/ip-multitool/releases",
@@ -612,8 +594,7 @@ export const featuredProjects: Project[] = [
         "2.0.1 härtet Session-IDs und das Auslesen von DOCX-Dateien.",
       ],
     },
-    stack: ["TypeScript", "Ollama", "Terminal"],
-    featuredTier: "featured",
+    stack: ["TypeScript", "Ink", "Ollama"],
     repo: "jx-grxf/PatchPilot",
     githubUrl: "https://github.com/jx-grxf/PatchPilot",
     releaseUrl: "https://github.com/jx-grxf/PatchPilot/releases/tag/v2.0.1",
@@ -647,16 +628,9 @@ export const featuredProjects: Project[] = [
       "Model discovery across every supported runtime, including a measured context window.",
       "2.0.1 hardens session IDs and DOCX text extraction.",
     ],
-    showcase: [
-      {
-        src: "/projects/patchpilot/hero.webp",
-        fallbackSrc: "/projects/patchpilot/hero.png",
-        alt: "PatchPilot TUI session",
-        fit: "contain",
-        width: 2856,
-        height: 1904,
-      },
-    ],
+    // The 1.x screenshot showed the old cloud providers; 2.0 is local-only, so
+    // the page shows the terminal card until there is a current capture.
+    showcase: [],
     visibility: "public",
   },
   {
@@ -694,7 +668,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["Swift", "macOS", "Sensors"],
-    featuredTier: "project",
     repo: "jx-grxf/SlamX",
     githubUrl: "https://github.com/jx-grxf/SlamX",
     releaseUrl: "https://github.com/jx-grxf/SlamX/releases/tag/v0.3.5",
@@ -777,7 +750,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["Swift", "SwiftUI", "AppKit"],
-    featuredTier: "featured",
     repo: "jx-grxf/BriskEdit",
     githubUrl: "https://github.com/jx-grxf/BriskEdit",
     releaseUrl: "https://github.com/jx-grxf/BriskEdit/releases/tag/v0.6.2",
@@ -853,7 +825,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["TypeScript", "Discord", "Whisper"],
-    featuredTier: "featured",
     repo: "jx-grxf/Hermes-Discord-Voice",
     githubUrl: "https://github.com/jx-grxf/Hermes-Discord-Voice",
     releaseUrl: "https://github.com/jx-grxf/Hermes-Discord-Voice/releases",
@@ -896,7 +867,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["Swift", "macOS", "Menu Bar"],
-    featuredTier: "project",
     repo: "jx-grxf/poise",
     githubUrl: "https://github.com/jx-grxf/poise",
     releaseUrl: "https://github.com/jx-grxf/poise/releases/tag/v0.1.0",
@@ -952,7 +922,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["Swift", "macOS", "Menu Bar"],
-    featuredTier: "project",
     repo: "jx-grxf/claude-swap-bar",
     githubUrl: "https://github.com/jx-grxf/claude-swap-bar",
     releaseUrl: "https://github.com/jx-grxf/claude-swap-bar/releases/tag/v1.1.1",
@@ -1003,7 +972,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["Swift", "macOS", "Menu Bar"],
-    featuredTier: "project",
     repo: "jx-grxf/NotchTray",
     githubUrl: "https://github.com/jx-grxf/NotchTray",
     releaseUrl: "https://github.com/jx-grxf/NotchTray/releases/tag/v1.0.0",
@@ -1053,7 +1021,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["Rust", "Discord", "CLI"],
-    featuredTier: "project",
     repo: "jx-grxf/agent-presence",
     githubUrl: "https://github.com/jx-grxf/agent-presence",
     releaseUrl: "https://github.com/jx-grxf/agent-presence/releases/tag/v0.3.0",
@@ -1121,7 +1088,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["Swift", "AppKit", "Core Animation"],
-    featuredTier: "project",
     repo: "jx-grxf/CCrab",
     githubUrl: "https://github.com/jx-grxf/CCrab",
     releaseUrl: "https://github.com/jx-grxf/CCrab",
@@ -1163,7 +1129,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["TypeScript", "Vite", "pdf-lib"],
-    featuredTier: "project",
     repo: "jx-grxf/tools",
     githubUrl: "https://github.com/jx-grxf/tools",
     releaseUrl: "https://github.com/jx-grxf/tools",
@@ -1182,6 +1147,7 @@ export const featuredProjects: Project[] = [
   {
     name: "johannesgrof.me",
     slug: "johannesgrof-me",
+    logo: { src: "/icon-512.png", alt: "johannesgrof.me icon", width: 512, height: 512 },
     status: "active",
     tagline: "This site: a portfolio that reads its own release data from GitHub.",
     description:
@@ -1205,7 +1171,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["Astro", "TypeScript", "Vercel"],
-    featuredTier: "project",
     repo: "jx-grxf/johannesgrof.me",
     githubUrl: "https://github.com/jx-grxf/johannesgrof.me",
     releaseUrl: "https://github.com/jx-grxf/johannesgrof.me",
@@ -1222,6 +1187,7 @@ export const featuredProjects: Project[] = [
   {
     name: "ÖffiGo Website",
     slug: "oeffigo-website",
+    logo: { src: "/projects/oeffigo/icon.webp", fallbackSrc: "/projects/oeffigo/icon.png", alt: "ÖffiGo app icon", width: 256, height: 256 },
     status: "active",
     tagline: "The product site behind oeffigo.app, with a public data status page.",
     description:
@@ -1245,7 +1211,6 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["Astro", "TypeScript", "Cloudflare"],
-    featuredTier: "project",
     repo: "jx-grxf/oeffigo-website",
     githubUrl: "https://github.com/jx-grxf/oeffigo-website",
     releaseUrl: "https://github.com/jx-grxf/oeffigo-website",
@@ -1262,21 +1227,6 @@ export const featuredProjects: Project[] = [
   },
 ];
 
-// ÖffiGo has its own dedicated launch band on the homepage, so it is
-// intentionally omitted here to avoid showing the project twice.
-export const upcomingProjects: UpcomingProject[] = [
-  {
-    name: "TypeBot",
-    status: "coming soon",
-    description: "A controlled typing automation tool for predictable browser and desktop workflows.",
-    de: {
-      description: "Ein kontrolliertes Tipp-Automationstool für vorhersehbare Browser- und Desktop-Abläufe.",
-    },
-    stack: ["TypeScript", "CLI", "Automation"],
-    visibility: "private",
-  },
-];
-
 export const projectsBySlug = new Map(featuredProjects.map((project) => [project.slug, project]));
 
 const orderedProjects = (slugs: string[]) =>
@@ -1287,8 +1237,7 @@ const orderedProjects = (slugs: string[]) =>
 // appears here OR in a section below, never both.
 export const featuredShowcaseProjects = orderedProjects(["patchpilot", "briskedit", "macphone"]);
 
-export const homepageProjects = orderedProjects(["briskedit", "macphone"]);
-export const homepageSmallProjects = orderedProjects(["poise", "agent-presence", "caruso-reborn"]);
+export const homepageProjects = orderedProjects(["briskedit", "macphone", "patchpilot", "poise", "agent-presence", "caruso-reborn"]);
 
 export const projectSections: ProjectSection[] = [
   {

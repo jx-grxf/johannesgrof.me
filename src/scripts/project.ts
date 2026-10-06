@@ -1,9 +1,21 @@
+// Clipboard API first; where it is blocked, fall back to a hidden textarea and
+// the old copy command, which still works on a user click.
 const copyText = async (text: string) => {
-  if (!navigator.clipboard?.writeText) {
-    throw new Error("Clipboard API is unavailable");
+  try {
+    await navigator.clipboard.writeText(text);
+    return;
+  } catch {
+    const area = document.createElement("textarea");
+    area.value = text;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.opacity = "0";
+    document.body.append(area);
+    area.select();
+    const ok = document.execCommand("copy");
+    area.remove();
+    if (!ok) throw new Error("Copy failed");
   }
-
-  await navigator.clipboard.writeText(text);
 };
 
 document.querySelectorAll<HTMLButtonElement>("[data-install-copy]").forEach((button) => {
@@ -32,6 +44,26 @@ document.querySelectorAll<HTMLButtonElement>("[data-install-copy]").forEach((but
       delete button.dataset.copyState;
       status.textContent = button.dataset.copyLabel ?? "Copy npm command";
     }, 2400);
+  });
+});
+
+// Copy buttons next to the developer-setup commands.
+document.querySelectorAll<HTMLButtonElement>("[data-command-copy]").forEach((button) => {
+  const label = button.textContent ?? "Copy";
+  let resetTimer: number | undefined;
+  button.addEventListener("click", async () => {
+    window.clearTimeout(resetTimer);
+    try {
+      await copyText(button.dataset.commandCopy ?? "");
+      button.textContent = button.dataset.copied ?? "Copied";
+      button.dataset.copyState = "success";
+    } catch {
+      button.dataset.copyState = "error";
+    }
+    resetTimer = window.setTimeout(() => {
+      button.textContent = label;
+      delete button.dataset.copyState;
+    }, 1800);
   });
 });
 

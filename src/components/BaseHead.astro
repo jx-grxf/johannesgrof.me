@@ -70,9 +70,21 @@ const websiteLd = {
   author: { "@id": personId },
   publisher: { "@id": personId },
 };
+
+// A note for anyone who opens view-source.
+const sourceNote = `<!--
+   ____________   ____________   ______________
+  |[] [] [] [] | |[] [] [] [] | |[] [] [] []   \\_
+  |____________|=|____________|=|_______________|
+     o      o       o      o       o          o
+
+  Hi, view-source reader. Built by hand with Astro by Johannes Grof.
+  Press ~ on the page for a terminal. Source: github.com/jx-grxf/johannesgrof.me
+-->`;
 ---
 
 <meta charset="UTF-8" />
+<Fragment set:html={sourceNote} />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="description" content={description} />
 <meta name="author" content="Johannes Grof" />

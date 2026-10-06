@@ -9,6 +9,7 @@ import type { Project, ProjectLang } from "@/data/projects";
 import { adjacentProjects, getProjectCopy, localizedStatusLabel, statusClass } from "@/data/projects";
 import { toCanonicalUrl } from "@/data/siteMetadata";
 import "@/styles/global.css";
+import PixelSprite from "@/components/PixelSprite.astro";
 import { downloadLabel as releaseDownloadLabel, downloadPlatformLabel, downloadSize } from "@/lib/releases";
 
 interface Props {
@@ -73,6 +74,12 @@ const s = isDe
       allProjects: "Alle Projekte",
       langSwitchLabel: "EN",
       langSwitchAria: "View this project page in English",
+      stack: "Stack",
+      copy: "Kopieren",
+      copied: "Kopiert",
+      repoPrivate: "privat",
+      terminalCaption: "Projektdaten, live aus GitHub beim Build",
+      gallery: "Mehr Bilder",
     }
   : {
       projects: "Projects",
@@ -122,6 +129,12 @@ const s = isDe
       allProjects: "All projects",
       langSwitchLabel: "DE",
       langSwitchAria: "Diese Projektseite auf Deutsch ansehen",
+      stack: "Stack",
+      copy: "Copy",
+      copied: "Copied",
+      repoPrivate: "private",
+      terminalCaption: "Project data, read from GitHub at build time",
+      gallery: "More pictures",
     };
 
 const localePrefix = isDe ? "/de" : "";
@@ -139,7 +152,15 @@ const langSwitch = {
   ariaLabel: s.langSwitchAria,
 };
 const { previous, next } = adjacentProjects(project.slug);
-const [heroImage, ...galleryImages] = project.showcase;
+// A still that only exists as a video poster is not shown a second time, and a
+// video goes first: it is the richer version of the same picture.
+const posters = new Set(project.showcase.filter((item) => item.kind === "video").map((item) => item.posterSrc));
+const media = project.showcase
+  .filter((item) => item.kind === "video" || !posters.has(item.src))
+  .sort((a, b) => Number(b.kind === "video") - Number(a.kind === "video"));
+const [heroImage, ...galleryImages] = media;
+const monogram = project.name.replace(/[^A-Za-zÄÖÜäöü]/g, "").slice(0, 2);
+const cloneCommand = github.commands[0]?.command;
 const stableDownloads = github.downloadGroup?.stableDownloads ?? (github.downloadGroup?.stable ? [github.downloadGroup.stable] : []);
 const downloads = [...stableDownloads, ...(github.downloadGroup?.prereleases ?? [])].filter(
   (download): download is ProjectReleaseDownload => Boolean(download)
@@ -167,7 +188,6 @@ const formatDate = (date: string) => {
 };
 
 const releaseVersionLabel = github.metadataState === "live" ? s.latestRelease : isDe ? "Bekannte Version" : "Known version";
-const releaseLinkLabel = github.metadataState === "live" ? s.latestRelease : isDe ? "Release auf GitHub" : "Release on GitHub";
 const platformValue = project.downloadsDisabled ? s.archived : project.platformLabels?.join(" / ") ?? github.language;
 const downloadValue = project.npmPackage
   ? s.npmPackageVal
@@ -197,6 +217,7 @@ const metaItems = [
   { label: s.platform, value: platformValue },
   hidesAvailabilityRow ? undefined : { label: downloadLabel, value: downloadValue },
   github.updatedAt ? { label: s.updated, value: formatDate(github.updatedAt) } : undefined,
+  { label: s.stack, value: project.stack.join(" · ") },
 ].filter((item): item is { label: string; value: string } => Boolean(item));
 // A private or planned repo has no public metadata to fetch, so its fallback is
 // the normal case, not a failed build — saying "GitHub metadata was
@@ -246,14 +267,8 @@ const hreflangAlternates = [
     <main id="main" class="project-detail section-shell">
       <a class="back-link" href={`${localePrefix}/projects/`}>{s.back}</a>
 
-      <section class="project-detail-hero" aria-labelledby="project-title">
-        <div class="project-detail-copy">
-          {project.logo && (
-            <picture>
-              {project.logo.fallbackSrc && <source srcset={project.logo.src} type="image/webp" />}
-              <img class="project-detail-logo" src={project.logo.fallbackSrc ?? project.logo.src} alt="" width={project.logo.width} height={project.logo.height} aria-hidden="true" loading="eager" decoding="async" />
-            </picture>
-          )}
+      <section class="pd-hero" aria-labelledby="project-title">
+        <div class="pd-hero-copy">
           <div class="project-kicker">
             <span class={`status ${statusClass(project.status)}`}>{localizedStatusLabel(project.status, lang)}</span>
             {hasRelease && <span>{github.version}</span>}
@@ -276,7 +291,7 @@ const hreflangAlternates = [
                 <small>{npmInstallCommand}</small>
               </button>
             )}
-            {github.downloadGroup && (
+            {github.downloadGroup && !npmInstallCommand && (
               hasMultipleDownloads ? (
                 <details class="download-menu" data-download-menu>
                   <summary
@@ -326,52 +341,79 @@ const hreflangAlternates = [
               )
             )}
             {isPublicRepo && <a class="button secondary" href={project.githubUrl} target="_blank" rel="noreferrer">{project.downloadsDisabled ? s.githubArchive : s.openSource}</a>}
-            {hasRelease && <a class="button secondary" href={github.releaseUrl} target="_blank" rel="noreferrer">{releaseLinkLabel}</a>}
             {!isPublicRepo && !hasRelease && !github.downloadGroup && !npmInstallCommand && !project.liveUrl && project.status !== "archived" && (
               <p class="actions-note">{s.comingSoonNote}</p>
             )}
           </div>
         </div>
 
-        {/* A region, not an aside: this summarises the project it sits next to,
-            and a complementary landmark nested inside <main> is flagged as a
-            landmark error. */}
-        <section class="project-meta-panel" aria-label={`${project.name} ${isDe ? "im Überblick" : "summary"}`}>
-          <dl class="project-meta-grid">
-            {metaItems.map((item) => (
-              <div>
-                <dt>{item.label}</dt>
-                <dd>{item.value}</dd>
-              </div>
-            ))}
-          </dl>
-          {metadataNote && <p class="metadata-note">{metadataNote}</p>}
-        </section>
+        {/* The app icon on a dot screen, or a monogram when there is none. */}
+        <div class="pd-mark" aria-hidden="true">
+          {project.logo ? (
+            <picture>
+              {project.logo.fallbackSrc && <source srcset={project.logo.src} type="image/webp" />}
+              <img src={project.logo.fallbackSrc ?? project.logo.src} alt="" width={project.logo.width} height={project.logo.height} loading="eager" decoding="async" />
+            </picture>
+          ) : (
+            <span class="pd-monogram">{monogram}</span>
+          )}
+        </div>
       </section>
 
-      {heroImage && (
-        <section class="project-showcase" aria-label={`${project.name} ${isDe ? "in Bildern" : "in pictures"}`}>
-          {isVideoShowcase(heroImage) ? (
-            <video class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.src} poster={heroImage.posterSrc ?? heroImage.fallbackSrc} width={heroImage.width} height={heroImage.height} controls muted playsinline preload="metadata" aria-label={heroImage.alt} data-showcase-video></video>
-          ) : (
-            <picture>
-              {heroImage.fallbackSrc && <source srcset={heroImage.src} type="image/webp" />}
-              <img class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} width={heroImage.width} height={heroImage.height} loading="eager" decoding="async" />
-            </picture>
-          )}
+      {/* The facts as one row of cells, the same device as the status line on
+          the home page. */}
+      <section class="pd-facts-row" aria-label={`${project.name} ${isDe ? "im Überblick" : "summary"}`}>
+        <dl class="pd-facts">
+          {metaItems.map((item) => (
+            <div>
+              <dt>{item.label}</dt>
+              <dd>{item.value}</dd>
+            </div>
+          ))}
+        </dl>
+        {metadataNote && <p class="metadata-note">{metadataNote}</p>}
+      </section>
+
+      {heroImage ? (
+        <section class="pd-media" aria-label={`${project.name} ${isDe ? "in Bildern" : "in pictures"}`}>
+          <div class="pd-window">
+            <div class="pd-window-bar" aria-hidden="true"><span class="tl"></span><span class="tl"></span><span class="tl"></span><strong>{project.name}</strong></div>
+            {isVideoShowcase(heroImage) ? (
+              <video class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.src} poster={heroImage.posterSrc ?? heroImage.fallbackSrc} width={heroImage.width} height={heroImage.height} controls muted playsinline preload="metadata" aria-label={heroImage.alt} data-showcase-video></video>
+            ) : (
+              <picture>
+                {heroImage.fallbackSrc && <source srcset={heroImage.src} type="image/webp" />}
+                <img class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.fallbackSrc ?? heroImage.src} alt={heroImage.alt} width={heroImage.width} height={heroImage.height} loading="eager" decoding="async" />
+              </picture>
+            )}
+          </div>
+        </section>
+      ) : (
+        /* No screenshot yet: show the project as it reads in a terminal, built
+           only from real data, never a mock-up of an interface. */
+        <section class="pd-media" aria-label={`${project.name} ${isDe ? "Projektdaten" : "project data"}`}>
+          <figure class="pd-terminal">
+            <div class="pd-window-bar" aria-hidden="true"><span class="tl"></span><span class="tl"></span><span class="tl"></span><strong>~/projects/{project.slug}</strong></div>
+            <pre><code><span class="pd-prompt">~ $</span> {isPublicRepo ? `gh repo view ${project.repo}` : "cat README.md"}
+<span class="pd-term-name">{project.name}</span>  {c.tagline}
+
+<span class="pd-term-key">status  </span> {localizedStatusLabel(project.status, lang)}{hasRelease ? `\n` : ""}{hasRelease && <span class="pd-term-key">version </span>}{hasRelease && ` ${github.version}`}
+<span class="pd-term-key">stack   </span> {project.stack.join(" · ")}
+<span class="pd-term-key">platform</span> {platformValue}
+<span class="pd-term-key">repo    </span> {isPublicRepo ? project.githubUrl.replace("https://", "") : s.repoPrivate}{cloneCommand && isPublicRepo ? `\n\n` : ""}{cloneCommand && isPublicRepo && <span class="pd-prompt">~ $</span>}{cloneCommand && isPublicRepo && ` ${cloneCommand}`}
+<span class="pd-prompt">~ $</span> <span class="pd-cursor"></span></code></pre>
+            <figcaption>{s.terminalCaption}</figcaption>
+          </figure>
         </section>
       )}
 
-      {/* Two columns, not four. "Result" and "Audience" were restatements of
-          the problem in almost every project — the outcomes that are actually
-          measurable live in the meta panel as numbers instead. */}
-      <section class="case-study-panel" aria-label={`${project.name} ${isDe ? "Hintergrund" : "background"}`}>
+      <section class="pd-case" aria-label={`${project.name} ${isDe ? "Hintergrund" : "background"}`}>
         <article>
-          <span>{s.problem}</span>
+          <h2>{s.problem}</h2>
           <p>{c.caseStudy.problem}</p>
         </article>
         <article>
-          <span>{s.built}</span>
+          <h2>{s.built}</h2>
           <p>{c.caseStudy.built}</p>
         </article>
       </section>
@@ -388,49 +430,54 @@ const hreflangAlternates = [
         </section>
       )}
 
-      <section class="project-detail-grid" aria-label={`${project.name} ${isDe ? "Details" : "details"}`}>
-        {github.commands.length > 0 && (
-          <div class="command-panel">
-            <h2>{s.developerSetup}</h2>
-            {github.commands.map((command) => (
-              <div class="command-block">
-                <span>{command.label}</span>
-                <code>{command.command}</code>
-              </div>
-            ))}
-          </div>
-        )}
-
-        <div class="highlights-panel">
+      <section class="pd-details" aria-label={`${project.name} ${isDe ? "Details" : "details"}`}>
+        <div class="pd-highlights">
           <h2>{s.highlights}</h2>
           <ul>
             {c.highlights.map((highlight) => <li>{highlight}</li>)}
           </ul>
         </div>
+
+        {github.commands.length > 0 && (
+          <div class="pd-setup">
+            <h2>{s.developerSetup}</h2>
+            {github.commands.map((command) => (
+              <div class="command-block">
+                <span>{command.label}</span>
+                <div class="command-line">
+                  <code><span class="pd-prompt" aria-hidden="true">$</span> {command.command}</code>
+                  <button class="command-copy" type="button" data-command-copy={command.command} data-copied={s.copied}>{s.copy}</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       {galleryImages.length > 0 && (
         <section class="showcase-gallery" aria-label={`${project.name} ${isDe ? "Galerie" : "gallery"}`}>
-          {galleryImages.map((image) => (
-            <figure>
-              {isVideoShowcase(image) ? (
-                /* preload="none" below the fold: the BriskEdit promo alone is
-                   881 kB, and it was being fetched on every page load. */
-                <video class={`showcase-image ${image.fit ?? "cover"}`} src={image.src} poster={image.posterSrc ?? image.fallbackSrc} width={image.width} height={image.height} controls muted playsinline preload="none" aria-label={image.alt} data-showcase-video></video>
-              ) : (
-                <picture>
-                  {image.fallbackSrc && <source srcset={image.src} type="image/webp" />}
-                  <img class={`showcase-image ${image.fit ?? "cover"}`} src={image.fallbackSrc ?? image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" />
-                </picture>
-              )}
-            </figure>
-          ))}
+          <h2 class="pd-gallery-title">{s.gallery}</h2>
+          <div class="showcase-gallery-grid">
+            {galleryImages.map((image) => (
+              <figure>
+                {isVideoShowcase(image) ? (
+                  /* preload="none" below the fold: the BriskEdit promo alone is
+                     881 kB, and it was being fetched on every page load. */
+                  <video class={`showcase-image ${image.fit ?? "cover"}`} src={image.src} poster={image.posterSrc ?? image.fallbackSrc} width={image.width} height={image.height} controls muted playsinline preload="none" aria-label={image.alt} data-showcase-video></video>
+                ) : (
+                  <picture>
+                    {image.fallbackSrc && <source srcset={image.src} type="image/webp" />}
+                    <img class={`showcase-image ${image.fit ?? "cover"}`} src={image.fallbackSrc ?? image.src} alt={image.alt} width={image.width} height={image.height} loading="lazy" decoding="async" />
+                  </picture>
+                )}
+              </figure>
+            ))}
+          </div>
         </section>
       )}
 
-      {/* A detail page used to end on a screenshot and nothing else. The reader
-          is now handed the neighbouring projects and a way back into the
-          catalogue instead of a dead end above the footer. */}
+      <div class="pd-track" aria-hidden="true"><span class="pd-track-train"><PixelSprite name="train" /></span></div>
+
       <nav class="project-pager" aria-label={s.pagerLabel}>
         {previous ? (
           <a class="project-pager-link project-pager-link--prev" href={`${localePrefix}/projects/${previous.slug}/`} rel="prev">
