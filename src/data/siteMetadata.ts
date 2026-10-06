@@ -6,11 +6,11 @@ export const canonicalOrigin = "https://johannesgrof.me";
 export const socialCard = {
   en: {
     src: "/og-card.png",
-    alt: "Johannes Grof — software developer in Styria, Austria",
+    alt: "Johannes Grof, software developer in Styria, Austria",
   },
   de: {
     src: "/og-card-de.png",
-    alt: "Johannes Grof — Softwareentwickler aus der Südost-Steiermark",
+    alt: "Johannes Grof, Softwareentwickler aus der Südost-Steiermark",
   },
 } as const;
 

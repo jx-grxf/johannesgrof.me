@@ -25,9 +25,10 @@ export function GET() {
   // Updated when page content or its shared template changes significantly.
   // Daily GitHub metadata rebuilds must not advance this date.
   const contentRevision = "2026-10-04";
+  const homeRevision = "2026-10-06";
   const urls = [
-    { path: "/", alternates: homeAlternates, lastmod: contentRevision },
-    { path: "/de/", alternates: homeAlternates, lastmod: contentRevision },
+    { path: "/", alternates: homeAlternates, lastmod: homeRevision },
+    { path: "/de/", alternates: homeAlternates, lastmod: homeRevision },
     { path: "/oeffigo/", alternates: oeffigoAlternates },
     { path: "/de/oeffigo/", alternates: oeffigoAlternates },
     { path: "/projects/", alternates: catalogueAlternates, lastmod: contentRevision },

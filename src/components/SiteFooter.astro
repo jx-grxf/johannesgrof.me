@@ -1,4 +1,5 @@
 ---
+import PixelSprite from "@/components/PixelSprite.astro";
 import SocialLinks from "@/components/SocialLinks.astro";
 
 // Shared footer. Every page needs it: the Impressum and Datenschutz links have
@@ -9,25 +10,104 @@ interface Props {
 
 const { lang = "de" } = Astro.props;
 const isEn = lang === "en";
+const prefix = isEn ? "" : "/de";
+const home = isEn ? "/" : "/de/";
+
+const columns = [
+  {
+    title: isEn ? "Pages" : "Seiten",
+    links: [
+      { label: isEn ? "Home" : "Startseite", href: home },
+      { label: isEn ? "All projects" : "Alle Projekte", href: `${prefix}/projects/` },
+      { label: "ÖffiGo", href: `${prefix}/oeffigo/` },
+      { label: "Stack", href: `${home}#services` },
+      { label: isEn ? "About" : "Über mich", href: `${home}#about` },
+      { label: isEn ? "Contact" : "Kontakt", href: `${home}#contact` },
+    ],
+  },
+  {
+    title: isEn ? "Projects" : "Projekte",
+    links: [
+      { label: "ÖffiGo", href: "https://oeffigo.app", external: true },
+      { label: "Kontobuch", href: "https://kontobuch.johannesgrof.me/", external: true },
+      { label: "BriskEdit", href: `${prefix}/projects/briskedit/` },
+      { label: "MacPhone", href: `${prefix}/projects/macphone/` },
+      { label: "PatchPilot", href: `${prefix}/projects/patchpilot/` },
+      { label: "Tools", href: "https://tools.johannesgrof.me", external: true },
+    ],
+  },
+  {
+    title: isEn ? "For developers" : "Für Devs",
+    links: [
+      { label: isEn ? "Source code" : "Quelltext", href: "https://github.com/jx-grxf/johannesgrof.me", external: true },
+      { label: "llms.txt", href: "/llms.txt" },
+      { label: "llms-full.txt", href: "/llms-full.txt" },
+      { label: "humans.txt", href: "/humans.txt" },
+      { label: "Sitemap", href: "/sitemap.xml" },
+      { label: "security.txt", href: "/.well-known/security.txt" },
+    ],
+  },
+  {
+    title: isEn ? "Legal" : "Rechtliches",
+    links: [
+      /* Both legal pages are German-only, so the English footer says so up front. */
+      { label: isEn ? "Imprint (DE)" : "Impressum", href: "/impressum/" },
+      { label: isEn ? "Privacy (DE)" : "Datenschutz", href: "/datenschutz/" },
+      { label: isEn ? "Email" : "E-Mail", href: "mailto:contact@johannesgrof.me" },
+    ],
+  },
+];
 ---
 
 <footer class="site-footer">
-  <div class="footer-top">
-    <p class="footer-brand">
-      <strong>Johannes Grof</strong><br />
-      {isEn ? "South-East Styria, Austria" : "Südost-Steiermark, Österreich"}
-    </p>
-    <p class="footer-contact">
-      <a href="mailto:contact@johannesgrof.me">contact@johannesgrof.me</a>
-    </p>
-    <SocialLinks variant="icons" />
-    <p class="footer-links">
-      {/* Both legal pages are German-only, so the English footer says so up front. */}
-      <a href="/impressum/">{isEn ? "Imprint (DE)" : "Impressum"}</a>
-      <a href="/datenschutz/">{isEn ? "Privacy (DE)" : "Datenschutz"}</a>
-    </p>
+  <div class="footer-main">
+    <div class="footer-about">
+      <a class="footer-mark" href={home}><span class="brand-prompt" aria-hidden="true">$</span> Johannes Grof</a>
+      <p>
+        {isEn
+          ? "Apps for iPhone and Mac, a transit app for all of Austria, and the small tools I need along the way."
+          : "Apps für iPhone und Mac, eine Öffi-App für ganz Österreich und die kleinen Tools, die ich dabei brauche."}
+      </p>
+      <p class="footer-place">{isEn ? "HTL Kaindorf · South-East Styria, Austria" : "HTL Kaindorf · Südost-Steiermark, Österreich"}</p>
+      <button class="footer-terminal" type="button" data-terminal-open>
+        <span aria-hidden="true">~ $</span> {isEn ? "open the terminal" : "Terminal öffnen"}
+      </button>
+    </div>
+
+    {
+      columns.map((column) => (
+        <nav class="footer-col" aria-label={column.title}>
+          <p class="footer-col-title">{column.title}</p>
+          <ul>
+            {column.links.map((link) => (
+              <li>
+                <a href={link.href} target={link.external ? "_blank" : undefined} rel={link.external ? "noreferrer" : undefined}>
+                  {link.label}
+                  {link.external && <span class="ext" aria-hidden="true"> ↗</span>}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      ))
+    }
   </div>
+
+  <p class="footer-sources">
+    {isEn
+      ? "Live departures: City of Vienna – data.wien.gv.at (CC BY 4.0). Versions, releases and dates are read from the GitHub API at build time. Screenshots show the real apps."
+      : "Live-Abfahrten: Stadt Wien – data.wien.gv.at (CC BY 4.0). Versionen, Releases und Daten kommen beim Build aus der GitHub-API. Screenshots zeigen die echten Apps."}
+  </p>
+
   <div class="footer-bottom">
-    <p>© {new Date().getFullYear()} Johannes Grof</p>
+    <p class="footer-love">
+      {isEn ? "Built with" : "Gebaut mit"}
+      <span class="footer-heart" role="img" aria-label={isEn ? "love" : "Liebe"}><PixelSprite name="heart" /></span>
+      {isEn ? "by" : "von"} <a href={`${home}#about`}>Johannes</a> {isEn ? "in Kaindorf" : "in Kaindorf"} · © {new Date().getFullYear()} Johannes Grof
+    </p>
+    <SocialLinks variant="icons" class="footer-socials" />
   </div>
+
+  {/* The name once more, set huge on an LED dot screen. Decorative only. */}
+  <p class="footer-wordmark" aria-hidden="true">Johannes Grof</p>
 </footer>

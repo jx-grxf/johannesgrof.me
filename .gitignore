@@ -13,3 +13,6 @@ output/
 .codexignore
 AGENTS.md
 .env*
+.local/
+.commandcode/
+Brain/

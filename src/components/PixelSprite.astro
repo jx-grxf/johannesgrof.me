@@ -1,0 +1,141 @@
+---
+// Small pixel sprites, drawn from text grids so they stay crisp at any size.
+// Each character is one pixel; "." is transparent. Colours are theme tokens,
+// so a sprite follows the paper stock like everything else.
+interface Props {
+  name: keyof typeof sprites;
+  class?: string;
+  title?: string;
+}
+
+const palette: Record<string, string> = {
+  K: "var(--ink)",
+  S: "var(--paper)",
+  R: "var(--signal)",
+  B: "#3456e0",
+  Y: "#ffcc4d",
+  O: "#e0832a",
+  o: "#b8621a",
+  G: "#5b8c32",
+  L: "#a8e22a",
+  l: "#7fae16",
+  W: "#ece8dc",
+  w: "#bdb8aa",
+  D: "#2a2722",
+  g: "#1f3b1a",
+  F: "#fff6c8",
+};
+
+// The train front faces right, because it drives left to right.
+const car = (body: string, shade: string, front = false) => [
+  `.${body.repeat(front ? 22 : 24)}${front ? "...." : "."}`,
+  `${body.repeat(front ? 24 : 26)}${front ? ".." : ""}`,
+  `${body}${body}${"YYY".concat(body).repeat(5)}${front ? `${body}${body}${body}YY${body}.` : `${body}${body}${body}${body}`}`,
+  `${body}${body}${"YYY".concat(body).repeat(5)}${front ? `${body}${body}${body}YYY${body}` : `${body}${body}${body}${body}`}`,
+  `${body.repeat(front ? 27 : 26)}${front ? "Y" : ""}`,
+  `${shade.repeat(front ? 28 : 26)}`,
+  `.DD....DD.......DD....DD.${front ? "..." : "."}`,
+];
+
+const sprites = {
+  terminal: [
+    "RRRRRRRRRRRR",
+    "RSRSRSRRRRRR",
+    "RRRRRRRRRRRR",
+    "KKKKKKKKKKKK",
+    "KKSKKKKKKKKK",
+    "KKKSKKKKKKKK",
+    "KKSKKCCKKKKK",
+    "KKKKKKKKKKKK",
+  ],
+  mac: [
+    "KKKKKKKKKKKK",
+    "KBBBBBBBBBBK",
+    "KBYYBBBBBBBK",
+    "KBBBBBBBBBBK",
+    "KBBBBBBBBBBK",
+    "KBBBBBBBBBBK",
+    "KKKKKKKKKKKK",
+    ".....KK.....",
+    "...KKKKKK...",
+  ],
+  happymac: [
+    "KKKKKKKKKKKK",
+    "KWWWWWWWWWWK",
+    "KWWDWWWWDWWK",
+    "KWWWWWDWWWWK",
+    "KWWDWWWWDWWK",
+    "KWWWDDDDWWWK",
+    "KKKKKKKKKKKK",
+    ".....KK.....",
+    "...KKKKKK...",
+  ],
+  oil: [
+    "...DD...",
+    "...gg...",
+    "...gg...",
+    "..gggg..",
+    ".gggggg.",
+    ".gYYYYg.",
+    ".gYOOYg.",
+    ".gYYYYg.",
+    ".gggggg.",
+    ".gggggg.",
+  ],
+  star: [".F.", "FFF", ".F."],
+  heart: [".RR.RR.", "RRRRRRR", "RRRRRRR", ".RRRRR.", "..RRR..", "...R..."],
+  buffer: [
+    "RRWWRRWWRR",
+    "RRWWRRWWRR",
+    "..DD..DD..",
+    "..DD..DD..",
+    ".DDDDDDDD.",
+    "DDDDDDDDDD",
+  ],
+  pumpkin: [
+    "....G....",
+    "...GG....",
+    ".OOOOOOO.",
+    "OOOoOOoOO",
+    "OOOoOOoOO",
+    "OOOoOOoOO",
+    ".OOOOOOO.",
+  ],
+  train: (() => {
+    const cars = [car("W", "w"), car("W", "w"), car("L", "l", true)];
+    return cars[0].map((_, row) => cars.map((c) => c[row]).join("."));
+  })(),
+} as const;
+
+const { name, class: className, title } = Astro.props;
+const grid = sprites[name] as readonly string[];
+const width = Math.max(...grid.map((row) => row.length));
+const height = grid.length;
+
+// Merge horizontal runs of the same colour into one rect to keep the markup small.
+const rects: { x: number; y: number; w: number; fill: string; blink: boolean }[] = [];
+grid.forEach((row, y) => {
+  let x = 0;
+  while (x < row.length) {
+    const ch = row[x];
+    let run = 1;
+    while (row[x + run] === ch) run++;
+    if (ch === "C") rects.push({ x, y, w: run, fill: palette.R, blink: true });
+    else if (ch !== "." && palette[ch]) rects.push({ x, y, w: run, fill: palette[ch], blink: false });
+    x += run;
+  }
+});
+---
+
+<svg
+  class:list={["pixel-sprite", className]}
+  viewBox={`0 0 ${width} ${height}`}
+  width={width}
+  height={height}
+  shape-rendering="crispEdges"
+  role={title ? "img" : undefined}
+  aria-hidden={title ? undefined : "true"}
+  aria-label={title}
+>
+  {rects.map((r) => <rect x={r.x} y={r.y} width={r.w} height="1" style={`fill:${r.fill}`} class={r.blink ? "pixel-blink" : undefined} />)}
+</svg>
