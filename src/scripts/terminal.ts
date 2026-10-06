@@ -108,8 +108,8 @@ function neofetch() {
   const browser = /Firefox\//.test(ua) ? "Firefox" : /Edg\//.test(ua) ? "Edge" : /Chrome\//.test(ua) ? "Chrome" : /Safari\//.test(ua) ? "Safari" : "?";
   const logo = ["+---------+", "| >       |", "|  >      |", "| >  __   |", "|         |", "+---------+", "", "", "", "", ""];
   const info: [string, string][] = [
-    ["", "johannes@kaindorf"],
-    ["", "-----------------"],
+    ["", "johannes@johannesgrof.me"],
+    ["", "------------------------"],
     ["Site", "johannesgrof.me (Astro)"],
     ["Host", "Vercel"],
     [t("Ort", "Location"), t("Südost-Steiermark", "south-east Styria")],
@@ -118,7 +118,7 @@ function neofetch() {
     [t("Projekte", "Projects"), String(data.projects.length + 2)],
     ["Theme", theme],
     ["Browser", `${browser}, ${window.innerWidth}×${window.innerHeight}`],
-    [t("Uhrzeit", "Time"), `${time} Kaindorf`],
+    [t("Uhrzeit", "Time"), `${time} Europe/Vienna`],
   ];
   info.forEach(([key, value], i) => {
     const row = line(`${(logo[i] ?? "").padEnd(13)}`, i < 6 ? "error" : undefined);
@@ -246,7 +246,7 @@ function run(raw: string) {
       linkLine("github.com/jx-grxf/johannesgrof.me", links.source);
       break;
     case "date":
-      line(new Intl.DateTimeFormat(de ? "de-AT" : "en-GB", { dateStyle: "full", timeStyle: "short", timeZone: "Europe/Vienna" }).format(new Date()) + " (Kaindorf)");
+      line(new Intl.DateTimeFormat(de ? "de-AT" : "en-GB", { dateStyle: "full", timeStyle: "short", timeZone: "Europe/Vienna" }).format(new Date()));
       break;
     case "echo":
       line(arg);
@@ -292,7 +292,7 @@ function build() {
     lights.append(light);
   }
   const title = document.createElement("span");
-  title.textContent = "johannes@kaindorf: ~";
+  title.textContent = "johannes@johannesgrof.me: ~";
   const left = document.createElement("span");
   left.className = "term-title";
   left.append(lights, title);

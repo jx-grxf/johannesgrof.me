@@ -3430,9 +3430,14 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   background: radial-gradient(circle, var(--rule-2) 1px, transparent 1.5px) 0 0 / 9px 9px;
 }
 
-.pd-mark img {
+.pd-mark picture {
   display: block;
   width: 56%;
+}
+
+.pd-mark img {
+  display: block;
+  width: 100%;
   height: auto;
   border-radius: 23%;
   transition: transform 260ms var(--smooth);
