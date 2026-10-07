@@ -187,7 +187,7 @@ const profileSchema = {
             <div><dt>{content.hero.status.push}</dt><dd><a href={`${localePrefix}/projects/${latestPush.project.slug}/`}>{latestPush.project.name}</a> <span class="hero-status-meta">{latestPushDate}</span></dd></div>
           )}
           <div><dt>{content.hero.status.stack}</dt><dd><a href="#services">{content.hero.status.stackValue}</a></dd></div>
-          <div class="hero-status-clock" data-clock hidden><dt>{content.hero.status.clock}</dt><dd><time data-clock-time></time> <span class="hero-status-meta">Kaindorf</span></dd></div>
+          <div class="hero-status-clock" data-clock hidden><dt>{content.hero.status.clock}</dt><dd><time data-clock-time></time> <span class="hero-status-meta">{isDe ? "Steiermark" : "Styria"}</span></dd></div>
         </dl>
       </div>
 
