@@ -45,6 +45,8 @@ export interface Project {
   liveUrl?: string;
   fallbackVersion: string;
   npmPackage?: string;
+  /** One-line install command shown as a copy button, e.g. a curl installer. */
+  installCommand?: string;
   downloadsDisabled?: boolean;
   platformLabels?: string[];
   fallbackDownload?: {
@@ -364,6 +366,86 @@ export const featuredProjects: Project[] = [
       },
     ],
     visibility: "private",
+  },
+  {
+    name: "dirhop",
+    slug: "dirhop",
+    status: "beta",
+    logo: {
+      src: "/projects/dirhop/logo.webp",
+      fallbackSrc: "/projects/dirhop/logo.png",
+      alt: "dirhop icon",
+      fit: "contain",
+      width: 256,
+      height: 256,
+    },
+    tagline: "Jump to any folder from the terminal in a few keystrokes.",
+    description:
+      "A fuzzy folder picker for the terminal, written in Rust. It searches every folder in your home directory while you type, ranks your projects and the places you visit most at the top, and drops you there with Enter. You choose the command name and the shortcut in a small settings screen, and it keeps itself up to date from GitHub releases.",
+    caseStudy: {
+      problem: "Getting into a project meant tabbing through four or five folders every time, and jump tools like zoxide only know folders you have already visited.",
+      built: "A parallel directory walk built on the ignore crate (the one ripgrep uses) streams folders into the UI in batches, so results show up before the scan is done. The Helix editor's nucleo matcher scores every keystroke, plus a bonus for git repos, project folders and frecency. The UI draws on stderr and prints the chosen path on stdout, so a small zsh, bash or fish function can cd into it.",
+    },
+    de: {
+      tagline: "Mit ein paar Tastendrücken in jeden Ordner springen, direkt im Terminal.",
+      description:
+        "Ein Fuzzy-Ordnerwähler fürs Terminal, in Rust geschrieben. Er durchsucht beim Tippen jeden Ordner im Home-Verzeichnis, reiht deine Projekte und die meistbesuchten Orte nach oben und bringt dich mit Enter hin. Befehlsname und Tastenkürzel stellst du in einem kleinen Einstellungsbildschirm ein, Updates holt er sich selbst aus den GitHub-Releases.",
+      caseStudy: {
+        problem: "Um in ein Projekt zu kommen, musste ich mich jedes Mal durch vier, fünf Ordner tabben, und Sprung-Tools wie zoxide kennen nur Ordner, in denen man schon war.",
+        built: "Ein paralleler Verzeichnis-Scan auf Basis des ignore-Crates (das auch ripgrep nutzt) schickt Ordner stapelweise an die Oberfläche, Ergebnisse erscheinen also schon vor Ende des Scans. Der nucleo-Matcher aus dem Helix-Editor bewertet jeden Tastendruck, dazu kommt ein Bonus für Git-Repos, Projektordner und häufig besuchte Orte. Die Oberfläche zeichnet auf stderr und gibt den gewählten Pfad auf stdout aus, damit eine kleine zsh-, bash- oder fish-Funktion hineinwechseln kann.",
+      },
+      highlights: [
+        "Durchsucht rund 10.000 Ordner in unter 100 ms, die Liste füllt sich schon beim Tippen.",
+        "Git-Repos, Projektordner und oft besuchte Orte stehen oben, die zoxide-Historie zählt mit.",
+        "Vorschau mit Git-Branch, erkannter Sprache und Ordnerinhalt; Strg-E öffnet im Editor, Strg-O im Finder.",
+        "Eigener Befehlsname und eigenes Tastenkürzel, Installation mit einem Befehl, Updates mit SHA-256-Prüfung.",
+      ],
+    },
+    stack: ["Rust", "ratatui", "nucleo"],
+    repo: "jx-grxf/dirhop",
+    githubUrl: "https://github.com/jx-grxf/dirhop",
+    releaseUrl: "https://github.com/jx-grxf/dirhop/releases/latest",
+    installCommand: "curl -fsSL https://raw.githubusercontent.com/jx-grxf/dirhop/main/install.sh | sh",
+    fallbackVersion: "v0.1.1",
+    platformLabels: ["macOS", "Linux"],
+    highlights: [
+      "Searches around 10,000 folders in under 100 ms, with results filling in while you type.",
+      "Git repos, project folders and the places you visit most rank first; zoxide history counts too.",
+      "Preview with git branch, detected language and folder contents; Ctrl-E opens your editor, Ctrl-O opens Finder.",
+      "Your own command name and shortcut, a one-line install, and self-updates checked against SHA-256.",
+    ],
+    showcase: [
+      {
+        src: "/projects/dirhop/dirhop-demo.mp4",
+        kind: "video",
+        posterSrc: "/projects/dirhop/showcase.webp",
+        fallbackSrc: "/projects/dirhop/showcase.png",
+        alt: "dirhop demo: typing hop, searching for wea and jumping into the weather-app project",
+        altDe: "dirhop-Demo: hop tippen, nach wea suchen und ins Projekt weather-app springen",
+        fit: "contain",
+        width: 1280,
+        height: 720,
+      },
+      {
+        src: "/projects/dirhop/showcase.webp",
+        fallbackSrc: "/projects/dirhop/showcase.png",
+        alt: "dirhop picker with ranked folder matches and a preview showing the git branch and language",
+        altDe: "dirhop-Auswahl mit gereihten Ordner-Treffern und einer Vorschau mit Git-Branch und Sprache",
+        fit: "contain",
+        width: 1280,
+        height: 720,
+      },
+      {
+        src: "/projects/dirhop/settings.webp",
+        fallbackSrc: "/projects/dirhop/settings.png",
+        alt: "dirhop settings screen with command name, shortcut, folders, editor and automatic updates",
+        altDe: "dirhop-Einstellungen mit Befehlsname, Tastenkürzel, Ordnern, Editor und automatischen Updates",
+        fit: "contain",
+        width: 1280,
+        height: 720,
+      },
+    ],
+    visibility: "public",
   },
   {
     name: "HealthKit-MCP",
@@ -1256,7 +1338,7 @@ export const projectSections: ProjectSection[] = [
       eyebrow: "agents & tools",
       title: "Agent- und Entwickler-Tools",
     },
-    projects: orderedProjects(["healthkit-mcp", "agent-presence", "hermes-discord-voice", "openclaw-discord-voice"]),
+    projects: orderedProjects(["dirhop", "healthkit-mcp", "agent-presence", "hermes-discord-voice", "openclaw-discord-voice"]),
   },
   {
     eyebrow: "more",
