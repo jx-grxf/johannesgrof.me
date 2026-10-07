@@ -45,6 +45,7 @@ const s = isDe
       releaseAssets: (n: number) => `${n} Release-Assets`,
       archived: "Archiviert",
       installNpm: "npm-Befehl kopieren",
+      installCommand: "Install-Befehl kopieren",
       installNpmCopied: "Kopiert",
       installNpmError: "Kopieren fehlgeschlagen",
       openSource: "Quelltext öffnen",
@@ -100,6 +101,7 @@ const s = isDe
       releaseAssets: (n: number) => `${n} release assets`,
       archived: "Archived",
       installNpm: "Copy npm command",
+      installCommand: "Copy install command",
       installNpmCopied: "Copied",
       installNpmError: "Copy failed",
       openSource: "Open source",
@@ -167,7 +169,8 @@ const downloads = [...stableDownloads, ...(github.downloadGroup?.prereleases ?? 
 );
 const hasMultipleDownloads = downloads.length > 1;
 const downloadMenuId = `${project.slug}-download-menu`;
-const npmInstallCommand = project.npmPackage ? `npm install -g ${project.npmPackage}` : undefined;
+const installCommand = project.installCommand ?? (project.npmPackage ? `npm install -g ${project.npmPackage}` : undefined);
+const installLabel = project.installCommand ? s.installCommand : s.installNpm;
 const downloadActionLabel = project.npmPackage ? s.packageArchive : s.download;
 const downloadButtonDetail = [...new Set(downloads.map(download => download.kind))]
   .map(kind => ({ macos: "macOS", windows: "Windows", linux: "Linux", archive: isDe ? "Paket" : "Package" })[kind]).join(" · ");
@@ -277,21 +280,21 @@ const hreflangAlternates = [
           <p class="project-tagline">{c.tagline}</p>
           <p class="project-description">{c.description}</p>
           <div class="project-actions">
-            {npmInstallCommand && (
+            {installCommand && (
               <button
                 class="button install-button"
                 type="button"
                 data-install-copy
-                data-copy-command={npmInstallCommand}
-                data-copy-label={s.installNpm}
+                data-copy-command={installCommand}
+                data-copy-label={installLabel}
                 data-copy-success={s.installNpmCopied}
                 data-copy-error={s.installNpmError}
               >
-                <span aria-live="polite" data-copy-status>{s.installNpm}</span>
-                <small>{npmInstallCommand}</small>
+                <span aria-live="polite" data-copy-status>{installLabel}</span>
+                <small>{installCommand}</small>
               </button>
             )}
-            {github.downloadGroup && !npmInstallCommand && (
+            {github.downloadGroup && !installCommand && (
               hasMultipleDownloads ? (
                 <details class="download-menu" data-download-menu>
                   <summary
@@ -341,7 +344,7 @@ const hreflangAlternates = [
               )
             )}
             {isPublicRepo && <a class="button secondary" href={project.githubUrl} target="_blank" rel="noreferrer">{project.downloadsDisabled ? s.githubArchive : s.openSource}</a>}
-            {!isPublicRepo && !hasRelease && !github.downloadGroup && !npmInstallCommand && !project.liveUrl && project.status !== "archived" && (
+            {!isPublicRepo && !hasRelease && !github.downloadGroup && !installCommand && !project.liveUrl && project.status !== "archived" && (
               <p class="actions-note">{s.comingSoonNote}</p>
             )}
           </div>
