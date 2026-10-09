@@ -66,6 +66,9 @@ function initContactForm(form: HTMLFormElement) {
   let renderedTheme = theme;
   const widgetSize = () => widget.clientWidth < 300 ? "compact" as const : "flexible" as const;
   let renderedSize = widgetSize();
+  // Blockers can keep Turnstile from ever calling back, which would leave the
+  // form stuck on "checking" with no hint that email still works.
+  let slowTimer: number | undefined;
 
   const updateButton = () => { submit.disabled = sending || !token; };
   const showStatus = (state: ContactStatus) => {
@@ -75,6 +78,7 @@ function initContactForm(form: HTMLFormElement) {
     body.textContent = copy.statuses[state].body;
   };
   const verificationFailed = (expired = false) => {
+    window.clearTimeout(slowTimer);
     token = "";
     verification.dataset.state = "error";
     verificationStatus.textContent = expired ? copy.verifyExpired : copy.verifyFailed;
@@ -88,6 +92,13 @@ function initContactForm(form: HTMLFormElement) {
     verificationStatus.textContent = copy.checking;
     retry.hidden = true;
     updateButton();
+    window.clearTimeout(slowTimer);
+    slowTimer = window.setTimeout(() => {
+      if (token || verification.dataset.state !== "checking") return;
+      verification.dataset.state = "slow";
+      verificationStatus.textContent = copy.verifySlow;
+      retry.hidden = false;
+    }, 8_000);
   };
   const renderWidget = () => {
     clearVerification();
@@ -100,6 +111,7 @@ function initContactForm(form: HTMLFormElement) {
       language: lang,
       size: renderedSize,
       callback: (value) => {
+        window.clearTimeout(slowTimer);
         token = value;
         verification.dataset.state = "verified";
         verificationStatus.textContent = copy.verified;
