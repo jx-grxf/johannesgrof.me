@@ -971,7 +971,7 @@ body::after {
 /* Verification and delivery share one quiet, bordered surface. */
 .contact-verification {
   min-width: 0;
-  padding: 18px;
+  padding: 14px 16px;
   border: 1px solid var(--rule-2);
   background: var(--paper-2);
 }
@@ -980,7 +980,7 @@ body::after {
   display: flex;
   align-items: center;
   gap: 9px;
-  margin-bottom: 16px;
+  margin-bottom: 10px;
 }
 
 .verification-heading h3 {
@@ -1009,7 +1009,7 @@ body::after {
 }
 
 .verification-status {
-  margin: 12px 0 0;
+  margin: 8px 0 0;
   color: var(--mute);
   font-size: 0.8rem;
   line-height: 1.5;
@@ -1019,7 +1019,8 @@ body::after {
   background: var(--signal);
 }
 
-.contact-verification[data-state="error"] {
+.contact-verification[data-state="error"],
+.contact-verification[data-state="slow"] {
   border-color: var(--signal);
 }
 
@@ -2379,10 +2380,15 @@ html[lang="de"] .error-page [data-error-lang="en"] {
     transform: translateY(-2px);
   }
 }
+/* Four cells still fit "Über mich" on one line at 360px; Stack is the one
+   that gives way. */
 @media (max-width: 560px) {
-  .site-nav > a[href="#oeffigo"],
   .site-nav > a[href="#services"] {
     display: none;
+  }
+
+  .site-nav a {
+    padding: 0 4px;
   }
 }
 
@@ -3335,7 +3341,8 @@ html[lang="de"] .error-page [data-error-lang="en"] {
 .led-ticker > span {
   display: inline-block;
   padding-left: 100%;
-  animation: led-tick 22s linear infinite;
+  /* Starts mid-run so the reason is already on the board at load. */
+  animation: led-tick 22s linear -6s infinite;
 }
 
 @keyframes led-tick {
@@ -3831,9 +3838,12 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   container-type: inline-size;
 }
 
-.footer-wordmark {
+/* Needs .site-footer in the selector: `.site-footer p { margin: 0 }` would
+   otherwise win, and the glyphs, taller than the 0.9 line box, would cover
+   the social icons above. */
+.site-footer .footer-wordmark {
   --dot-color: var(--rule-2);
-  margin: clamp(28px, 4vw, 48px) 0 calc(-0.2em - 40px);
+  margin: calc(clamp(28px, 4vw, 48px) + 0.12em) 0 calc(-0.2em - 40px);
   font-family: var(--font-display);
   font-size: 14.85cqi;
   font-weight: 800;
@@ -3848,7 +3858,7 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   transition: --dot-color 500ms ease;
 }
 
-.footer-wordmark:hover {
+.site-footer .footer-wordmark:hover {
   --dot-color: var(--signal);
 }
 
@@ -3857,7 +3867,7 @@ html[lang="de"] .error-page [data-error-lang="en"] {
 }
 
 @media (max-width: 560px) {
-  .footer-wordmark {
+  .site-footer .footer-wordmark {
     background-size: 4px 4px;
     background-image: radial-gradient(circle, var(--dot-color) 1.1px, transparent 1.5px);
   }
@@ -4171,5 +4181,62 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   .dep-row,
   .dep-eta--now {
     animation: none;
+  }
+}
+
+/* Touch targets on phones: at least 44px. Controls grow their box; underlined
+   text links keep their look and get a larger invisible hit area instead, so
+   the underline stays tight under the text. */
+@media (max-width: 860px) {
+  .dep-stops button {
+    min-height: 44px;
+  }
+
+  .footer-socials a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .footer-col a,
+  .footer-mark,
+  .footer-terminal {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .footer-col ul {
+    gap: 0;
+  }
+
+  .stack-proof a,
+  .contact-email-alternative,
+  .product-footnote a,
+  .dep-note a,
+  .contact-privacy-note a,
+  .contact-section .text-link {
+    position: relative;
+  }
+
+  .stack-proof a::after,
+  .contact-email-alternative::after,
+  .product-footnote a::after,
+  .dep-note a::after,
+  .contact-privacy-note a::after,
+  .contact-section .text-link::after {
+    content: "";
+    position: absolute;
+    inset: -14px -6px;
+  }
+}
+
+/* Stacked under the credit line, the icons' 44px boxes would indent them;
+   pull the first glyph back onto the text edge. */
+@media (max-width: 560px) {
+  .footer-socials {
+    margin-left: -14px;
   }
 }
