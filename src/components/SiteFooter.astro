@@ -23,6 +23,8 @@ const columns = [
       { label: "Stack", href: `${home}#services` },
       { label: isEn ? "About" : "Über mich", href: `${home}#about` },
       { label: isEn ? "Contact" : "Kontakt", href: `${home}#contact` },
+      { label: isEn ? "What I use" : "Womit ich arbeite", href: `${prefix}/uses/` },
+      { label: isEn ? "In your terminal" : "Im Terminal", href: `${prefix}/hi/` },
     ],
   },
   {
@@ -40,7 +42,6 @@ const columns = [
     title: isEn ? "For developers" : "Für Devs",
     links: [
       { label: "curl …/hi", href: isEn ? "/hi/" : "/de/hi/" },
-      { label: isEn ? "What I use" : "Womit ich arbeite", href: isEn ? "/uses/" : "/de/uses/" },
       { label: isEn ? "Source code" : "Quelltext", href: "https://github.com/jx-grxf/johannesgrof.me", external: true },
       { label: "llms.txt", href: "/llms.txt" },
       { label: "llms-full.txt", href: "/llms-full.txt" },

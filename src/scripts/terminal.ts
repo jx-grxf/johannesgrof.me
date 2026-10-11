@@ -180,12 +180,6 @@ async function runPing(raw = "") {
     : 0;
   line(`rtt min/avg/max/mdev = ${Math.min(...times).toFixed(1)}/${avg.toFixed(1)}/${Math.max(...times).toFixed(1)}/${mdev.toFixed(1)} ms`);
   line(`jitter ${formatMs(jitter)}`, "dim");
-  const verdict = avg < 40
-    ? t("Schneller als die U1 zwischen zwei Stationen.", "Faster than the U1 between two stations.")
-    : avg < 120
-      ? t("Passt scho.", "Good enough.")
-      : t("Klingt nach Zugverbindung im Semmering-Tunnel.", "Sounds like train Wi-Fi in a mountain tunnel.");
-  line(verdict, "dim");
 }
 
 async function runStatus() {
@@ -273,7 +267,7 @@ async function runCallTrain() {
     onToken: (token) => {
       line(t("Tipp das in dein echtes Terminal:", "Type this into your real terminal:"));
       line(`curl -X POST https://${hiBase}/zug/${token}`, "accent");
-      line(t("Ich warte hier. Der Code gilt zehn Minuten, und der Zug fährt nur bei dir.", "I'll wait here. The code works for ten minutes, and the train only comes to you."), "dim");
+      line(t("Ich warte hier. Der Code gilt zehn Minuten.", "I'll wait here. The code works for ten minutes."), "dim");
     },
     onRing: () => line(t("Zug kommt!", "Train incoming!"), "accent"),
     onExpire: () => line(t("Der Code ist abgelaufen. zug holt einen neuen.", "The code expired. call gets a new one."), "dim"),
@@ -314,7 +308,6 @@ async function runTrace() {
 
 const fortunes = de
   ? [
-      "„Passt scho.“ (jedes Code-Review in der Steiermark)",
       "Bei mir am Mac geht's.",
       "Der Zug hat Verspätung. Der Build hoffentlich nicht.",
       "Wer git push --force sagt, muss auch git reflog sagen.",
@@ -323,7 +316,6 @@ const fortunes = de
       "Ein Feature ist ein Bug, den jemand dokumentiert hat.",
     ]
   : [
-      "\"Passt scho.\" (every code review in Styria)",
       "Works on my Mac.",
       "The train is late. Hopefully the build isn't.",
       "Whoever says git push --force must also say git reflog.",

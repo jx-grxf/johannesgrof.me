@@ -1,5 +1,5 @@
-// What I work with, for /uses. Read off the machine on 2026-10-11; keep it to
-// things I actually use for development, and update it when the setup changes.
+// What I work with, for /uses. Read off the machine on 2026-10-11; only tools
+// used for development, plain notes, update when the setup changes.
 
 type Text = { en: string; de: string };
 
@@ -21,36 +21,36 @@ export const usesGroups: UsesGroup[] = [
   {
     title: { en: "Hardware", de: "Hardware" },
     items: [
-      { name: "MacBook Pro, Apple M5 Pro", note: { en: "15 cores (5 super, 10 performance), 24 GB. Everything runs on it, local models included.", de: "15 Kerne (5 Super, 10 Performance), 24 GB. Darauf läuft alles, auch lokale Modelle." } },
-      { name: "macOS 27", note: { en: "Always the current version, because my apps have to run on it.", de: "Immer die aktuelle Version, weil meine Apps darauf laufen müssen." } },
+      { name: "MacBook Pro, Apple M5 Pro", note: { en: "Work machine.", de: "Arbeitsrechner." } },
+      { name: "macOS 27", note: { en: "Current release.", de: "Aktuelle Version." } },
     ],
   },
   {
     title: { en: "Terminal", de: "Terminal" },
     items: [
-      { name: "Ghostty", note: { en: "Cascadia Code at 14 pt. Fast, native, no fuss.", de: "Cascadia Code in 14 pt. Schnell, nativ, ohne Theater." } },
+      { name: "Ghostty", note: { en: "With Cascadia Code.", de: "Mit Cascadia Code." } },
       { name: "zsh", note: { en: "With fzf, eza, bat, fd and ripgrep.", de: "Mit fzf, eza, bat, fd und ripgrep." } },
-      { name: "dirhop", note: { en: "My own: jump to any folder in a few keystrokes.", de: "Selbst gebaut: in ein paar Tasten in jeden Ordner springen." }, href: "/projects/dirhop/" },
-      { name: "RTK", note: { en: "Shrinks shell output before it reaches a coding agent.", de: "Kürzt Shell-Ausgaben, bevor sie bei einem Coding-Agent landen." } },
+      { name: "dirhop", note: { en: "Built by me. Jumps to any folder in a few keystrokes.", de: "Selbst gebaut. Springt mit ein paar Tasten in jeden Ordner." }, href: "/projects/dirhop/" },
+      { name: "RTK", note: { en: "Shortens shell output for coding agents.", de: "Kürzt Shell-Ausgaben für Coding-Agents." } },
     ],
   },
   {
     title: { en: "Coding agents", de: "Coding-Agents" },
     items: [
-      { name: "Claude Code", note: { en: "My main agent, in the terminal next to the editor.", de: "Mein Haupt-Agent, im Terminal neben dem Editor." } },
-      { name: "Codex", note: { en: "Second opinion, reviews and longer jobs; CodexBar shows the usage.", de: "Zweite Meinung, Reviews und längere Aufgaben; CodexBar zeigt den Verbrauch." } },
-      { name: "OpenCode", note: { en: "Mechanical work goes to cheaper models, I review what comes back.", de: "Mechanische Arbeit geht an günstigere Modelle, ich prüfe, was zurückkommt." } },
-      { name: "claude-swap-bar", note: { en: "My own: switch Claude Code accounts from the menu bar.", de: "Selbst gebaut: Claude-Code-Accounts aus der Menüleiste wechseln." }, href: "/projects/claude-swap-bar/" },
-      { name: "agent-presence", note: { en: "My own: Discord shows what the agent is working on.", de: "Selbst gebaut: Discord zeigt, woran der Agent gerade arbeitet." }, href: "/projects/agent-presence/" },
-      { name: "Wispr Flow", note: { en: "Dictation instead of typing.", de: "Diktieren statt tippen." } },
+      { name: "Claude Code", note: { en: "Main agent, in the terminal.", de: "Haupt-Agent, im Terminal." } },
+      { name: "Codex", note: { en: "Reviews and longer tasks. CodexBar shows the usage.", de: "Reviews und längere Aufgaben. Den Verbrauch zeigt CodexBar." } },
+      { name: "OpenCode", note: { en: "Mechanical tasks with cheaper models.", de: "Mechanische Aufgaben mit günstigeren Modellen." } },
+      { name: "claude-swap-bar", note: { en: "Built by me. Switches Claude Code accounts in the menu bar.", de: "Selbst gebaut. Wechselt Claude-Code-Accounts in der Menüleiste." }, href: "/projects/claude-swap-bar/" },
+      { name: "agent-presence", note: { en: "Built by me. Shows in Discord what the agent is working on.", de: "Selbst gebaut. Zeigt in Discord, woran der Agent arbeitet." }, href: "/projects/agent-presence/" },
+      { name: "Wispr Flow", note: { en: "Dictation.", de: "Diktieren." } },
     ],
   },
   {
     title: { en: "Editors and IDEs", de: "Editoren und IDEs" },
     items: [
-      { name: "Xcode", note: { en: "Everything Swift: ÖffiGo, the Mac apps, the Watch app.", de: "Alles mit Swift: ÖffiGo, die Mac-Apps, die Watch-App." } },
+      { name: "Xcode", note: { en: "Everything in Swift: ÖffiGo, the Mac apps, the Watch app.", de: "Alles in Swift: ÖffiGo, die Mac-Apps, die Watch-App." } },
       { name: "Visual Studio Code Insiders", note: { en: "Web projects like this site.", de: "Web-Projekte wie diese Seite." } },
-      { name: "BriskEdit", note: { en: "My own: quick edits and Markdown with a terminal right there.", de: "Selbst gebaut: schnelle Änderungen und Markdown, mit Terminal daneben." }, href: "/projects/briskedit/" },
+      { name: "BriskEdit", note: { en: "Built by me. Markdown and short edits, with a terminal.", de: "Selbst gebaut. Markdown und kurze Änderungen, mit Terminal." }, href: "/projects/briskedit/" },
       { name: "IntelliJ IDEA, Android Studio", note: { en: "Java and Android.", de: "Java und Android." } },
     ],
   },
@@ -58,48 +58,48 @@ export const usesGroups: UsesGroup[] = [
     title: { en: "Languages and runtimes", de: "Sprachen und Laufzeiten" },
     items: [
       { name: "Swift 6.4", note: { en: "SwiftUI and AppKit for iPhone, Watch and Mac.", de: "SwiftUI und AppKit für iPhone, Watch und Mac." } },
-      { name: "TypeScript", note: { en: "Node 26, Bun and pnpm; Astro for sites.", de: "Node 26, Bun und pnpm; Astro für Websites." } },
-      { name: "Rust", note: { en: "Small, fast CLIs that ship as one binary.", de: "Kleine, schnelle CLIs, die als ein Binary ausgeliefert werden." } },
+      { name: "TypeScript", note: { en: "Node, Bun and pnpm; Astro for websites.", de: "Node, Bun und pnpm, Astro für Websites." } },
+      { name: "Rust", note: { en: "CLIs that ship as one binary.", de: "CLIs, die als ein Binary kommen." } },
       { name: "Python", note: { en: "With uv, for scripts and network tools.", de: "Mit uv, für Skripte und Netzwerk-Tools." } },
     ],
   },
   {
     title: { en: "Shipping", de: "Ausliefern" },
     items: [
-      { name: "GitHub and GitHub Actions", note: { en: "Every project, every release, CI on every pull request.", de: "Jedes Projekt, jedes Release, CI bei jedem Pull Request." } },
-      { name: "Vercel", note: { en: "This site, in Frankfurt, with Upstash Redis and Resend behind it.", de: "Diese Seite, in Frankfurt, mit Upstash Redis und Resend dahinter." } },
-      { name: "Cloudflare", note: { en: "DNS, and oeffigo.app with its status page.", de: "DNS, und oeffigo.app samt Status-Seite." } },
-      { name: "Railway", note: { en: "Backends that need a long-running server.", de: "Backends, die einen dauerhaft laufenden Server brauchen." } },
+      { name: "GitHub and GitHub Actions", note: { en: "Code, releases and CI.", de: "Code, Releases und CI." } },
+      { name: "Vercel", note: { en: "Hosts this site, with Upstash Redis and Resend.", de: "Hostet diese Seite, mit Upstash Redis und Resend." } },
+      { name: "Cloudflare", note: { en: "DNS and oeffigo.app.", de: "DNS und oeffigo.app." } },
+      { name: "Railway", note: { en: "Backends that need a running server.", de: "Backends mit dauerhaft laufendem Server." } },
       { name: "TestFlight", note: { en: "The ÖffiGo beta.", de: "Die ÖffiGo-Beta." } },
-      { name: "OrbStack", note: { en: "Docker and Linux machines on the Mac.", de: "Docker und Linux-Maschinen am Mac." } },
+      { name: "OrbStack", note: { en: "Docker and Linux VMs.", de: "Docker und Linux-VMs." } },
     ],
   },
   {
     title: { en: "Debugging and APIs", de: "Debugging und APIs" },
     items: [
-      { name: "Proxyman", note: { en: "Watching what an app really sends.", de: "Sehen, was eine App wirklich schickt." } },
-      { name: "Yaak, Postman", note: { en: "Trying APIs before writing code against them.", de: "APIs ausprobieren, bevor ich Code dagegen schreibe." } },
-      { name: "Tailscale", note: { en: "Reaching my own machines from anywhere.", de: "Meine eigenen Geräte von überall erreichen." } },
-      { name: "Ghidra", note: { en: "For when there is no documentation.", de: "Für den Fall, dass es keine Doku gibt." } },
+      { name: "Proxyman", note: { en: "Reading the network traffic of apps.", de: "Netzwerkverkehr von Apps mitlesen." } },
+      { name: "Yaak, Postman", note: { en: "Testing APIs.", de: "APIs testen." } },
+      { name: "Tailscale", note: { en: "Access to my devices from anywhere.", de: "Zugriff auf meine Geräte von unterwegs." } },
+      { name: "Ghidra", note: { en: "Reverse engineering.", de: "Reverse Engineering." } },
     ],
   },
   {
     title: { en: "On the Mac", de: "Am Mac" },
     items: [
-      { name: "Raycast", note: { en: "Launcher, snippets, clipboard history.", de: "Launcher, Snippets, Zwischenablage-Verlauf." } },
-      { name: "Rectangle, Ice, Stats", note: { en: "Windows on shortcuts, a tidy menu bar, the load at a glance.", de: "Fenster per Tastenkürzel, aufgeräumte Menüleiste, Auslastung auf einen Blick." } },
-      { name: "Shottr, Screen Studio", note: { en: "Screenshots and the videos for project pages.", de: "Screenshots und die Videos für Projektseiten." } },
-      { name: "Karabiner-Elements", note: { en: "A few custom key mappings.", de: "Ein paar eigene Tastenbelegungen." } },
-      { name: "NotchTray, poise", note: { en: "My own menu bar apps, in daily use.", de: "Meine eigenen Menüleisten-Apps, jeden Tag im Einsatz." }, href: "/projects/notchtray/" },
+      { name: "Raycast", note: { en: "Launcher, snippets, clipboard.", de: "Launcher, Snippets, Zwischenablage." } },
+      { name: "Rectangle, Ice, Stats", note: { en: "Window shortcuts, menu bar order, system load.", de: "Fenster per Tastenkürzel, Menüleiste ordnen, Systemauslastung." } },
+      { name: "Shottr, Screen Studio", note: { en: "Screenshots and videos for the project pages.", de: "Screenshots und Videos für die Projektseiten." } },
+      { name: "Karabiner-Elements", note: { en: "Custom key mappings.", de: "Eigene Tastenbelegungen." } },
+      { name: "NotchTray, poise", note: { en: "Built by me. Menu bar apps.", de: "Selbst gebaut. Menüleisten-Apps." }, href: "/projects/notchtray/" },
     ],
   },
   {
     title: { en: "Notes and design", de: "Notizen und Design" },
     items: [
-      { name: "Obsidian", note: { en: "One vault per bigger project, where decisions and pitfalls are written down.", de: "Ein Vault pro größerem Projekt, mit Entscheidungen und Fallen." } },
+      { name: "Obsidian", note: { en: "One vault per bigger project.", de: "Ein Vault pro größerem Projekt." } },
       { name: "Notion", note: { en: "Planning.", de: "Planung." } },
       { name: "SF Symbols, Affinity, Illustrator", note: { en: "Icons and app graphics.", de: "Icons und App-Grafiken." } },
-      { name: "Blender, DaVinci Resolve", note: { en: "Now and then for 3D and video.", de: "Ab und zu für 3D und Video." } },
+      { name: "Blender, DaVinci Resolve", note: { en: "3D and video.", de: "3D und Video." } },
     ],
   },
 ];
