@@ -15,8 +15,8 @@ console.log(`%c${train}`, "color:#a8e22a;font-family:monospace;font-size:11px;li
 console.log(
   `%c$ johannes grof%c\n${
     de
-      ? "Du schaust in die Konsole, also bist du hier richtig.\nDrück ~ (am Mac Option+N) oder tipp einfach „terminal“, dann geht eins auf.\nQuelltext: https://github.com/jx-grxf/johannesgrof.me"
-      : "You opened the console, so you are in the right place.\nPress ~ (Option+N on a German Mac) or just type \"terminal\" and one opens.\nSource: https://github.com/jx-grxf/johannesgrof.me"
+      ? "Du schaust in die Konsole, also bist du hier richtig.\nDrück ~ (am Mac Option+N) oder tipp einfach „terminal“, dann geht eins auf.\nIm echten Terminal: curl -sL johannesgrof.me/de/hi\nQuelltext: https://github.com/jx-grxf/johannesgrof.me"
+      : "You opened the console, so you are in the right place.\nPress ~ (Option+N on a German Mac) or just type \"terminal\" and one opens.\nIn a real terminal: curl -sL johannesgrof.me/hi\nSource: https://github.com/jx-grxf/johannesgrof.me"
   }`,
   "color:#ff6a4d;font-family:monospace;font-weight:700;font-size:13px",
   "color:inherit;font-family:monospace;font-size:12px;line-height:1.6",
@@ -65,6 +65,8 @@ document.addEventListener("keydown", (event) => {
     }
   }
 });
+
+document.querySelectorAll<HTMLElement>("[data-print-cv]").forEach((button) => button.addEventListener("click", () => window.print()));
 
 document.querySelectorAll<HTMLElement>("[data-terminal-open]").forEach((button) => {
   button.addEventListener("click", openLazily);

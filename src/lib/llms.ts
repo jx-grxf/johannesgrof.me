@@ -60,6 +60,7 @@ ${contact}
 ## Optional
 
 - [Full project texts](${toCanonicalUrl("/llms-full.txt")}): every project with its description, problem, implementation and highlights.
+- [Terminal card](${toCanonicalUrl("/hi/")}): \`curl -sL johannesgrof.me/hi\` prints a plain-text card with the projects and live Vienna departures. Every other URL answers curl with normal HTML.
 - [Sitemap](${toCanonicalUrl("/sitemap.xml")})
 `;
 }

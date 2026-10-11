@@ -9,7 +9,7 @@
   X: https://x.com/johannesgrofdev
 
 /* SITE */
-  Last update: 2026-10-06
+  Last update: 2026-10-11
   Languages: English, German (Austria)
   Standards: HTML, CSS, TypeScript
   Built with: Astro, hosted on Vercel, DNS at Cloudflare
@@ -25,4 +25,5 @@
 /* COLOPHON */
   The train on the home page is 83 pixels long and drawn from text.
   Somewhere on this site there is a terminal. The little screen
-  in the headline knows where.
+  in the headline knows where. Your own terminal works too:
+    curl -sL johannesgrof.me/hi

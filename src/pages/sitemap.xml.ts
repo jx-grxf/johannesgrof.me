@@ -21,6 +21,11 @@ const oeffigoAlternates = `
     <xhtml:link rel="alternate" hreflang="de-AT" href="${toCanonicalUrl("/de/oeffigo/")}" />
     <xhtml:link rel="alternate" hreflang="x-default" href="${toCanonicalUrl("/oeffigo/")}" />`;
 
+const hiAlternates = `
+    <xhtml:link rel="alternate" hreflang="en" href="${toCanonicalUrl("/hi/")}" />
+    <xhtml:link rel="alternate" hreflang="de-AT" href="${toCanonicalUrl("/de/hi/")}" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${toCanonicalUrl("/hi/")}" />`;
+
 export function GET() {
   // Updated when page content or its shared template changes significantly.
   // Daily GitHub metadata rebuilds must not advance this date.
@@ -31,6 +36,8 @@ export function GET() {
     { path: "/de/", alternates: homeAlternates, lastmod: homeRevision },
     { path: "/oeffigo/", alternates: oeffigoAlternates },
     { path: "/de/oeffigo/", alternates: oeffigoAlternates },
+    { path: "/hi/", alternates: hiAlternates, lastmod: "2026-10-11" },
+    { path: "/de/hi/", alternates: hiAlternates, lastmod: "2026-10-11" },
     { path: "/projects/", alternates: catalogueAlternates, lastmod: contentRevision },
     { path: "/de/projects/", alternates: catalogueAlternates, lastmod: contentRevision },
     ...publicProjects.flatMap((project) => [
