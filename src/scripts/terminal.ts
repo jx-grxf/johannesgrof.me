@@ -329,6 +329,8 @@ function run(raw: string) {
       line(`  ping [-c n]      ${t("Latenz, Verlust und Jitter zum Server", "latency, loss and jitter to the server")}`);
       line(`  status           ${t("Verbindung im Detail: Edge, Protokoll, Timings", "connection details: edge, protocol, timings")}`);
       line(`  traceroute       ${t("Weg bis zum Server", "path to the server")}`);
+      line(`  curl             ${t("die Seite im echten Terminal", "this site in a real terminal")}`);
+      line(`  cv               ${t("einseitiger Lebenslauf zum Drucken", "one-page CV to print")}`);
       line(`  train            ${t("ruft den Zug", "calls the train")}`);
       line(`  theme light|dark ${t("Papier wechseln", "switch the paper")}`);
       line("  clear, exit");
@@ -423,6 +425,12 @@ function run(raw: string) {
     case "coffee":
     case "kaffee":
       line("418 I'm a teapot", "accent");
+      break;
+    case "cv":
+    case "lebenslauf":
+    case "lpr":
+      line(t("Schicke den Lebenslauf an den Drucker …", "Sending the CV to the printer …"), "dim");
+      window.setTimeout(() => window.print(), 300);
       break;
     case "curl":
     case "wget":
@@ -550,6 +558,7 @@ function build() {
 
   line(t("Servus. Das hier ist ein kleines Terminal für die Seite.", "Hi. This is a small terminal for the site."), "accent");
   line(t("Tipp help für alle Befehle.", "Type help for the commands."), "dim");
+  line(t("Im echten Terminal: curl -sL johannesgrof.me/de/hi", "In a real terminal: curl -sL johannesgrof.me/hi"), "dim");
 }
 
 export function openTerminal() {

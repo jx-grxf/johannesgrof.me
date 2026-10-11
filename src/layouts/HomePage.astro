@@ -14,6 +14,7 @@ import { kontobuch } from "@/data/kontobuch";
 import type { LocaleContent } from "@/data/siteContent";
 import { personSameAs, toCanonicalUrl } from "@/data/siteMetadata";
 import ContributionGrid from "@/components/ContributionGrid.astro";
+import PrintCv from "@/components/PrintCv.astro";
 import { getContributionGrid } from "@/data/contributions";
 import "@/styles/global.css";
 import SpeedInsights from "@vercel/speed-insights/astro";
@@ -138,6 +139,7 @@ const profileSchema = {
     <script type="application/ld+json" is:inline set:html={JSON.stringify(kontobuchSchema)} />
   </head>
   <body>
+    <PrintCv content={content} lang={lang} grid={contributionGrid} />
     <SiteHeader ariaLabel={isDe ? "Hauptnavigation" : "Primary navigation"} navItems={content.nav} homeHref={canonicalPath} langSwitch={content.langSwitch} lang={isDe ? "de" : "en"} />
 
     <main id="main">
@@ -312,7 +314,10 @@ const profileSchema = {
           <p class="eyebrow">{content.about.eyebrow}</p>
           <h2 id="about-title">{content.about.title}</h2>
         </div>
-        <p>{content.about.body}</p>
+        <div>
+          <p>{content.about.body}</p>
+          <button class="text-link print-cv-trigger" type="button" data-print-cv>{isDe ? "Als Lebenslauf drucken" : "Print as a CV"}</button>
+        </div>
       </section>
 
       <section id="contact" class="band section-shell contact-section" aria-labelledby="contact-title">

@@ -1,0 +1,102 @@
+---
+// Only visible on paper: Cmd+P on the home page prints this one-page CV
+// instead of the screen layout. Everything comes from the same data as the
+// site, so the two never disagree.
+import { kontobuch } from "@/data/kontobuch";
+import { oeffigo } from "@/data/oeffigo";
+import { getProjectCopy, homepageProjects, localizedStatusLabel } from "@/data/projects";
+import type { LocaleContent } from "@/data/siteContent";
+import { author } from "@/data/siteMetadata";
+import type { ContributionGrid } from "@/lib/contributions";
+
+interface Props {
+  content: LocaleContent;
+  lang: "en" | "de";
+  grid: ContributionGrid | null;
+}
+
+const { content, lang, grid } = Astro.props;
+const de = lang === "de";
+const locale = de ? "de-AT" : "en-GB";
+const number = (value: number) => new Intl.NumberFormat(locale).format(value);
+const asOf = new Intl.DateTimeFormat(locale, { day: "numeric", month: "long", year: "numeric", timeZone: "Europe/Vienna" }).format(new Date());
+const short = (url: string) => url.replace(/^https:\/\/(www\.)?/, "").replace(/\/$/, "");
+---
+
+<article class="print-cv" lang={de ? "de-AT" : "en"}>
+  <header class="cv-head">
+    <div>
+      <h1>{author.name}</h1>
+      <p>{de ? "Entwickler und HTL-Schüler · HTL Kaindorf · Südost-Steiermark, Österreich" : "Developer and HTL student · HTL Kaindorf · South-east Styria, Austria"}</p>
+    </div>
+    <ul>
+      <li>{author.email}</li>
+      <li>johannesgrof.me</li>
+      <li>github.com/jx-grxf</li>
+      <li>linkedin.com/in/johannes-grof</li>
+    </ul>
+  </header>
+
+  <section>
+    <h2>{de ? "Kurz" : "In short"}</h2>
+    <p>{content.about.body}</p>
+  </section>
+
+  <section>
+    <h2>{de ? "Hauptprojekte" : "Main projects"}</h2>
+    <dl>
+      <dt>ÖffiGo <span>{short(oeffigo.websiteUrl)}</span></dt>
+      <dd>{oeffigo.tagline[lang]} {oeffigo.platform[lang]} <em>{oeffigo.status[lang]}</em></dd>
+      <dt>Kontobuch <span>{short(kontobuch.websiteUrl)}</span></dt>
+      <dd>{kontobuch.description[lang]} <em>{kontobuch.availability[lang]}</em></dd>
+    </dl>
+  </section>
+
+  <section>
+    <h2>{de ? "Weitere Arbeiten" : "More work"}</h2>
+    <dl>
+      {
+        homepageProjects.map((project) => (
+          <>
+            <dt>
+              {project.name} <span>{project.repo}</span>
+            </dt>
+            <dd>
+              {getProjectCopy(project, lang).tagline} <em>{project.stack.join(", ")} · {localizedStatusLabel(project.status, lang)}</em>
+            </dd>
+          </>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section class="cv-stack">
+    <h2>Stack</h2>
+    <ul>
+      {
+        content.stack.groups.map((group) => (
+          <li>
+            <strong>{group.title}:</strong> {group.items.join(", ")}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  {
+    grid && (
+      <section>
+        <h2>GitHub</h2>
+        <p>
+          {de
+            ? `${number(grid.total)} Beiträge in den letzten zwölf Monaten, an ${number(grid.activeDays)} Tagen; längste Serie ${grid.longestStreak} Tage.`
+            : `${number(grid.total)} contributions in the last twelve months, on ${number(grid.activeDays)} days; longest streak ${grid.longestStreak} days.`}
+        </p>
+      </section>
+    )
+  }
+
+  <footer class="cv-foot">
+    {de ? `Stand vom ${asOf}. Die aktuelle Fassung steht immer auf johannesgrof.me/de/.` : `As of ${asOf}. The current version always lives at johannesgrof.me.`}
+  </footer>
+</article>

@@ -73,6 +73,9 @@ const columns = [
       <button class="footer-terminal" type="button" data-terminal-open>
         <span aria-hidden="true">~ $</span> {isEn ? "open the terminal" : "Terminal öffnen"}
       </button>
+      <a class="footer-curl" href={isEn ? "/hi/" : "/de/hi/"}>
+        <span aria-hidden="true">$</span> curl -sL johannesgrof.me{isEn ? "" : "/de"}/hi
+      </a>
     </div>
 
     {
