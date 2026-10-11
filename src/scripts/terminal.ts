@@ -35,7 +35,7 @@ const links: Record<string, string> = {
   source: "https://github.com/jx-grxf/johannesgrof.me",
 };
 
-const commands = ["help", "ls", "open", "stack", "about", "contact", "ping", "status", "traceroute", "who", "zug", "call", "guestbook", "gaestebuch", "curl", "cv", "train", "theme", "clear", "exit"];
+const commands = ["help", "ls", "open", "stack", "about", "contact", "ping", "status", "traceroute", "who", "uses", "zug", "call", "guestbook", "gaestebuch", "curl", "cv", "train", "theme", "clear", "exit"];
 
 let root: HTMLElement | undefined;
 let output: HTMLElement;
@@ -383,6 +383,7 @@ function run(raw: string) {
       line(`  curl             ${t("die Seite im echten Terminal", "this site in a real terminal")}`);
       line(`  cv               ${t("einseitiger Lebenslauf zum Drucken", "one-page CV to print")}`);
       line(`  who              ${t("wer gerade auf der Seite ist", "who is on the site right now")}`);
+      line(`  uses             ${t("womit ich arbeite, das ganze Setup", "my whole setup")}`);
       line(`  ${t("zug             ", "call            ")} ${t("Zug per curl aus deinem Terminal rufen", "call the train with curl from your terminal")}`);
       line(`  ${t("gästebuch       ", "guestbook       ")} ${t("Einträge lesen und per curl unterschreiben", "read entries and sign with curl")}`);
       line(`  train            ${t("ruft den Zug", "calls the train")}`);
@@ -479,6 +480,11 @@ function run(raw: string) {
     case "coffee":
     case "kaffee":
       line("418 I'm a teapot", "accent");
+      break;
+    case "uses":
+      line(t("MacBook Pro M5 Pro · Ghostty · Claude Code · Codex · Xcode · VS Code", "MacBook Pro M5 Pro · Ghostty · Claude Code · Codex · Xcode · VS Code"), "accent");
+      line(t("Die ganze Liste:", "The whole list:"), "dim");
+      linkLine(`${data.prefix}/uses/`, `${data.prefix}/uses/`);
       break;
     case "cv":
     case "lebenslauf":

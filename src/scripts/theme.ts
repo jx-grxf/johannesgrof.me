@@ -1,5 +1,7 @@
 // Paper stock switch. The stock itself is applied before first paint by the
-// inline script in BaseHead; this only handles the toggle and the store.
+// inline script in BaseHead; this handles the toggle, the store, and turning
+// the page at sunrise or sunset for readers who never chose a stock.
+import { isViennaDaylight } from "@/lib/sun";
 
 type Theme = "dark" | "light";
 
@@ -34,6 +36,21 @@ const applyTheme = (theme: Theme) => {
 // The markup ships the dark-stock labels; correct them if the reader is on the
 // light one before they can reach for the control.
 applyTheme(currentTheme());
+
+const hasStoredChoice = () => {
+  try {
+    const stored = window.localStorage.getItem(STORAGE_KEY);
+    return stored === "light" || stored === "dark";
+  } catch {
+    return false;
+  }
+};
+
+window.setInterval(() => {
+  if (hasStoredChoice()) return;
+  const bySun: Theme = isViennaDaylight(new Date()) ? "light" : "dark";
+  if (bySun !== currentTheme()) applyTheme(bySun);
+}, 60_000);
 
 document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]").forEach((toggle) => {
   toggle.addEventListener("click", () => {

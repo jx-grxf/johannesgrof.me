@@ -2,6 +2,7 @@
 import { author, canonicalOrigin, personSameAs, socialCard, toCanonicalUrl } from "@/data/siteMetadata";
 import geistLatin from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url";
 import geistMonoLatin from "@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url";
+import { isViennaDaylight } from "@/lib/sun";
 
 interface HreflangAlternate {
   hreflang: string;
@@ -94,23 +95,21 @@ const sourceNote = `<!--
 {/* Preload the self-hosted Latin fonts used by the headline and navigation. */}
 <link rel="preload" href={geistLatin} as="font" type="font/woff2" crossorigin />
 <link rel="preload" href={geistMonoLatin} as="font" type="font/woff2" crossorigin />
-{/* Runs before the first paint, so a reader who chose the light stock never
-    sees the dark one flash first. No stored choice means dark. */}
-<script is:inline>
+{/* Runs before the first paint, so a reader never sees the other stock flash
+    first. A stored choice wins; without one the paper follows the sun in
+    Vienna: light by day, dark after sunset. */}
+<script is:inline set:html={`
+  const isViennaDaylight = ${isViennaDaylight.toString()};
+  let stored = null;
   try {
-    const stored = localStorage.getItem("theme");
-
-    if (stored === "light" || stored === "dark") {
-      document.documentElement.dataset.theme = stored;
-
-      if (stored === "light") {
-        document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#f4f2ed");
-      }
-    }
-  } catch {
-    /* Storage blocked — the default stock is already correct. */
+    stored = localStorage.getItem("theme");
+  } catch {}
+  const theme = stored === "light" || stored === "dark" ? stored : isViennaDaylight(new Date()) ? "light" : "dark";
+  if (theme === "light") {
+    document.documentElement.dataset.theme = "light";
+    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#f4f2ed");
   }
-</script>
+`} />
 {noindex && <meta name="robots" content="noindex" />}
 <title>{title}</title>
 {!noindex && <link rel="canonical" href={canonicalUrl} />}
