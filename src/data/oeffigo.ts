@@ -3,8 +3,9 @@
 //
 // Status discipline: this must never claim more than the product does. Keep it
 // in sync with oeffigo-website/src/data/strings.ts, which is checked against
-// the app itself. As of 2026-09-16: iPhone and Apple Watch only, Android paused,
-// sign-up is a waitlist, and the three time labels are Live, Echtzeit, Fahrplan.
+// the app itself. As of 2026-10-11: iPhone and Apple Watch only, Android paused,
+// sign-up is a beta-place request, and the times carry Echtzeit or Fahrplan. ÖffiGo's
+// own Live estimate is in development there, so it may only appear as "later".
 
 export interface OeffigoFeature {
   /** Inline SVG path data (24x24 viewBox) for the feature glyph. */
@@ -24,8 +25,11 @@ export interface OeffigoContent {
   appStoreUrl: string | null;
   /** Canonical product site — the cross-link to oeffigo.app for SEO + users. */
   websiteUrl: string;
-  liveUrl: string;
+  liveUrl: { en: string; de: string };
   statusUrl: string;
+  /** The "Das neue ÖffiGo" page for the current beta build. */
+  newUrl: { en: string; de: string };
+  betaUrl: { en: string; de: string };
   icon: string;
   /** Screens from the current build, copied from oeffigo-website/public/shots. */
   shots: { src: string; alt: { en: string; de: string }; caption: { en: string; de: string } }[];
@@ -44,6 +48,7 @@ export interface OeffigoContent {
     body: { en: string; de: string };
     note: { en: string; de: string };
     ctaLabel: { en: string; de: string };
+    newLabel: { en: string; de: string };
   };
 }
 
@@ -62,12 +67,12 @@ export const oeffigo: OeffigoContent = {
   name: "ÖffiGo",
   eyebrow: { en: "closed beta · iPhone and Apple Watch", de: "geschlossene Beta · iPhone und Apple Watch" },
   tagline: {
-    en: "Transit, without the guesswork.",
-    de: "Öffi fahren, ohne zu raten.",
+    en: "The transit app for all of Austria.",
+    de: "Die Öffi-App für ganz Österreich.",
   },
   lead: {
-    en: "A public-transport app for all of Austria: departures, routes and step-by-step guidance, on the iPhone, the Apple Watch and the lock screen. Every time says where it came from, and when a transfer gets tight, ÖffiGo already has a plan B. No ads, no account.",
-    de: "Eine Öffi-App für ganz Österreich: Abfahrten, Routen und Zielführung, am iPhone, an der Apple Watch und am Sperrbildschirm. Jede Zeit sagt, woher sie kommt, und wenn ein Umstieg knapp wird, hat ÖffiGo schon einen Plan B. Ohne Werbung, ohne Konto.",
+    en: "Routes, departures and step-by-step guidance for bus, train and tram, from village to city, on the iPhone, the Apple Watch and the lock screen. Every time shows whether it comes from the operator or the timetable, and when a connection gets tight, ÖffiGo already has a plan B. No ads, no account.",
+    de: "Verbindungen, Abfahrten und Zielführung für Bus, Bahn und Bim, vom Dorf bis in die Stadt, am iPhone, an der Apple Watch und am Sperrbildschirm. Bei jeder Zeit steht, ob sie vom Verkehrsbetrieb kommt oder aus dem Fahrplan, und wird ein Anschluss knapp, hat ÖffiGo schon einen Plan B. Ohne Werbung, ohne Konto.",
   },
   platform: { en: "iPhone (iOS 17+) and Apple Watch. Android is paused for now.", de: "iPhone (ab iOS 17) und Apple Watch. Android ist derzeit pausiert." },
   status: { en: "closed TestFlight beta, not released yet", de: "geschlossene TestFlight-Beta, noch nicht veröffentlicht" },
@@ -77,8 +82,10 @@ export const oeffigo: OeffigoContent = {
   },
   appStoreUrl: null,
   websiteUrl: "https://oeffigo.app",
-  liveUrl: "https://oeffigo.app/history",
-  statusUrl: "https://oeffigo.app/status",
+  liveUrl: { en: "https://oeffigo.app/en/puenktlichkeit/", de: "https://oeffigo.app/puenktlichkeit/" },
+  statusUrl: "https://status.oeffigo.app/",
+  newUrl: { en: "https://oeffigo.app/en/neu/", de: "https://oeffigo.app/neu/" },
+  betaUrl: { en: "https://oeffigo.app/en/#beta", de: "https://oeffigo.app/#beta" },
   icon: "/projects/oeffigo/icon.webp",
   shots: [
     {
@@ -92,18 +99,18 @@ export const oeffigo: OeffigoContent = {
     {
       src: "/projects/oeffigo/app-departures.webp",
       alt: {
-        en: "ÖffiGo departures at Wien Karlsplatz. The U1 shows its own live reading next to the operator's display.",
-        de: "ÖffiGo Abfahrten am Wiener Karlsplatz. Die U1 zeigt die eigene Live-Zeit neben der Anzeige des Betreibers.",
+        en: "ÖffiGo departures at Wien Karlsplatz: U1, U2 and U4 with platform and minutes until departure.",
+        de: "ÖffiGo Abfahrten am Wiener Karlsplatz: U1, U2 und U4 mit Steig und Minuten bis zur Abfahrt.",
       },
       caption: { en: "Departures", de: "Abfahrten" },
     },
     {
       src: "/projects/oeffigo/app-live.webp",
       alt: {
-        en: "ÖffiGo at Wien Karlsplatz: the U2 with a live reading of two minutes late while the operator still shows it on time.",
-        de: "ÖffiGo am Karlsplatz: die U2 mit eigener Live-Messung plus zwei Minuten, während der Betreiber noch pünktlich anzeigt.",
+        en: "ÖffiGo Today near Wien Karlsplatz: the next U4, U1 and U2, with the nearby map below.",
+        de: "ÖffiGo Heute beim Wiener Karlsplatz: die nächste U4, U1 und U2, darunter die Umgebungskarte.",
       },
-      caption: { en: "Live next to the display", de: "Live neben der Anzeige" },
+      caption: { en: "Near you", de: "In der Nähe" },
     },
     {
       src: "/projects/oeffigo/app-welcome.webp",
@@ -120,15 +127,15 @@ export const oeffigo: OeffigoContent = {
   },
   liveProof: {
     eyebrow: { en: "where the time comes from", de: "woher die zeit kommt" },
-    title: { en: "Every time shows where it came from.", de: "Jede Zeit zeigt, woher sie kommt." },
+    title: { en: "Every time says where it comes from.", de: "Jede Zeit sagt, woher sie kommt." },
     body: {
-      en: "Some times are reported, some are calculated, some are only scheduled. The row on the board tells you which one you are reading, and ÖffiGo's own estimate never replaces the operator's.",
-      de: "Manche Zeiten sind gemeldet, manche gerechnet, manche nur geplant. Welche du gerade liest, steht an der Zeile, und die eigene Schätzung ersetzt nie die des Betreibers.",
+      en: "A departure time comes from the operator or from the timetable. In the app every row says which one applies.",
+      de: "Eine Abfahrtszeit kommt vom Verkehrsbetrieb oder aus dem Fahrplan. In der App steht bei jeder Zeile, was gerade gilt.",
     },
     stats: [
-      { en: "Live: ÖffiGo's own calculation, shown only when it is confident, next to the official time", de: "Live: selbst nachgerechnet, steht nur da, wenn es sicher genug ist, und immer neben der offiziellen Zeit" },
-      { en: "Realtime: times supplied by the operator", de: "Echtzeit: vom Betreiber zugelieferte Zeiten" },
-      { en: "Timetable: nobody supplies realtime for this trip, so you see the plan", de: "Fahrplan: für diese Fahrt liefert niemand Echtzeit, also steht da der Plan" },
+      { en: "Real time: the time comes from the operator and keeps updating, wherever the operator provides it", de: "Echtzeit: die Zeit kommt vom Verkehrsbetrieb und wird laufend aktualisiert, überall dort, wo er sie liefert" },
+      { en: "Timetable: nobody supplies real time for this trip, so you see the timetable, and ÖffiGo says so", de: "Fahrplan: für diese Fahrt liefert niemand Echtzeit, also steht da der Fahrplan, und ÖffiGo sagt das dazu" },
+      { en: "Later: ÖffiGo's own forecast from real time and measured punctuality, always next to the official time. It is in development.", de: "Später: eine eigene Prognose von ÖffiGo aus Echtzeit und gemessener Pünktlichkeit, immer neben der offiziellen Zeit. Sie ist in Entwicklung." },
     ],
     liveLabel: { en: "How punctual is your line?", de: "Wie pünktlich ist deine Linie?" },
     statusLabel: { en: "System status", de: "Systemstatus" },
@@ -138,8 +145,8 @@ export const oeffigo: OeffigoContent = {
       icon: ICONS.clock,
       title: { en: "Departures", de: "Abfahrten" },
       body: {
-        en: "Your stop with every line, delays, platform changes and cancellations, and a label on each time saying whether it is live, realtime or timetable.",
-        de: "Deine Haltestelle mit allen Linien, Verspätungen, Steigwechseln und Ausfällen, und an jeder Zeit steht, ob sie live, Echtzeit oder Fahrplan ist.",
+        en: "Your stop with every line, delays, platform changes and cancellations, and a label on each time saying whether it is real time or timetable.",
+        de: "Deine Haltestelle mit allen Linien, Verspätungen, Steigwechseln und Ausfällen, und an jeder Zeit steht, ob sie Echtzeit oder Fahrplan ist.",
       },
     },
     {
@@ -184,15 +191,16 @@ export const oeffigo: OeffigoContent = {
     },
   ],
   beta: {
-    headline: { en: "A small group is testing it right now", de: "Gerade testet eine kleine Runde" },
+    headline: { en: "Closed beta on the iPhone", de: "Geschlossene Beta auf dem iPhone" },
     body: {
-      en: "ÖffiGo runs as a TestFlight beta on the iPhone. Put yourself on the waitlist at oeffigo.app and you hear back when a spot opens up.",
-      de: "ÖffiGo läuft als TestFlight-Beta auf dem iPhone. Auf oeffigo.app kannst du dich auf die Warteliste setzen, dann hörst du, sobald ein Platz frei wird.",
+      en: "ÖffiGo runs as a TestFlight beta. You can request a beta place at oeffigo.app; there is no guarantee of one. The app is in German.",
+      de: "ÖffiGo läuft als TestFlight-Beta. Auf oeffigo.app kannst du einen Beta-Platz anfragen, eine Zusage gibt es nicht. Die App ist auf Deutsch.",
     },
     note: {
-      en: "Free during the beta. There is no paid offering.",
-      de: "Während der Beta kostenlos. Es gibt kein kostenpflichtiges Angebot.",
+      en: "Free during the beta. What applies after that is not decided yet.",
+      de: "Während der Beta kostenlos. Was danach gilt, ist noch offen.",
     },
-    ctaLabel: { en: "Join the waitlist", de: "Auf die Warteliste" },
+    ctaLabel: { en: "Request a beta place", de: "Beta-Platz anfragen" },
+    newLabel: { en: "What's new in the beta", de: "Neu in der Beta" },
   },
 };

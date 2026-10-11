@@ -199,10 +199,10 @@ const profileSchema = {
               <div class="featured-product-copy">
                 <div class="product-heading"><img src={oeffigo.icon} alt="" width="64" height="64" loading="lazy" /><h2 id="oeffigo-title">ÖffiGo</h2></div>
                 <p class="product-tagline">{oeffigo.tagline[lang]}</p>
-                <p>{isDe ? "ÖffiGo ist mein größtes Projekt: eine Öffi-App für Österreich. Sie zeigt Abfahrten, findet Verbindungen und begleitet dich am iPhone und an der Apple Watch. An jeder Zeit steht, ob sie vom Betreiber kommt, berechnet ist oder nur im Fahrplan steht." : "ÖffiGo is my largest project: a public transport app for Austria. It shows departures, plans journeys and follows your trip on iPhone and Apple Watch. Each time tells you whether it comes from the operator, is calculated or is just the timetable."}</p>
+                <p>{isDe ? "ÖffiGo ist mein größtes Projekt: die Öffi-App für ganz Österreich. Sie zeigt Abfahrten, findet Verbindungen für Bus, Bahn und Bim und begleitet dich am iPhone und an der Apple Watch. Bei jeder Zeit steht, ob sie vom Verkehrsbetrieb kommt oder aus dem Fahrplan." : "ÖffiGo is my largest project: the transit app for all of Austria. It shows departures, plans journeys by bus, train and tram and follows your trip on iPhone and Apple Watch. Every time shows whether it comes from the operator or the timetable."}</p>
                 <p class="product-availability">{oeffigo.status[lang]}</p>
                 <div class="oeffigo-actions"><a class="button primary" href={`${localePrefix}/oeffigo/`}>{content.oeffigo.detailCta}</a><a class="button secondary" href={oeffigo.websiteUrl}>oeffigo.app ↗</a></div>
-                <p class="product-footnote"><a href={oeffigo.liveUrl}>{isDe ? "Pünktlichkeit nachschauen" : "Explore punctuality"} ↗</a><a href={oeffigo.statusUrl}>{isDe ? "Systemstatus" : "System status"} ↗</a></p>
+                <p class="product-footnote"><a href={oeffigo.newUrl[lang]}>{oeffigo.beta.newLabel[lang]} ↗</a><a href={oeffigo.liveUrl[lang]}>{isDe ? "Pünktlichkeit nachschauen" : "Explore punctuality"} ↗</a><a href={oeffigo.statusUrl}>{isDe ? "Systemstatus" : "System status"} ↗</a></p>
               </div>
               <figure class="product-phone-preview"><img src={oeffigo.shots[0].src} alt={oeffigo.shots[0].alt[lang]} width="675" height="1380" loading="lazy" decoding="async" /><figcaption>{isDe ? "Die Heute-Ansicht am iPhone. Screenshot aus der Beta." : "Today on iPhone. Screenshot from the beta."}</figcaption></figure>
             </div>

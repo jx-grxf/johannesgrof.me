@@ -42,7 +42,7 @@ export function llmsTxt(): string {
 
 ## Main projects
 
-- [ÖffiGo](${toCanonicalUrl("/oeffigo/")}): ${oeffigo.tagline.en} Public transport for all of Austria on iPhone and Apple Watch. Status: ${oeffigo.status.en.toLowerCase()}. [Deutsch](${toCanonicalUrl("/de/oeffigo/")}). [Product website](${oeffigo.websiteUrl}).
+- [ÖffiGo](${toCanonicalUrl("/oeffigo/")}): ${oeffigo.tagline.en} On iPhone and Apple Watch. Status: ${oeffigo.status.en.toLowerCase()}. [Deutsch](${toCanonicalUrl("/de/oeffigo/")}). [Product website](${oeffigo.websiteUrl}).
 - [Kontobuch](${kontobuch.websiteUrl}): ${kontobuch.description.en} ${kontobuch.availability.en}.
 
 ## Selected work
