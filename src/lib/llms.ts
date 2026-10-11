@@ -60,6 +60,7 @@ ${contact}
 ## Optional
 
 - [Full project texts](${toCanonicalUrl("/llms-full.txt")}): every project with its description, problem, implementation and highlights.
+- [What I use](${toCanonicalUrl("/uses/")}): hardware, terminal, coding agents, editors and services behind the projects.
 - [Terminal card](${toCanonicalUrl("/hi/")}): \`curl -sL johannesgrof.me/hi\` prints a plain-text card with the projects and live Vienna departures. Below it: \`/hi/oeffi/<stop>\` (departures for any Vienna stop), \`/hi/who\`, \`/hi/sign\` (guestbook, POST), \`/hi/help\`. Every other URL answers curl with normal HTML.
 - [Sitemap](${toCanonicalUrl("/sitemap.xml")})
 `;

@@ -26,6 +26,11 @@ const hiAlternates = `
     <xhtml:link rel="alternate" hreflang="de-AT" href="${toCanonicalUrl("/de/hi/")}" />
     <xhtml:link rel="alternate" hreflang="x-default" href="${toCanonicalUrl("/hi/")}" />`;
 
+const usesAlternates = `
+    <xhtml:link rel="alternate" hreflang="en" href="${toCanonicalUrl("/uses/")}" />
+    <xhtml:link rel="alternate" hreflang="de-AT" href="${toCanonicalUrl("/de/uses/")}" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="${toCanonicalUrl("/uses/")}" />`;
+
 export function GET() {
   // Updated when page content or its shared template changes significantly.
   // Daily GitHub metadata rebuilds must not advance this date.
@@ -36,6 +41,8 @@ export function GET() {
     { path: "/de/", alternates: homeAlternates, lastmod: homeRevision },
     { path: "/oeffigo/", alternates: oeffigoAlternates },
     { path: "/de/oeffigo/", alternates: oeffigoAlternates },
+    { path: "/uses/", alternates: usesAlternates, lastmod: "2026-10-11" },
+    { path: "/de/uses/", alternates: usesAlternates, lastmod: "2026-10-11" },
     { path: "/hi/", alternates: hiAlternates, lastmod: "2026-10-11" },
     { path: "/de/hi/", alternates: hiAlternates, lastmod: "2026-10-11" },
     { path: "/projects/", alternates: catalogueAlternates, lastmod: contentRevision },

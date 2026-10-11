@@ -281,7 +281,7 @@ const profileSchema = {
             <span class="section-num">04</span>
             <h2 id="stack-title">{content.stack.title}</h2>
           </div>
-          <p class="services-lead">{content.stack.lead}</p>
+          <p class="services-lead">{content.stack.lead} <a class="text-link" href={`${localePrefix}/uses/`}>{isDe ? "Das ganze Setup" : "The whole setup"}</a></p>
           <div id="skills" class="stack-grid">
             {content.stack.groups.map((group) => (
               <article class="stack-group">

@@ -1,0 +1,89 @@
+---
+import BaseHead from "@/components/BaseHead.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import type { ProjectLang } from "@/data/projects";
+import { toCanonicalUrl } from "@/data/siteMetadata";
+import { usesGroups, usesUpdated } from "@/data/uses";
+import "@/styles/global.css";
+
+interface Props {
+  lang: ProjectLang;
+}
+
+const { lang } = Astro.props;
+const de = lang === "de";
+const home = de ? "/de/" : "/";
+const prefix = de ? "/de" : "";
+const updated = new Intl.DateTimeFormat(de ? "de-AT" : "en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" }).format(new Date(`${usesUpdated}T00:00:00Z`));
+const s = de
+  ? {
+      title: "Womit ich arbeite · Johannes Grof",
+      description: "Mein Setup zum Entwickeln: MacBook Pro mit M5 Pro, Ghostty, Claude Code, Codex, Xcode und die Werkzeuge rundherum.",
+      heading: "Womit ich arbeite.",
+      lead: "Das Setup hinter den Projekten auf dieser Seite. Nur, was ich wirklich benutze, und ein paar Dinge, die ich mir selbst gebaut habe.",
+      updated: `Stand: ${updated}`,
+    }
+  : {
+      title: "What I use · Johannes Grof",
+      description: "My development setup: MacBook Pro with M5 Pro, Ghostty, Claude Code, Codex, Xcode and the tools around them.",
+      heading: "What I use.",
+      lead: "The setup behind the projects on this site. Only what I actually use, and a few things I built for myself.",
+      updated: `As of ${updated}`,
+    };
+---
+
+<!doctype html>
+<html lang={de ? "de-AT" : "en"}>
+  <head>
+    <BaseHead
+      title={s.title}
+      description={s.description}
+      canonicalPath={`${prefix}/uses/`}
+      ogLocale={de ? "de_AT" : "en_US"}
+      hreflangAlternates={[
+        { hreflang: "en", href: toCanonicalUrl("/uses/") },
+        { hreflang: "de-AT", href: toCanonicalUrl("/de/uses/") },
+        { hreflang: "x-default", href: toCanonicalUrl("/uses/") },
+      ]}
+    />
+  </head>
+  <body>
+    <SiteHeader
+      lang={lang}
+      homeHref={home}
+      ariaLabel={de ? "Seitennavigation" : "Page navigation"}
+      navItems={[
+        { label: de ? "Projekte" : "Projects", href: `${home}#projects` },
+        { label: "Stack", href: `${home}#services` },
+        { label: de ? "Kontakt" : "Contact", href: `${home}#contact` },
+      ]}
+      langSwitch={{ label: de ? "EN" : "DE", href: de ? "/uses/" : "/de/uses/", ariaLabel: de ? "View this page in English" : "Diese Seite auf Deutsch ansehen" }}
+    />
+
+    <main id="main" class="uses-page section-shell">
+      <p class="eyebrow">/uses</p>
+      <h1>{s.heading}</h1>
+      <p class="uses-lead">{s.lead}</p>
+      <p class="uses-updated">{s.updated}</p>
+
+      {
+        usesGroups.map((group) => (
+          <section class="uses-group">
+            <h2>{group.title[lang]}</h2>
+            <dl>
+              {group.items.map((item) => (
+                <>
+                  <dt>{item.href ? <a href={`${prefix}${item.href}`}>{item.name}</a> : item.name}</dt>
+                  <dd>{item.note[lang]}</dd>
+                </>
+              ))}
+            </dl>
+          </section>
+        ))
+      }
+    </main>
+
+    <SiteFooter lang={lang} />
+  </body>
+</html>
