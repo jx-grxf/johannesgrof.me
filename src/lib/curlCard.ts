@@ -84,21 +84,46 @@ const truncate = (text: string, width: number) => {
 
 type Pixel = string | null;
 
-/** Two pixel rows per text row: the upper half block takes the top colour, its background the bottom one. */
+/**
+ * Two pixel rows per text row: the upper half block takes the top colour, its
+ * background the bottom one. Colour codes are only written when they change,
+ * which keeps the streamed train frames small.
+ */
 export function halfBlocks(grid: Pixel[][]): string[] {
   const width = Math.max(...grid.map((row) => row.length));
   const out: string[] = [];
   for (let y = 0; y < grid.length; y += 2) {
     let row = "";
+    let fgNow: string | null = null;
+    let bgNow: string | null = null;
+    const set = (nextFg: string | null, nextBg: string | null) => {
+      if ((fgNow && !nextFg) || (bgNow && !nextBg)) {
+        row += RESET;
+        fgNow = bgNow = null;
+      }
+      if (nextFg && nextFg !== fgNow) row += fg(nextFg);
+      if (nextBg && nextBg !== bgNow) row += bg(nextBg);
+      fgNow = nextFg;
+      bgNow = nextBg;
+    };
     for (let x = 0; x < width; x++) {
       const top = grid[y]?.[x] ?? null;
       const bottom = grid[y + 1]?.[x] ?? null;
-      if (!top && !bottom) row += " ";
-      else if (top && !bottom) row += `${fg(top)}▀${RESET}`;
-      else if (!top && bottom) row += `${fg(bottom)}▄${RESET}`;
-      else row += `${fg(top!)}${bg(bottom!)}▀${RESET}`;
+      if (!top && !bottom) {
+        set(null, null);
+        row += " ";
+      } else if (top && !bottom) {
+        set(top, null);
+        row += "▀";
+      } else if (!top && bottom) {
+        set(bottom, null);
+        row += "▄";
+      } else {
+        set(top, bottom);
+        row += "▀";
+      }
     }
-    out.push(row);
+    out.push(fgNow || bgNow ? row + RESET : row);
   }
   return out;
 }
@@ -256,6 +281,7 @@ export function card(data: CardData): string {
       ),
       paint("#5c574d", de ? "Im Browser gibt's mehr: ~ drücken öffnet das Terminal der Seite." : "There is more in the browser: press ~ to open the site's own terminal."),
       paint("#5c574d", de ? "English: curl -sL johannesgrof.me" : "Auf Deutsch: curl -sL johannesgrof.me/de"),
+      paint("#5c574d", de ? "HTML statt Karte: -H 'Accept: text/html' · für Agents: /llms.txt" : "HTML instead: -H 'Accept: text/html' · for agents: /llms.txt"),
     ]),
     "",
   ];

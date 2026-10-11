@@ -16,6 +16,9 @@ const FUNCTION = "_curl";
 const curlRoute = {
   src: "^/(de)?/?$",
   has: [{ type: "header", key: "user-agent", value: "^(curl|HTTPie|xh)/.*$" }],
+  // Anyone who asks for HTML gets the page, e.g. scripts and agents that
+  // fetch the site with curl -H "Accept: text/html".
+  missing: [{ type: "header", key: "accept", value: ".*text/html.*" }],
   dest: FUNCTION,
 };
 
