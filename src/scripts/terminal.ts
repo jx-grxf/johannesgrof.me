@@ -424,6 +424,11 @@ function run(raw: string) {
     case "kaffee":
       line("418 I'm a teapot", "accent");
       break;
+    case "curl":
+    case "wget":
+      line(t("Im echten Terminal ausprobieren:", "Try it in a real terminal:"), "dim");
+      line(`curl -sL johannesgrof.me${de ? "/de" : ""}`, "accent");
+      break;
     case "git":
       line(t("Der Quelltext liegt hier:", "The source lives here:"), "dim");
       linkLine("github.com/jx-grxf/johannesgrof.me", links.source);
