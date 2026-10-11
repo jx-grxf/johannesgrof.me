@@ -33,7 +33,7 @@ const links: Record<string, string> = {
   source: "https://github.com/jx-grxf/johannesgrof.me",
 };
 
-const commands = ["help", "ls", "open", "stack", "about", "contact", "train", "theme", "clear", "exit"];
+const commands = ["help", "ls", "open", "stack", "about", "contact", "ping", "status", "traceroute", "train", "theme", "clear", "exit"];
 
 let root: HTMLElement | undefined;
 let output: HTMLElement;
@@ -47,6 +47,7 @@ function line(text = "", kind?: "dim" | "accent" | "error" | "cmd") {
   row.className = kind ? `term-row term-row--${kind}` : "term-row";
   row.textContent = text;
   output.append(row);
+  output.scrollTop = output.scrollHeight;
   return row;
 }
 
@@ -79,6 +80,185 @@ function runTrain() {
   line(t("Achtung, Zug fährt ein.", "Stand back, train arriving."), "accent");
   close();
   expressTrain();
+}
+
+interface PingResult {
+  ms: number;
+  status: number;
+  /** Vercel edge PoP that answered, e.g. "fra1". */
+  edge: string | null;
+  /** Region the function ran in, e.g. "fra1" or "iad1". */
+  region: string | null;
+  bytes: number;
+  /** Server clock minus local clock, corrected for half the round trip. */
+  skew: number | null;
+}
+
+async function measurePing(): Promise<PingResult> {
+  const started = performance.now();
+  const sentAt = Date.now();
+  const response = await fetch(`/api/ping?nonce=${crypto.randomUUID()}`, {
+    cache: "no-store",
+    headers: { Accept: "application/json" },
+    signal: AbortSignal.timeout(8_000),
+  });
+  const body = await response.arrayBuffer();
+  const ms = performance.now() - started;
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  let payload: { at?: number; region?: string } = {};
+  try {
+    payload = JSON.parse(new TextDecoder().decode(body));
+  } catch {}
+  // x-vercel-id reads "edge::function::id" for function calls, "edge::id" for cached files.
+  const hops = (response.headers.get("x-vercel-id") ?? "").split("::");
+  return {
+    ms,
+    status: response.status,
+    edge: hops.length > 1 ? hops[0]! : null,
+    region: payload.region ?? (hops.length > 2 ? hops[1]! : null),
+    bytes: body.byteLength,
+    skew: typeof payload.at === "number" ? payload.at - (sentAt + ms / 2) : null,
+  };
+}
+
+const sleep = (ms: number) => new Promise((resolve) => window.setTimeout(resolve, ms));
+
+function formatMs(ms: number) {
+  return `${ms.toFixed(1)} ms`;
+}
+
+function formatBytes(bytes: number) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+}
+
+function kv(key: string, value: string, kind?: "dim" | "accent") {
+  line(`  ${key.padEnd(13)} ${value}`, kind);
+}
+
+async function runPing(raw = "") {
+  const parts = raw.split(/\s+/).filter(Boolean);
+  let count = 4;
+  const countFlag = parts.indexOf("-c");
+  if (countFlag !== -1) {
+    count = Math.min(Math.max(Number.parseInt(parts[countFlag + 1] ?? "", 10) || 4, 1), 10);
+    parts.splice(countFlag, 2);
+  }
+  const target = (parts[0] ?? "").replace(/^https?:\/\//i, "").replace(/\/$/, "").toLowerCase();
+  if (target && target !== "johannesgrof.me" && target !== "www.johannesgrof.me") {
+    line(t(`ping: ${target}: aus dem Browser geht nur johannesgrof.me.`, `ping: ${target}: from a browser only johannesgrof.me works.`), "error");
+    return;
+  }
+
+  line(`PING johannesgrof.me (/api/ping): ${count} ${t("Pakete", "packets")}`, "dim");
+  const results: PingResult[] = [];
+  for (let seq = 1; seq <= count; seq++) {
+    try {
+      const result = await measurePing();
+      results.push(result);
+      const via = result.edge ? `${result.edge}${result.region && result.region !== result.edge ? ` → ${result.region}` : ""}` : location.hostname;
+      line(`${result.bytes} bytes from ${via}: seq=${seq} time=${formatMs(result.ms)}`);
+    } catch {
+      line(`Request timeout for seq ${seq}`, "error");
+    }
+    if (seq < count) await sleep(250);
+  }
+
+  line();
+  line("--- johannesgrof.me ping statistics ---", "accent");
+  const loss = ((count - results.length) / count) * 100;
+  line(`${count} packets transmitted, ${results.length} received, ${loss.toFixed(0)}% packet loss`);
+  if (!results.length) return;
+  const times = results.map((result) => result.ms);
+  const avg = times.reduce((sum, value) => sum + value, 0) / times.length;
+  const mdev = Math.sqrt(times.reduce((sum, value) => sum + (value - avg) ** 2, 0) / times.length);
+  const jitter = times.length > 1
+    ? times.slice(1).reduce((sum, value, index) => sum + Math.abs(value - times[index]!), 0) / (times.length - 1)
+    : 0;
+  line(`rtt min/avg/max/mdev = ${Math.min(...times).toFixed(1)}/${avg.toFixed(1)}/${Math.max(...times).toFixed(1)}/${mdev.toFixed(1)} ms`);
+  line(`jitter ${formatMs(jitter)}`, "dim");
+  const verdict = avg < 40
+    ? t("Schneller als die U1 zwischen zwei Stationen.", "Faster than the U1 between two stations.")
+    : avg < 120
+      ? t("Passt scho.", "Good enough.")
+      : t("Klingt nach Zugverbindung im Semmering-Tunnel.", "Sounds like train Wi-Fi in a mountain tunnel.");
+  line(verdict, "dim");
+}
+
+async function runStatus() {
+  const nav = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+  const resources = performance.getEntriesByType("resource") as PerformanceResourceTiming[];
+  const connection = (navigator as Navigator & {
+    connection?: { effectiveType?: string; downlink?: number; rtt?: number; saveData?: boolean };
+  }).connection;
+
+  line(t("johannesgrof.me, Verbindung", "johannesgrof.me, connection"), "accent");
+  kv("online", navigator.onLine ? t("ja", "yes") : t("nein", "no"));
+
+  const probe = line(t("  messe …", "  measuring …"), "dim");
+  let ping: PingResult | null = null;
+  try {
+    ping = await measurePing();
+  } catch {}
+  probe.remove();
+
+  if (ping) {
+    kv("rtt", formatMs(ping.ms));
+    kv("edge", ping.edge ?? t("unbekannt", "unknown"));
+    kv(t("funktion", "function"), ping.region ?? t("unbekannt", "unknown"));
+    if (ping.skew !== null) kv(t("uhr-drift", "clock skew"), `${ping.skew >= 0 ? "+" : ""}${ping.skew.toFixed(0)} ms ${t("gegen den Server", "vs. server")}`);
+  } else {
+    kv("rtt", t("keine Antwort", "no reply"));
+  }
+
+  if (nav) {
+    kv(t("protokoll", "protocol"), nav.nextHopProtocol || t("unbekannt", "unknown"));
+    const dns = nav.domainLookupEnd - nav.domainLookupStart;
+    const tcp = nav.connectEnd - nav.connectStart;
+    const tls = nav.secureConnectionStart > 0 ? nav.connectEnd - nav.secureConnectionStart : 0;
+    const ttfb = nav.responseStart - nav.requestStart;
+    const download = nav.responseEnd - nav.responseStart;
+    if (dns + tcp === 0) kv("dns/tcp/tls", t("Verbindung wiederverwendet", "connection reused"));
+    else kv("dns/tcp/tls", `${dns.toFixed(0)} / ${tcp.toFixed(0)} / ${tls.toFixed(0)} ms`);
+    kv("ttfb", formatMs(ttfb));
+    kv("download", formatMs(download));
+    kv("dom ready", formatMs(nav.domContentLoadedEventEnd));
+    if (nav.transferSize === 0 && nav.decodedBodySize > 0) {
+      kv("html", t(`${formatBytes(nav.decodedBodySize)}, aus dem Browser-Cache`, `${formatBytes(nav.decodedBodySize)}, from browser cache`));
+    } else if (nav.encodedBodySize > 0) {
+      const ratio = nav.decodedBodySize / nav.encodedBodySize;
+      kv("html", `${formatBytes(nav.encodedBodySize)} ${t("über die Leitung", "on the wire")}, ${formatBytes(nav.decodedBodySize)} ${t("entpackt", "unpacked")} (${ratio.toFixed(1)}×)`);
+    }
+  }
+
+  const transferred = resources.reduce((sum, entry) => sum + entry.transferSize, 0);
+  const cached = resources.filter((entry) => entry.transferSize === 0 && entry.decodedBodySize > 0).length;
+  kv(t("dateien", "requests"), `${resources.length} ${t("geladen", "loaded")}, ${cached} ${t("aus dem Cache", "from cache")}, ${formatBytes(transferred)}`);
+
+  if (connection) {
+    const parts = [
+      connection.effectiveType,
+      typeof connection.downlink === "number" ? `~${connection.downlink} Mbit/s` : "",
+      connection.rtt ? `rtt ~${connection.rtt} ms` : "",
+      connection.saveData ? "save-data" : "",
+    ].filter(Boolean);
+    if (parts.length) kv(t("netz", "network"), `${parts.join(", ")} ${t("(Schätzung des Browsers)", "(browser estimate)")}`);
+  }
+  kv(t("auf der seite", "on this page"), `${Math.round(performance.now() / 1000)} s`, "dim");
+}
+
+async function runTrace() {
+  line(t("traceroute to johannesgrof.me, 3 hops max", "traceroute to johannesgrof.me, 3 hops max"), "accent");
+  line(t(" 1  dein Browser  0.0 ms", " 1  your browser  0.0 ms"));
+  try {
+    const result = await measurePing();
+    line(` 2  ${result.edge ? `vercel edge ${result.edge}` : location.hostname}  ${formatMs(result.ms)}`);
+    if (result.region) line(` 3  function ${result.region}  ${formatMs(result.ms)}`);
+    line(t("Echte Router-Hops (TTL, ICMP) gibt der Browser nicht her.", "Real router hops (TTL, ICMP) are not exposed to browsers."), "dim");
+  } catch {
+    line(t("traceroute: Server nicht erreichbar.", "traceroute: server unreachable."), "error");
+  }
 }
 
 const fortunes = de
@@ -146,6 +326,9 @@ function run(raw: string) {
       line(`  stack            ${t("womit ich arbeite", "what I work with")}`);
       line(`  about            ${t("wer das hier gebaut hat", "who built this")}`);
       line(`  contact          ${t("wie du mich erreichst", "how to reach me")}`);
+      line(`  ping [-c n]      ${t("Latenz, Verlust und Jitter zum Server", "latency, loss and jitter to the server")}`);
+      line(`  status           ${t("Verbindung im Detail: Edge, Protokoll, Timings", "connection details: edge, protocol, timings")}`);
+      line(`  traceroute       ${t("Weg bis zum Server", "path to the server")}`);
       line(`  train            ${t("ruft den Zug", "calls the train")}`);
       line(`  theme light|dark ${t("Papier wechseln", "switch the paper")}`);
       line("  clear, exit");
@@ -252,7 +435,15 @@ function run(raw: string) {
       line(arg);
       break;
     case "ping":
-      line(t(`${arg || "johannesgrof.me"} antwortet. Du bist ja gerade hier.`, `${arg || "johannesgrof.me"} responds. You are on it right now.`));
+      void runPing(arg);
+      break;
+    case "status":
+    case "stats":
+      void runStatus();
+      break;
+    case "traceroute":
+    case "trace":
+      void runTrace();
       break;
     default:
       line(t(`Befehl nicht gefunden: ${cmd}. Tipp: help`, `command not found: ${cmd}. Try: help`), "error");
@@ -322,7 +513,7 @@ function build() {
   form.append(prompt, input);
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    run(input.value);
+    void run(input.value);
     input.value = "";
     output.scrollTop = output.scrollHeight;
   });
