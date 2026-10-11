@@ -91,34 +91,34 @@ export const oeffigo: OeffigoContent = {
     {
       src: "/projects/oeffigo/app-today.webp",
       alt: {
-        en: "ÖffiGo Today on iPhone: the next departures near Wien Praterstern on the O tram, U2 and U1, with the nearby map below.",
-        de: "ÖffiGo Heute auf dem iPhone: die nächsten Abfahrten bei Wien Praterstern mit O-Wagen, U2 und U1, darunter die Umgebungskarte.",
+        en: "ÖffiGo Today on iPhone near Wien Praterstern: the next two U2 trains and the O tram with live delays, a saved route and the nearby map.",
+        de: "ÖffiGo Heute auf dem iPhone beim Wiener Praterstern: die nächsten zwei U2 und der O-Wagen mit Live-Verspätung, eine gespeicherte Route und die Umgebungskarte.",
       },
       caption: { en: "Today", de: "Heute" },
     },
     {
       src: "/projects/oeffigo/app-departures.webp",
       alt: {
-        en: "ÖffiGo departures at Wien Karlsplatz: U1, U2 and U4 with platform and minutes until departure.",
-        de: "ÖffiGo Abfahrten am Wiener Karlsplatz: U1, U2 und U4 mit Steig und Minuten bis zur Abfahrt.",
+        en: "ÖffiGo departures at Wien Praterstern: U2, O tram, buses 80A and 5B and tram 5, each marked on time or with its delay.",
+        de: "ÖffiGo Abfahrten am Wiener Praterstern: U2, O-Wagen, die Busse 80A und 5B und die Linie 5, jeweils mit pünktlich oder Verspätung.",
       },
       caption: { en: "Departures", de: "Abfahrten" },
     },
     {
-      src: "/projects/oeffigo/app-live.webp",
+      src: "/projects/oeffigo/app-trip.webp",
       alt: {
-        en: "ÖffiGo Today near Wien Karlsplatz: the next U4, U1 and U2, with the nearby map below.",
-        de: "ÖffiGo Heute beim Wiener Karlsplatz: die nächste U4, U1 und U2, darunter die Umgebungskarte.",
+        en: "ÖffiGo trip view of a U2 to Karlsplatz: the stops after Praterstern with their times, the delay shown at the stop just passed.",
+        de: "ÖffiGo Fahrtverlauf einer U2 zum Karlsplatz: die Halte nach dem Praterstern mit Zeiten, die Verspätung beim gerade passierten Halt.",
       },
-      caption: { en: "Near you", de: "In der Nähe" },
+      caption: { en: "Trip", de: "Fahrtverlauf" },
     },
     {
-      src: "/projects/oeffigo/app-welcome.webp",
+      src: "/projects/oeffigo/app-routes.webp",
       alt: {
-        en: "ÖffiGo route search: start at the current location, pick a destination, find connections.",
-        de: "ÖffiGo Routensuche: Start am aktuellen Standort, Ziel wählen, Verbindungen finden.",
+        en: "ÖffiGo connections from Wien Praterstern to Wien Schönbrunn: three options via U1 and U4 with live status, transfer time and fare.",
+        de: "ÖffiGo Verbindungen vom Wiener Praterstern nach Wien Schönbrunn: drei Varianten über U1 und U4 mit Live-Status, Umstiegszeit und Preis.",
       },
-      caption: { en: "Where to?", de: "Wohin geht's?" },
+      caption: { en: "Connections", de: "Verbindungen" },
     },
   ],
   support: {
