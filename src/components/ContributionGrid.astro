@@ -1,0 +1,128 @@
+---
+import type { ContributionGrid } from "@/lib/contributions";
+
+interface Props {
+  grid: ContributionGrid;
+  lang: "en" | "de";
+}
+
+const { grid, lang } = Astro.props;
+const de = lang === "de";
+const locale = de ? "de-AT" : "en-GB";
+const CELL = 11;
+const PITCH = 14;
+const TOP = 18;
+const width = grid.weeks.length * PITCH - (PITCH - CELL);
+const height = TOP + 7 * PITCH - (PITCH - CELL);
+
+const days = grid.weeks.flat();
+const indexOf = new Map(days.map((day, i) => [day.date, i]));
+const formatDay = (date: string, options: Intl.DateTimeFormatOptions) =>
+  new Intl.DateTimeFormat(locale, { ...options, timeZone: "UTC" }).format(new Date(`${date}T00:00:00Z`));
+const number = (value: number) => new Intl.NumberFormat(locale).format(value);
+
+// A month label sits above the first week that starts in that month.
+const months = grid.weeks
+  .map((week, x) => ({ x, date: week[0]?.date ?? "" }))
+  .filter(({ date }, i, all) => i > 0 && date.slice(5, 7) !== all[i - 1]!.date.slice(5, 7))
+  .map(({ x, date }) => ({ x: x * PITCH, label: formatDay(date, { month: "short" }) }));
+
+const stats = [
+  de ? `${number(grid.total)} Beiträge` : `${number(grid.total)} contributions`,
+  de ? `an ${number(grid.activeDays)} Tagen` : `on ${number(grid.activeDays)} days`,
+  de ? `längste Serie ${grid.longestStreak} Tage` : `longest streak ${grid.longestStreak} days`,
+  ...(grid.busiest
+    ? [de ? `meiste an einem Tag: ${grid.busiest.count} (${formatDay(grid.busiest.date, { day: "numeric", month: "short" })})` : `busiest day: ${grid.busiest.count} (${formatDay(grid.busiest.date, { day: "numeric", month: "short" })})`]
+    : []),
+];
+
+const details = days.map((day) => [day.date, day.count, day.repos.slice(0, 4)]);
+const strings = {
+  locale,
+  none: de ? "keine Beiträge" : "no contributions",
+  one: de ? "1 Beitrag" : "1 contribution",
+  many: de ? "{n} Beiträge" : "{n} contributions",
+  hint: de ? "Zeig auf einen Tag, oder fokussiere das Raster und nimm die Pfeiltasten." : "Point at a day, or focus the grid and use the arrow keys.",
+};
+const summary = de
+  ? `Beiträge auf GitHub von ${formatDay(grid.from, { day: "numeric", month: "long", year: "numeric" })} bis ${formatDay(grid.to, { day: "numeric", month: "long", year: "numeric" })}: ${stats.join(", ")}.`
+  : `GitHub contributions from ${formatDay(grid.from, { day: "numeric", month: "long", year: "numeric" })} to ${formatDay(grid.to, { day: "numeric", month: "long", year: "numeric" })}: ${stats.join(", ")}.`;
+---
+
+<figure class="contrib" data-contrib>
+  <div class="contrib-scroll">
+    <svg
+      class="contrib-grid"
+      viewBox={`0 0 ${width} ${height}`}
+      width={width}
+      height={height}
+      shape-rendering="crispEdges"
+      role="img"
+      aria-label={summary}
+      tabindex="0"
+      data-contrib-grid
+    >
+      {months.map((month) => <text x={month.x} y="10" class="contrib-month">{month.label}</text>)}
+      {
+        grid.weeks.map((week, x) =>
+          week.map((day) => {
+            const y = new Date(`${day.date}T00:00:00Z`).getUTCDay();
+            return <rect x={x * PITCH} y={TOP + y * PITCH} width={CELL} height={CELL} class={`lvl-${day.level}`} data-i={indexOf.get(day.date)} />;
+          }),
+        )
+      }
+    </svg>
+  </div>
+  <figcaption>
+    <p class="contrib-detail" data-contrib-detail aria-live="polite">{strings.hint}</p>
+    <p class="contrib-stats">{stats.join(" · ")}</p>
+  </figcaption>
+  <script type="application/json" data-contrib-data set:html={JSON.stringify({ details, strings })} />
+</figure>
+
+<script>
+  const root = document.querySelector<HTMLElement>("[data-contrib]");
+  if (root) {
+    const svg = root.querySelector<SVGSVGElement>("[data-contrib-grid]")!;
+    const scroller = root.querySelector<HTMLElement>(".contrib-scroll");
+    if (scroller) scroller.scrollLeft = scroller.scrollWidth;
+    const detail = root.querySelector<HTMLElement>("[data-contrib-detail]")!;
+    const { details, strings } = JSON.parse(root.querySelector("[data-contrib-data]")!.textContent ?? "{}") as {
+      details: [string, number, string[]][];
+      strings: { locale: string; none: string; one: string; many: string; hint: string };
+    };
+    const cells = [...svg.querySelectorAll<SVGRectElement>("rect[data-i]")];
+    const byIndex = new Map(cells.map((cell) => [Number(cell.dataset.i), cell]));
+    const format = new Intl.DateTimeFormat(strings.locale, { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
+    let current = -1;
+
+    const select = (index: number) => {
+      const entry = details[index];
+      if (!entry) return;
+      byIndex.get(current)?.classList.remove("is-selected");
+      current = index;
+      byIndex.get(index)?.classList.add("is-selected");
+      const [date, count, repos] = entry;
+      const amount = count === 0 ? strings.none : count === 1 ? strings.one : strings.many.replace("{n}", String(count));
+      detail.textContent = `${format.format(new Date(`${date}T00:00:00Z`))} · ${amount}${repos.length ? ` · ${repos.join(", ")}` : ""}`;
+    };
+
+    svg.addEventListener("pointerover", (event) => {
+      const target = event.target as Element;
+      if (target instanceof SVGRectElement && target.dataset.i) select(Number(target.dataset.i));
+    });
+    svg.addEventListener("click", (event) => {
+      const target = event.target as Element;
+      if (target instanceof SVGRectElement && target.dataset.i) select(Number(target.dataset.i));
+    });
+    svg.addEventListener("focus", () => {
+      if (current === -1) select(details.length - 1);
+    });
+    svg.addEventListener("keydown", (event) => {
+      const step = { ArrowLeft: -7, ArrowRight: 7, ArrowUp: -1, ArrowDown: 1 }[event.key];
+      if (step === undefined) return;
+      event.preventDefault();
+      select(Math.min(details.length - 1, Math.max(0, current + step)));
+    });
+  }
+</script>

@@ -2663,6 +2663,97 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   border-top: 1px solid var(--ink);
 }
 
+.contrib-block {
+  margin-top: clamp(40px, 6vw, 64px);
+  padding-top: 24px;
+  border-top: 1px solid var(--ink);
+}
+
+.contrib-block h3 {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: 1.18rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.contrib-lead {
+  max-width: 62ch;
+  margin: 0 0 20px;
+  color: var(--ink-2);
+  font-size: 0.92rem;
+}
+
+.contrib {
+  margin: 0;
+}
+
+/* The grid fills the column on wide screens and keeps a minimum size on
+   narrow ones, where it scrolls sideways (the script starts it at the newest
+   weeks) instead of shrinking into unreadable dots. */
+.contrib-scroll {
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.contrib-grid {
+  display: block;
+  width: max(100%, 740px);
+  max-width: none;
+  height: auto;
+  outline-offset: 6px;
+}
+
+.contrib-grid:focus-visible {
+  outline: 2px solid var(--signal);
+}
+
+.contrib-month {
+  fill: var(--mute);
+  font-family: var(--font-mono);
+  font-size: 9px;
+}
+
+/* Ink at rising strength, so the grid reads on both paper stocks. */
+.contrib-grid rect {
+  fill: var(--ink);
+  cursor: pointer;
+}
+.contrib-grid .lvl-0 {
+  fill: var(--rule);
+}
+.contrib-grid .lvl-1 {
+  fill-opacity: 0.22;
+}
+.contrib-grid .lvl-2 {
+  fill-opacity: 0.45;
+}
+.contrib-grid .lvl-3 {
+  fill-opacity: 0.7;
+}
+.contrib-grid .is-selected {
+  fill: var(--signal);
+  fill-opacity: 1;
+}
+
+.contrib figcaption {
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  line-height: 1.7;
+}
+
+.contrib-detail {
+  min-height: 1.7em;
+  margin: 0;
+  color: var(--ink);
+}
+
+.contrib-stats {
+  margin: 4px 0 0;
+  color: var(--mute);
+}
+
 .stack-group {
   display: flex;
   flex-direction: column;

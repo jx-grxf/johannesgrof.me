@@ -13,6 +13,8 @@ import { oeffigo } from "@/data/oeffigo";
 import { kontobuch } from "@/data/kontobuch";
 import type { LocaleContent } from "@/data/siteContent";
 import { personSameAs, toCanonicalUrl } from "@/data/siteMetadata";
+import ContributionGrid from "@/components/ContributionGrid.astro";
+import { getContributionGrid } from "@/data/contributions";
 import "@/styles/global.css";
 import SpeedInsights from "@vercel/speed-insights/astro";
 
@@ -39,6 +41,8 @@ const latestPush = pushes
 const latestPushDate = latestPush
   ? new Intl.DateTimeFormat(isDe ? "de-AT" : "en-GB", { day: "numeric", month: "short", timeZone: "Europe/Vienna" }).format(new Date(latestPush.info.updatedAt))
   : "";
+
+const contributionGrid = await getContributionGrid();
 
 // Stack proof links: the two products have their own pages, everything else is
 // a catalogue entry.
@@ -287,6 +291,19 @@ const profileSchema = {
               </article>
             ))}
           </div>
+          {
+            contributionGrid && (
+              <div class="contrib-block">
+                <h3>{isDe ? "Ein Jahr auf GitHub" : "A year on GitHub"}</h3>
+                <p class="contrib-lead">
+                  {isDe
+                    ? "Jedes Kästchen ist ein Tag: Commits, Pull Requests, Reviews und Issues, je kräftiger, desto mehr. Stand vom letzten Build."
+                    : "Each square is a day of commits, pull requests, reviews and issues; the stronger the square, the more. As of the last build."}
+                </p>
+                <ContributionGrid grid={contributionGrid} lang={lang} />
+              </div>
+            )
+          }
         </div>
       </section>
 
