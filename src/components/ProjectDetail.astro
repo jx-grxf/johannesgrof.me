@@ -286,15 +286,18 @@ const hreflangAlternates = [
                 type="button"
                 data-install-copy
                 data-copy-command={installCommand}
+                data-copy-command-windows={project.installCommandWindows}
                 data-copy-label={installLabel}
                 data-copy-success={s.installNpmCopied}
                 data-copy-error={s.installNpmError}
               >
                 <span aria-live="polite" data-copy-status>{installLabel}</span>
-                <small>{installCommand}</small>
+                <small data-copy-preview>{installCommand}</small>
               </button>
             )}
-            {github.downloadGroup && !installCommand && (
+            {/* An npm install already is the download; a brew or curl installer is not,
+                so release archives stay on offer next to it. */}
+            {github.downloadGroup && !project.npmPackage && (
               hasMultipleDownloads ? (
                 <details class="download-menu" data-download-menu>
                   <summary

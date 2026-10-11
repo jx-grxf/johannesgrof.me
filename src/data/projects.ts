@@ -47,6 +47,8 @@ export interface Project {
   npmPackage?: string;
   /** One-line install command shown as a copy button, e.g. a curl installer. */
   installCommand?: string;
+  /** Replaces installCommand for visitors on Windows, where brew or curl | sh do not apply. */
+  installCommandWindows?: string;
   downloadsDisabled?: boolean;
   platformLabels?: string[];
   fallbackDownload?: {
@@ -136,25 +138,26 @@ export const featuredProjects: Project[] = [
       width: 256,
       height: 256,
     },
-    tagline: "macOS menu bar control for local dev ports.",
+    tagline: "See which coding agent started each local dev port, and stop the right one.",
     description:
-      "A Swift menu bar app that maps every listening port to its process, its repository, and the AI agent that started it, so localhost stays visible and exact processes can be stopped from one native surface.",
+      "A macOS menu bar app for developers who run coding agents. It shows every local dev port, which Claude Code or Codex session started it in which worktree, and what that session is doing right now. You can stop exactly that server, and so can the agent.",
     caseStudy: {
       problem: "Local development servers keep running, ports collide, and it is hard to tell which process, repository, or agent owns a given listener.",
       built: "I built a native Swift menu bar app that scans listening TCP ports, links each one to its process, repo, and agent, and gates process control behind precise actions.",
     },
     de: {
-      tagline: "Menüleisten-Steuerung für lokale Dev-Ports auf macOS.",
+      tagline: "Sieh, welcher Coding-Agent welchen lokalen Dev-Port gestartet hat, und stopp den richtigen.",
       description:
-        "Eine Swift-Menüleisten-App, die jeden lauschenden Port seinem Prozess, seinem Repository und dem AI-Agenten zuordnet, der ihn gestartet hat. So bleibt localhost sichtbar, und einzelne Prozesse lassen sich aus einer nativen Oberfläche stoppen.",
+        "Eine macOS-Menüleisten-App für alle, die mit Coding-Agents arbeiten. Sie zeigt jeden lokalen Dev-Port, welche Claude-Code- oder Codex-Session ihn in welchem Worktree gestartet hat und was diese Session gerade tut. Du kannst genau diesen Server stoppen, und der Agent kann es auch.",
       caseStudy: {
         problem: "Lokale Dev-Server laufen weiter, Ports kollidieren, und es ist schwer zu erkennen, welchem Prozess, Repository oder Agent ein Listener gehört.",
         built: "Ich habe eine native Swift-Menüleisten-App gebaut, die lauschende TCP-Ports scannt, jeden Port seinem Prozess, Repo und Agent zuordnet und Prozesskontrolle hinter präzise Aktionen legt.",
       },
       highlights: [
-        "Läuft als native macOS-Menüleisten-Utility mit eigenem Runtime-Browser.",
-        "Ordnet jeden lauschenden TCP-Port seinem Prozess, Repository und dem Agenten zu, der ihn gestartet hat.",
-        "Öffnet localhost-URLs und stoppt exakte PIDs statt mit groben Prozessbefehlen.",
+        "Jede laufende Claude-Code- und Codex-Session nach Projekt und Branch, mit Status: arbeitet, wartet, braucht Freigabe.",
+        "Ordnet jeden lauschenden TCP-Port seinem Prozess, Repo, Branch und der Agent-Session zu, die ihn gestartet hat.",
+        "Agents holen sich über MCP einen freien Port pro Worktree, damit parallele Sessions nicht kollidieren.",
+        "Vor jedem Stopp werden PID, Port, Befehl und Ordner neu geprüft. Server, die du selbst gestartet hast, darf kein Agent beenden.",
       ],
     },
     stack: ["Swift", "macOS", "Menu Bar"],
@@ -164,9 +167,10 @@ export const featuredProjects: Project[] = [
     fallbackVersion: "unreleased",
     platformLabels: ["macOS"],
     highlights: [
-      "Runs as a native macOS menu bar utility with a dedicated runtime browser.",
-      "Maps each listening TCP port to its process, repository, and the agent that started it.",
-      "Opens localhost URLs and stops exact PIDs instead of using broad process commands.",
+      "Every running Claude Code and Codex session by project and branch, with its status: working, waiting, needs approval.",
+      "Maps each listening TCP port to its process, repo, branch and the agent session that started it.",
+      "Agents ask it over MCP for a free port per worktree, so parallel sessions never collide.",
+      "PID, port, command and folder are checked again before any stop. No agent can kill a server you started by hand.",
     ],
     showcase: [
       {
@@ -691,14 +695,6 @@ export const featuredProjects: Project[] = [
     ],
     npmPackage: "@jx-grxf/patchpilot",
     platformLabels: ["npm", "Terminal"],
-    logo: {
-      src: "/projects/patchpilot/logo.webp",
-      fallbackSrc: "/projects/patchpilot/logo.png",
-      alt: "PatchPilot logo",
-      fit: "contain",
-      width: 1254,
-      height: 1254,
-    },
     highlights: [
       "Local only: Ollama on your machine, your LAN or over Tailscale, plus OpenAI-compatible servers like LM Studio, MLX, llama.cpp and vLLM.",
       "Every file read and shell command lands in the transcript before it runs, with plan, build and bypass modes and a workspace boundary.",
@@ -978,7 +974,7 @@ export const featuredProjects: Project[] = [
     visibility: "public",
   },
   {
-    name: "claude-swap-bar",
+    name: "cswap",
     slug: "claude-swap-bar",
     status: "active",
     tagline: "Switch between Claude Code accounts from the menu bar, with live usage meters.",
@@ -1004,15 +1000,15 @@ export const featuredProjects: Project[] = [
       ],
     },
     stack: ["Swift", "macOS", "Menu Bar"],
-    repo: "jx-grxf/claude-swap-bar",
-    githubUrl: "https://github.com/jx-grxf/claude-swap-bar",
-    releaseUrl: "https://github.com/jx-grxf/claude-swap-bar/releases/tag/v1.1.1",
+    repo: "jx-grxf/cswap",
+    githubUrl: "https://github.com/jx-grxf/cswap",
+    releaseUrl: "https://github.com/jx-grxf/cswap/releases/tag/v1.1.1",
     fallbackVersion: "v1.1.1",
     platformLabels: ["macOS"],
     fallbackDownloads: [
       {
         assetName: "ClaudeSwapBar-1.1.1.zip",
-        assetUrl: "https://github.com/jx-grxf/claude-swap-bar/releases/download/v1.1.1/ClaudeSwapBar-1.1.1.zip",
+        assetUrl: "https://github.com/jx-grxf/cswap/releases/download/v1.1.1/ClaudeSwapBar-1.1.1.zip",
         size: 7771449,
         kind: "macos",
       },
@@ -1106,6 +1102,8 @@ export const featuredProjects: Project[] = [
     repo: "jx-grxf/agent-presence",
     githubUrl: "https://github.com/jx-grxf/agent-presence",
     releaseUrl: "https://github.com/jx-grxf/agent-presence/releases/tag/v0.3.0",
+    installCommand: "brew install jx-grxf/tap/agent-presence && agent-presence",
+    installCommandWindows: "scoop bucket add jx-grxf https://github.com/jx-grxf/scoop-bucket; scoop install agent-presence",
     fallbackVersion: "v0.3.0",
     fallbackDownloads: [
       {
@@ -1319,7 +1317,7 @@ const orderedProjects = (slugs: string[]) =>
 // appears here OR in a section below, never both.
 export const featuredShowcaseProjects = orderedProjects(["patchpilot", "briskedit", "macphone"]);
 
-export const homepageProjects = orderedProjects(["briskedit", "macphone", "patchpilot", "poise", "agent-presence", "caruso-reborn"]);
+export const homepageProjects = orderedProjects(["dirhop", "briskedit", "claude-swap-bar", "agent-presence", "poise", "patchpilot"]);
 
 export const projectSections: ProjectSection[] = [
   {

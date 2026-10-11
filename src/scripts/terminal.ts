@@ -153,6 +153,7 @@ async function runPing(raw = "") {
     return;
   }
 
+  line("Pong!", "accent");
   line(`PING johannesgrof.me (/api/ping): ${count} ${t("Pakete", "packets")}`, "dim");
   const results: PingResult[] = [];
   for (let seq = 1; seq <= count; seq++) {

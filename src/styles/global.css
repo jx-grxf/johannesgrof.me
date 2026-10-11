@@ -1467,6 +1467,10 @@ body::after {
   opacity: 0.72;
 }
 
+.install-button small {
+  overflow-wrap: anywhere;
+}
+
 .install-button[data-copy-state="success"] {
   border-color: var(--signal);
   color: var(--signal);
