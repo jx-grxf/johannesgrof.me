@@ -1,6 +1,6 @@
-// The answer to `curl johannesgrof.me`, shared by the /api/card route (local
+// The answer to `curl -sL johannesgrof.me/hi`, shared by the /api/card route (local
 // dev) and the standalone _curl function the build adds for production (see
-// tools/curl-route.mjs). The language comes from the path: / or /de.
+// tools/curl-route.mjs). The language comes from the path: /hi or /de/hi.
 import { HIDE_CURSOR, SHOW_CURSOR, card, trainFrames, type CardData } from "@/lib/curlCard";
 import { kontobuch } from "@/data/kontobuch";
 import { oeffigo } from "@/data/oeffigo";

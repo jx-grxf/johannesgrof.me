@@ -427,7 +427,7 @@ function run(raw: string) {
     case "curl":
     case "wget":
       line(t("Im echten Terminal ausprobieren:", "Try it in a real terminal:"), "dim");
-      line(`curl -sL johannesgrof.me${de ? "/de" : ""}`, "accent");
+      line(`curl -sL johannesgrof.me${de ? "/de" : ""}/hi`, "accent");
       break;
     case "git":
       line(t("Der Quelltext liegt hier:", "The source lives here:"), "dim");
