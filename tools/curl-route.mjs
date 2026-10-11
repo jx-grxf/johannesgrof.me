@@ -1,4 +1,4 @@
-// Sends curl, HTTPie and xh on /hi and /de/hi to a small function of its own
+// Sends curl, HTTPie and xh on /hi, /de/hi and everything below to a function of its own
 // that prints the terminal card. /hi is also a static page that explains the
 // command to browsers, and Vercel serves static files before any function, so
 // the route has to sit in front of the filesystem check in the build output.
@@ -14,7 +14,7 @@ import { build } from "rolldown";
 const FUNCTION = "_curl";
 
 const curlRoute = {
-  src: "^/(de/)?hi/?$",
+  src: "^/(de/)?hi(/.*)?$",
   has: [{ type: "header", key: "user-agent", value: "^(curl|HTTPie|xh)/.*$" }],
   // Anyone who asks for HTML gets the explainer page instead.
   missing: [{ type: "header", key: "accept", value: ".*text/html.*" }],

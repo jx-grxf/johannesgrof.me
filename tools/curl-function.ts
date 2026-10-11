@@ -1,3 +1,3 @@
-import { handleCard } from "../src/lib/curlHandler";
+import { handleHi } from "../src/lib/curlHandler";
 
-export default { fetch: handleCard };
+export default { fetch: handleHi };

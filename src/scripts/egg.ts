@@ -2,7 +2,10 @@
 // the dev console and the keys that open it. The terminal itself is only
 // downloaded the first time someone asks for it.
 
+import { startPresence } from "./presence";
+
 const de = document.documentElement.lang.startsWith("de");
+startPresence();
 
 const train = String.raw`
   ____________   ____________   ______________

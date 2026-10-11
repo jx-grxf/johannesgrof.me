@@ -2,6 +2,8 @@
 // headline), closed with Escape. Everything it prints is set as text, never as
 // HTML, so project data can't inject markup.
 
+import { peopleHere } from "./presence";
+import { callTrain } from "./remoteTrain";
 import { expressTrain } from "./train";
 
 interface TerminalProject {
@@ -33,7 +35,7 @@ const links: Record<string, string> = {
   source: "https://github.com/jx-grxf/johannesgrof.me",
 };
 
-const commands = ["help", "ls", "open", "stack", "about", "contact", "ping", "status", "traceroute", "train", "theme", "clear", "exit"];
+const commands = ["help", "ls", "open", "stack", "about", "contact", "ping", "status", "traceroute", "who", "zug", "call", "guestbook", "gaestebuch", "curl", "cv", "train", "theme", "clear", "exit"];
 
 let root: HTMLElement | undefined;
 let output: HTMLElement;
@@ -248,6 +250,55 @@ async function runStatus() {
   kv(t("auf der seite", "on this page"), `${Math.round(performance.now() / 1000)} s`, "dim");
 }
 
+const hiBase = `johannesgrof.me${de ? "/de" : ""}/hi`;
+
+async function runWho() {
+  const count = await peopleHere();
+  if (count === null) {
+    line(t("who: weiß ich gerade nicht.", "who: can't tell right now."), "error");
+    return;
+  }
+  line(
+    count <= 1
+      ? t("Nur du. Gerade ist sonst niemand auf der Seite.", "Just you. Nobody else is on the site right now.")
+      : t(`${count} Leute sind gerade auf der Seite, du eingeschlossen.`, `${count} people are on the site right now, you included.`),
+    "accent",
+  );
+  line(t("Gezählt werden offene Tabs, ohne Namen, IPs oder Cookies.", "Counting open tabs, with no names, IPs or cookies."), "dim");
+}
+
+async function runCallTrain() {
+  line(t("Hole einen Code …", "Getting a code …"), "dim");
+  await callTrain({
+    onToken: (token) => {
+      line(t("Tipp das in dein echtes Terminal:", "Type this into your real terminal:"));
+      line(`curl -X POST ${hiBase}/zug/${token}`, "accent");
+      line(t("Ich warte hier. Der Code gilt zehn Minuten, und der Zug fährt nur bei dir.", "I'll wait here. The code works for ten minutes, and the train only comes to you."), "dim");
+    },
+    onRing: () => line(t("Zug kommt!", "Train incoming!"), "accent"),
+    onExpire: () => line(t("Der Code ist abgelaufen. zug holt einen neuen.", "The code expired. call gets a new one."), "dim"),
+    onError: () => line(t("Gerade gibt es keinen Code. Später nochmal.", "No code right now. Try again later."), "error"),
+  });
+}
+
+async function runGuestbook() {
+  try {
+    const response = await fetch("/api/hi/guestbook", { headers: { Accept: "application/json" } });
+    const { entries } = (await response.json()) as { entries: { text: string; at: string }[] };
+    if (entries.length) {
+      const date = new Intl.DateTimeFormat(de ? "de-AT" : "en-GB", { day: "numeric", month: "short", timeZone: "Europe/Vienna" });
+      line(t("Gästebuch:", "Guestbook:"), "accent");
+      for (const entry of entries) line(`  ${date.format(new Date(entry.at)).padEnd(8)} »${entry.text}«`);
+    } else {
+      line(t("Noch leer. Du könntest der Erste sein.", "Still empty. You could be the first."), "dim");
+    }
+  } catch {
+    line(t("Das Gästebuch lädt gerade nicht.", "The guestbook won't load right now."), "error");
+  }
+  line(t("Unterschreiben geht im echten Terminal:", "Sign it from a real terminal:"), "dim");
+  line(`curl -d "servus" ${hiBase}/sign`, "accent");
+}
+
 async function runTrace() {
   line(t("traceroute to johannesgrof.me, 3 hops max", "traceroute to johannesgrof.me, 3 hops max"), "accent");
   line(t(" 1  dein Browser  0.0 ms", " 1  your browser  0.0 ms"));
@@ -331,6 +382,9 @@ function run(raw: string) {
       line(`  traceroute       ${t("Weg bis zum Server", "path to the server")}`);
       line(`  curl             ${t("die Seite im echten Terminal", "this site in a real terminal")}`);
       line(`  cv               ${t("einseitiger Lebenslauf zum Drucken", "one-page CV to print")}`);
+      line(`  who              ${t("wer gerade auf der Seite ist", "who is on the site right now")}`);
+      line(`  ${t("zug             ", "call            ")} ${t("Zug per curl aus deinem Terminal rufen", "call the train with curl from your terminal")}`);
+      line(`  ${t("gästebuch       ", "guestbook       ")} ${t("Einträge lesen und per curl unterschreiben", "read entries and sign with curl")}`);
       line(`  train            ${t("ruft den Zug", "calls the train")}`);
       line(`  theme light|dark ${t("Papier wechseln", "switch the paper")}`);
       line("  clear, exit");
@@ -431,6 +485,20 @@ function run(raw: string) {
     case "lpr":
       line(t("Schicke den Lebenslauf an den Drucker …", "Sending the CV to the printer …"), "dim");
       window.setTimeout(() => window.print(), 300);
+      break;
+    case "who":
+    case "w":
+      void runWho();
+      break;
+    case "zug":
+    case "call":
+      void runCallTrain();
+      break;
+    case "guestbook":
+    case "gaestebuch":
+    case "gästebuch":
+    case "gb":
+      void runGuestbook();
       break;
     case "curl":
     case "wget":
