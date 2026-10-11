@@ -52,7 +52,7 @@ export async function handleCard(request: Request): Promise<Response> {
       { label: lang === "de" ? "mail" : "email", url: `mailto:${author.email}` },
     ],
     served: {
-      edge: request.headers.get("x-vercel-id")?.split("::")[0] ?? null,
+      edge: request.headers.get("x-vercel-id")?.split(":")[0] ?? null,
       region: process.env.VERCEL_REGION ?? null,
       ms: 0,
     },
