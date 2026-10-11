@@ -36,17 +36,81 @@ if (board) {
     return span;
   };
 
+  // Split-flap: a changed cell runs every character through the flap order
+  // until it lands on the new one; characters that stay the same don't move.
+  const FLAPS = " ABCDEFGHIJKLMNOPQRSTUVWXYZÄÖÜ0123456789-.";
+  const TICK_MS = 50;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const timers = new WeakMap<HTMLElement, number>();
+  let flipping = 0;
+
+  const flapAt = (target: string, stepsLeft: number) => {
+    const index = FLAPS.indexOf(target.toUpperCase());
+    if (index === -1) return FLAPS[(stepsLeft * 7) % FLAPS.length]!;
+    const char = FLAPS[(index - stepsLeft + FLAPS.length * 8) % FLAPS.length]!;
+    return target === target.toLowerCase() ? char.toLowerCase() : char;
+  };
+
+  const flip = (el: HTMLElement, next: string, delay: number) => {
+    const prev = el.dataset.value ?? "";
+    if (prev === next) return;
+    el.dataset.value = next;
+    const running = timers.get(el);
+    if (running) {
+      window.clearInterval(running);
+      flipping--;
+    }
+    if (reduceMotion.matches) {
+      el.textContent = next;
+      return;
+    }
+    const length = Math.max(prev.length, next.length);
+    const settle = Array.from({ length }, (_, i) => delay + 3 + ((i * 5) % 7) + Math.floor(i / 2));
+    const last = Math.max(...settle, delay);
+    let tick = 0;
+    flipping++;
+    rows.setAttribute("aria-busy", "true");
+    el.classList.add("is-flipping");
+    const id = window.setInterval(() => {
+      tick++;
+      let text = "";
+      for (let i = 0; i < length; i++) {
+        const from = prev[i] ?? " ";
+        const to = next[i] ?? " ";
+        if (tick < delay || from === to) text += tick < delay ? from : to;
+        else if (tick >= settle[i]!) text += to;
+        else text += flapAt(to, settle[i]! - tick);
+      }
+      el.textContent = text;
+      if (tick >= last) {
+        window.clearInterval(id);
+        timers.delete(el);
+        el.textContent = next;
+        el.classList.remove("is-flipping");
+        if (--flipping === 0) rows.setAttribute("aria-busy", "false");
+      }
+    }, TICK_MS);
+    timers.set(el, id);
+  };
+
   const render = (departures: Departure[]) => {
-    rows.replaceChildren(
-      ...departures.map((d) => {
-        const li = document.createElement("li");
-        li.className = "dep-row";
-        const eta = cell(`dep-eta${d.minutes === 0 ? " dep-eta--now" : ""}`, d.minutes === 0 ? t.now : `${d.minutes} ${t.min}`);
-        const kind = cell(`dep-kind${d.realtime ? " dep-kind--rt" : ""}`, d.realtime ? t.realtime : t.timetable);
-        li.append(cell("dep-line", d.line), cell("dep-dest", d.towards), kind, eta);
-        return li;
-      }),
-    );
+    while (rows.children.length > departures.length) rows.lastElementChild!.remove();
+    while (rows.children.length < departures.length) {
+      const li = document.createElement("li");
+      li.className = "dep-row";
+      li.append(cell("dep-line", ""), cell("dep-dest", ""), cell("dep-kind", ""), cell("dep-eta", ""));
+      rows.append(li);
+    }
+    departures.forEach((d, index) => {
+      const [line, dest, kind, eta] = [...rows.children[index]!.children] as HTMLElement[];
+      const delay = index * 2;
+      flip(line!, d.line, delay);
+      flip(dest!, d.towards, delay);
+      kind!.className = `dep-kind${d.realtime ? " dep-kind--rt" : ""}`;
+      kind!.textContent = d.realtime ? t.realtime : t.timetable;
+      eta!.classList.toggle("dep-eta--now", d.minutes === 0);
+      flip(eta!, d.minutes === 0 ? t.now : `${d.minutes} ${t.min}`, delay);
+    });
   };
 
   const load = async () => {
@@ -79,7 +143,6 @@ if (board) {
     button.addEventListener("click", () => {
       stop = button.dataset.stop ?? stop;
       buttons.forEach((b) => b.setAttribute("aria-pressed", String(b === button)));
-      rows.replaceChildren();
       status.textContent = t.loading;
       void load();
     });

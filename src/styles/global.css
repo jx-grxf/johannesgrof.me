@@ -4067,35 +4067,18 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   border-bottom: 2px solid #3a2a0c;
   font-size: clamp(1rem, 2.2vw, 1.4rem);
   font-weight: 700;
-  animation: dep-in 360ms steps(4) backwards;
 }
 
-.dep-row:nth-child(2) {
-  animation-delay: 60ms;
-}
-.dep-row:nth-child(3) {
-  animation-delay: 120ms;
-}
-.dep-row:nth-child(4) {
-  animation-delay: 180ms;
-}
-.dep-row:nth-child(5) {
-  animation-delay: 240ms;
-}
-.dep-row:nth-child(6) {
-  animation-delay: 300ms;
-}
-.dep-row:nth-child(7) {
-  animation-delay: 360ms;
-}
-.dep-row:nth-child(8) {
-  animation-delay: 420ms;
+/* While a cell flips, a hairline across the middle shows the split between
+   the two flap halves, like on the station boards. */
+.dep-row .is-flipping {
+  background-image: linear-gradient(to bottom, transparent calc(50% - 1px), rgb(0 0 0 / 55%) calc(50% - 1px), rgb(0 0 0 / 55%) calc(50% + 1px), transparent calc(50% + 1px));
+  color: #ffd27a;
 }
 
-@keyframes dep-in {
-  from {
-    clip-path: inset(0 0 100% 0);
-  }
+.dep-line.is-flipping {
+  background-color: #ffae1a;
+  color: #070706;
 }
 
 .dep-line {
@@ -4178,7 +4161,6 @@ html[lang="de"] .error-page [data-error-lang="en"] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dep-row,
   .dep-eta--now {
     animation: none;
   }
