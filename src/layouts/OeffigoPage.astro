@@ -25,9 +25,9 @@ const s = isDe
       navLabel: "Seitennavigation",
       langLabel: "EN",
       langAria: "View this page in English",
-      title: `${oeffigo.name} — Öffi fahren, ohne zu raten`,
+      title: `${oeffigo.name} — die Öffi-App für ganz Österreich`,
       description:
-        "ÖffiGo: Abfahrten, Routen und Zielführung für ganz Österreich, am iPhone und an der Apple Watch. Eine App von Johannes Grof, derzeit in geschlossener TestFlight-Beta.",
+        "ÖffiGo, die Öffi-App für ganz Österreich: Verbindungen, Abfahrten und Zielführung für Bus, Bahn und Bim, am iPhone und an der Apple Watch. Eine App von Johannes Grof, derzeit in geschlossener TestFlight-Beta.",
       features: "Funktionen",
       data: "Daten & Quellen",
       dataPlatform: "Plattform",
@@ -45,9 +45,9 @@ const s = isDe
       navLabel: "Page navigation",
       langLabel: "DE",
       langAria: "Diese Seite auf Deutsch ansehen",
-      title: `${oeffigo.name} — transit, without the guesswork`,
+      title: `${oeffigo.name} — the transit app for all of Austria`,
       description:
-        "ÖffiGo: departures, routes and guidance for all of Austria, on the iPhone and the Apple Watch. An app by Johannes Grof, currently in a closed TestFlight beta.",
+        "ÖffiGo, the transit app for all of Austria: routes, departures and step-by-step guidance for bus, train and tram, on the iPhone and the Apple Watch. An app by Johannes Grof, currently in a closed TestFlight beta.",
       features: "Features",
       data: "Data & sources",
       dataPlatform: "Platform",
@@ -97,7 +97,7 @@ const oeffigoSchema = {
     {
       "@type": "WebPage",
       name: "ÖffiGo Live",
-      url: oeffigo.liveUrl,
+      url: oeffigo.liveUrl[lang],
       description: oeffigo.liveProof.body[lang],
     },
     {
@@ -200,7 +200,7 @@ const oeffigoSchema = {
             {oeffigo.liveProof.stats.map((stat) => <li>{stat[lang]}</li>)}
           </ul>
           <div class="note-actions">
-            <a href={oeffigo.liveUrl} rel="me">{oeffigo.liveProof.liveLabel[lang]}</a>
+            <a href={oeffigo.liveUrl[lang]} rel="me">{oeffigo.liveProof.liveLabel[lang]}</a>
             <a href={oeffigo.statusUrl} rel="me">{oeffigo.liveProof.statusLabel[lang]}</a>
           </div>
         </div>
@@ -240,7 +240,8 @@ const oeffigoSchema = {
           <h3>{oeffigo.beta.headline[lang]}</h3>
           <p>{oeffigo.beta.body[lang]}</p>
           <div class="note-actions">
-            <a href={oeffigo.websiteUrl} rel="me">{oeffigo.beta.ctaLabel[lang]}</a>
+            <a href={oeffigo.betaUrl[lang]} rel="me">{oeffigo.beta.ctaLabel[lang]}</a>
+            <a href={oeffigo.newUrl[lang]} rel="me">{oeffigo.beta.newLabel[lang]}</a>
           </div>
         </div>
       </section>
