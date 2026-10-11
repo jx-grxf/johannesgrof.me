@@ -22,6 +22,15 @@ export interface CardData {
   links: { label: string; url: string }[];
   served: { edge: string | null; region: string | null; ms: number };
   viennaTime: string;
+  /** Visitors on the site right now, null when unknown. */
+  here: number | null;
+  guestbook: { text: string; at: string }[];
+}
+
+export interface BoardData {
+  stop: string;
+  updatedAt: string;
+  departures: Departure[];
 }
 
 export const WIDTH = 78;
@@ -226,7 +235,12 @@ function box(title: string, lines: string[], color: string): string[] {
 }
 
 function board(data: CardData): string[] {
-  const de = data.lang === "de";
+  return departureBoard(data.board, data.lang, `${data.lang === "de" ? "Gerade in Wien" : "Right now in Vienna"} · `);
+}
+
+export function departureBoard(board: BoardData | null, lang: "en" | "de", titlePrefix = "", limit = 6): string[] {
+  const de = lang === "de";
+  const data = { board };
   if (!data.board || !data.board.departures.length) {
     return box(de ? "Abfahrten" : "Departures", [paint(MUTED, de ? "Die Tafel ist gerade dunkel." : "The board is dark right now.")], "#5c574d");
   }
@@ -235,14 +249,14 @@ function board(data: CardData): string[] {
   // line(5) + space + towards + minutes(7) + two spaces + source dot + space = inner
   const towardsWidth = inner - 17;
   const panel = `${bg(LED_BG)}${fg(LED)}`;
-  const rows = data.board.departures.slice(0, 6).map((d) => {
+  const rows = data.board.departures.slice(0, limit).map((d) => {
     const minutes = d.minutes === 0 ? (de ? "jetzt" : "now") : `${d.minutes} min`;
     const towards = truncate(clean(d.towards), towardsWidth).padEnd(towardsWidth);
     const source = d.realtime ? `${fg(LIVE)}●` : `${fg(MUTED)}○`;
     return `${panel}${BOLD}${truncate(clean(d.line), 5).padEnd(5)}${RESET}${panel} ${towards}${minutes.padStart(7)}  ${source} ${RESET}`;
   });
   const legend = paint(MUTED, de ? `● Echtzeit  ○ Fahrplan · Wiener Linien OGD, CC BY 4.0 · ${time}` : `● real time  ○ timetable · Wiener Linien OGD, CC BY 4.0 · ${time}`);
-  return box(`${de ? "Gerade in Wien" : "Right now in Vienna"} · ${clean(data.board.stop)}`, [...rows, legend], LED);
+  return box(`${titlePrefix}${clean(data.board.stop)}`, [...rows, legend], LED);
 }
 
 export function card(data: CardData): string {
@@ -261,6 +275,7 @@ export function card(data: CardData): string {
       `${paint(MUTED, "→")} ${paint(LIVE, link(data.oeffigo.url))}`,
     ], LIVE),
     ...board(data),
+    ...guestbookBox(data),
     "",
     ...indent([`${BOLD}${paint(SIGNAL, de ? "PROJEKTE" : "PROJECTS")}${RESET}`]),
     ...indent(
@@ -274,15 +289,86 @@ export function card(data: CardData): string {
     "",
     ...indent(data.links.map((l) => `${paint(MUTED, l.label.padEnd(9))}${link(l.url, l.url.replace(/^mailto:|^https:\/\//, ""))}`)),
     "",
+    ...indent([`${BOLD}${paint(SIGNAL, de ? "BEFEHLE" : "COMMANDS")}${RESET}`]),
+    ...indent(commandLines(data.lang)),
+    "",
     ...indent([
       paint(
         "#5c574d",
-        `${de ? "ausgeliefert" : "served"} ${data.served.edge ?? "edge"} → ${data.served.region ?? "local"} ${de ? "in" : "in"} ${data.served.ms} ms · ${de ? "Wien" : "Vienna"} ${data.viennaTime}`,
+        `${de ? "ausgeliefert" : "served"} ${data.served.edge ?? "edge"} → ${data.served.region ?? "local"} in ${data.served.ms} ms · ${de ? "Wien" : "Vienna"} ${data.viennaTime}`,
       ),
+      ...(data.here ? [paint("#5c574d", hereText(data.here, data.lang))] : []),
       paint("#5c574d", de ? "Im Browser gibt's mehr: ~ drücken öffnet das Terminal der Seite." : "There is more in the browser: press ~ to open the site's own terminal."),
       paint("#5c574d", de ? "English: curl -sL johannesgrof.me/hi" : "Auf Deutsch: curl -sL johannesgrof.me/de/hi"),
     ]),
     "",
   ];
   return `${out.join("\n")}${RESET}\n`;
+}
+
+const DIMMER = "#5c574d";
+const base = (lang: "en" | "de") => `johannesgrof.me${lang === "de" ? "/de" : ""}/hi`;
+
+export const hereText = (count: number, lang: "en" | "de") =>
+  lang === "de"
+    ? count === 1 ? "1 Person ist gerade auf der Seite" : `${count} Leute sind gerade auf der Seite`
+    : count === 1 ? "1 person is on the site right now" : `${count} people are on the site right now`;
+
+function commandLines(lang: "en" | "de"): string[] {
+  const de = lang === "de";
+  const rows: [string, string][] = [
+    [`curl -sL ${base(lang)}/oeffi/schottentor`, de ? "Abfahrten jeder Wiener Station" : "departures for any stop in Vienna"],
+    [`curl -sL ${base(lang)}/who`, de ? "wer gerade auf der Seite ist" : "who is on the site right now"],
+    [`curl -d "servus" ${base(lang)}/sign`, de ? "ins Gästebuch schreiben" : "sign the guestbook"],
+    [`curl -sL ${base(lang)}/help`, de ? "alle Befehle, auch Zug rufen" : "every command, calling the train too"],
+  ];
+  return rows.flatMap(([command, what]) => [paint(INK, command), `  ${paint(MUTED, what)}`]);
+}
+
+function guestbookBox(data: CardData): string[] {
+  if (!data.guestbook.length) return [];
+  const de = data.lang === "de";
+  const date = new Intl.DateTimeFormat(de ? "de-AT" : "en-GB", { day: "numeric", month: "short", timeZone: "Europe/Vienna" });
+  const lines = data.guestbook.slice(0, 3).flatMap((entry) =>
+    wrap(`»${clean(entry.text)}«`, BOX_INNER - 10).map((line, i, all) => (i === all.length - 1 ? padEnd(paint(INK, line), BOX_INNER - 9) + paint(MUTED, date.format(new Date(entry.at)).padStart(9)) : paint(INK, line))),
+  );
+  return box(de ? "Gästebuch" : "Guestbook", lines, AMBER);
+}
+
+/** The departures of one stop, for curl johannesgrof.me/hi/oeffi/<stop>. */
+export function stationCard(board: BoardData | null, query: string, suggestions: string[], lang: "en" | "de"): string {
+  const de = lang === "de";
+  const out = [""];
+  if (!board) {
+    out.push(`  ${paint(SIGNAL, de ? `Keine Station gefunden für „${clean(query)}“.` : `No stop found for "${clean(query)}".`)}`);
+  } else {
+    out.push(...departureBoard(board, lang, "", 12));
+  }
+  if (suggestions.length) {
+    out.push("", `  ${paint(MUTED, de ? "Meintest du:" : "Did you mean:")}`);
+    for (const name of suggestions) out.push(`  ${paint(INK, `curl -sL ${base(lang)}/oeffi/${encodeURIComponent(name.toLowerCase().replace(/\s+/g, "-"))}`)}`);
+  }
+  out.push("", `  ${paint(DIMMER, de ? "Daten: Wiener Linien, data.wien.gv.at (CC BY 4.0)" : "Data: Wiener Linien, data.wien.gv.at (CC BY 4.0)")}`, "");
+  return `${out.join("\n")}${RESET}\n`;
+}
+
+/** A short answer in the same style, for sign, who, the train and errors. */
+export function messageCard(lines: { text: string; tone?: "ok" | "muted" | "error" | "plain" }[]): string {
+  const color = { ok: LIVE, muted: MUTED, error: SIGNAL, plain: INK } as const;
+  return `\n${lines.map((line) => `  ${paint(color[line.tone ?? "plain"], line.text)}`).join("\n")}\n\n${RESET}`;
+}
+
+export function helpCard(lang: "en" | "de"): string {
+  const de = lang === "de";
+  return [
+    "",
+    `  ${BOLD}${paint(SIGNAL, de ? "BEFEHLE" : "COMMANDS")}${RESET}`,
+    ...commandLines(lang).map((line) => `  ${line}`),
+    `  ${paint(INK, `curl -X POST ${base(lang)}/zug/<code>`)}`,
+    `    ${paint(MUTED, de ? "schickt den Pixel-Zug durch deinen Browser-Tab; den Code" : "sends the pixel train through your browser tab; the code")}`,
+    `    ${paint(MUTED, de ? `zeigt dir johannesgrof.me${lang === "de" ? "/de" : ""}/hi/ oder das Terminal der Seite (zug)` : "is on johannesgrof.me/hi/ or in the site terminal (train call)")}`,
+    "",
+    `  ${paint(DIMMER, de ? "?static lässt den Zug in der Karte weg." : "?static skips the train in the card.")}`,
+    "",
+  ].join("\n") + `${RESET}\n`;
 }

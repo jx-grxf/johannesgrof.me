@@ -13,7 +13,16 @@ interface Props {
 const { lang } = Astro.props;
 const de = lang === "de";
 const home = de ? "/de/" : "/";
-const command = `curl -sL johannesgrof.me${de ? "/de" : ""}/hi`;
+const base = `johannesgrof.me${de ? "/de" : ""}/hi`;
+const command = `curl -sL ${base}`;
+const commands = [
+  { command: `curl -sL ${base}`, what: de ? "die Karte mit Projekten und Live-Abfahrten" : "the card with projects and live departures" },
+  { command: `curl -sL ${base}/oeffi/schottentor`, what: de ? "Abfahrten jeder Wiener Station, Name in die URL" : "departures for any stop in Vienna, name in the URL" },
+  { command: `curl -sL ${base}/who`, what: de ? "wie viele gerade auf der Seite sind" : "how many people are on the site right now" },
+  { command: `curl -d "servus" ${base}/sign`, what: de ? "ins Gästebuch schreiben, erscheint nach meiner Freigabe" : "sign the guestbook, shows up once I've read it" },
+  { command: `curl -X POST ${base}/zug/<code>`, what: de ? "den Zug durch deinen Tab schicken, Code holst du unten" : "send the train through your tab, get the code below" },
+  { command: `curl -sL ${base}/help`, what: de ? "alle Befehle im Terminal" : "every command, in the terminal" },
+];
 const s = de
   ? {
       title: "Im Terminal · Johannes Grof",
@@ -24,6 +33,17 @@ const s = de
       copied: "Kopiert",
       alt: "So sieht die Ausgabe im Terminal aus: der Name in Pixelschrift, ÖffiGo, eine Abfahrtstafel vom Praterstern und die Projekte.",
       caption: "Eine Aufnahme der Ausgabe. Die Abfahrten sind bei dir aktuell.",
+      commandsTitle: "Alle Befehle",
+      trainTitle: "Zug rufen",
+      trainLead: "Hol dir deinen eigenen Befehl und tipp ihn in dein Terminal. Der Pixel-Zug fährt dann durch genau diesen Tab, bei niemandem sonst.",
+      trainButton: "Meinen Befehl holen",
+      trainWaiting: "Wartet auf deinen curl. Der Code gilt zehn Minuten.",
+      trainRang: "Zug kommt! Nochmal? Einfach den Befehl wiederholen.",
+      trainExpired: "Der Code ist abgelaufen. Hol dir einen neuen.",
+      trainError: "Gerade gibt es keinen Code. Später nochmal.",
+      guestbookTitle: "Gästebuch",
+      guestbookLead: "Unterschreiben geht nur aus dem Terminal. Jeder Eintrag landet erst bei mir und steht nach der Freigabe hier und auf der Abfahrtstafel der Startseite.",
+      guestbookEmpty: "Noch leer.",
       notes: [
         "Funktioniert mit curl, HTTPie und xh. Farben brauchen ein Terminal mit 24-Bit-Farbe, das haben fast alle.",
         "Ohne Zug: ?static anhängen. Links sind in iTerm2, kitty, WezTerm und Ghostty klickbar.",
@@ -38,6 +58,17 @@ const s = de
       copied: "Copied",
       alt: "What the terminal output looks like: the name in a pixel font, ÖffiGo, a departures board for Praterstern and the projects.",
       caption: "A capture of the output. Yours shows the departures of right now.",
+      commandsTitle: "Every command",
+      trainTitle: "Call the train",
+      trainLead: "Get your own command and type it into your terminal. The pixel train then drives through this very tab, and nobody else's.",
+      trainButton: "Get my command",
+      trainWaiting: "Waiting for your curl. The code works for ten minutes.",
+      trainRang: "Train incoming! Again? Just repeat the command.",
+      trainExpired: "The code expired. Get a new one.",
+      trainError: "No code right now. Try again later.",
+      guestbookTitle: "Guestbook",
+      guestbookLead: "Signing only works from a terminal. Every entry comes to me first and shows up here and on the home page departures board once I've read it.",
+      guestbookEmpty: "Still empty.",
       notes: [
         "Works with curl, HTTPie and xh. Colours need a terminal with 24-bit colour, which almost all have.",
         "Skip the train: add ?static. Links are clickable in iTerm2, kitty, WezTerm and Ghostty.",
@@ -85,6 +116,42 @@ const canonicalPath = `${de ? "/de" : ""}/hi/`;
         <img src={`/hi/card-${lang}.webp`} alt={s.alt} width="1440" height="1138" loading="eager" decoding="async" />
         <figcaption>{s.caption}</figcaption>
       </figure>
+
+      <section class="curl-section" aria-labelledby="curl-commands-title">
+        <h2 id="curl-commands-title">{s.commandsTitle}</h2>
+        <dl class="curl-commands">
+          {
+            commands.map((entry) => (
+              <>
+                <dt><code>{entry.command}</code></dt>
+                <dd>{entry.what}</dd>
+              </>
+            ))
+          }
+        </dl>
+      </section>
+
+      <section class="curl-section" aria-labelledby="curl-train-title" data-call-train data-waiting={s.trainWaiting} data-rang={s.trainRang} data-expired={s.trainExpired} data-error={s.trainError} data-base={base}>
+        <h2 id="curl-train-title">{s.trainTitle}</h2>
+        <p class="curl-lead">{s.trainLead}</p>
+        <button class="curl-get" type="button" data-call-button>{s.trainButton}</button>
+        <div class="curl-command" data-call-command hidden>
+          <code></code>
+          <button type="button" data-copy="" data-copied={s.copied}>{s.copy}</button>
+        </div>
+        <p class="curl-status" data-call-status aria-live="polite"></p>
+      </section>
+
+      <section class="curl-section" aria-labelledby="curl-guestbook-title">
+        <h2 id="curl-guestbook-title">{s.guestbookTitle}</h2>
+        <p class="curl-lead">{s.guestbookLead}</p>
+        <div class="curl-command">
+          <code>{`curl -d "servus" ${base}/sign`}</code>
+          <button type="button" data-copy={`curl -d "servus" ${base}/sign`} data-copied={s.copied}>{s.copy}</button>
+        </div>
+        <ul class="curl-guestbook" data-guestbook data-empty={s.guestbookEmpty}></ul>
+      </section>
+
       <ul class="curl-notes">
         {s.notes.map((note) => <li>{note}</li>)}
       </ul>
@@ -93,17 +160,78 @@ const canonicalPath = `${de ? "/de" : ""}/hi/`;
     <SiteFooter lang={lang} />
 
     <script>
-      const button = document.querySelector<HTMLButtonElement>("[data-copy]");
-      button?.addEventListener("click", async () => {
-        const label = button.textContent;
-        try {
-          await navigator.clipboard.writeText(button.dataset.copy ?? "");
-          button.textContent = button.dataset.copied ?? label;
-        } catch {
-          window.getSelection()?.selectAllChildren(button.previousElementSibling!);
-        }
-        window.setTimeout(() => (button.textContent = label), 1600);
+      import { callTrain } from "@/scripts/remoteTrain";
+
+      document.querySelectorAll<HTMLButtonElement>("[data-copy]").forEach((button) => {
+        button.addEventListener("click", async () => {
+          const label = button.textContent;
+          try {
+            await navigator.clipboard.writeText(button.dataset.copy ?? "");
+            button.textContent = button.dataset.copied ?? label;
+          } catch {
+            window.getSelection()?.selectAllChildren(button.previousElementSibling!);
+          }
+          window.setTimeout(() => (button.textContent = label), 1600);
+        });
       });
+
+      const section = document.querySelector<HTMLElement>("[data-call-train]");
+      if (section) {
+        const get = section.querySelector<HTMLButtonElement>("[data-call-button]")!;
+        const box = section.querySelector<HTMLElement>("[data-call-command]")!;
+        const code = box.querySelector("code")!;
+        const copy = box.querySelector<HTMLButtonElement>("[data-copy]")!;
+        const status = section.querySelector<HTMLElement>("[data-call-status]")!;
+        get.addEventListener("click", () => {
+          get.disabled = true;
+          void callTrain({
+            onToken: (token) => {
+              const command = `curl -X POST ${section.dataset.base}/zug/${token}`;
+              code.textContent = command;
+              copy.dataset.copy = command;
+              box.hidden = false;
+              status.textContent = section.dataset.waiting ?? "";
+              get.disabled = false;
+            },
+            onRing: () => (status.textContent = section.dataset.rang ?? ""),
+            onExpire: () => {
+              box.hidden = true;
+              status.textContent = section.dataset.expired ?? "";
+            },
+            onError: () => {
+              status.textContent = section.dataset.error ?? "";
+              get.disabled = false;
+            },
+          });
+        });
+      }
+
+      const list = document.querySelector<HTMLElement>("[data-guestbook]");
+      if (list) {
+        const format = new Intl.DateTimeFormat(document.documentElement.lang.startsWith("de") ? "de-AT" : "en-GB", { day: "numeric", month: "short", timeZone: "Europe/Vienna" });
+        fetch("/api/hi/guestbook", { headers: { Accept: "application/json" } })
+          .then((response) => (response.ok ? response.json() : { entries: [] }))
+          .then(({ entries }: { entries: { text: string; at: string }[] }) => {
+            if (!entries.length) {
+              const empty = document.createElement("li");
+              empty.className = "curl-guestbook-empty";
+              empty.textContent = list.dataset.empty ?? "";
+              list.append(empty);
+              return;
+            }
+            for (const entry of entries) {
+              const item = document.createElement("li");
+              const date = document.createElement("time");
+              date.dateTime = entry.at;
+              date.textContent = format.format(new Date(entry.at));
+              const text = document.createElement("span");
+              text.textContent = `»${entry.text}«`;
+              item.append(date, text);
+              list.append(item);
+            }
+          })
+          .catch(() => {});
+      }
     </script>
   </body>
 </html>

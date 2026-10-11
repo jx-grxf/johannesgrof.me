@@ -131,11 +131,29 @@ if (board) {
     }
   };
 
+  // Approved guestbook entries (signed with curl) run along the bottom of the board.
+  const ticker = board.querySelector<HTMLElement>("[data-guestbook-ticker]");
+  const loadGuestbook = async () => {
+    if (!ticker) return;
+    try {
+      const response = await fetch("/api/hi/guestbook", { headers: { Accept: "application/json" } });
+      if (!response.ok) return;
+      const { entries } = (await response.json()) as { entries: { text: string }[] };
+      if (!entries.length) return;
+      const span = document.createElement("span");
+      span.textContent = `${de ? "Gästebuch" : "Guestbook"}: ${entries.map((entry) => `»${entry.text}«`).join("  ·  ")}  ·  curl -d "…" johannesgrof.me${de ? "/de" : ""}/hi/sign`;
+      span.style.animationDuration = `${Math.max(22, span.textContent.length / 5)}s`;
+      ticker.replaceChildren(span);
+      ticker.hidden = false;
+    } catch {}
+  };
+
   const start = () => {
     if (started) return;
     started = true;
     status.textContent = t.loading;
     void load();
+    void loadGuestbook();
     timer = window.setInterval(() => void load(), 30_000);
   };
 

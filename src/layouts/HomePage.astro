@@ -228,6 +228,7 @@ const profileSchema = {
                 <div class="led-top"><span>{isDe ? "Abfahrten" : "Departures"}</span><span data-departures-clock>--:--</span></div>
                 <ul class="dep-rows" data-departures-rows aria-live="polite"></ul>
                 <p class="dep-status" data-departures-status>{isDe ? "Lade Abfahrten …" : "Loading departures …"}</p>
+                <p class="led-ticker dep-ticker" data-guestbook-ticker hidden></p>
               </div>
               <p class="dep-note">
                 {isDe

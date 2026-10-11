@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { WIDTH, card, trainFrames, visibleLength, type CardData } from "../src/lib/curlCard.ts";
+import { WIDTH, card, helpCard, messageCard, stationCard, trainFrames, visibleLength, type CardData } from "../src/lib/curlCard.ts";
 
 const data = (overrides: Partial<CardData> = {}): CardData => ({
   lang: "de",
@@ -24,6 +24,11 @@ const data = (overrides: Partial<CardData> = {}): CardData => ({
   links: [{ label: "github", url: "https://github.com/jx-grxf" }],
   served: { edge: "fra1", region: "fra1", ms: 12 },
   viennaTime: "17:45",
+  here: 3,
+  guestbook: [
+    { text: "Servus aus Graz! Ein Eintrag, der so lang ist, dass er im Kasten umbrechen muss, damit nichts über den Rand ragt, und noch etwas.", at: "2026-10-11T15:00:00.000Z" },
+    { text: "kurz", at: "2026-10-10T15:00:00.000Z" },
+  ],
   ...overrides,
 });
 
@@ -63,4 +68,22 @@ test("control characters from the departures feed never reach the terminal", () 
   assert.ok(!out.includes("\x1b]0;"));
   assert.ok(!out.includes("\x07"));
   assert.ok(!out.includes("\x1b[2J"));
+});
+
+test("station board, help and messages stay inside the card width", () => {
+  const station = stationCard(
+    { stop: "Schottentor", updatedAt: "2026-10-11T15:45:00.000Z", departures: Array.from({ length: 14 }, (_, i) => ({ line: `D${i}`, towards: "Nußdorf, Beethovengang und noch viel weiter", minutes: i, realtime: i % 2 === 0, type: "ptTram" })) },
+    "schottentor",
+    ["Schottenring", "Schottentor (Universität)"],
+    "de",
+  );
+  for (const text of [station, helpCard("de"), helpCard("en"), messageCard([{ text: "Danke, ist angekommen.", tone: "ok" }])]) {
+    for (const line of text.split("\n")) assert.ok(visibleLength(line) <= WIDTH, `${visibleLength(line)}: ${line}`);
+  }
+  assert.equal(station.split("\n").filter((line) => line.includes("D1")).length > 0, true);
+});
+
+test("guestbook entries are cleaned before they reach a terminal", () => {
+  const out = card(data({ guestbook: [{ text: "hi\x1b]0;pwned\x07 there", at: "2026-10-11T15:00:00.000Z" }] }));
+  assert.ok(!out.includes("\x1b]0;"));
 });

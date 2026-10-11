@@ -58,10 +58,40 @@ import LegalPage from "@/layouts/LegalPage.astro";
 
   <h2>Schutz vor Missbrauch (Rate-Limiting)</h2>
   <p>
-    Zum Schutz des Kontaktformulars vor automatisiertem Missbrauch wird Ihre IP-Adresse
-    kurzzeitig verarbeitet, um die Anzahl der Absendungen pro Zeitfenster zu begrenzen. Hierfür
-    wird der Dienst <strong>Upstash</strong> (Upstash, Inc., USA) als Auftragsverarbeiter
-    eingesetzt. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (Schutz vor Spam und Missbrauch).
+    Zum Schutz des Kontaktformulars und der Terminal-Funktionen (siehe unten) vor automatisiertem
+    Missbrauch wird Ihre IP-Adresse kurzzeitig verarbeitet, um die Anzahl der Anfragen pro
+    Zeitfenster zu begrenzen. Die Zähler verfallen nach höchstens einer Stunde. Hierfür wird der
+    Dienst <strong>Upstash</strong> (Upstash, Inc., USA) als Auftragsverarbeiter eingesetzt.
+    Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (Schutz vor Spam und Missbrauch).
+  </p>
+
+  <h2>Terminal-Funktionen</h2>
+  <p>
+    Über <code>curl</code> und das Terminal auf der Seite gibt es drei Funktionen, die Daten bei
+    Upstash speichern:
+  </p>
+  <ul>
+    <li>
+      <strong>Gästebuch:</strong> Den Text, den Sie absenden, und den Zeitpunkt. Der Eintrag geht
+      zuerst per E-Mail (über Resend, siehe Kontaktformular) an mich und wird erst nach meiner
+      Freigabe öffentlich angezeigt. Nicht freigegebene Einträge werden nach sieben Tagen gelöscht,
+      angezeigt werden höchstens die letzten 30. Bitte schreiben Sie keine personenbezogenen Daten
+      hinein. Auf Wunsch lösche ich einen Eintrag jederzeit.
+    </li>
+    <li>
+      <strong>Besucherzähler („who“):</strong> Jeder geöffnete Tab erzeugt beim Laden eine
+      Zufallskennung, die nirgends im Browser gespeichert wird, und meldet sie alle zwei Minuten.
+      Gespeichert werden nur diese Kennung und der Zeitpunkt; nach zweieinhalb Minuten ohne
+      Meldung fällt sie heraus. Es werden keine Cookies gesetzt und keine IP-Adressen gespeichert.
+    </li>
+    <li>
+      <strong>Zug rufen:</strong> Ein zufälliger Code ohne Bezug zu Ihrer Person, der nach zehn
+      Minuten verfällt.
+    </li>
+  </ul>
+  <p>
+    Rechtsgrundlage ist Art. 6 Abs. 1 lit. a DSGVO für das Gästebuch (Sie senden den Eintrag
+    selbst ab) und Art. 6 Abs. 1 lit. f DSGVO für Besucherzähler und Zug-Code.
   </p>
 
   <h2>Reichweitenmessung</h2>
