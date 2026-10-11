@@ -272,7 +272,7 @@ async function runCallTrain() {
   await callTrain({
     onToken: (token) => {
       line(t("Tipp das in dein echtes Terminal:", "Type this into your real terminal:"));
-      line(`curl -X POST ${hiBase}/zug/${token}`, "accent");
+      line(`curl -X POST https://${hiBase}/zug/${token}`, "accent");
       line(t("Ich warte hier. Der Code gilt zehn Minuten, und der Zug fährt nur bei dir.", "I'll wait here. The code works for ten minutes, and the train only comes to you."), "dim");
     },
     onRing: () => line(t("Zug kommt!", "Train incoming!"), "accent"),
@@ -296,7 +296,7 @@ async function runGuestbook() {
     line(t("Das Gästebuch lädt gerade nicht.", "The guestbook won't load right now."), "error");
   }
   line(t("Unterschreiben geht im echten Terminal:", "Sign it from a real terminal:"), "dim");
-  line(`curl -d "servus" ${hiBase}/sign`, "accent");
+  line(`curl -d "servus" https://${hiBase}/sign`, "accent");
 }
 
 async function runTrace() {

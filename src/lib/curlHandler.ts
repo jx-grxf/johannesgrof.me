@@ -151,7 +151,7 @@ async function signResponse(request: Request, lang: Lang): Promise<Response> {
   if (request.method !== "POST") {
     return text(messageCard([
       { text: de ? "So schreibst du ins Gästebuch:" : "To sign the guestbook:", tone: "muted" },
-      { text: `curl -d "servus aus Graz" johannesgrof.me${de ? "/de" : ""}/hi/sign` },
+      { text: `curl -d "servus aus Graz" https://johannesgrof.me${de ? "/de" : ""}/hi/sign` },
       { text: de ? `Höchstens ${GUESTBOOK_MAX} Zeichen. Ich lese jeden Eintrag, bevor er auf der Seite steht.` : `Up to ${GUESTBOOK_MAX} characters. I read every entry before it shows up on the site.`, tone: "muted" },
     ]));
   }
@@ -160,7 +160,7 @@ async function signResponse(request: Request, lang: Lang): Promise<Response> {
   }
   const entryText = cleanGuestbookText(await readSignBody(request));
   if (entryText.length < 2) {
-    return text(messageCard([{ text: de ? 'Da steht nichts drin. Beispiel: curl -d "servus" johannesgrof.me/de/hi/sign' : 'That was empty. Example: curl -d "hi" johannesgrof.me/hi/sign', tone: "error" }]), 400);
+    return text(messageCard([{ text: de ? 'Da steht nichts drin. Beispiel: curl -d "servus" https://johannesgrof.me/de/hi/sign' : 'That was empty. Example: curl -d "hi" https://johannesgrof.me/hi/sign', tone: "error" }]), 400);
   }
   const entry = await addPending(entryText);
   const signature = entry ? await signReview(entry.id) : null;
@@ -201,7 +201,7 @@ async function zugResponse(request: Request, token: string, lang: Lang): Promise
   if (request.method !== "POST") {
     return text(messageCard([
       { text: de ? "Der Zug kommt nur mit POST:" : "The train only comes with POST:", tone: "muted" },
-      { text: `curl -X POST johannesgrof.me${de ? "/de" : ""}/hi/zug/${token || "<code>"}` },
+      { text: `curl -X POST https://johannesgrof.me${de ? "/de" : ""}/hi/zug/${token || "<code>"}` },
     ]), 405);
   }
   if (!(await allow("hi-zug", clientIp(request), 10, "1 m"))) {
