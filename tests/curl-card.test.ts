@@ -49,3 +49,18 @@ test("every train frame has the same height and fits the width", () => {
     for (const line of frame) assert.equal(visibleLength(line), WIDTH);
   }
 });
+
+test("control characters from the departures feed never reach the terminal", () => {
+  const evil = data({
+    board: {
+      stop: "Prater\x1b]0;pwned\x07stern",
+      updatedAt: "2026-10-11T15:45:00.000Z",
+      departures: [{ line: "U1\x1b[2J", towards: "Leopoldau\x1b]8;;https://evil.example\x1b\\", minutes: 1, realtime: true, type: "ptMetro" }],
+    },
+  });
+  const out = card(evil);
+  assert.ok(!out.includes("\x1b]8;;https://evil.example"));
+  assert.ok(!out.includes("\x1b]0;"));
+  assert.ok(!out.includes("\x07"));
+  assert.ok(!out.includes("\x1b[2J"));
+});

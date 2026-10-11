@@ -72,6 +72,11 @@ function wrap(text: string, width: number): string[] {
   return lines;
 }
 
+// Departure texts come from a third party and go straight into someone's
+// terminal, so no control character may survive (ESC, CSI, OSC, BEL ...).
+// eslint-disable-next-line no-control-regex
+export const clean = (text: string) => text.replace(/[\u0000-\u001f\u007f-\u009f]/g, "");
+
 const truncate = (text: string, width: number) => {
   const chars = [...text];
   return chars.length > width ? `${chars.slice(0, width - 1).join("")}…` : text;
@@ -207,12 +212,12 @@ function board(data: CardData): string[] {
   const panel = `${bg(LED_BG)}${fg(LED)}`;
   const rows = data.board.departures.slice(0, 6).map((d) => {
     const minutes = d.minutes === 0 ? (de ? "jetzt" : "now") : `${d.minutes} min`;
-    const towards = truncate(d.towards, towardsWidth).padEnd(towardsWidth);
+    const towards = truncate(clean(d.towards), towardsWidth).padEnd(towardsWidth);
     const source = d.realtime ? `${fg(LIVE)}●` : `${fg(MUTED)}○`;
-    return `${panel}${BOLD}${truncate(d.line, 5).padEnd(5)}${RESET}${panel} ${towards}${minutes.padStart(7)}  ${source} ${RESET}`;
+    return `${panel}${BOLD}${truncate(clean(d.line), 5).padEnd(5)}${RESET}${panel} ${towards}${minutes.padStart(7)}  ${source} ${RESET}`;
   });
   const legend = paint(MUTED, de ? `● Echtzeit  ○ Fahrplan · Wiener Linien OGD, CC BY 4.0 · ${time}` : `● real time  ○ timetable · Wiener Linien OGD, CC BY 4.0 · ${time}`);
-  return box(`${de ? "Gerade in Wien" : "Right now in Vienna"} · ${data.board.stop}`, [...rows, legend], LED);
+  return box(`${de ? "Gerade in Wien" : "Right now in Vienna"} · ${clean(data.board.stop)}`, [...rows, legend], LED);
 }
 
 export function card(data: CardData): string {

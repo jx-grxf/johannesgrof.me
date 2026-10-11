@@ -4,7 +4,7 @@ import { kontobuch } from "@/data/kontobuch";
 import { oeffigo } from "@/data/oeffigo";
 import { getProjectCopy, homepageProjects, localizedStatusLabel } from "@/data/projects";
 import { siteContentByLocale } from "@/data/siteContent";
-import { author, personSameAs } from "@/data/siteMetadata";
+import { author, canonicalOrigin, personSameAs } from "@/data/siteMetadata";
 
 // The answer to `curl johannesgrof.me`. Browsers never get here: the build adds
 // a route in front of the static files that sends only curl, HTTPie and xh to
@@ -31,7 +31,8 @@ export const GET: APIRoute = async ({ request, url }) => {
   const content = siteContentByLocale[lang];
   const animate = /^curl\//i.test(request.headers.get("user-agent") ?? "") && !url.searchParams.has("static");
 
-  const board = await loadBoard(url.origin);
+  // A fixed origin on Vercel: the request's own host comes from a header and must not pick the fetch target.
+  const board = await loadBoard(process.env.VERCEL ? canonicalOrigin : url.origin);
   const data: CardData = {
     lang,
     eyebrow: content.hero.eyebrow,
