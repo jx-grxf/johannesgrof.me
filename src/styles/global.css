@@ -2735,7 +2735,6 @@ html[lang="de"] .error-page [data-error-lang="en"] {
 /* Ink at rising strength, so the grid reads on both paper stocks. */
 .contrib-grid rect {
   fill: var(--ink);
-  cursor: pointer;
 }
 .contrib-grid .lvl-0 {
   fill: var(--rule);
@@ -4433,7 +4432,6 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   font: inherit;
   font-family: var(--font-mono);
   font-size: 0.8rem;
-  cursor: pointer;
 }
 
 .print-cv {
