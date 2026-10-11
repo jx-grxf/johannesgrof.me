@@ -89,7 +89,7 @@ export const oeffigo: OeffigoContent = {
   icon: "/projects/oeffigo/icon.webp",
   shots: [
     {
-      src: "/projects/oeffigo/app-today.webp",
+      src: "/projects/oeffigo/today-praterstern.webp",
       alt: {
         en: "ÖffiGo Today on iPhone near Wien Praterstern: the next two U2 trains and the O tram with live delays, a saved route and the nearby map.",
         de: "ÖffiGo Heute auf dem iPhone beim Wiener Praterstern: die nächsten zwei U2 und der O-Wagen mit Live-Verspätung, eine gespeicherte Route und die Umgebungskarte.",
@@ -97,7 +97,7 @@ export const oeffigo: OeffigoContent = {
       caption: { en: "Today", de: "Heute" },
     },
     {
-      src: "/projects/oeffigo/app-departures.webp",
+      src: "/projects/oeffigo/departures-praterstern.webp",
       alt: {
         en: "ÖffiGo departures at Wien Praterstern: U2, O tram, buses 80A and 5B and tram 5, each marked on time or with its delay.",
         de: "ÖffiGo Abfahrten am Wiener Praterstern: U2, O-Wagen, die Busse 80A und 5B und die Linie 5, jeweils mit pünktlich oder Verspätung.",
@@ -105,7 +105,7 @@ export const oeffigo: OeffigoContent = {
       caption: { en: "Departures", de: "Abfahrten" },
     },
     {
-      src: "/projects/oeffigo/app-trip.webp",
+      src: "/projects/oeffigo/trip-praterstern.webp",
       alt: {
         en: "ÖffiGo trip view of a U2 to Karlsplatz: the stops after Praterstern with their times, the delay shown at the stop just passed.",
         de: "ÖffiGo Fahrtverlauf einer U2 zum Karlsplatz: die Halte nach dem Praterstern mit Zeiten, die Verspätung beim gerade passierten Halt.",
@@ -113,7 +113,7 @@ export const oeffigo: OeffigoContent = {
       caption: { en: "Trip", de: "Fahrtverlauf" },
     },
     {
-      src: "/projects/oeffigo/app-routes.webp",
+      src: "/projects/oeffigo/routes-praterstern.webp",
       alt: {
         en: "ÖffiGo connections from Wien Praterstern to Wien Schönbrunn: three options via U1 and U4 with live status, transfer time and fare.",
         de: "ÖffiGo Verbindungen vom Wiener Praterstern nach Wien Schönbrunn: drei Varianten über U1 und U4 mit Live-Status, Umstiegszeit und Preis.",
