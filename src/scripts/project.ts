@@ -18,8 +18,17 @@ const copyText = async (text: string) => {
   }
 };
 
+const isWindows = /Windows/i.test(navigator.userAgent);
+
 document.querySelectorAll<HTMLButtonElement>("[data-install-copy]").forEach((button) => {
   const status = button.querySelector<HTMLElement>("[data-copy-status]");
+  const windowsCommand = button.dataset.copyCommandWindows;
+
+  if (isWindows && windowsCommand) {
+    button.dataset.copyCommand = windowsCommand;
+    const preview = button.querySelector<HTMLElement>("[data-copy-preview]");
+    if (preview) preview.textContent = windowsCommand;
+  }
   let resetTimer: number | undefined;
 
   button.addEventListener("click", async () => {
