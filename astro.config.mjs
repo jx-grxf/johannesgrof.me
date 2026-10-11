@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 import vercel from "@astrojs/vercel";
+import curlRoute from "./tools/curl-route.mjs";
 
 export default defineConfig({
   site: "https://johannesgrof.me",
@@ -12,4 +13,5 @@ export default defineConfig({
     },
   },
   adapter: vercel(),
+  integrations: [curlRoute()],
 });
