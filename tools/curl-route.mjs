@@ -8,6 +8,9 @@ const curlRoute = {
   src: "^/(de)?/?$",
   has: [{ type: "header", key: "user-agent", value: "^(curl|HTTPie|xh)/.*$" }],
   dest: "/api/card?lang=$1",
+  // Sends the rewritten path through the filesystem and function routes again,
+  // the same way vercel.json rewrites do; without it the request ends at 404.html.
+  check: true,
 };
 
 export default function curlRouteIntegration() {
