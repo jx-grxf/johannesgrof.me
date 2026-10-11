@@ -1,4 +1,4 @@
-// What `curl johannesgrof.me` prints: a pixel train drives through, then a
+// What `curl -sL johannesgrof.me/hi` prints: a pixel train drives through, then a
 // business card with the live departures board. Pure string building, so the
 // frames and the card can be tested without a terminal.
 
@@ -280,8 +280,7 @@ export function card(data: CardData): string {
         `${de ? "ausgeliefert" : "served"} ${data.served.edge ?? "edge"} → ${data.served.region ?? "local"} ${de ? "in" : "in"} ${data.served.ms} ms · ${de ? "Wien" : "Vienna"} ${data.viennaTime}`,
       ),
       paint("#5c574d", de ? "Im Browser gibt's mehr: ~ drücken öffnet das Terminal der Seite." : "There is more in the browser: press ~ to open the site's own terminal."),
-      paint("#5c574d", de ? "English: curl -sL johannesgrof.me" : "Auf Deutsch: curl -sL johannesgrof.me/de"),
-      paint("#5c574d", de ? "HTML statt Karte: -H 'Accept: text/html' · für Agents: /llms.txt" : "HTML instead: -H 'Accept: text/html' · for agents: /llms.txt"),
+      paint("#5c574d", de ? "English: curl -sL johannesgrof.me/hi" : "Auf Deutsch: curl -sL johannesgrof.me/de/hi"),
     ]),
     "",
   ];

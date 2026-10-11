@@ -1,11 +1,11 @@
-// Sends curl, HTTPie and xh on / and /de/ to a small function of its own that
-// prints the terminal card. The home pages are static files, which Vercel
-// serves before any function, so the route has to sit in front of the
-// filesystem check in the build output. Browsers never match it, so the static
-// pages stay fully cached for them.
+// Sends curl, HTTPie and xh on /hi and /de/hi to a small function of its own
+// that prints the terminal card. /hi is also a static page that explains the
+// command to browsers, and Vercel serves static files before any function, so
+// the route has to sit in front of the filesystem check in the build output.
+// The home pages stay plain HTML for everyone, scripts and agents included.
 //
 // The card runs as its own function instead of an Astro route: Vercel hands a
-// function the original path, and Astro would look up "/" among its server
+// function the original path, and Astro would look up /hi among its server
 // routes, find only the prerendered page and answer 404.
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
@@ -14,10 +14,9 @@ import { build } from "rolldown";
 const FUNCTION = "_curl";
 
 const curlRoute = {
-  src: "^/(de)?/?$",
+  src: "^/(de/)?hi/?$",
   has: [{ type: "header", key: "user-agent", value: "^(curl|HTTPie|xh)/.*$" }],
-  // Anyone who asks for HTML gets the page, e.g. scripts and agents that
-  // fetch the site with curl -H "Accept: text/html".
+  // Anyone who asks for HTML gets the explainer page instead.
   missing: [{ type: "header", key: "accept", value: ".*text/html.*" }],
   dest: FUNCTION,
 };

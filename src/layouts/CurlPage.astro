@@ -1,0 +1,109 @@
+---
+import BaseHead from "@/components/BaseHead.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import type { ProjectLang } from "@/data/projects";
+import { toCanonicalUrl } from "@/data/siteMetadata";
+import "@/styles/global.css";
+
+interface Props {
+  lang: ProjectLang;
+}
+
+const { lang } = Astro.props;
+const de = lang === "de";
+const home = de ? "/de/" : "/";
+const command = `curl -sL johannesgrof.me${de ? "/de" : ""}/hi`;
+const s = de
+  ? {
+      title: "Im Terminal · Johannes Grof",
+      description: "Diese Seite gibt es auch fürs Terminal: ein Befehl, und ein Pixel-Zug fährt durch, danach kommen Projekte und Live-Abfahrten aus Wien.",
+      heading: "Diese Seite gibt es auch fürs Terminal.",
+      lead: "Kopier den Befehl in dein Terminal. Erst fährt der Pixel-Zug von der Startseite durch, dann kommen Projekte, Links und die Abfahrten am Praterstern, live von den Wiener Linien.",
+      copy: "Kopieren",
+      copied: "Kopiert",
+      alt: "So sieht die Ausgabe im Terminal aus: der Name in Pixelschrift, ÖffiGo, eine Abfahrtstafel vom Praterstern und die Projekte.",
+      caption: "Eine Aufnahme der Ausgabe. Die Abfahrten sind bei dir aktuell.",
+      notes: [
+        "Funktioniert mit curl, HTTPie und xh. Farben brauchen ein Terminal mit 24-Bit-Farbe, das haben fast alle.",
+        "Ohne Zug: ?static anhängen. Links sind in iTerm2, kitty, WezTerm und Ghostty klickbar.",
+      ],
+    }
+  : {
+      title: "In your terminal · Johannes Grof",
+      description: "This site also works in a terminal: one command, a pixel train drives through, then the projects and live departures from Vienna.",
+      heading: "This site also works in your terminal.",
+      lead: "Paste the command into your terminal. The pixel train from the home page drives through first, then the projects, the links and the departures at Praterstern, live from Wiener Linien.",
+      copy: "Copy",
+      copied: "Copied",
+      alt: "What the terminal output looks like: the name in a pixel font, ÖffiGo, a departures board for Praterstern and the projects.",
+      caption: "A capture of the output. Yours shows the departures of right now.",
+      notes: [
+        "Works with curl, HTTPie and xh. Colours need a terminal with 24-bit colour, which almost all have.",
+        "Skip the train: add ?static. Links are clickable in iTerm2, kitty, WezTerm and Ghostty.",
+      ],
+    };
+const canonicalPath = `${de ? "/de" : ""}/hi/`;
+---
+
+<!doctype html>
+<html lang={de ? "de-AT" : "en"}>
+  <head>
+    <BaseHead
+      title={s.title}
+      description={s.description}
+      canonicalPath={canonicalPath}
+      ogLocale={de ? "de_AT" : "en_US"}
+      hreflangAlternates={[
+        { hreflang: "en", href: toCanonicalUrl("/hi/") },
+        { hreflang: "de-AT", href: toCanonicalUrl("/de/hi/") },
+        { hreflang: "x-default", href: toCanonicalUrl("/hi/") },
+      ]}
+    />
+  </head>
+  <body>
+    <SiteHeader
+      lang={lang}
+      homeHref={home}
+      ariaLabel={de ? "Seitennavigation" : "Page navigation"}
+      navItems={[
+        { label: de ? "Projekte" : "Projects", href: `${home}#projects` },
+        { label: de ? "Kontakt" : "Contact", href: `${home}#contact` },
+      ]}
+      langSwitch={{ label: de ? "EN" : "DE", href: de ? "/hi/" : "/de/hi/", ariaLabel: de ? "View this page in English" : "Diese Seite auf Deutsch ansehen" }}
+    />
+
+    <main id="main" class="curl-page section-shell">
+      <p class="eyebrow">~ $</p>
+      <h1>{s.heading}</h1>
+      <p class="curl-lead">{s.lead}</p>
+      <div class="curl-command" data-curl-command>
+        <code>{command}</code>
+        <button type="button" data-copy={command} data-copied={s.copied}>{s.copy}</button>
+      </div>
+      <figure class="curl-preview">
+        <img src={`/hi/card-${lang}.webp`} alt={s.alt} width="1440" height="1138" loading="eager" decoding="async" />
+        <figcaption>{s.caption}</figcaption>
+      </figure>
+      <ul class="curl-notes">
+        {s.notes.map((note) => <li>{note}</li>)}
+      </ul>
+    </main>
+
+    <SiteFooter lang={lang} />
+
+    <script>
+      const button = document.querySelector<HTMLButtonElement>("[data-copy]");
+      button?.addEventListener("click", async () => {
+        const label = button.textContent;
+        try {
+          await navigator.clipboard.writeText(button.dataset.copy ?? "");
+          button.textContent = button.dataset.copied ?? label;
+        } catch {
+          window.getSelection()?.selectAllChildren(button.previousElementSibling!);
+        }
+        window.setTimeout(() => (button.textContent = label), 1600);
+      });
+    </script>
+  </body>
+</html>
