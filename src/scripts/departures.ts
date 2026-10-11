@@ -141,7 +141,7 @@ if (board) {
       const { entries } = (await response.json()) as { entries: { text: string }[] };
       if (!entries.length) return;
       const span = document.createElement("span");
-      span.textContent = `${de ? "Gästebuch" : "Guestbook"}: ${entries.map((entry) => `»${entry.text}«`).join("  ·  ")}  ·  curl -d "…" johannesgrof.me${de ? "/de" : ""}/hi/sign`;
+      span.textContent = `${de ? "Gästebuch" : "Guestbook"}: ${entries.map((entry) => `»${entry.text}«`).join("  ·  ")}  ·  curl -d "…" https://johannesgrof.me${de ? "/de" : ""}/hi/sign`;
       span.style.animationDuration = `${Math.max(22, span.textContent.length / 5)}s`;
       ticker.replaceChildren(span);
       ticker.hidden = false;

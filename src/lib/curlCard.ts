@@ -319,7 +319,7 @@ function commandLines(lang: "en" | "de"): string[] {
   const rows: [string, string][] = [
     [`curl -sL ${base(lang)}/oeffi/schottentor`, de ? "Abfahrten jeder Wiener Station" : "departures for any stop in Vienna"],
     [`curl -sL ${base(lang)}/who`, de ? "wer gerade auf der Seite ist" : "who is on the site right now"],
-    [`curl -d "servus" ${base(lang)}/sign`, de ? "ins Gästebuch schreiben" : "sign the guestbook"],
+    [`curl -d "servus" https://${base(lang)}/sign`, de ? "ins Gästebuch schreiben" : "sign the guestbook"],
     [`curl -sL ${base(lang)}/help`, de ? "alle Befehle, auch Zug rufen" : "every command, calling the train too"],
   ];
   return rows.flatMap(([command, what]) => [paint(INK, command), `  ${paint(MUTED, what)}`]);
@@ -364,7 +364,7 @@ export function helpCard(lang: "en" | "de"): string {
     "",
     `  ${BOLD}${paint(SIGNAL, de ? "BEFEHLE" : "COMMANDS")}${RESET}`,
     ...commandLines(lang).map((line) => `  ${line}`),
-    `  ${paint(INK, `curl -X POST ${base(lang)}/zug/<code>`)}`,
+    `  ${paint(INK, `curl -X POST https://${base(lang)}/zug/<code>`)}`,
     `    ${paint(MUTED, de ? "schickt den Pixel-Zug durch deinen Browser-Tab; den Code" : "sends the pixel train through your browser tab; the code")}`,
     `    ${paint(MUTED, de ? `zeigt dir johannesgrof.me${lang === "de" ? "/de" : ""}/hi/ oder das Terminal der Seite (zug)` : "is on johannesgrof.me/hi/ or in the site terminal (train call)")}`,
     "",

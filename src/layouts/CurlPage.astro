@@ -19,8 +19,8 @@ const commands = [
   { command: `curl -sL ${base}`, what: de ? "die Karte mit Projekten und Live-Abfahrten" : "the card with projects and live departures" },
   { command: `curl -sL ${base}/oeffi/schottentor`, what: de ? "Abfahrten jeder Wiener Station, Name in die URL" : "departures for any stop in Vienna, name in the URL" },
   { command: `curl -sL ${base}/who`, what: de ? "wie viele gerade auf der Seite sind" : "how many people are on the site right now" },
-  { command: `curl -d "servus" ${base}/sign`, what: de ? "ins Gästebuch schreiben, erscheint nach meiner Freigabe" : "sign the guestbook, shows up once I've read it" },
-  { command: `curl -X POST ${base}/zug/<code>`, what: de ? "den Zug durch deinen Tab schicken, Code holst du unten" : "send the train through your tab, get the code below" },
+  { command: `curl -d "servus" https://${base}/sign`, what: de ? "ins Gästebuch schreiben, erscheint nach meiner Freigabe" : "sign the guestbook, shows up once I've read it" },
+  { command: `curl -X POST https://${base}/zug/<code>`, what: de ? "den Zug durch deinen Tab schicken, Code holst du unten" : "send the train through your tab, get the code below" },
   { command: `curl -sL ${base}/help`, what: de ? "alle Befehle im Terminal" : "every command, in the terminal" },
 ];
 const s = de
@@ -146,8 +146,8 @@ const canonicalPath = `${de ? "/de" : ""}/hi/`;
         <h2 id="curl-guestbook-title">{s.guestbookTitle}</h2>
         <p class="curl-lead">{s.guestbookLead}</p>
         <div class="curl-command">
-          <code>{`curl -d "servus" ${base}/sign`}</code>
-          <button type="button" data-copy={`curl -d "servus" ${base}/sign`} data-copied={s.copied}>{s.copy}</button>
+          <code>{`curl -d "servus" https://${base}/sign`}</code>
+          <button type="button" data-copy={`curl -d "servus" https://${base}/sign`} data-copied={s.copied}>{s.copy}</button>
         </div>
         <ul class="curl-guestbook" data-guestbook data-empty={s.guestbookEmpty}></ul>
       </section>
@@ -186,7 +186,7 @@ const canonicalPath = `${de ? "/de" : ""}/hi/`;
           get.disabled = true;
           void callTrain({
             onToken: (token) => {
-              const command = `curl -X POST ${section.dataset.base}/zug/${token}`;
+              const command = `curl -X POST https://${section.dataset.base}/zug/${token}`;
               code.textContent = command;
               copy.dataset.copy = command;
               box.hidden = false;
