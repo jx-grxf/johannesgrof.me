@@ -974,50 +974,61 @@ export const featuredProjects: Project[] = [
     visibility: "public",
   },
   {
-    name: "cswap",
-    slug: "claude-swap-bar",
+    name: "CSwap",
+    slug: "cswap",
+    logo: { src: "/projects/cswap/logo.webp", fallbackSrc: "/projects/cswap/logo.png", alt: "CSwap app icon", width: 256, height: 256 },
     status: "active",
-    tagline: "Switch between Claude Code accounts from the menu bar, with live usage meters.",
+    tagline: "Run several Claude Code accounts side by side, and move a session to another account with /swap.",
     description:
-      "A native macOS menu bar app for anyone running more than one Claude Code account. Swap the active account in one click and watch live usage meters for each, so you can see what's left before you hit a limit.",
+      "A macOS menu bar app and the cswap command for people with more than one Claude Code account. Every account keeps its own login and shows its live usage. When one runs out, /swap continues the same conversation on another account in the same terminal tab.",
     caseStudy: {
-      problem: "Running multiple Claude Code accounts means manual re-auth and no visibility into how much of each plan you've used.",
-      built: "A SwiftUI menu bar app that stores and switches between accounts and surfaces live per-account usage meters right in the dropdown.",
+      problem: "Switching Claude Code accounts meant logging out and back in, and tools that swap one shared login around end up logging you out, because Claude Code's refresh tokens are single-use.",
+      built: "A Swift menu bar app and CLI that give every account its own configuration folder, share settings, skills and transcripts between them, and only ever read a login, never write one.",
     },
     de: {
-      tagline: "Zwischen Claude-Code-Accounts aus der Menüleiste wechseln, mit Live-Verbrauchsanzeige.",
+      tagline: "Mehrere Claude-Code-Accounts nebeneinander nutzen und eine Session per /swap auf einen anderen Account schieben.",
       description:
-        "Eine native macOS-Menüleisten-App für alle, die mehr als einen Claude-Code-Account nutzen. Wechsle den aktiven Account mit einem Klick und behalte die Live-Verbrauchsanzeigen jedes Accounts im Blick, damit du siehst, was noch übrig ist, bevor du an ein Limit stößt.",
+        "Eine macOS-Menüleisten-App mit dem Befehl cswap für alle mit mehr als einem Claude-Code-Account. Jeder Account bleibt angemeldet und zeigt seinen Verbrauch live. Ist einer leer, setzt /swap dieselbe Unterhaltung im selben Terminal-Tab mit einem anderen Account fort.",
       caseStudy: {
-        problem: "Mehrere Claude-Code-Accounts zu nutzen heißt manuelles Neu-Anmelden und keine Sicht darauf, wie viel von jedem Plan schon verbraucht ist.",
-        built: "Eine SwiftUI-Menüleisten-App, die Accounts speichert und umschaltet und die Live-Verbrauchsanzeigen pro Account direkt im Dropdown zeigt.",
+        problem: "Account wechseln hieß in Claude Code ab- und wieder anmelden. Tools, die einen gemeinsamen Login hin- und herkopieren, melden einen irgendwann ab, weil die Refresh-Tokens nur einmal gültig sind.",
+        built: "Eine Swift-Menüleisten-App mit CLI, die jedem Account einen eigenen Konfigurationsordner gibt, Einstellungen, Skills und Transkripte zwischen ihnen teilt und einen Login nur liest, nie schreibt.",
       },
       highlights: [
-        "Wechselt den aktiven Claude-Code-Account mit einem Klick aus der Menüleiste.",
-        "Zeigt Live-Verbrauchsanzeigen pro Account direkt im Dropdown.",
-        "Speichert mehrere Accounts, damit blindes Neu-Anmelden entfällt.",
-        "Native SwiftUI-App mit GitHub-Release und Sparkle-Update-Feed.",
+        "Jeder Account läuft in seinem eigenen Claude-Code-Ordner und bleibt angemeldet, auch parallel in zwei Terminals.",
+        "/swap setzt eine laufende Session mit einem anderen Account fort, auch wenn das Limit schon erreicht ist.",
+        "Die Menüleiste zeigt 5-Stunden-, Wochen- und Modell-Verbrauch jedes Accounts und die laufenden Sessions.",
+        "Einstellungen, Skills, Plugins, Hooks, Memory und Transkripte teilen sich alle Accounts mit ~/.claude.",
+      ],
+      releaseHighlights: [
+        "2.0 heißt CSwap und ersetzt das Login-Tauschen durch eigene Ordner pro Account.",
+        "Neuer Befehl cswap für zsh und bash, mit Setup-Assistent und /swap.",
+        "Laufende Sessions in der Menüleiste, mit Verschieben auf einen anderen Account.",
       ],
     },
-    stack: ["Swift", "macOS", "Menu Bar"],
+    stack: ["Swift", "macOS", "Menu Bar", "CLI"],
     repo: "jx-grxf/cswap",
     githubUrl: "https://github.com/jx-grxf/cswap",
-    releaseUrl: "https://github.com/jx-grxf/cswap/releases/tag/v1.1.1",
-    fallbackVersion: "v1.1.1",
+    releaseUrl: "https://github.com/jx-grxf/cswap/releases/tag/v2.0.0",
+    fallbackVersion: "v2.0.0",
     platformLabels: ["macOS"],
     fallbackDownloads: [
       {
-        assetName: "ClaudeSwapBar-1.1.1.zip",
-        assetUrl: "https://github.com/jx-grxf/cswap/releases/download/v1.1.1/ClaudeSwapBar-1.1.1.zip",
-        size: 7771449,
+        assetName: "CSwap-2.0.0.zip",
+        assetUrl: "https://github.com/jx-grxf/cswap/releases/download/v2.0.0/CSwap-2.0.0.zip",
+        size: 8119437,
         kind: "macos",
       },
     ],
     highlights: [
-      "Switches the active Claude Code account in one click from the menu bar.",
-      "Shows live per-account usage meters right in the dropdown.",
-      "Stores multiple accounts so re-authenticating blind is a thing of the past.",
-      "Native SwiftUI app with a GitHub release and Sparkle update feed.",
+      "Every account runs in its own Claude Code folder and stays logged in, side by side in two terminals if you like.",
+      "/swap continues a running session on another account, even after the current one hit its limit.",
+      "The menu bar shows 5-hour, weekly and per-model usage for every account, plus its running sessions.",
+      "Settings, skills, plugins, hooks, memory and transcripts are shared with ~/.claude across all accounts.",
+    ],
+    releaseHighlights: [
+      "2.0 is renamed to CSwap and replaces login swapping with one folder per account.",
+      "New cswap command for zsh and bash, with guided setup and /swap.",
+      "Running sessions in the menu bar, with a button to move them to another account.",
     ],
     showcase: [],
     visibility: "public",
@@ -1317,7 +1328,7 @@ const orderedProjects = (slugs: string[]) =>
 // appears here OR in a section below, never both.
 export const featuredShowcaseProjects = orderedProjects(["patchpilot", "briskedit", "macphone"]);
 
-export const homepageProjects = orderedProjects(["dirhop", "briskedit", "claude-swap-bar", "agent-presence", "poise", "patchpilot"]);
+export const homepageProjects = orderedProjects(["dirhop", "briskedit", "cswap", "agent-presence", "poise", "patchpilot"]);
 
 export const projectSections: ProjectSection[] = [
   {
@@ -1327,7 +1338,7 @@ export const projectSections: ProjectSection[] = [
       eyebrow: "mac-apps",
       title: "Mac-Apps",
     },
-    projects: orderedProjects(["bottlelite", "poise", "claude-swap-bar", "notchtray", "ccrab", "portpirate", "slamx"]),
+    projects: orderedProjects(["bottlelite", "poise", "cswap", "notchtray", "ccrab", "portpirate", "slamx"]),
   },
   {
     eyebrow: "agents & tools",

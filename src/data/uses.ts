@@ -40,7 +40,7 @@ export const usesGroups: UsesGroup[] = [
       { name: "Claude Code", note: { en: "Main agent, in the terminal.", de: "Haupt-Agent, im Terminal." } },
       { name: "Codex", note: { en: "Reviews and longer tasks. CodexBar shows the usage.", de: "Reviews und längere Aufgaben. Den Verbrauch zeigt CodexBar." } },
       { name: "OpenCode", note: { en: "Mechanical tasks with cheaper models.", de: "Mechanische Aufgaben mit günstigeren Modellen." } },
-      { name: "cswap", note: { en: "Built by me. Switches Claude Code accounts in the menu bar.", de: "Selbst gebaut. Wechselt Claude-Code-Accounts in der Menüleiste." }, href: "/projects/claude-swap-bar/" },
+      { name: "CSwap", note: { en: "Built by me. Runs my Claude Code accounts side by side and moves a session over with /swap.", de: "Selbst gebaut. Hält meine Claude-Code-Accounts parallel angemeldet und schiebt Sessions per /swap rüber." }, href: "/projects/cswap/" },
       { name: "agent-presence", note: { en: "Built by me. Shows in Discord what the agent is working on.", de: "Selbst gebaut. Zeigt in Discord, woran der Agent arbeitet." }, href: "/projects/agent-presence/" },
       { name: "Wispr Flow", note: { en: "Dictation.", de: "Diktieren." } },
     ],

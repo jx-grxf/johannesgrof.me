@@ -54,6 +54,26 @@
       "source": "/de/projects/digi2pdf/",
       "destination": "/de/#projects",
       "permanent": true
+    },
+    {
+      "source": "/projects/claude-swap-bar",
+      "destination": "/projects/cswap/",
+      "permanent": true
+    },
+    {
+      "source": "/projects/claude-swap-bar/",
+      "destination": "/projects/cswap/",
+      "permanent": true
+    },
+    {
+      "source": "/de/projects/claude-swap-bar",
+      "destination": "/de/projects/cswap/",
+      "permanent": true
+    },
+    {
+      "source": "/de/projects/claude-swap-bar/",
+      "destination": "/de/projects/cswap/",
+      "permanent": true
     }
   ],
   "headers": [
