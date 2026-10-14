@@ -15,7 +15,7 @@ export interface UsesGroup {
   items: UsesItem[];
 }
 
-export const usesUpdated = "2026-10-11";
+export const usesUpdated = "2026-10-14";
 
 export const usesGroups: UsesGroup[] = [
   {
@@ -49,6 +49,7 @@ export const usesGroups: UsesGroup[] = [
     title: { en: "Editors and IDEs", de: "Editoren und IDEs" },
     items: [
       { name: "Xcode", note: { en: "Everything in Swift: ÖffiGo, the Mac apps, the Watch app.", de: "Alles in Swift: ÖffiGo, die Mac-Apps, die Watch-App." } },
+      { name: "XcodeGen, SwiftLint", note: { en: "Project files from a spec, and linting.", de: "Projektdateien aus einer Spezifikation, und Linting." } },
       { name: "Visual Studio Code Insiders", note: { en: "Web projects like this site.", de: "Web-Projekte wie diese Seite." } },
       { name: "BriskEdit", note: { en: "Built by me. Markdown and short edits, with a terminal.", de: "Selbst gebaut. Markdown und kurze Änderungen, mit Terminal." }, href: "/projects/briskedit/" },
       { name: "IntelliJ IDEA, Android Studio", note: { en: "Java and Android.", de: "Java und Android." } },
@@ -68,9 +69,13 @@ export const usesGroups: UsesGroup[] = [
     items: [
       { name: "GitHub and GitHub Actions", note: { en: "Code, releases and CI.", de: "Code, Releases und CI." } },
       { name: "Vercel", note: { en: "Hosts this site, with Upstash Redis and Resend.", de: "Hostet diese Seite, mit Upstash Redis und Resend." } },
-      { name: "Cloudflare", note: { en: "DNS and oeffigo.app.", de: "DNS und oeffigo.app." } },
+      { name: "Cloudflare", note: { en: "DNS, oeffigo.app and Turnstile on the contact form.", de: "DNS, oeffigo.app und Turnstile am Kontaktformular." } },
+      { name: "Supabase", note: { en: "Postgres for app backends.", de: "Postgres für App-Backends." } },
+      { name: "AWS", note: { en: "Hosts tools.johannesgrof.me, deployed from GitHub Actions over OIDC and SSM.", de: "Hostet tools.johannesgrof.me, deployt aus GitHub Actions über OIDC und SSM." } },
       { name: "Railway", note: { en: "Backends that need a running server.", de: "Backends mit dauerhaft laufendem Server." } },
-      { name: "TestFlight", note: { en: "The ÖffiGo beta.", de: "Die ÖffiGo-Beta." } },
+      { name: "App Store Connect, TestFlight", note: { en: "Builds and the ÖffiGo beta.", de: "Builds und die ÖffiGo-Beta." } },
+      { name: "Sparkle", note: { en: "Update feed for the Mac apps.", de: "Update-Feed für die Mac-Apps." } },
+      { name: "1Password", note: { en: "Passwords and secrets.", de: "Passwörter und Secrets." } },
       { name: "OrbStack", note: { en: "Docker and Linux VMs.", de: "Docker und Linux-VMs." } },
     ],
   },
