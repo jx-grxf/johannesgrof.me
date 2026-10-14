@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 import vercel from "@astrojs/vercel";
+import textEditor from "./tools/text-editor/integration.mjs";
 import curlRoute from "./tools/curl-route.mjs";
 
 export default defineConfig({
@@ -13,5 +14,5 @@ export default defineConfig({
     },
   },
   adapter: vercel(),
-  integrations: [curlRoute()],
+  integrations: [textEditor(), curlRoute()],
 });
