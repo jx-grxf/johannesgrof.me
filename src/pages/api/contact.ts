@@ -61,6 +61,11 @@ const escapeHtml = (value: string) =>
     .replaceAll('"', "&quot;");
 
 export const POST: APIRoute = async ({ request, clientAddress }) => {
+  // Kill switch: set CONTACT_PAUSED=1 in Vercel and redeploy to stop all sends.
+  if (env("CONTACT_PAUSED") === "1") {
+    return json(503, { ok: false, error: "paused" });
+  }
+
   // Reject cross-site POSTs: a browser sets Origin on cross-origin requests, so
   // a mismatch against our own host means the request came from another site.
   // Comparing to the request host (not a hard-coded domain) keeps preview
