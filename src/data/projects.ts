@@ -388,7 +388,7 @@ export const featuredProjects: Project[] = [
       "A fuzzy folder picker for the terminal, written in Rust. It searches every folder in your home directory while you type, ranks your projects and the places you visit most at the top, and drops you there with Enter. You choose the command name and the shortcut in a small settings screen, and it keeps itself up to date from GitHub releases.",
     caseStudy: {
       problem: "Getting into a project meant tabbing through four or five folders every time, and jump tools like zoxide only know folders you have already visited.",
-      built: "A parallel directory walk built on the ignore crate (the one ripgrep uses) streams folders into the UI in batches, so results show up before the scan is done. The Helix editor's nucleo matcher scores every keystroke, plus a bonus for git repos, project folders and frecency. The UI draws on stderr and prints the chosen path on stdout, so a small zsh, bash or fish function can cd into it.",
+      built: "A parallel directory walk built on the ignore crate (the one ripgrep uses) streams folders into the UI in batches, so results show up before the scan is done. The Helix editor's nucleo matcher scores every keystroke, plus a bonus for git repos, project folders and frecency. The UI draws on stderr and prints the chosen path on stdout, so a small zsh, bash, fish or PowerShell function can cd into it. Release builds cover macOS, Linux and Windows on x64 and arm64.",
     },
     de: {
       tagline: "Mit ein paar Tastendrücken in jeden Ordner springen, direkt im Terminal.",
@@ -396,13 +396,13 @@ export const featuredProjects: Project[] = [
         "Ein Fuzzy-Ordnerwähler fürs Terminal, in Rust geschrieben. Er durchsucht beim Tippen jeden Ordner im Home-Verzeichnis, reiht deine Projekte und die meistbesuchten Orte nach oben und bringt dich mit Enter hin. Befehlsname und Tastenkürzel stellst du in einem kleinen Einstellungsbildschirm ein, Updates holt er sich selbst aus den GitHub-Releases.",
       caseStudy: {
         problem: "Um in ein Projekt zu kommen, musste ich mich jedes Mal durch vier, fünf Ordner tabben, und Sprung-Tools wie zoxide kennen nur Ordner, in denen man schon war.",
-        built: "Ein paralleler Verzeichnis-Scan auf Basis des ignore-Crates (das auch ripgrep nutzt) schickt Ordner stapelweise an die Oberfläche, Ergebnisse erscheinen also schon vor Ende des Scans. Der nucleo-Matcher aus dem Helix-Editor bewertet jeden Tastendruck, dazu kommt ein Bonus für Git-Repos, Projektordner und häufig besuchte Orte. Die Oberfläche zeichnet auf stderr und gibt den gewählten Pfad auf stdout aus, damit eine kleine zsh-, bash- oder fish-Funktion hineinwechseln kann.",
+        built: "Ein paralleler Verzeichnis-Scan auf Basis des ignore-Crates (das auch ripgrep nutzt) schickt Ordner stapelweise an die Oberfläche, Ergebnisse erscheinen also schon vor Ende des Scans. Der nucleo-Matcher aus dem Helix-Editor bewertet jeden Tastendruck, dazu kommt ein Bonus für Git-Repos, Projektordner und häufig besuchte Orte. Die Oberfläche zeichnet auf stderr und gibt den gewählten Pfad auf stdout aus, damit eine kleine zsh-, bash-, fish- oder PowerShell-Funktion hineinwechseln kann. Release-Builds gibt es für macOS, Linux und Windows, jeweils für x64 und arm64.",
       },
       highlights: [
-        "Durchsucht rund 10.000 Ordner in unter 100 ms, die Liste füllt sich schon beim Tippen.",
-        "Git-Repos, Projektordner und oft besuchte Orte stehen oben, die zoxide-Historie zählt mit.",
-        "Vorschau mit Git-Branch, erkannter Sprache und Ordnerinhalt; Strg-E öffnet im Editor, Strg-O im Finder.",
-        "Eigener Befehlsname und eigenes Tastenkürzel, Installation mit einem Befehl, Updates mit SHA-256-Prüfung.",
+        "Durchsucht rund 10.000 Ordner in unter 100 ms und startet sofort mit dem Index vom letzten Mal, neue Ordner kommen beim Tippen dazu.",
+        "Git-Repos, Projektordner und oft besuchte Orte stehen oben, Strg-B pinnt Ordner fest. hop dirhop springt direkt hin, wenn ein Treffer klar vorne liegt.",
+        "Vorschau mit Git-Branch, erkannter Sprache und Ordnerinhalt; Strg-E öffnet im Editor, Strg-O im Dateimanager.",
+        "Läuft auf macOS, Linux und Windows mit zsh, bash, fish oder PowerShell. Installation mit einem Befehl, Updates mit SHA-256-Prüfung.",
       ],
     },
     stack: ["Rust", "ratatui", "nucleo"],
@@ -410,13 +410,14 @@ export const featuredProjects: Project[] = [
     githubUrl: "https://github.com/jx-grxf/dirhop",
     releaseUrl: "https://github.com/jx-grxf/dirhop/releases/latest",
     installCommand: "curl -fsSL https://raw.githubusercontent.com/jx-grxf/dirhop/main/install.sh | sh",
-    fallbackVersion: "v0.1.1",
-    platformLabels: ["macOS", "Linux"],
+    installCommandWindows: "irm https://raw.githubusercontent.com/jx-grxf/dirhop/main/install.ps1 | iex",
+    fallbackVersion: "v0.2.0",
+    platformLabels: ["macOS", "Windows", "Linux"],
     highlights: [
-      "Searches around 10,000 folders in under 100 ms, with results filling in while you type.",
-      "Git repos, project folders and the places you visit most rank first; zoxide history counts too.",
-      "Preview with git branch, detected language and folder contents; Ctrl-E opens your editor, Ctrl-O opens Finder.",
-      "Your own command name and shortcut, a one-line install, and self-updates checked against SHA-256.",
+      "Searches around 10,000 folders in under 100 ms and opens instantly with the index from last time, adding new folders while you type.",
+      "Git repos, project folders and the places you visit most rank first, Ctrl-B pins a folder. hop dirhop jumps straight there when one match clearly wins.",
+      "Preview with git branch, detected language and folder contents; Ctrl-E opens your editor, Ctrl-O opens your file manager.",
+      "Runs on macOS, Linux and Windows with zsh, bash, fish or PowerShell. One-line install, self-updates checked against SHA-256.",
     ],
     showcase: [
       {
