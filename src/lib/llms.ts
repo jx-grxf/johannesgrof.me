@@ -82,7 +82,11 @@ Problem: ${project.caseStudy.problem}
 
 What was built: ${project.caseStudy.built}
 
-${project.highlights.map((highlight) => `- ${highlight}`).join("\n")}`;
+${project.highlights.map((highlight) => `- ${highlight}`).join("\n")}${
+    project.releaseHighlights?.length
+      ? `\n\nLatest release:\n${project.releaseHighlights.map((highlight) => `- ${highlight}`).join("\n")}`
+      : ""
+  }`;
 
   return `${intro}
 

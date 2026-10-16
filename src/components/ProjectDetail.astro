@@ -243,6 +243,28 @@ const socialImage =
 const socialImageAlt = socialImage ? socialImageSource?.alt : undefined;
 
 const canonicalPath = `${localePrefix}/projects/${project.slug}/`;
+
+// One SoftwareApplication per project page, so search engines and assistants
+// can tie the app, its icon and its maker together. The PNG icon is used
+// because Google does not show WebP logos everywhere.
+const logoSource = project.logo?.fallbackSrc ?? project.logo?.src;
+const applicationLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "@id": `${toCanonicalUrl(`/projects/${project.slug}/`)}#app`,
+  name: project.name,
+  url: toCanonicalUrl(canonicalPath),
+  description: c.description,
+  inLanguage: isDe ? "de-AT" : "en",
+  applicationCategory: "DeveloperApplication",
+  ...(project.platformLabels ? { operatingSystem: project.platformLabels.join(", ") } : {}),
+  ...(logoSource ? { image: toCanonicalUrl(logoSource) } : {}),
+  ...(socialImage ? { screenshot: toCanonicalUrl(socialImage) } : {}),
+  ...(hasRelease && github.version ? { softwareVersion: github.version.replace(/^v/, "") } : {}),
+  ...(isPublicRepo ? { sameAs: [project.githubUrl] } : {}),
+  ...(project.liveUrl ? { installUrl: project.liveUrl } : {}),
+  creator: { "@id": toCanonicalUrl("/#person") },
+};
 const hreflangAlternates = [
   { hreflang: "en", href: toCanonicalUrl(`/projects/${project.slug}/`) },
   { hreflang: "de-AT", href: toCanonicalUrl(`/de/projects/${project.slug}/`) },
@@ -263,6 +285,7 @@ const hreflangAlternates = [
       ogLocale={isDe ? "de_AT" : "en_US"}
       hreflangAlternates={hreflangAlternates}
     />
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(applicationLd)} />
   </head>
   <body>
     <SiteHeader navItems={navItems} ariaLabel={s.navLabel} homeHref={isDe ? "/de/" : "/"} langSwitch={langSwitch} lang={lang} />
