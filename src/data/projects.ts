@@ -138,48 +138,53 @@ export const featuredProjects: Project[] = [
       width: 256,
       height: 256,
     },
-    tagline: "See which coding agent started each local dev port, and stop the right one.",
+    tagline: "Local dev servers on your Mac, run by you and your coding agents without collisions.",
     description:
-      "A macOS menu bar app for developers who run coding agents. It shows every local dev port, which Claude Code or Codex session started it in which worktree, and what that session is doing right now. You can stop exactly that server, and so can the agent.",
+      "A macOS menu bar app for developers who work with Claude Code or Codex. It shows every local dev server, which agent session started it in which worktree, and what that session is doing right now. Agents get their own tools: one call starts a dev server on a free port and returns the URL, and they can read its logs, find the local database and stop only what is theirs. You see all of it in one panel.",
     caseStudy: {
-      problem: "Local development servers keep running, ports collide, and it is hard to tell which process, repository, or agent owns a given listener.",
-      built: "I built a native Swift menu bar app that scans listening TCP ports, links each one to its process, repo, and agent, and gates process control behind precise actions.",
+      problem: "With several coding agents in parallel worktrees, dev servers pile up, two agents reach for port 3000, and nobody can tell which process belongs to which session. Agents fall back to sleep loops, curl polling and kill -9.",
+      built: "A native Swift menu bar app that maps every listening TCP port to its process, repo, branch and agent session, with hooks for live session status. A bundled MCP server and the pp command give agents eleven tools. start_server reserves a port block per worktree, detects the package manager and framework, starts the server, waits until it answers and keeps its output in a log. wait_for_port, server_logs, list_services and project_context cover the rest. Every stop goes through one validated path in the app.",
     },
     de: {
-      tagline: "Sieh, welcher Coding-Agent welchen lokalen Dev-Port gestartet hat, und stopp den richtigen.",
+      tagline: "Lokale Dev-Server auf deinem Mac, gestartet von dir und deinen Coding-Agents, ohne Port-Kollisionen.",
       description:
-        "Eine macOS-Menüleisten-App für alle, die mit Coding-Agents arbeiten. Sie zeigt jeden lokalen Dev-Port, welche Claude-Code- oder Codex-Session ihn in welchem Worktree gestartet hat und was diese Session gerade tut. Du kannst genau diesen Server stoppen, und der Agent kann es auch.",
+        "Eine macOS-Menüleisten-App für alle, die mit Claude Code oder Codex arbeiten. Sie zeigt jeden lokalen Dev-Server, welche Agent-Session ihn in welchem Worktree gestartet hat und was diese Session gerade tut. Agents bekommen eigene Werkzeuge: Ein Aufruf startet einen Dev-Server auf einem freien Port und liefert die URL zurück. Danach lesen sie seine Logs, finden die lokale Datenbank und stoppen nur, was ihnen gehört. Du siehst alles in einem Panel.",
       caseStudy: {
-        problem: "Lokale Dev-Server laufen weiter, Ports kollidieren, und es ist schwer zu erkennen, welchem Prozess, Repository oder Agent ein Listener gehört.",
-        built: "Ich habe eine native Swift-Menüleisten-App gebaut, die lauschende TCP-Ports scannt, jeden Port seinem Prozess, Repo und Agent zuordnet und Prozesskontrolle hinter präzise Aktionen legt.",
+        problem: "Arbeiten mehrere Coding-Agents parallel in Worktrees, stapeln sich die Dev-Server, zwei Agents greifen nach Port 3000, und niemand weiß, welcher Prozess zu welcher Session gehört. Die Agents behelfen sich mit sleep-Schleifen, curl-Polling und kill -9.",
+        built: "Eine native Swift-Menüleisten-App, die jeden lauschenden TCP-Port seinem Prozess, Repo, Branch und seiner Agent-Session zuordnet, mit Hooks für den Live-Status der Sessions. Ein mitgelieferter MCP-Server und der Befehl pp geben Agents elf Werkzeuge. start_server reserviert pro Worktree einen Portblock, erkennt Paketmanager und Framework, startet den Server, wartet, bis er antwortet, und schreibt seine Ausgabe in ein Log. wait_for_port, server_logs, list_services und project_context decken den Rest ab. Jeder Stopp läuft über einen einzigen geprüften Pfad in der App.",
       },
       highlights: [
-        "Jede laufende Claude-Code- und Codex-Session nach Projekt und Branch, mit Status: arbeitet, wartet, braucht Freigabe.",
-        "Ordnet jeden lauschenden TCP-Port seinem Prozess, Repo, Branch und der Agent-Session zu, die ihn gestartet hat.",
-        "Agents holen sich über MCP einen freien Port pro Worktree, damit parallele Sessions nicht kollidieren.",
-        "Vor jedem Stopp werden PID, Port, Befehl und Ordner neu geprüft. Server, die du selbst gestartet hast, darf kein Agent beenden.",
+        "Jede Claude-Code- und Codex-Session nach Projekt und Branch, mit Live-Status: arbeitet, wartet auf dich, braucht Freigabe.",
+        "Agents starten Dev-Server mit einem MCP-Aufruf: freier Port pro Worktree, passender Paketmanager, --port für Vite, Astro, Next.js und Nuxt, zurück kommen URL und Log.",
+        "Lokale Datenbanken und Dienste wie PostgreSQL, Redis oder MongoDB erscheinen mit ihrer Verbindungs-URL, für dich und für Agents.",
+        "pp im Terminal: pp start, pp logs -f, pp who 3000, pp stop, eval \"$(pp env)\". pp setup richtet Hooks, MCP und einen kurzen Abschnitt in CLAUDE.md und AGENTS.md ein.",
+        "Derselbe MCP-Server funktioniert auch in Cursor, Windsurf, VS Code, Zed und Claude Desktop.",
+        "Agents stoppen nur eigene Server. PID, Port, Befehl und Ordner werden vor jedem Signal neu geprüft, und in den Einstellungen legst du fest, was Agents dürfen.",
       ],
     },
-    stack: ["Swift", "macOS", "Menu Bar"],
+    stack: ["Swift", "SwiftUI", "MCP"],
     repo: "jx-grxf/PortPirate",
     githubUrl: "https://github.com/jx-grxf/PortPirate",
     releaseUrl: "https://github.com/jx-grxf/PortPirate/releases",
     fallbackVersion: "unreleased",
     platformLabels: ["macOS"],
     highlights: [
-      "Every running Claude Code and Codex session by project and branch, with its status: working, waiting, needs approval.",
-      "Maps each listening TCP port to its process, repo, branch and the agent session that started it.",
-      "Agents ask it over MCP for a free port per worktree, so parallel sessions never collide.",
-      "PID, port, command and folder are checked again before any stop. No agent can kill a server you started by hand.",
+      "Every Claude Code and Codex session by project and branch, with live status: working, waiting for you, needs approval.",
+      "Agents start dev servers with one MCP call: a free port per worktree, the right package manager, --port for Vite, Astro, Next.js and Nuxt, and the URL and log come back.",
+      "Local databases and services such as PostgreSQL, Redis or MongoDB show up with their connection URL, for you and for agents.",
+      "pp in the terminal: pp start, pp logs -f, pp who 3000, pp stop, eval \"$(pp env)\". pp setup installs hooks, MCP and a short section in CLAUDE.md and AGENTS.md.",
+      "The same MCP server works in Cursor, Windsurf, VS Code, Zed and Claude Desktop.",
+      "Agents only stop their own servers. PID, port, command and folder are checked again before any signal, and Settings decide what agents may do.",
     ],
     showcase: [
       {
         src: "/projects/portpirate/showcase.webp",
         fallbackSrc: "/projects/portpirate/showcase.png",
-        alt: "PortPirate menu bar runtime panel with localhost runtimes, warnings, and diagnostics",
+        alt: "PortPirate menu bar panel with four Claude Code sessions and two dev servers an agent started through PortPirate",
+        altDe: "PortPirate-Menüleistenpanel mit vier Claude-Code-Sessions und zwei Dev-Servern, die ein Agent über PortPirate gestartet hat",
         fit: "contain",
-        width: 1600,
-        height: 900,
+        width: 944,
+        height: 1166,
       },
     ],
     visibility: "planned",
@@ -1327,9 +1332,9 @@ const orderedProjects = (slugs: string[]) =>
 // The "highlights" group that opens the project index — the flagship projects,
 // rendered as the same text rows as every other group, just first. Each project
 // appears here OR in a section below, never both.
-export const featuredShowcaseProjects = orderedProjects(["patchpilot", "briskedit", "macphone"]);
+export const featuredShowcaseProjects = orderedProjects(["portpirate", "patchpilot", "briskedit", "macphone"]);
 
-export const homepageProjects = orderedProjects(["dirhop", "briskedit", "cswap", "agent-presence", "poise", "patchpilot"]);
+export const homepageProjects = orderedProjects(["portpirate", "dirhop", "briskedit", "cswap", "agent-presence", "poise"]);
 
 export const projectSections: ProjectSection[] = [
   {
@@ -1339,7 +1344,7 @@ export const projectSections: ProjectSection[] = [
       eyebrow: "mac-apps",
       title: "Mac-Apps",
     },
-    projects: orderedProjects(["bottlelite", "poise", "cswap", "notchtray", "ccrab", "portpirate", "slamx"]),
+    projects: orderedProjects(["bottlelite", "poise", "cswap", "notchtray", "ccrab", "slamx"]),
   },
   {
     eyebrow: "agents & tools",
