@@ -15,15 +15,16 @@ const info = await getProjectGitHubInfo(project);
 // Fallback data carries no star count, so a zero there means "unknown", not "none".
 const stars = project.visibility === "public" && info.metadataState !== "fallback" ? info.stars : 0;
 const starsLabel = lang === "de" ? `${stars} ${stars === 1 ? "Stern" : "Sterne"} auf GitHub` : `${stars} GitHub ${stars === 1 ? "star" : "stars"}`;
+const morph = (part: string) => `view-transition-name: pj-${project.slug}-${part}`;
 const monogram = project.name.replace(/[^A-Za-zÄÖÜäöü]/g, "").slice(0, 2);
 ---
 
 <li data-project-item={search === undefined ? undefined : ""} data-search={search}>
   <a href={`${prefix}/projects/${project.slug}/`}>
     {project.logo
-      ? <img class="work-index-icon" src={project.logo.src} alt="" width="48" height="48" loading="lazy" decoding="async" />
-      : <span class="work-index-icon work-index-icon--mono" aria-hidden="true">{monogram}</span>}
-    <span class="work-index-name"><strong>{project.name}</strong><span>{copy.tagline}</span></span>
+      ? <img class="work-index-icon" src={project.logo.src} alt="" width="48" height="48" loading="lazy" decoding="async" style={morph("icon")} />
+      : <span class="work-index-icon work-index-icon--mono" aria-hidden="true" style={morph("icon")}>{monogram}</span>}
+    <span class="work-index-name"><strong style={morph("name")}>{project.name}</strong><span>{copy.tagline}</span></span>
     <span class="work-index-stack">{project.stack.join(" · ")}</span>
     <span class="work-index-meta">
       <span class={`status ${statusClass(project.status)}`}>{localizedStatusLabel(project.status, lang)}</span>

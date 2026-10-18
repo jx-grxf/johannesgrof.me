@@ -165,6 +165,9 @@ const media = project.showcase
   .filter((item) => item.kind === "video" || !posters.has(item.src))
   .sort((a, b) => Number(b.kind === "video") - Number(a.kind === "video"));
 const [heroImage, ...galleryImages] = media;
+// Same names as the row in the project lists, so the browser carries the icon
+// and title across the page change (see @view-transition in global.css).
+const morphIcon = `view-transition-name: pj-${project.slug}-icon`;
 const monogram = project.name.replace(/[^A-Za-zÄÖÜäöü]/g, "").slice(0, 2);
 const cloneCommand = github.commands[0]?.command;
 const stableDownloads = github.downloadGroup?.stableDownloads ?? (github.downloadGroup?.stable ? [github.downloadGroup.stable] : []);
@@ -304,7 +307,7 @@ const hreflangAlternates = [
             <span class={`status ${statusClass(project.status)}`}>{localizedStatusLabel(project.status, lang)}</span>
             {hasRelease && <span>{github.version}</span>}
           </div>
-          <h1 id="project-title">{project.name}</h1>
+          <h1 id="project-title" style={`view-transition-name: pj-${project.slug}-name`}>{project.name}</h1>
           <p class="project-tagline">{c.tagline}</p>
           <p class="project-description">{c.description}</p>
           <div class="project-actions">
@@ -386,10 +389,10 @@ const hreflangAlternates = [
           {project.logo ? (
             <picture>
               {project.logo.fallbackSrc && <source srcset={project.logo.src} type="image/webp" />}
-              <img src={project.logo.fallbackSrc ?? project.logo.src} alt="" width={project.logo.width} height={project.logo.height} loading="eager" decoding="async" />
+              <img src={project.logo.fallbackSrc ?? project.logo.src} alt="" width={project.logo.width} height={project.logo.height} loading="eager" decoding="async" style={morphIcon} />
             </picture>
           ) : (
-            <span class="pd-monogram">{monogram}</span>
+            <span class="pd-monogram" style={morphIcon}>{monogram}</span>
           )}
         </div>
       </section>

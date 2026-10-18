@@ -106,6 +106,18 @@ const sourceNote = `<!--
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#f4f2ed");
   }
 </script>
+{/* The home intro plays once per tab session, decided before the first paint
+    so nothing shows up and then jumps. */}
+{isHome && (
+  <script is:inline>
+    try {
+      if (!sessionStorage.getItem("intro-seen")) {
+        document.documentElement.classList.add("intro");
+        sessionStorage.setItem("intro-seen", "1");
+      }
+    } catch {}
+  </script>
+)}
 {noindex && <meta name="robots" content="noindex" />}
 <title>{title}</title>
 {!noindex && <link rel="canonical" href={canonicalUrl} />}

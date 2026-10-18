@@ -144,6 +144,7 @@ const profileSchema = {
 
     <main id="main">
       <section class="hero-stage" aria-labelledby="hero-title">
+        <div class="hero-trail" aria-hidden="true"></div>
         <div class="hero section-shell">
           <p class="eyebrow">{content.hero.eyebrow}</p>
           <h1 id="hero-title">{titleFirst}<button class="hero-glyph" type="button" data-terminal-open aria-label={isDe ? "Terminal öffnen" : "Open the terminal"} title={isDe ? "Terminal öffnen (~)" : "Open the terminal (~)"}><PixelSprite name="terminal" /></button>{titleRest}<span class="display-em">{titleAccent}</span>{titleTail}</h1>
@@ -332,6 +333,7 @@ const profileSchema = {
     <script>
       import "@/scripts/clock";
       import "@/scripts/scene";
+      import "@/scripts/trail";
       import "@/scripts/departures";
     </script>
   </body>
