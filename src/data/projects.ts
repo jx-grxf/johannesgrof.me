@@ -1159,6 +1159,98 @@ export const featuredProjects: Project[] = [
     visibility: "public",
   },
   {
+    name: "claude-code-todo-fix",
+    slug: "claude-code-todo-fix",
+    status: "active",
+    logo: { src: "/projects/claude-code-todo-fix/logo.svg", alt: "claude-code-todo-fix icon: a pixel checklist with two ticked items", width: 512, height: 512 },
+    tagline: "Brings the task list back to Claude Code on newer models.",
+    description:
+      "Newer Claude Code releases switched the todo and task tools off on current models, so the checklist Claude used to tick off step by step is gone and Ctrl+T shows nothing. The fix sets the opt-in flag from the changelog and adds one rule to CLAUDE.md so Claude actually loads the tools. Paste one prompt into Claude Code, or run the script for macOS, Linux or Windows.",
+    caseStudy: {
+      problem: "Setting CLAUDE_CODE_ENABLE_TODO_TOOLS=1 only gets you halfway. The tools come back as deferred tools: Claude sees their names but not their instructions, so it rarely uses them.",
+      built: "Two changes: the flag in settings.json, and a short CLAUDE.md rule that loads TaskCreate, TaskUpdate and TaskList through tool search on any job with three or more steps. The bash and PowerShell installers write identical files, back up everything they touch, keep symlinks, line endings and BOMs intact, and refuse to edit an invalid settings.json.",
+    },
+    de: {
+      tagline: "Holt die Aufgabenliste in Claude Code auf neueren Modellen zurück.",
+      description:
+        "Neuere Versionen von Claude Code haben die Todo- und Task-Tools auf aktuellen Modellen abgeschaltet. Die Checkliste, die Claude Schritt für Schritt abhakt, fehlt, und Ctrl+T zeigt nichts. Der Fix setzt das Opt-in-Flag aus dem Changelog und ergänzt eine Regel in der CLAUDE.md, damit Claude die Tools auch lädt. Du fügst einen Prompt in Claude Code ein oder startest das Skript für macOS, Linux oder Windows.",
+      caseStudy: {
+        problem: "CLAUDE_CODE_ENABLE_TODO_TOOLS=1 allein reicht nicht. Die Tools kommen als deferred Tools zurück: Claude sieht ihre Namen, aber nicht ihre Anleitung, und benutzt sie deshalb kaum.",
+        built: "Zwei Änderungen: das Flag in der settings.json und eine kurze Regel in der CLAUDE.md, die TaskCreate, TaskUpdate und TaskList bei Aufgaben ab drei Schritten über die Tool-Suche lädt. Die Installer für Bash und PowerShell schreiben identische Dateien, sichern jede Datei vorher, lassen Symlinks, Zeilenenden und BOM in Ruhe und fassen eine ungültige settings.json nicht an.",
+      },
+      highlights: [
+        "Für Opus 5.5, Sonnet 5.5, Haiku 5.5, Opus 5, Fable und Mythos, geprüft mit Claude Code 2.1.302.",
+        "Der Schnellstart ist ein Prompt zum Einfügen in Claude Code. Kein Klonen, kein Download.",
+        "Die Installer kann man öfter laufen lassen: Sie schreiben nur, wenn sich etwas ändert, und sichern jede Datei mit Zeitstempel.",
+        "Das README nennt auch die Kosten: rund 2k Tokens Kontext pro Session und ab und zu eine Erinnerung von Claude Code.",
+      ],
+    },
+    stack: ["Shell", "PowerShell", "Claude Code"],
+    repo: "jx-grxf/claude-code-todo-fix",
+    githubUrl: "https://github.com/jx-grxf/claude-code-todo-fix",
+    releaseUrl: "https://github.com/jx-grxf/claude-code-todo-fix/releases/tag/v0.2.1",
+    installCommand: "git clone https://github.com/jx-grxf/claude-code-todo-fix.git && cd claude-code-todo-fix && ./install.sh",
+    installCommandWindows: "git clone https://github.com/jx-grxf/claude-code-todo-fix.git; cd claude-code-todo-fix; powershell -ExecutionPolicy Bypass -File .\\install.ps1",
+    fallbackVersion: "v0.2.1",
+    platformLabels: ["macOS", "Linux", "Windows"],
+    highlights: [
+      "Covers Opus 5.5, Sonnet 5.5, Haiku 5.5, Opus 5, Fable and Mythos, checked against Claude Code 2.1.302.",
+      "The quickstart is a prompt you paste into Claude Code. No clone, no download.",
+      "The installers are safe to run again: they only write when something changes and back up every file with a timestamp.",
+      "The README states the cost as well: about 2k tokens of context per session and an occasional reminder from Claude Code.",
+    ],
+    showcase: [],
+    visibility: "public",
+  },
+  {
+    name: "DriveTech",
+    slug: "beamng-drivetech",
+    status: "active",
+    logo: { src: "/projects/beamng-drivetech/logo.svg", alt: "DriveTech icon: a pixel rev counter with the needle near the red line", width: 512, height: 512 },
+    tagline: "BMW-style driving electronics for BeamNG.drive.",
+    description:
+      "A BeamNG.drive mod that loads into every car and adds what a current BMW does on the road: drive profiles from ECO PRO to SPORT+, DSC, DTC and DSC OFF, xDrive, launch control, auto start-stop, auto hold and coasting. Each feature checks whether the car has the hardware for it and stays off otherwise. For the ETK 800 it adds a 330d xDrive and a 320d Touring tuned to the real cars' figures. A fan project, not affiliated with BMW or BeamNG.",
+    caseStudy: {
+      problem: "BeamNG simulates the drivetrain in great detail, but the stock cars drive without the electronics around it: automatics hang in gear after you lift off, there is no launch control and no proper DSC modes.",
+      built: "Lua on BeamNG's vehicle extension system, one file per feature. Every feature runs isolated: if one throws, it is logged, switched off and its changes are undone while the rest keeps running. Nothing runs on AI or traffic cars, no stock file is overwritten, and 29 scenario tests run against BeamNG mocks under LuaJIT.",
+    },
+    de: {
+      tagline: "Fahrelektronik wie bei BMW für BeamNG.drive.",
+      description:
+        "Eine Mod für BeamNG.drive, die sich in jedes Auto lädt und nachrüstet, was ein aktueller BMW auf der Straße macht: Fahrprofile von ECO PRO bis SPORT+, DSC, DTC und DSC OFF, xDrive, Launch Control, Start-Stopp, Auto Hold und Segeln. Jede Funktion prüft, ob das Auto die Hardware dafür hat, und bleibt sonst aus. Für den ETK 800 kommen ein 330d xDrive und ein 320d Touring dazu, abgestimmt auf die Werte der echten Autos. Ein Fanprojekt, nicht mit BMW oder BeamNG verbunden.",
+      caseStudy: {
+        problem: "BeamNG simuliert den Antrieb sehr genau, die Serienautos fahren aber ohne die Elektronik drumherum: Automatikgetriebe bleiben nach dem Gaswegnehmen im Gang hängen, es gibt keine Launch Control und keine richtigen DSC-Modi.",
+        built: "Lua auf BeamNGs Vehicle-Extension-System, eine Datei pro Funktion. Jede Funktion läuft isoliert: Wirft eine einen Fehler, wird sie geloggt, abgeschaltet und ihre Änderungen werden zurückgenommen, der Rest läuft weiter. Auf KI- und Verkehrsautos läuft nichts, keine Originaldatei wird überschrieben, und 29 Szenario-Tests laufen gegen BeamNG-Mocks unter LuaJIT.",
+      },
+      highlights: [
+        "Schaltlogik, die in D nach dem Gaswegnehmen hochschaltet, in SPORT den Gang hält und in der Kurve nie hochschaltet.",
+        "Launch Control für Automatik, Doppelkupplung und Handschalter; beim Wandlerautomaten wird der Wandler entlastet, damit der Motor die Startdrehzahl erreicht.",
+        "ETK-800-Setups mit den Übersetzungen der ZF 8HP, die Werte abgeglichen mit BMW-Pressemappe und ADAC-Katalog.",
+        "Zeitmessung für 0-100, 0-200, 100-200 km/h und die Viertelmeile als UI-App im Spiel.",
+      ],
+    },
+    stack: ["Lua", "LuaJIT", "BeamNG.drive"],
+    repo: "jx-grxf/beamng-drivetech",
+    githubUrl: "https://github.com/jx-grxf/beamng-drivetech",
+    releaseUrl: "https://github.com/jx-grxf/beamng-drivetech/releases/tag/v1.0.0",
+    fallbackVersion: "v1.0.0",
+    fallbackDownload: {
+      assetName: "DriveTech.zip",
+      assetUrl: "https://github.com/jx-grxf/beamng-drivetech/releases/download/v1.0.0/DriveTech.zip",
+      size: 27512,
+      kind: "archive",
+    },
+    platformLabels: ["BeamNG.drive 0.39"],
+    highlights: [
+      "Shift logic that upshifts after you lift off in D, holds the gear in SPORT and never upshifts mid-corner.",
+      "Launch control for automatic, DCT and manual; on torque converter automatics the converter is unloaded so the engine reaches launch rpm.",
+      "ETK 800 setups with the ZF 8HP ratios, figures checked against the BMW press kit and the ADAC catalogue.",
+      "0-100, 0-200, 100-200 km/h and quarter-mile timer as an in-game UI app.",
+    ],
+    showcase: [],
+    visibility: "public",
+  },
+  {
     name: "CCrab",
     slug: "ccrab",
     status: "experimental",
@@ -1334,12 +1426,12 @@ const orderedProjects = (slugs: string[]) =>
 // appears here OR in a section below, never both.
 export const featuredShowcaseProjects = orderedProjects(["portpirate", "patchpilot", "briskedit", "macphone"]);
 
-export const homepageProjects = orderedProjects(["portpirate", "dirhop", "briskedit", "cswap", "agent-presence", "poise"]);
+export const homepageProjects = orderedProjects(["portpirate", "briskedit", "dirhop", "cswap", "notchtray", "claude-code-todo-fix", "agent-presence", "beamng-drivetech"]);
 
 export const projectSections: ProjectSection[] = [
   {
     eyebrow: "mac apps",
-    title: "Mac Apps",
+    title: "Mac apps",
     de: {
       eyebrow: "mac-apps",
       title: "Mac-Apps",
@@ -1353,16 +1445,16 @@ export const projectSections: ProjectSection[] = [
       eyebrow: "agents & tools",
       title: "Agent- und Entwickler-Tools",
     },
-    projects: orderedProjects(["dirhop", "healthkit-mcp", "agent-presence", "hermes-discord-voice", "openclaw-discord-voice"]),
+    projects: orderedProjects(["dirhop", "claude-code-todo-fix", "agent-presence", "healthkit-mcp", "hermes-discord-voice", "openclaw-discord-voice"]),
   },
   {
     eyebrow: "more",
-    title: "More Projects",
+    title: "More projects",
     de: {
       eyebrow: "mehr",
       title: "Weitere Projekte",
     },
-    projects: orderedProjects(["johannesgrof-me", "oeffigo-website", "tools", "caruso-reborn", "ip-multitool", "docxtopdf"]),
+    projects: orderedProjects(["beamng-drivetech", "caruso-reborn", "tools", "ip-multitool", "johannesgrof-me", "oeffigo-website", "docxtopdf"]),
   },
 ];
 
