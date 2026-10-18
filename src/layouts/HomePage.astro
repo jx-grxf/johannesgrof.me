@@ -5,7 +5,8 @@ import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import SocialLinks from "@/components/SocialLinks.astro";
 import PixelSprite from "@/components/PixelSprite.astro";
-import { getProjectCopy, homepageProjects, projectsBySlug, publicProjects, localizedStatusLabel, statusClass } from "@/data/projects";
+import WorkRow from "@/components/WorkRow.astro";
+import { homepageProjects, projectsBySlug, publicProjects } from "@/data/projects";
 import { getProjectGitHubInfo } from "@/data/github";
 import { departureStops } from "@/lib/departures";
 import type { ProjectLang } from "@/data/projects";
@@ -54,7 +55,6 @@ const proofLink = (slug: string) => {
   return project ? { name: project.name, href: `${localePrefix}/projects/${project.slug}/` } : undefined;
 };
 
-const monogram = (name: string) => name.replace(/[^A-Za-zÄÖÜäöü]/g, "").slice(0, 2);
 
 // Split the headline around its accent word here rather than in the template:
 // interpolating three expressions across separate JSX lines re-introduces the
@@ -144,6 +144,7 @@ const profileSchema = {
 
     <main id="main">
       <section class="hero-stage" aria-labelledby="hero-title">
+        <div class="hero-trail" aria-hidden="true"></div>
         <div class="hero section-shell">
           <p class="eyebrow">{content.hero.eyebrow}</p>
           <h1 id="hero-title">{titleFirst}<button class="hero-glyph" type="button" data-terminal-open aria-label={isDe ? "Terminal öffnen" : "Open the terminal"} title={isDe ? "Terminal öffnen (~)" : "Open the terminal (~)"}><PixelSprite name="terminal" /></button>{titleRest}<span class="display-em">{titleAccent}</span>{titleTail}</h1>
@@ -256,18 +257,7 @@ const profileSchema = {
         <section class="band section-shell" aria-labelledby="selected-projects-title">
           <div class="section-head"><span class="section-num">03</span><h2 id="selected-projects-title">{content.more.title}</h2></div>
           <ul class="work-index">
-            {homepageProjects.map((project) => (
-              <li>
-                <a href={`${localePrefix}/projects/${project.slug}/`}>
-                  {project.logo
-                    ? <img class="work-index-icon" src={project.logo.src} alt="" width="48" height="48" loading="lazy" decoding="async" />
-                    : <span class="work-index-icon work-index-icon--mono" aria-hidden="true">{monogram(project.name)}</span>}
-                  <span class="work-index-name"><strong>{project.name}</strong><span>{getProjectCopy(project, lang).tagline}</span></span>
-                  <span class="work-index-stack">{project.stack.join(" · ")}</span>
-                  <span class={`status ${statusClass(project.status)}`}>{localizedStatusLabel(project.status, lang)}</span>
-                </a>
-              </li>
-            ))}
+            {homepageProjects.map((project) => <WorkRow project={project} lang={lang} />)}
           </ul>
           <div class="catalogue-cta"><p>{content.more.catalogue}</p><a class="button secondary" href={`${localePrefix}/projects/`}>{content.more.catalogueAction} <span aria-hidden="true">↗</span></a></div>
         </section>
@@ -343,6 +333,7 @@ const profileSchema = {
     <script>
       import "@/scripts/clock";
       import "@/scripts/scene";
+      import "@/scripts/trail";
       import "@/scripts/departures";
     </script>
   </body>

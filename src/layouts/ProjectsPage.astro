@@ -2,7 +2,8 @@
 import BaseHead from "@/components/BaseHead.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
-import { publicProjects, getProjectCopy, localizedStatusLabel, statusClass, type ProjectLang } from "@/data/projects";
+import WorkRow from "@/components/WorkRow.astro";
+import { featuredShowcaseProjects, getProjectCopy, localizedStatusLabel, projectSections, publicProjects, type Project, type ProjectLang } from "@/data/projects";
 import { toCanonicalUrl } from "@/data/siteMetadata";
 import "@/styles/global.css";
 
@@ -12,9 +13,13 @@ const de = lang === "de";
 const prefix = de ? "/de" : "";
 const home = de ? "/de/" : "/";
 const canonicalPath = `${prefix}/projects/`;
-const active = publicProjects.filter(project => project.status !== "archived");
-const archived = publicProjects.filter(project => project.status === "archived");
-const groups = [{ title: de ? "Apps und Tools" : "Apps and tools", items: active }, { title: de ? "Archiv" : "Archive", items: archived }];
+const live = (projects: Project[]) => projects.filter(project => project.status !== "archived");
+const groups = [
+  { title: de ? "Auswahl" : "Highlights", items: live(featuredShowcaseProjects) },
+  ...projectSections.map(section => ({ title: de ? section.de.title : section.title, items: live(section.projects) })),
+  { title: de ? "Archiv" : "Archive", items: publicProjects.filter(project => project.status === "archived") },
+].filter(group => group.items.length > 0);
+const searchText = (project: Project) => `${project.name} ${getProjectCopy(project, lang).tagline} ${project.stack.join(" ")} ${localizedStatusLabel(project.status, lang)}`.toLocaleLowerCase();
 const s = de ? {
   title: "Alle Projekte", description: "Apps für Mac und iPhone, Websites und kleine Werkzeuge von Johannes Grof. Mit öffentlichen Releases, privaten Experimenten und einem Archiv.",
   intro: "Hier findest du auch die kleineren Tools und Experimente. Manche lassen sich herunterladen, andere sind noch in Arbeit. Was nicht weiterentwickelt wird, steht im Archiv.",
@@ -52,16 +57,8 @@ const s = de ? {
       <p data-project-results role="status" aria-live="polite" class="catalogue-results"></p>
       <p data-project-empty hidden>{s.empty}</p>
       {groups.map(group => <section class="catalogue-group" data-project-group>
-        <h2>{group.title}</h2>
-        <ul class="catalogue-list">{group.items.map(project => {
-          const copy = getProjectCopy(project, lang);
-          return <li data-project-item data-search={`${project.name} ${copy.tagline} ${project.stack.join(" ")} ${localizedStatusLabel(project.status, lang)}`.toLocaleLowerCase()}>
-            <a href={`${prefix}/projects/${project.slug}/`}>
-              <div><h3>{project.name}<span aria-hidden="true"> ↗</span></h3><p>{copy.tagline}</p></div>
-              <span class={`status ${statusClass(project.status)}`}>{localizedStatusLabel(project.status, lang)}</span>
-            </a>
-          </li>;
-        })}</ul>
+        <h2>{group.title}<span class="catalogue-count">{String(group.items.length).padStart(2, "0")}</span></h2>
+        <ul class="work-index catalogue-index">{group.items.map(project => <WorkRow project={project} lang={lang} search={searchText(project)} />)}</ul>
       </section>)}
       <noscript><p>{de ? "Die vollständige Liste ist auch ohne JavaScript sichtbar. Du kannst die Seitensuche deines Browsers verwenden." : "The full list is visible without JavaScript. You can use your browser’s find command."}</p></noscript>
     </main>

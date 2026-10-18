@@ -145,8 +145,8 @@ const en: LocaleContent = {
       },
       {
         title: "CLI and tools",
-        items: ["Rust", "Python", "Node", "Local LLMs"],
-        proof: ["agent-presence", "ip-multitool", "patchpilot"],
+        items: ["Rust", "Python", "Node", "Lua", "Local LLMs"],
+        proof: ["agent-presence", "ip-multitool", "patchpilot", "beamng-drivetech", "claude-code-todo-fix"],
       },
       {
         title: "Shipping",
@@ -240,8 +240,8 @@ const de: LocaleContent = {
       },
       {
         title: "CLI und Tools",
-        items: ["Rust", "Python", "Node", "Lokale LLMs"],
-        proof: ["agent-presence", "ip-multitool", "patchpilot"],
+        items: ["Rust", "Python", "Node", "Lua", "Lokale LLMs"],
+        proof: ["agent-presence", "ip-multitool", "patchpilot", "beamng-drivetech", "claude-code-todo-fix"],
       },
       {
         title: "Ausliefern",

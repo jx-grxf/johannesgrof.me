@@ -42,6 +42,7 @@ export function downloadLabel(asset: DownloadAsset, name: string, lang: "en" | "
 
 export function downloadSize(bytes: number, lang: "en" | "de"): string {
   if (!bytes) return "GitHub Releases";
+  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB · GitHub Releases`;
   const size = new Intl.NumberFormat(lang === "de" ? "de-AT" : "en", { maximumFractionDigits: bytes >= 10 * 1024 * 1024 ? 0 : 1 }).format(bytes / 1024 / 1024);
   return `${size} MB · GitHub Releases`;
 }
