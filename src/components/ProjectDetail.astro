@@ -37,6 +37,8 @@ const s = isDe
       access: "Zugriff",
       availability: "Verfügbarkeit",
       updated: "Aktualisiert",
+      stars: (n: number) => `★ ${n} ${n === 1 ? "Stern" : "Sterne"}`,
+      starsLabel: "GitHub",
       comingSoon: "bald verfügbar",
       notAccessible: "nicht zugänglich",
       githubRepository: "GitHub-Repository",
@@ -93,6 +95,8 @@ const s = isDe
       access: "Access",
       availability: "Availability",
       updated: "Updated",
+      stars: (n: number) => `★ ${n} ${n === 1 ? "star" : "stars"}`,
+      starsLabel: "GitHub",
       comingSoon: "coming soon",
       notAccessible: "not accessible",
       githubRepository: "GitHub repository",
@@ -220,6 +224,7 @@ const metaItems = [
   { label: s.platform, value: platformValue },
   hidesAvailabilityRow ? undefined : { label: downloadLabel, value: downloadValue },
   github.updatedAt ? { label: s.updated, value: formatDate(github.updatedAt) } : undefined,
+  isPublicRepo && github.metadataState !== "fallback" && github.stars > 0 ? { label: s.starsLabel, value: s.stars(github.stars) } : undefined,
   { label: s.stack, value: project.stack.join(" · ") },
 ].filter((item): item is { label: string; value: string } => Boolean(item));
 // A private or planned repo has no public metadata to fetch, so its fallback is
