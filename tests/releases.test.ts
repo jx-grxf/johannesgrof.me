@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { classifyDownload, downloadPlatformLabel } from "../src/lib/releases.ts";
+import { classifyDownload, downloadPlatformLabel, downloadSize } from "../src/lib/releases.ts";
 
 test("real cross-platform release files identify platform and architecture", () => {
   const cases = [
@@ -27,4 +27,10 @@ test("a plain archive uses an explicit single platform without guessing for mult
   assert.equal(classifyDownload("BriskEdit-0.6.2.zip", ["macOS"])?.kind, "macos");
   assert.equal(classifyDownload("bundle.zip", ["macOS", "Windows", "Linux"])?.kind, "archive");
   assert.equal(classifyDownload("Tool-universal.dmg")?.architecture, "universal");
+});
+
+test("assets under a megabyte are sized in kilobytes, not rounded to zero", () => {
+  assert.equal(downloadSize(27512, "en"), "27 KB · GitHub Releases");
+  assert.equal(downloadSize(947663, "de"), "925 KB · GitHub Releases");
+  assert.equal(downloadSize(1118610 * 10, "en"), "11 MB · GitHub Releases");
 });
