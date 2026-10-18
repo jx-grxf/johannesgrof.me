@@ -4898,3 +4898,621 @@ html[lang="de"] .error-page [data-error-lang="en"] {
 @keyframes trail-fade {
   to { opacity: 0; }
 }
+
+/* ---------------------------------------------------------------------------
+   Project page: DriveTech deep dive. Switches as a row of cells, two plots
+   drawn from the mod's own defaults, the rest as hairline tables.
+   --------------------------------------------------------------------------- */
+
+.dt-lab {
+  margin: clamp(48px, 6vw, 80px) 0 0;
+}
+
+.dt-label {
+  margin: 0 0 14px;
+  color: var(--signal);
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  font-weight: 500;
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+}
+
+.dt-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 3.4vw, 2.5rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.dt-lead {
+  max-width: 62ch;
+  margin: 12px 0 0;
+  color: var(--ink-2);
+}
+
+.dt-switches {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1fr);
+  margin: 32px calc(-1 * var(--inset)) 0;
+  border-block: 1px solid var(--rule-2);
+}
+
+.dt-switches > * {
+  min-width: 0;
+  padding: 18px var(--inset) 20px;
+}
+
+.dt-switches > * + * {
+  border-left: 1px solid var(--rule);
+}
+
+.dt-rocker-label,
+.dt-strip-head span,
+.dt-facts dt,
+.dt-dsc-rows dt,
+.dt-slider span {
+  display: block;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+}
+
+.dt-rocker-cells {
+  display: flex;
+  margin-top: 10px;
+  border: 1px solid var(--rule-2);
+}
+
+.dt-rocker-cells button {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 11px 6px;
+  border: 0;
+  background: transparent;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease;
+}
+
+.dt-rocker-cells button + button {
+  border-left: 1px solid var(--rule-2);
+}
+
+.dt-rocker-cells button:hover {
+  color: var(--ink);
+}
+
+.dt-rocker-cells button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* Without the script the switches would do nothing, so they only look live once it runs. */
+.dt-lab:not(.is-live) .dt-rocker-cells button {
+  pointer-events: none;
+}
+
+.dt-telltale {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: center;
+  gap: 4px 10px;
+}
+
+.dt-telltale-lamp {
+  grid-row: span 2;
+  align-self: center;
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--rule-2);
+  transition: background 160ms steps(2, end), border-color 160ms ease;
+}
+
+.dt-telltale[data-ready="true"] .dt-telltale-lamp {
+  border-color: var(--signal);
+  background: var(--signal);
+}
+
+.dt-telltale-name {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+}
+
+.dt-telltale[data-ready="false"] .dt-telltale-name {
+  color: var(--faint);
+}
+
+.dt-telltale-state {
+  color: var(--ink-2);
+  font-size: 0.86rem;
+  line-height: 1.4;
+}
+
+.dt-panels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-inline: calc(-1 * var(--inset));
+  border-bottom: 1px solid var(--rule-2);
+}
+
+.dt-panel {
+  min-width: 0;
+  margin: 0;
+  padding: 24px var(--inset) 26px;
+}
+
+.dt-panel + .dt-panel {
+  border-left: 1px solid var(--rule);
+}
+
+.dt-panel h3,
+.dt-dsc h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.dt-panel figcaption p,
+.dt-dsc-head p {
+  max-width: 54ch;
+  margin: 6px 0 0;
+  color: var(--ink-2);
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.dt-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 18px;
+  overflow: visible;
+}
+
+.dt-grid {
+  stroke: var(--rule);
+  stroke-width: 1;
+}
+
+.dt-linear {
+  stroke: var(--rule-2);
+  stroke-dasharray: 3 4;
+}
+
+.dt-kickdown {
+  fill: var(--paper-3);
+}
+
+.dt-axis {
+  fill: var(--mute);
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.08em;
+}
+
+.dt-axis--kick,
+.dt-axis--side {
+  fill: var(--faint);
+}
+
+.dt-curve {
+  fill: none;
+  stroke: var(--rule-2);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  transition: stroke 200ms ease;
+}
+
+.dt-curve.is-active {
+  stroke: var(--signal);
+  stroke-width: 2.5;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .dt-lab.is-live .dt-curve.is-active {
+    stroke-dasharray: 1;
+    animation: dt-draw 520ms var(--smooth) both;
+  }
+}
+
+@keyframes dt-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.dt-cross {
+  stroke: var(--ink-2);
+  stroke-dasharray: 2 3;
+}
+
+.dt-marker {
+  fill: var(--ink);
+}
+
+.dt-readout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 12px 24px;
+  margin-top: 16px;
+}
+
+.dt-slider input {
+  display: block;
+  width: 100%;
+  margin: 10px 0 0;
+  accent-color: var(--signal);
+}
+
+.dt-out {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.dt-out output:last-of-type {
+  color: var(--signal);
+}
+
+.dt-out > span[aria-hidden] {
+  color: var(--faint);
+  font-size: 1rem;
+}
+
+.dt-out-label {
+  color: var(--faint);
+  font-size: 0.68rem;
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+}
+
+.dt-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 0;
+  margin: 18px 0 0;
+  border-top: 1px solid var(--rule);
+}
+
+.dt-facts > div {
+  padding: 12px 12px 0 0;
+}
+
+.dt-facts dd,
+.dt-strip-head strong {
+  margin: 4px 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.dt-strips {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-inline: calc(-1 * var(--inset));
+  border-bottom: 1px solid var(--rule-2);
+}
+
+.dt-strip {
+  min-width: 0;
+  padding: 20px var(--inset) 22px;
+}
+
+.dt-strip + .dt-strip {
+  border-left: 1px solid var(--rule);
+}
+
+.dt-strip-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.dt-strip p {
+  margin: 12px 0 0;
+  color: var(--ink-2);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.dt-bar {
+  position: relative;
+  height: 12px;
+  margin-top: 14px;
+  border: 1px solid var(--rule-2);
+}
+
+.dt-bar-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--fill) * 100%);
+  background: var(--signal);
+  transition: width 280ms steps(6, end);
+}
+
+.dt-bar--speed {
+  margin-bottom: 18px;
+}
+
+.dt-bar-band {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--from) * 100%);
+  width: calc(var(--width) * 100%);
+  background: repeating-linear-gradient(90deg, var(--rule-2) 0 2px, transparent 2px 5px);
+  transition: background 200ms ease;
+}
+
+.dt-strip[data-active="true"] .dt-bar-band {
+  background: var(--signal);
+}
+
+.dt-bar--speed i {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: calc(var(--at) * 100%);
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-style: normal;
+  transform: translateX(-50%);
+}
+
+.dt-bar--speed i:first-of-type {
+  transform: none;
+}
+
+.dt-bar--speed i:last-of-type {
+  transform: translateX(-100%);
+}
+
+.dt-bar--steps {
+  display: flex;
+  height: auto;
+}
+
+.dt-bar--steps span {
+  flex: 1 1 0;
+  padding: 3px 0;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-decoration: line-through;
+}
+
+.dt-bar--steps span + span {
+  border-left: 1px solid var(--rule-2);
+}
+
+.dt-bar--steps span.is-on {
+  background: var(--paper-3);
+  color: var(--ink-2);
+  text-decoration: none;
+}
+
+.dt-bar--steps span.is-current {
+  box-shadow: inset 0 0 0 1px var(--ink);
+  color: var(--ink);
+}
+
+.dt-dsc {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 24px clamp(24px, 4vw, 56px);
+  padding: 26px 0 28px;
+  border-bottom: 1px solid var(--rule-2);
+}
+
+.dt-dsc-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+/* The DSC lamp: dark in DSC ON, lit once DTC or DSC OFF is selected. */
+.dt-dsc-icon {
+  flex: none;
+  fill: var(--rule-2);
+  transition: fill 160ms steps(2, end);
+}
+
+.dt-lab:not([data-stability="dsc"]) .dt-dsc-icon {
+  fill: var(--signal);
+}
+
+.dt-dsc-rows {
+  margin: 0;
+  border-top: 1px solid var(--rule);
+}
+
+.dt-dsc-rows > div {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.4fr);
+  align-items: baseline;
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.dt-dsc-rows dd {
+  margin: 0;
+  color: var(--ink-2);
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
+}
+
+.dt-dsc-rows dd.is-changed {
+  color: var(--ink);
+}
+
+.dt-dsc-rows dd.is-off {
+  color: var(--signal);
+}
+
+.dt-specs {
+  margin-top: clamp(40px, 5vw, 64px);
+}
+
+.dt-spec-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px clamp(24px, 4vw, 56px);
+}
+
+.dt-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.dt-table caption {
+  margin-bottom: 10px;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-align: left;
+}
+
+.dt-table th,
+.dt-table td {
+  padding: 10px 14px 10px 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.dt-table thead th {
+  border-bottom-color: var(--rule-2);
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.dt-table tbody th {
+  color: var(--mute);
+  font-weight: 400;
+}
+
+.dt-table td {
+  color: var(--ink);
+}
+
+.dt-table td + td {
+  color: var(--ink-2);
+}
+
+.dt-note {
+  max-width: 80ch;
+  margin: 14px 0 0;
+  color: var(--mute);
+  font-size: 0.82rem;
+}
+
+.dt-bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 36px clamp(32px, 5vw, 72px);
+  margin-top: clamp(40px, 5vw, 64px);
+}
+
+.dt-table--matrix {
+  margin-top: 18px;
+}
+
+.dt-table--matrix tbody th {
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.dt-steps {
+  margin: 0 0 22px;
+  padding: 0;
+  border-top: 1px solid var(--rule-2);
+  list-style: none;
+  counter-reset: dt-step;
+}
+
+.dt-steps li {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+  counter-increment: dt-step;
+}
+
+.dt-steps li::before {
+  content: counter(dt-step, decimal-leading-zero);
+  color: var(--signal);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.9;
+}
+
+@media (max-width: 860px) {
+  .dt-switches,
+  .dt-panels,
+  .dt-strips,
+  .dt-dsc,
+  .dt-spec-grid,
+  .dt-bottom {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dt-switches > * + *,
+  .dt-panel + .dt-panel,
+  .dt-strip + .dt-strip {
+    border-top: 1px solid var(--rule);
+    border-left: 0;
+  }
+
+  .dt-table--matrix tbody th {
+    white-space: normal;
+  }
+}
+
+@media (max-width: 560px) {
+  .dt-readout,
+  .dt-dsc-rows > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dt-dsc-rows > div {
+    gap: 4px;
+  }
+
+  .dt-table {
+    font-size: 0.84rem;
+    hyphens: auto;
+  }
+}

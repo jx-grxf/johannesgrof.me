@@ -1,0 +1,377 @@
+---
+import {
+  aggressionAfterLiftOff,
+  coastingRange,
+  defaultProfile,
+  defaultStability,
+  dtc,
+  hardwareMatrix,
+  installSteps,
+  kickdownPedal,
+  launchAllowed,
+  mappedThrottle,
+  profiles,
+  settleTime,
+  specSheets,
+  specSources,
+  stabilityModes,
+  xdriveLaunchLockBelowKmh,
+  chartFrame,
+  type DriveProfile,
+} from "@/data/drivetech";
+import type { ProjectLang } from "@/data/projects";
+
+interface Props {
+  lang: ProjectLang;
+  releaseUrl: string;
+}
+
+const { lang, releaseUrl } = Astro.props;
+const de = lang === "de";
+const num = (value: number, digits = 2) => new Intl.NumberFormat(de ? "de-AT" : "en", { maximumFractionDigits: digits }).format(value);
+const pct = (value: number) => `${Math.round(value * 100)} %`;
+
+const s = de
+  ? {
+      label: "Funktionen",
+      title: "Schalter umlegen, Kurven ansehen.",
+      lead: "Das sind die Standardwerte aus der config.lua von DriveTech. Wähl ein Fahrprofil und einen DSC-Modus; die Kurven rechnen mit denselben Formeln wie die Mod im Spiel.",
+      profileGroup: "Fahrerlebnisschalter",
+      stabilityGroup: "DSC",
+      launch: "Launch Control",
+      pedalTitle: "Gaspedal-Kennlinie",
+      pedalText: "Wie weit die Drosselklappe bei welcher Pedalstellung öffnet. ECO PRO setzt sanft ein und begrenzt die Teillast auf 80 %, SPORT+ öffnet früh. Die letzten 3 % Pedalweg sind Kickdown und immer Vollgas.",
+      pedal: "Pedal",
+      throttle: "Drosselklappe",
+      rise: "0 → 100 % in",
+      maxPart: "Teillast bis",
+      liftTitle: "Nach dem Gaswegnehmen",
+      liftText: "Vollgas in D, dann Fuß vom Gas. Solange die Linie oben ist, hält das Getriebe den Gang; fällt sie, schaltet es hoch. BeamNG allein hält die hohe Drehzahl sekundenlang.",
+      hold: "Gang halten",
+      settle: "Grundwert nach",
+      floor: "Grundwert",
+      brakeDown: "Runter beim Bremsen",
+      yes: "ja",
+      no: "nein",
+      on: "an",
+      off: "aus",
+      startStop: "Start-Stopp",
+      startStopText: "Motor aus nach 1 s Stillstand auf der Bremse in D, wieder an, sobald du die Bremse löst.",
+      tc: "Traktionskontrolle",
+      esc: "Stabilitätskontrolle",
+      abs: "ABS",
+      stock: "wie ab Werk",
+      coasting: "Segeln",
+      xdrive: "xDrive-Vorspannung",
+      xdriveLock: `voll unter ${xdriveLaunchLockBelowKmh} km/h beim Anfahren`,
+      coastingOnly: "nur in ECO PRO",
+      axisPedal: "PEDAL",
+      axisThrottle: "DROSSELKLAPPE",
+      axisTime: "SEKUNDEN NACH DEM GASWEGNEHMEN",
+      axisKeep: "GANG HALTEN",
+      axisUp: "HOCHSCHALTEN",
+      kickdown: "KICKDOWN",
+      linear: "linear",
+      stability: {
+        dsc: "Die Abstimmung des Autos: Traktions- und Stabilitätskontrolle arbeiten wie ab Werk.",
+        dtc: `Mehr Schlupf, bevor etwas eingreift: Traktionskontrolle ab einem Schlupf von ${num(dtc.tcSlipThreshold)}, Stabilitätskontrolle ab einem Schräglaufwinkel von ${num(dtc.yawSlipAngleThreshold)}. Wird es zu viel, greift die Elektronik trotzdem ein.`,
+        off: "Traktions- und Stabilitätskontrolle aus. ABS bleibt an.",
+      },
+      launchReady: "Bremse halten, Vollgas, Bremse lösen.",
+      launchLocked: "nur in SPORT+ oder mit DTC / DSC OFF",
+      specsTitle: "Gegen die echten Autos",
+      specsMod: "DriveTech",
+      matrixTitle: "Welche Autos",
+      matrixLead: "DriveTech lädt sich in jedes Auto und nutzt nur, was das Auto mitbringt. Bei KI- und Verkehrsautos bleibt alles aus.",
+      matrixHardware: "Im Auto",
+      matrixFeatures: "Funktionen",
+      installTitle: "Installieren",
+      installAction: "Zum Release",
+    }
+  : {
+      label: "Features",
+      title: "Flip the switches, watch the curves.",
+      lead: "These are DriveTech's defaults from its config.lua. Pick a drive profile and a DSC mode; the curves use the same formulas the mod runs in the game.",
+      profileGroup: "Driving experience control",
+      stabilityGroup: "DSC",
+      launch: "Launch control",
+      pedalTitle: "Throttle map",
+      pedalText: "How far the throttle opens for each pedal position. ECO PRO starts soft and caps part throttle at 80 %, SPORT+ opens early. The last 3 % of pedal travel is kickdown and always full throttle.",
+      pedal: "Pedal",
+      throttle: "Throttle",
+      rise: "0 → 100 % in",
+      maxPart: "Part throttle up to",
+      liftTitle: "After you lift off",
+      liftText: "Full throttle in D, then off the pedal. While the line is high the gearbox keeps the gear; as it drops, it upshifts. Stock BeamNG holds the high rpm for seconds.",
+      hold: "Holds the gear",
+      settle: "Back to base after",
+      floor: "Base level",
+      brakeDown: "Downshift on braking",
+      yes: "yes",
+      no: "no",
+      on: "on",
+      off: "off",
+      startStop: "Start-stop",
+      startStopText: "Engine off after 1 s at a standstill on the brake in D, back on as soon as you release the brake.",
+      tc: "Traction control",
+      esc: "Stability control",
+      abs: "ABS",
+      stock: "as the car came",
+      coasting: "Coasting",
+      xdrive: "xDrive preload",
+      xdriveLock: `full lock below ${xdriveLaunchLockBelowKmh} km/h when pulling away`,
+      coastingOnly: "ECO PRO only",
+      axisPedal: "PEDAL",
+      axisThrottle: "THROTTLE",
+      axisTime: "SECONDS AFTER LIFT-OFF",
+      axisKeep: "KEEP GEAR",
+      axisUp: "UPSHIFT",
+      kickdown: "KICKDOWN",
+      linear: "linear",
+      stability: {
+        dsc: "The car's own tuning: traction and stability control work as the car came.",
+        dtc: `More slip before anything steps in: traction control from a slip of ${num(dtc.tcSlipThreshold)}, stability control from a slip angle of ${num(dtc.yawSlipAngleThreshold)}. If it gets too much, the electronics still step in.`,
+        off: "Traction and stability control off. ABS stays on.",
+      },
+      launchReady: "Hold the brake, full throttle, release the brake.",
+      launchLocked: "only in SPORT+ or with DTC / DSC OFF",
+      specsTitle: "Against the real cars",
+      specsMod: "DriveTech",
+      matrixTitle: "Which cars",
+      matrixLead: "DriveTech loads into every car and only uses what the car has. AI and traffic cars are left alone.",
+      matrixHardware: "In the car",
+      matrixFeatures: "Features",
+      installTitle: "Install",
+      installAction: "Go to the release",
+    };
+
+// Chart frame shared by both plots, in viewBox units.
+const { width: W, height: H, ...pad } = chartFrame;
+const plotW = W - pad.left - pad.right;
+const plotH = H - pad.top - pad.bottom;
+const px = (t: number) => pad.left + t * plotW;
+const py = (v: number) => pad.top + (1 - v) * plotH;
+const pathOf = (points: [number, number][]) => points.map(([x, y], i) => `${i ? "L" : "M"}${px(x).toFixed(1)} ${py(y).toFixed(1)}`).join(" ");
+
+const pedalPath = (profile: DriveProfile) => {
+  const points: [number, number][] = [];
+  for (let i = 0; i <= 194; i++) {
+    const pedal = i / 200;
+    points.push([pedal, mappedThrottle(profile, pedal)]);
+  }
+  points.push([kickdownPedal, mappedThrottle(profile, 0.969)], [kickdownPedal, 1], [1, 1]);
+  return pathOf(points);
+};
+
+const maxSeconds = 10;
+const liftPath = (profile: DriveProfile) => {
+  const points: [number, number][] = [];
+  for (let i = 0; i <= 200; i++) {
+    const t = (i / 200) * maxSeconds;
+    points.push([t / maxSeconds, aggressionAfterLiftOff(profile, t)]);
+  }
+  return pathOf(points);
+};
+
+const ticks = [0, 0.25, 0.5, 0.75, 1];
+// The active curve is drawn last so it sits on top of the others.
+const curveOrder = [...profiles].sort((a, b) => Number(a.key === defaultProfile) - Number(b.key === defaultProfile));
+const secondTicks = [0, 2, 4, 6, 8, 10];
+const start = profiles.find((p) => p.key === defaultProfile)!;
+const startStability = stabilityModes.find((m) => m.key === defaultStability)!;
+const startPedal = 0.5;
+type RowState = "stock" | "changed" | "off";
+const dscRows: { key: string; label: string; state: Record<"dsc" | "dtc" | "off", RowState>; text: Record<"dsc" | "dtc" | "off", string> }[] = [
+  {
+    key: "tc",
+    label: s.tc,
+    state: { dsc: "stock", dtc: "changed", off: "off" },
+    text: {
+      dsc: s.stock,
+      dtc: de ? `ab Schlupf ${num(dtc.tcSlipThreshold)}, mindestens ${pct(dtc.tcMinimumThrottle)} Gas bleiben` : `from a slip of ${num(dtc.tcSlipThreshold)}, keeps at least ${pct(dtc.tcMinimumThrottle)} throttle`,
+      off: s.off,
+    },
+  },
+  {
+    key: "esc",
+    label: s.esc,
+    state: { dsc: "stock", dtc: "changed", off: "off" },
+    text: {
+      dsc: s.stock,
+      dtc: de ? `ab Schräglaufwinkel ${num(dtc.yawSlipAngleThreshold)}` : `from a slip angle of ${num(dtc.yawSlipAngleThreshold)}`,
+      off: s.off,
+    },
+  },
+  { key: "abs", label: s.abs, state: { dsc: "stock", dtc: "stock", off: "stock" }, text: { dsc: s.on, dtc: s.on, off: s.on } },
+];
+const coastLeft = coastingRange.minKmh / 250;
+const coastWidth = (coastingRange.maxKmh - coastingRange.minKmh) / 250;
+---
+
+<section class="dt-lab" aria-labelledby="dt-title" data-drivetech data-profile={defaultProfile} data-stability={defaultStability}>
+  <div class="dt-head">
+    <h2 class="dt-label">{s.label}</h2>
+    <p id="dt-title" class="dt-title">{s.title}</p>
+    <p class="dt-lead">{s.lead}</p>
+  </div>
+
+  <div class="dt-switches">
+    <div class="dt-rocker" role="group" aria-label={s.profileGroup}>
+      <span class="dt-rocker-label">{s.profileGroup}</span>
+      <div class="dt-rocker-cells">
+        {profiles.map((p) => <button type="button" data-set-profile={p.key} aria-pressed={p.key === defaultProfile ? "true" : "false"}>{p.name}</button>)}
+      </div>
+    </div>
+    <div class="dt-rocker" role="group" aria-label={s.stabilityGroup}>
+      <span class="dt-rocker-label">{s.stabilityGroup}</span>
+      <div class="dt-rocker-cells">
+        {stabilityModes.map((m) => <button type="button" data-set-stability={m.key} aria-pressed={m.key === defaultStability ? "true" : "false"}>{m.name}</button>)}
+      </div>
+    </div>
+    <div class="dt-telltale" data-launch data-ready={launchAllowed(defaultProfile, defaultStability) ? "true" : "false"} aria-live="polite">
+      <span class="dt-telltale-lamp" aria-hidden="true"></span>
+      <span class="dt-telltale-name">{s.launch}</span>
+      <span class="dt-telltale-state" data-launch-state data-ready-text={s.launchReady} data-locked-text={s.launchLocked}>{launchAllowed(defaultProfile, defaultStability) ? s.launchReady : s.launchLocked}</span>
+    </div>
+  </div>
+
+  <div class="dt-panels">
+    <figure class="dt-panel">
+      <figcaption>
+        <h3>{s.pedalTitle}</h3>
+        <p>{s.pedalText}</p>
+      </figcaption>
+      <svg class="dt-chart" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={s.pedalTitle}>
+        <rect class="dt-kickdown" x={px(kickdownPedal)} y={pad.top} width={px(1) - px(kickdownPedal)} height={plotH} />
+        <text class="dt-axis dt-axis--kick" x={px(kickdownPedal) - 4} y={pad.top + 10} text-anchor="end">{s.kickdown}</text>
+        {ticks.map((t) => <line class="dt-grid" x1={px(0)} x2={px(1)} y1={py(t)} y2={py(t)} />)}
+        {ticks.map((t) => <line class="dt-grid" x1={px(t)} x2={px(t)} y1={py(0)} y2={py(1)} />)}
+        {ticks.map((t) => <text class="dt-axis" x={pad.left - 6} y={py(t) + 3} text-anchor="end">{Math.round(t * 100)}</text>)}
+        {ticks.map((t) => <text class="dt-axis" x={px(t)} y={H - pad.bottom + 14} text-anchor="middle">{Math.round(t * 100)}</text>)}
+        <text class="dt-axis" x={px(0.5)} y={H - 4} text-anchor="middle">{s.axisPedal} %</text>
+        <line class="dt-linear" x1={px(0)} y1={py(0)} x2={px(1)} y2={py(1)} />
+        {curveOrder.map((p) => <path class:list={["dt-curve", p.key === defaultProfile && "is-active"]} data-curve={p.key} d={pedalPath(p)} pathLength="1" />)}
+        <line class="dt-cross" data-cross-x x1={px(startPedal)} x2={px(startPedal)} y1={py(0)} y2={py(mappedThrottle(start, startPedal))} />
+        <line class="dt-cross" data-cross-y x1={px(0)} x2={px(startPedal)} y1={py(mappedThrottle(start, startPedal))} y2={py(mappedThrottle(start, startPedal))} />
+        <rect class="dt-marker" data-marker x={px(startPedal) - 4} y={py(mappedThrottle(start, startPedal)) - 4} width="8" height="8" />
+      </svg>
+      <div class="dt-readout">
+        <label class="dt-slider">
+          <span>{s.pedal}</span>
+          <input type="range" min="0" max="100" step="1" value={Math.round(startPedal * 100)} data-pedal />
+        </label>
+        <p class="dt-out" aria-live="polite">
+          <output data-pedal-out>{pct(startPedal)}</output>
+          <span aria-hidden="true">→</span>
+          <output data-throttle-out>{pct(mappedThrottle(start, startPedal))}</output>
+          <span class="dt-out-label">{s.throttle}</span>
+        </p>
+      </div>
+      <dl class="dt-facts">
+        <div><dt>{s.rise}</dt><dd data-rise>{num(1 / start.pedal.riseRate)} s</dd></div>
+        <div><dt>{s.maxPart}</dt><dd data-max-part>{pct(start.pedal.maxPartThrottle)}</dd></div>
+      </dl>
+    </figure>
+
+    <figure class="dt-panel">
+      <figcaption>
+        <h3>{s.liftTitle}</h3>
+        <p>{s.liftText}</p>
+      </figcaption>
+      <svg class="dt-chart" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={s.liftTitle}>
+        {ticks.map((t) => <line class="dt-grid" x1={px(0)} x2={px(1)} y1={py(t)} y2={py(t)} />)}
+        {secondTicks.map((t) => <line class="dt-grid" x1={px(t / maxSeconds)} x2={px(t / maxSeconds)} y1={py(0)} y2={py(1)} />)}
+        {secondTicks.map((t) => <text class="dt-axis" x={px(t / maxSeconds)} y={H - pad.bottom + 14} text-anchor="middle">{t}</text>)}
+        <text class="dt-axis" x={px(0.5)} y={H - 4} text-anchor="middle">{s.axisTime}</text>
+        <text class="dt-axis dt-axis--side" x={px(1) - 4} y={py(1) + 12} text-anchor="end">{s.axisKeep} ↑</text>
+        <text class="dt-axis dt-axis--side" x={px(1) - 4} y={py(0) - 6} text-anchor="end">{s.axisUp} ↓</text>
+        {curveOrder.map((p) => <path class:list={["dt-curve", p.key === defaultProfile && "is-active"]} data-curve={p.key} d={liftPath(p)} pathLength="1" />)}
+      </svg>
+      <dl class="dt-facts">
+        <div><dt>{s.hold}</dt><dd data-hold>{num(start.shift.holdTime, 1)} s</dd></div>
+        <div><dt>{s.settle}</dt><dd data-settle>{num(settleTime(start), 1)} s</dd></div>
+        <div><dt>{s.floor}</dt><dd data-floor>{pct(start.shift.floor)}</dd></div>
+        <div><dt>{s.brakeDown}</dt><dd data-brake-down>{start.shift.brakeDownshift ? s.yes : s.no}</dd></div>
+      </dl>
+    </figure>
+  </div>
+
+  <div class="dt-strips">
+    <div class="dt-strip">
+      <div class="dt-strip-head"><span>{s.xdrive}</span><strong data-xdrive>{pct(startStability.xdriveLock)}</strong></div>
+      <div class="dt-bar" aria-hidden="true"><span class="dt-bar-fill" data-xdrive-bar style={`--fill: ${startStability.xdriveLock}`}></span></div>
+      <p>{s.xdriveLock}</p>
+    </div>
+    <div class="dt-strip" data-coasting data-active={start.coasting ? "true" : "false"}>
+      <div class="dt-strip-head"><span>{s.coasting}</span><strong data-coasting-state data-on={`${coastingRange.minKmh}–${coastingRange.maxKmh} km/h`} data-off={s.off}>{start.coasting ? `${coastingRange.minKmh}–${coastingRange.maxKmh} km/h` : s.off}</strong></div>
+      <div class="dt-bar dt-bar--speed" aria-hidden="true">
+        <span class="dt-bar-band" style={`--from: ${coastLeft}; --width: ${coastWidth}`}></span>
+        {[0, 50, 100, 150, 200, 250].map((kmh) => <i style={`--at: ${kmh / 250}`}>{kmh}</i>)}
+      </div>
+      <p>{s.coastingOnly}</p>
+    </div>
+    <div class="dt-strip">
+      <div class="dt-strip-head"><span>{s.startStop}</span><strong data-start-stop data-on={s.on} data-off={s.off}>{start.startStop ? s.on : s.off}</strong></div>
+      <div class="dt-bar dt-bar--steps" aria-hidden="true">{profiles.map((p) => <span data-step={p.key} class:list={[p.startStop && "is-on"]}>{p.name}</span>)}</div>
+      <p>{s.startStopText}</p>
+    </div>
+  </div>
+
+  <div class="dt-dsc" aria-live="polite">
+    <div class="dt-dsc-head">
+      <svg class="dt-dsc-icon" viewBox="0 0 13 11" width="52" height="44" shape-rendering="crispEdges" aria-hidden="true">
+        <rect x="4" y="0" width="5" height="1" /><rect x="3" y="1" width="7" height="1" /><rect x="2" y="2" width="9" height="2" /><rect x="2" y="4" width="2" height="1" /><rect x="9" y="4" width="2" height="1" />
+        <rect x="2" y="6" width="1" height="1" /><rect x="3" y="7" width="1" height="2" /><rect x="2" y="9" width="1" height="1" /><rect x="3" y="10" width="1" height="1" />
+        <rect x="10" y="6" width="1" height="1" /><rect x="9" y="7" width="1" height="2" /><rect x="10" y="9" width="1" height="1" /><rect x="9" y="10" width="1" height="1" />
+      </svg>
+      <div>
+        <h3 data-dsc-name>{startStability.name}</h3>
+        <p data-stability-text data-dsc={s.stability.dsc} data-dtc={s.stability.dtc} data-off={s.stability.off}>{s.stability[defaultStability]}</p>
+      </div>
+    </div>
+    <dl class="dt-dsc-rows">
+      {dscRows.map((row) => (
+        <div data-dsc-row={row.key}>
+          <dt>{row.label}</dt>
+          {stabilityModes.map((m) => <dd data-mode={m.key} class:list={[row.state[m.key] === "off" && "is-off", row.state[m.key] === "changed" && "is-changed"]} hidden={m.key !== defaultStability}>{row.text[m.key]}</dd>)}
+        </div>
+      ))}
+    </dl>
+  </div>
+
+  <div class="dt-specs">
+    <h2 class="dt-label">{s.specsTitle}</h2>
+    <div class="dt-spec-grid">
+      {specSheets.map((sheet) => (
+        <table class="dt-table">
+          <caption>{sheet.title[lang]}</caption>
+          <thead><tr><th scope="col"></th><th scope="col">{s.specsMod}</th><th scope="col">{sheet.reference}</th></tr></thead>
+          <tbody>
+            {sheet.rows.map((row) => <tr><th scope="row">{row.label[lang]}</th><td>{row.mod[lang]}</td><td>{row.car[lang]}</td></tr>)}
+          </tbody>
+        </table>
+      ))}
+    </div>
+    <p class="dt-note">{specSources[lang]}</p>
+  </div>
+
+  <div class="dt-bottom">
+    <div>
+      <h2 class="dt-label">{s.matrixTitle}</h2>
+      <p class="dt-lead">{s.matrixLead}</p>
+      <table class="dt-table dt-table--matrix">
+        <thead><tr><th scope="col">{s.matrixHardware}</th><th scope="col">{s.matrixFeatures}</th></tr></thead>
+        <tbody>{hardwareMatrix.map((row) => <tr><th scope="row">{row.hardware[lang]}</th><td>{row.features[lang]}</td></tr>)}</tbody>
+      </table>
+    </div>
+    <div>
+      <h2 class="dt-label">{s.installTitle}</h2>
+      <ol class="dt-steps">{installSteps[lang].map((step) => <li>{step}</li>)}</ol>
+      <a class="button secondary" href={releaseUrl} target="_blank" rel="noreferrer">{s.installAction} ↗</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  import "@/scripts/drivetech";
+</script>

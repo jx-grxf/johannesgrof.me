@@ -10,6 +10,7 @@ import { adjacentProjects, getProjectCopy, localizedStatusLabel, statusClass } f
 import { toCanonicalUrl } from "@/data/siteMetadata";
 import "@/styles/global.css";
 import PixelSprite from "@/components/PixelSprite.astro";
+import DriveTechLab from "@/components/DriveTechLab.astro";
 import { downloadLabel as releaseDownloadLabel, downloadPlatformLabel, downloadSize } from "@/lib/releases";
 
 interface Props {
@@ -454,6 +455,9 @@ const hreflangAlternates = [
           <p>{c.caseStudy.built}</p>
         </article>
       </section>
+
+      {/* Project-specific deep dive; only DriveTech has one so far. */}
+      {project.slug === "beamng-drivetech" && <DriveTechLab lang={lang} releaseUrl={github.releaseUrl} />}
 
       {c.releaseHighlights && (
         <section class="release-panel" aria-label={`${project.name} release highlights`}>
