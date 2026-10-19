@@ -2,7 +2,13 @@
 // the active curves and values. The numbers come from the same module the
 // server used, so both always agree.
 import {
+  aquaplaning,
+  aquaplaningMaxKmh,
   chartFrame,
+  criticalLabelFlipKmh,
+  criticalSpeed,
+  gripPath,
+  rainLevels,
   coastingRange,
   launchAllowed,
   mappedThrottle,
@@ -10,6 +16,7 @@ import {
   settleTime,
   stabilityModes,
   type ProfileKey,
+  type RainKey,
   type StabilityKey,
 } from "@/data/drivetech";
 
@@ -120,6 +127,54 @@ if (root) {
   });
 
   pedalInput?.addEventListener("input", drawPedal);
+
+  const rain = $<HTMLElement>("[data-rain-lab]");
+  if (rain) {
+    let rainKey = rain.dataset.rain as RainKey;
+    let tread = Number(rain.dataset.tread);
+    const kmh = (value: number) => (Number.isFinite(value) ? `${Math.round(value)} km/h` : de ? "nie" : "never");
+
+    const renderRain = () => {
+      const level = rainLevels.find((r) => r.key === rainKey)!;
+      const critical = criticalSpeed(level.waterMm, tread);
+      rain.querySelectorAll<HTMLButtonElement>("[data-set-rain]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.setRain === rainKey)));
+      rain.querySelectorAll<HTMLButtonElement>("[data-set-tread]").forEach((b) => b.setAttribute("aria-pressed", String(Number(b.dataset.setTread) === tread)));
+
+      rain.querySelectorAll<SVGPathElement>("[data-grip-curve]").forEach((curve) => {
+        const mm = Number(curve.dataset.gripCurve);
+        curve.setAttribute("d", gripPath(level.waterMm, mm));
+        const active = mm === tread;
+        if (active) {
+          // Restart the draw-in and keep the active curve on top.
+          curve.classList.remove("is-active");
+          void curve.getBoundingClientRect();
+          curve.parentNode?.appendChild(curve);
+        }
+        curve.classList.toggle("is-active", active);
+      });
+
+      const x = frame.x(Math.min(critical, aquaplaningMaxKmh) / aquaplaningMaxKmh);
+      const line = rain.querySelector<SVGLineElement>("[data-critical-line]");
+      const label = rain.querySelector<SVGTextElement>("[data-critical-label]");
+      line?.setAttribute("x1", String(x));
+      line?.setAttribute("x2", String(x));
+      const flip = critical > criticalLabelFlipKmh;
+      label?.setAttribute("x", String(flip ? x - 4 : x + 4));
+      label?.setAttribute("text-anchor", flip ? "end" : "start");
+      rain.querySelector<HTMLElement>("[data-water]")!.textContent = `${num(level.waterMm, 1)} mm`;
+      rain.querySelector<HTMLElement>("[data-partial]")!.textContent = kmh(critical * aquaplaning.partialStart);
+      rain.querySelector<HTMLElement>("[data-critical]")!.textContent = kmh(critical);
+    };
+
+    rain.addEventListener("click", (event) => {
+      const button = (event.target as Element).closest<HTMLButtonElement>("[data-set-rain], [data-set-tread]");
+      if (!button) return;
+      if (button.dataset.setRain) rainKey = button.dataset.setRain as RainKey;
+      if (button.dataset.setTread) tread = Number(button.dataset.setTread);
+      renderRain();
+    });
+  }
+
   root.classList.add("is-live");
   render();
 }
