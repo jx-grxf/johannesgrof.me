@@ -3940,6 +3940,12 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   height: auto;
 }
 
+/* Tall screenshots (menu bar panels) would fill the whole column at full width. */
+.pd-window.is-portrait {
+  max-width: 520px;
+  margin-inline: auto;
+}
+
 .pd-terminal {
   background: #070706;
   color: #e9e5d8;
