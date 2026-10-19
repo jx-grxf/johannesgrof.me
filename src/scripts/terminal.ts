@@ -44,7 +44,7 @@ let lastFocus: HTMLElement | null = null;
 const history: string[] = [];
 let historyIndex = 0;
 
-function line(text = "", kind?: "dim" | "accent" | "error" | "cmd") {
+function line(text = "", kind?: "dim" | "accent" | "error" | "cmd" | "hack") {
   const row = document.createElement("p");
   row.className = kind ? `term-row term-row--${kind}` : "term-row";
   row.textContent = text;
@@ -353,6 +353,69 @@ function neofetch() {
   });
 }
 
+// sudo opsec: hacker cosplay. Nothing here touches the network or the device;
+// the MAC addresses are random strings and the last line says so.
+function randomMac() {
+  return Array.from({ length: 6 }, () => Math.floor(Math.random() * 256).toString(16).padStart(2, "0")).join(":");
+}
+
+function bar(done: number, width = 24) {
+  const filled = Math.round((done / 100) * width);
+  return `[${"#".repeat(filled)}${".".repeat(width - filled)}] ${String(done).padStart(3)}%`;
+}
+
+async function runOpsec() {
+  const fast = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const wait = (ms: number) => (fast ? Promise.resolve() : sleep(ms));
+  // Read-only, not disabled: the input keeps focus, so Escape still closes.
+  input.readOnly = true;
+  try {
+    const password = line("[sudo] password for guest: ", "dim");
+    for (let i = 0; i < 8; i++) {
+      await wait(70);
+      password.textContent += "*";
+    }
+    await wait(250);
+    line(t("Zugriff gewährt.", "Access granted."), "accent");
+    await wait(300);
+
+    // About 8.6px per mono character at the terminal's size; stay on one line.
+    const columns = Math.max(16, Math.min(48, Math.floor(output.clientWidth / 8.6) - 4));
+    for (let i = 0; i < 10; i++) {
+      line(Array.from({ length: columns }, () => (Math.random() < 0.5 ? "0" : "1")).join(""), "hack");
+      await wait(45);
+    }
+
+    const steps: [string, () => string | null][] = [
+      [t("lade kernoel-256 Verschlüsselung", "loading kernoel-256 cipher"), () => null],
+      [t("spoofe MAC-Adresse en0", "spoofing MAC address en0"), () => `en0  ${randomMac()} → ${randomMac()}`],
+      [t("baue Tor-Kreis auf", "building tor circuit"), () => "guest → Kaindorf → Reykjavík → Leibnitz → ?"],
+      [t("lösche Browser-Fingerprint", "wiping browser fingerprint"), () => `canvas, webgl, fonts: ${t("verrauscht", "scrambled")}`],
+      [t("verschlüssle /home/guest", "encrypting /home/guest"), () => `${Math.floor(Math.random() * 9000 + 1000)} ${t("Dateien", "files")}, AES-256-GCM`],
+      [t("verwische Spuren", "covering tracks"), () => "~/.bash_history → /dev/null"],
+    ];
+    for (const [label, detail] of steps) {
+      line(`> ${label}`, "hack");
+      const progress = line(bar(0), "hack");
+      for (let done = 0; done < 100; ) {
+        done = Math.min(100, done + Math.floor(Math.random() * 22) + 6);
+        progress.textContent = bar(done);
+        await wait(55);
+      }
+      const extra = detail();
+      if (extra) line(`  ${extra}`, "dim");
+      await wait(120);
+    }
+
+    line();
+    line(t("opsec: 100 %. Du bist jetzt komplett unsichtbar.", "opsec: 100%. You are now completely invisible."), "accent");
+    line(t("(Passiert ist nichts. Das ist eine Website, deine MAC-Adresse passt.)", "(Nothing happened. It's a website, your MAC address is fine.)"), "dim");
+  } finally {
+    input.readOnly = false;
+    if (root?.classList.contains("is-open")) input.focus();
+  }
+}
+
 function run(raw: string) {
   const value = raw.trim();
   line(`~ $ ${value}`, "cmd");
@@ -391,6 +454,7 @@ function run(raw: string) {
         line(`-rw-------  .secrets      ${t("Netter Versuch.", "Nice try.")}`, "dim");
         line(`-rw-r--r--  .kernoel      ${t("tipp irgendwo auf der Seite: kernoel", "type anywhere on the page: kernoel")}`, "dim");
         line(`-rw-r--r--  .trainrc      ${t("tipp irgendwo auf der Seite: train", "type anywhere on the page: train")}`, "dim");
+        line("-rwx------  .opsec        sudo opsec", "dim");
       }
       const width = Math.max(...data.projects.map((p) => p.slug.length)) + 3;
       const name = (slug: string) => `${slug}/`.padEnd(width);
@@ -453,6 +517,10 @@ function run(raw: string) {
       close();
       break;
     case "sudo":
+      if (/^(opsec|obsec)$/i.test(arg)) {
+        void runOpsec();
+        break;
+      }
       line(t("Netter Versuch. Hier hast du keine Rechte, nur Lesezugriff.", "Nice try. You only get read access here."), "error");
       break;
     case "rm":
@@ -593,6 +661,7 @@ function build() {
   form.append(prompt, input);
   form.addEventListener("submit", (event) => {
     event.preventDefault();
+    if (input.readOnly) return;
     void run(input.value);
     input.value = "";
     output.scrollTop = output.scrollHeight;

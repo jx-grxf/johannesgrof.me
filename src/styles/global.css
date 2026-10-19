@@ -3445,6 +3445,13 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   color: #ff6a4d;
 }
 
+/* Phosphor green, only for the sudo opsec cosplay. */
+.term-row--hack {
+  color: #3cff6e;
+  /* Geist Mono joins runs of # into one glyph and the bar shrinks. */
+  font-variant-ligatures: none;
+}
+
 .term-row .term-accent {
   color: #a8e22a;
 }
