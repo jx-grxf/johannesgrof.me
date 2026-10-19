@@ -107,7 +107,7 @@ const en: LocaleContent = {
     eyebrow: "Hi, I’m Johannes. Developer and HTL student.",
     title: "Software that does one thing, properly.",
     titleAccent: "one thing",
-    body: "I’m from south-east Styria and study at HTL Kaindorf. Most of my time goes into ÖffiGo and Kontobuch. I also build small tools for things I run into while working.",
+    body: "I’m from south-east Styria and study at HTL Kaindorf. Most of my time goes into ÖffiGo and my other tools, small ones for things I run into while working.",
     primaryAction: "See the projects",
     contactAction: "Contact",
     status: {
@@ -156,12 +156,12 @@ const en: LocaleContent = {
     ],
   },
   about: {
-    eyebrow: "about",
+    eyebrow: "About",
     title: "The short version.",
     body: "I live in south-east Styria and study at HTL Kaindorf. Most of what I build starts as a problem I ran into myself: a workflow that takes too many steps, a device that won't cooperate, an app that should exist and doesn't. I work with TypeScript, Swift and Python, but the stack matters less than whether the finished thing actually gets used.",
   },
   contact: {
-    eyebrow: "contact",
+    eyebrow: "Contact",
     title: "Get in touch.",
     note: "Questions about a project, an idea or just something you want to tell me? Write here or send me an email.",
     elsewhere: "Elsewhere",
@@ -202,7 +202,7 @@ const de: LocaleContent = {
     eyebrow: "Servus, ich bin Johannes. Entwickler und HTL-Schüler.",
     title: "Software, die eine Sache richtig macht.",
     titleAccent: "eine Sache",
-    body: "Ich komme aus der Südost-Steiermark und besuche die HTL Kaindorf. Die meiste Zeit stecke ich in ÖffiGo und Kontobuch. Daneben baue ich kleine Tools für Dinge, die mir beim Arbeiten auffallen.",
+    body: "Ich komme aus der Südost-Steiermark und besuche die HTL Kaindorf. Die meiste Zeit stecke ich in ÖffiGo und in meine anderen Tools, kleine Helfer für Dinge, die mir beim Arbeiten auffallen.",
     primaryAction: "Projekte ansehen",
     contactAction: "Kontakt",
     status: {
@@ -251,12 +251,12 @@ const de: LocaleContent = {
     ],
   },
   about: {
-    eyebrow: "über mich",
+    eyebrow: "Über mich",
     title: "Die Kurzfassung.",
     body: "Ich lebe in der Südost-Steiermark und besuche die HTL Kaindorf. Das meiste, was ich baue, fängt als eigenes Problem an: ein Ablauf mit zu vielen Schritten, ein Gerät, das nicht will, eine App, die es geben sollte und nicht gibt. Ich arbeite mit TypeScript, Swift und Python. Wichtiger als der Stack ist aber, ob das fertige Ding am Ende wirklich verwendet wird.",
   },
   contact: {
-    eyebrow: "kontakt",
+    eyebrow: "Kontakt",
     title: "Melde dich.",
     note: "Eine Frage zu einem Projekt, eine Idee oder einfach etwas, das du mir sagen möchtest? Schreib mir hier oder per E-Mail.",
     elsewhere: "Sonst findest du mich hier",

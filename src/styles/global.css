@@ -172,19 +172,24 @@ body::after {
   pointer-events: none;
 }
 
-/* Every label on the site: eyebrows, section kickers, meta keys. */
+/* Kickers are set in plain sentence case. Mono caps on every label was the
+   look of a hundred portfolio templates (changed 2026-10-19); mono now only
+   marks things that really are terminal or data. */
 .eyebrow {
   margin: 0;
   color: var(--mute);
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+/* A path or a prompt, not a kicker: /uses, ~ $, 404. */
+.eyebrow--code {
   font-family: var(--font-mono);
   font-size: var(--label-size);
   font-weight: 400;
-  letter-spacing: var(--label-track);
-  text-transform: uppercase;
 }
 
-/* The numbered print header: a set-in number block, the title, and a hairline
-   under the whole thing — the one device that repeats on every section. */
+/* Section header: the title over a hairline. */
 .section-head {
   display: flex;
   align-items: baseline;
@@ -194,22 +199,11 @@ body::after {
   border-bottom: 1px solid var(--rule-2);
 }
 
-.section-head .section-num {
-  flex: none;
-  padding: 2px 7px;
-  background: var(--ink);
-  color: var(--paper);
-  font-family: var(--font-mono);
-  font-size: var(--label-size);
-  letter-spacing: 0.1em;
-}
-
 .section-head h2 {
   margin: 0;
-  font-size: 0.86rem;
+  color: var(--ink-2);
+  font-size: 0.98rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
 }
 
 /* Sections are separated by a hairline, not by cards or shadows. */
@@ -299,10 +293,8 @@ body::after {
 .site-nav {
   display: flex;
   align-items: stretch;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .site-nav a {
@@ -373,10 +365,8 @@ body::after {
   padding: 0;
   background: none;
   color: var(--mute);
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 500;
   line-height: 1;
   transition: color 160ms ease;
 }
@@ -429,10 +419,8 @@ body::after {
   padding: 13px 26px;
   background: transparent;
   color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
+  font-size: 0.94rem;
+  font-weight: 500;
   transition:
     background 160ms ease,
     color 160ms ease,
@@ -886,10 +874,8 @@ body::after {
 
 .contact-field label {
   color: var(--mute);
-  font-family: var(--font-mono);
-  font-size: var(--label-size);
-  letter-spacing: var(--label-track);
-  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .contact-field input,
@@ -949,10 +935,8 @@ body::after {
   padding: 13px 30px;
   background: var(--ink);
   color: var(--paper);
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
+  font-size: 0.94rem;
+  font-weight: 500;
   transition:
     background 160ms ease,
     border-color 160ms ease;
@@ -1133,10 +1117,8 @@ body::after {
   margin: 28px 0 0;
   padding: 20px 0 0;
   border-top: 1px solid var(--rule);
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.92rem;
+  font-weight: 500;
 }
 
 .social-row a {
@@ -1264,10 +1246,8 @@ body::after {
 .footer-col-title {
   margin-bottom: 14px !important;
   color: var(--faint);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: var(--label-track);
-  text-transform: uppercase;
+  font-size: 0.86rem;
+  font-weight: 500;
 }
 
 .footer-col ul {
@@ -2367,8 +2347,7 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   display: flex;
   flex-wrap: wrap;
   gap: 12px 24px;
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
+  font-size: 0.9rem;
 }
 .product-footnote a {
   padding-block: 6px;
@@ -2643,10 +2622,8 @@ html[lang="de"] .error-page [data-error-lang="en"] {
 
 .hero-status dt {
   color: var(--faint);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: var(--label-track);
-  text-transform: uppercase;
+  font-size: 0.86rem;
+  font-weight: 500;
 }
 
 .hero-status dd {
@@ -2978,10 +2955,8 @@ html[lang="de"] .error-page [data-error-lang="en"] {
 .stack-proof span {
   flex-basis: 100%;
   color: var(--faint);
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  letter-spacing: var(--label-track);
-  text-transform: uppercase;
+  font-size: 0.84rem;
+  font-weight: 500;
 }
 
 .stack-proof a {
@@ -3468,6 +3443,13 @@ html[lang="de"] .error-page [data-error-lang="en"] {
 
 .term-row--error {
   color: #ff6a4d;
+}
+
+/* Phosphor green, only for the sudo opsec cosplay. */
+.term-row--hack {
+  color: #3cff6e;
+  /* Geist Mono joins runs of # into one glyph and the bar shrinks. */
+  font-variant-ligatures: none;
 }
 
 .term-row .term-accent {
