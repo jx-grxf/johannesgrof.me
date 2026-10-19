@@ -414,7 +414,7 @@ const hreflangAlternates = [
 
       {heroImage ? (
         <section class="pd-media" aria-label={`${project.name} ${isDe ? "in Bildern" : "in pictures"}`}>
-          <div class="pd-window">
+          <div class={`pd-window${(heroImage.height ?? 0) > (heroImage.width ?? 0) ? " is-portrait" : ""}`}>
             <div class="pd-window-bar" aria-hidden="true"><span class="tl"></span><span class="tl"></span><span class="tl"></span><strong>{project.name}</strong></div>
             {isVideoShowcase(heroImage) ? (
               <video class={`showcase-image ${heroImage.fit ?? "cover"}`} src={heroImage.src} poster={heroImage.posterSrc ?? heroImage.fallbackSrc} width={heroImage.width} height={heroImage.height} controls muted playsinline preload="metadata" aria-label={heroImage.alt} data-showcase-video></video>
