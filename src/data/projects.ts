@@ -1215,6 +1215,54 @@ export const featuredProjects: Project[] = [
     visibility: "public",
   },
   {
+    name: "BeamMac",
+    slug: "beammac",
+    status: "beta",
+    logo: { src: "/projects/beammac/logo.webp", fallbackSrc: "/projects/beammac/logo.png", alt: "BeamMac app icon: a yellow and black crash test marker", width: 256, height: 256 },
+    tagline: "A Mac app that installs and starts BeamNG.drive on Apple Silicon.",
+    description:
+      "BeamNG.drive only ships for Windows and Linux. BeamMac sets up Wine, the Metal graphics layers DXMT and D3DMetal and Steam for Windows on its own, then starts the game from a native Mac app. You log in to Steam and drive. A second button starts BeamMP for multiplayer servers. Not affiliated with BeamNG, Valve or Apple.",
+    caseStudy: {
+      problem: "Running BeamNG on a Mac meant building a Wine prefix, DLL overrides and Steam settings by hand, and fixing them again whenever the game or Steam changed.",
+      built: "A SwiftUI app on top of shell scripts that do the work, so the terminal and the app behave the same. Each graphics backend is an APFS clone of the Wine engine that shares one prefix and one Steam library. DXMT comes from my fork with a frame latency option, and the Wine and DXMT downloads are checked against pinned SHA-256 hashes.",
+    },
+    de: {
+      tagline: "Eine Mac-App, die BeamNG.drive auf Apple Silicon installiert und startet.",
+      description:
+        "BeamNG.drive gibt es nur für Windows und Linux. BeamMac richtet Wine, die Metal-Grafikschichten DXMT und D3DMetal und Steam für Windows selbst ein und startet das Spiel aus einer nativen Mac-App. Du meldest dich bei Steam an und fährst los. Ein zweiter Knopf startet BeamMP für Multiplayer-Server. Nicht mit BeamNG, Valve oder Apple verbunden.",
+      caseStudy: {
+        problem: "BeamNG auf dem Mac hieß: Wine-Prefix, DLL-Overrides und Steam-Einstellungen von Hand bauen und nach jedem Spiel- oder Steam-Update wieder reparieren.",
+        built: "Eine SwiftUI-App über Shell-Skripten, die die Arbeit machen, damit Terminal und App sich gleich verhalten. Jedes Grafik-Backend ist ein APFS-Klon der Wine-Engine mit gemeinsamem Prefix und gemeinsamer Steam-Bibliothek. DXMT kommt aus meinem Fork mit einer Option für die Frame-Latenz, und die Downloads von Wine und DXMT werden gegen festgelegte SHA-256-Hashes geprüft.",
+      },
+      highlights: [
+        "Einrichtung mit einem Klick: Wine 10, DXMT, Apples D3DMetal und Steam für Windows, rund 265 MB, alles in Application Support.",
+        "Steam startet versteckt im Hintergrund, das Spiel läuft nach etwa 25 Sekunden.",
+        "Profile für Bildrate, Details und Verkehr; Ausgewogen hält 40 fps, ein Drittel eines 120-Hz-Displays.",
+        "PlayStation- und Xbox-Controller als XInput-Gamepads, mit Akkustand, Lichtleiste und Live-Test.",
+      ],
+    },
+    stack: ["Swift", "SwiftUI", "Wine", "Metal"],
+    repo: "jx-grxf/BeamMac",
+    githubUrl: "https://github.com/jx-grxf/BeamMac",
+    releaseUrl: "https://github.com/jx-grxf/BeamMac/releases/tag/v0.1.0",
+    fallbackVersion: "v0.1.0",
+    platformLabels: ["macOS 14+", "Apple Silicon"],
+    fallbackDownload: {
+      assetName: "BeamMac-0.1.0.dmg",
+      assetUrl: "https://github.com/jx-grxf/BeamMac/releases/download/v0.1.0/BeamMac-0.1.0.dmg",
+      size: 865455,
+      kind: "macos",
+    },
+    highlights: [
+      "One-click setup: Wine 10, DXMT, Apple's D3DMetal and Steam for Windows, about 265 MB, all in Application Support.",
+      "Steam starts hidden in the background, so the game is up in about 25 seconds.",
+      "Profiles for frame limit, details and traffic; Balanced holds 40 fps, a third of a 120 Hz display.",
+      "PlayStation and Xbox controllers as XInput gamepads, with battery, light bar and a live input test.",
+    ],
+    showcase: [],
+    visibility: "public",
+  },
+  {
     name: "DriveTech",
     slug: "beamng-drivetech",
     status: "active",
@@ -1440,7 +1488,7 @@ const orderedProjects = (slugs: string[]) =>
 // appears here OR in a section below, never both.
 export const featuredShowcaseProjects = orderedProjects(["portpirate", "patchpilot", "briskedit", "macphone"]);
 
-export const homepageProjects = orderedProjects(["portpirate", "briskedit", "dirhop", "cswap", "notchtray", "claude-code-todo-fix", "agent-presence", "beamng-drivetech"]);
+export const homepageProjects = orderedProjects(["portpirate", "briskedit", "dirhop", "cswap", "notchtray", "claude-code-todo-fix", "agent-presence", "beammac", "beamng-drivetech"]);
 
 export const projectSections: ProjectSection[] = [
   {
@@ -1468,7 +1516,7 @@ export const projectSections: ProjectSection[] = [
       eyebrow: "mehr",
       title: "Weitere Projekte",
     },
-    projects: orderedProjects(["beamng-drivetech", "caruso-reborn", "tools", "ip-multitool", "johannesgrof-me", "oeffigo-website", "docxtopdf"]),
+    projects: orderedProjects(["beammac", "beamng-drivetech", "caruso-reborn", "tools", "ip-multitool", "johannesgrof-me", "oeffigo-website", "docxtopdf"]),
   },
 ];
 
