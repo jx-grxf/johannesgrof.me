@@ -1052,6 +1052,65 @@ export const featuredProjects: Project[] = [
     visibility: "public",
   },
   {
+    name: "DysonBar",
+    slug: "dysonbar",
+    logo: { src: "/projects/dysonbar/logo.webp", fallbackSrc: "/projects/dysonbar/logo.png", alt: "DysonBar app icon", width: 256, height: 256 },
+    status: "beta",
+    tagline: "Air quality and controls for Dyson purifiers in the Mac menu bar, over your own Wi-Fi.",
+    description:
+      "A menu bar app for Dyson air purifiers. It shows PM2.5, PM10, VOC, NO₂, formaldehyde, temperature and humidity, keeps seven days of history and controls fan speed, auto mode, oscillation, night mode and the timer. After one MyDyson sign-in it talks to the purifier directly on your network. Not affiliated with Dyson.",
+    caseStudy: {
+      problem: "Checking the air in the room meant finding the phone and opening the MyDyson app, which goes through Dyson's cloud for every value.",
+      built: "A SwiftUI menu bar app on a small Swift package that speaks Dyson's local MQTT protocol. The sign-in only fetches each purifier's local Wi-Fi key, which goes into the Keychain. The controls come from what the device reports, so models I could not test still get the right set.",
+    },
+    de: {
+      tagline: "Luftqualität und Steuerung für Dyson-Luftreiniger in der Mac-Menüleiste, über dein eigenes WLAN.",
+      description:
+        "Eine Menüleisten-App für Dyson-Luftreiniger. Sie zeigt PM2.5, PM10, VOC, NO₂, Formaldehyd, Temperatur und Luftfeuchte, speichert sieben Tage Verlauf und steuert Lüfterstufe, Automatik, Schwenken, Nachtmodus und Timer. Nach einer Anmeldung bei MyDyson spricht sie direkt im Heimnetz mit dem Gerät. Nicht mit Dyson verbunden.",
+      caseStudy: {
+        problem: "Um zu sehen, wie die Luft im Zimmer ist, musste ich das Handy suchen und die MyDyson-App öffnen, die jeden Wert über die Dyson-Cloud holt.",
+        built: "Eine SwiftUI-Menüleisten-App auf einem kleinen Swift-Paket, das Dysons lokales MQTT-Protokoll spricht. Die Anmeldung holt nur den lokalen WLAN-Schlüssel jedes Geräts, der in den Schlüsselbund kommt. Die Bedienelemente richten sich danach, was das Gerät meldet, deshalb bekommen auch Modelle, die ich nicht testen konnte, die passenden.",
+      },
+      highlights: [
+        "Feinstaub, VOC, NO₂ und Formaldehyd in denselben sechs Stufen wie die MyDyson-App, alle 30 Sekunden aktualisiert.",
+        "Sieben Tage Verlauf pro Gerät, lokal gespeichert, mit 24-Stunden- und 7-Tage-Diagramm.",
+        "Mitteilungen, wenn die Luft fünf Minuten lang schlecht bleibt, der Filter auf 10 % fällt oder das Gerät einen Fehler meldet.",
+        "Das MyDyson-Passwort wird nie gespeichert, danach läuft alles lokal ohne Dyson-Cloud.",
+      ],
+    },
+    stack: ["Swift", "SwiftUI", "MQTT", "macOS"],
+    repo: "jx-grxf/DysonBar",
+    githubUrl: "https://github.com/jx-grxf/DysonBar",
+    releaseUrl: "https://github.com/jx-grxf/DysonBar/releases/tag/v0.1.0",
+    fallbackVersion: "v0.1.0",
+    installCommand: "brew tap jx-grxf/tap && brew trust --cask jx-grxf/tap/dysonbar && brew install --cask dysonbar",
+    platformLabels: ["macOS 15+"],
+    fallbackDownload: {
+      assetName: "DysonBar-0.1.0.dmg",
+      assetUrl: "https://github.com/jx-grxf/DysonBar/releases/download/v0.1.0/DysonBar-0.1.0.dmg",
+      size: 6666878,
+      kind: "macos",
+    },
+    highlights: [
+      "PM2.5, PM10, VOC, NO₂ and formaldehyde on the same six bands as the MyDyson app, refreshed every 30 seconds.",
+      "Seven days of history per device, stored locally, with a 24-hour and 7-day chart.",
+      "Notifications when the air stays bad for five minutes, a filter drops to 10 % or the device reports a fault.",
+      "The MyDyson password is never stored; after the first sign-in everything runs locally without Dyson's cloud.",
+    ],
+    showcase: [
+      {
+        src: "/projects/dysonbar/panel.webp",
+        fallbackSrc: "/projects/dysonbar/panel.png",
+        alt: "DysonBar panel with air quality, temperature, humidity and purifier controls",
+        altDe: "DysonBar-Panel mit Luftqualität, Temperatur, Luftfeuchte und Steuerung",
+        fit: "contain",
+        width: 728,
+        height: 1000,
+      },
+    ],
+    visibility: "public",
+  },
+  {
     name: "NotchTray",
     slug: "notchtray",
     logo: { src: "/projects/notchtray/logo.webp", fallbackSrc: "/projects/notchtray/logo.png", alt: "NotchTray app icon", width: 256, height: 256 },
@@ -1488,7 +1547,7 @@ const orderedProjects = (slugs: string[]) =>
 // appears here OR in a section below, never both.
 export const featuredShowcaseProjects = orderedProjects(["portpirate", "patchpilot", "briskedit", "macphone"]);
 
-export const homepageProjects = orderedProjects(["portpirate", "briskedit", "dirhop", "cswap", "notchtray", "claude-code-todo-fix", "agent-presence", "beammac", "beamng-drivetech"]);
+export const homepageProjects = orderedProjects(["portpirate", "briskedit", "dirhop", "cswap", "dysonbar", "notchtray", "claude-code-todo-fix", "agent-presence", "beammac", "beamng-drivetech"]);
 
 export const projectSections: ProjectSection[] = [
   {
@@ -1498,7 +1557,7 @@ export const projectSections: ProjectSection[] = [
       eyebrow: "mac-apps",
       title: "Mac-Apps",
     },
-    projects: orderedProjects(["bottlelite", "poise", "cswap", "notchtray", "ccrab", "slamx"]),
+    projects: orderedProjects(["dysonbar", "bottlelite", "poise", "cswap", "notchtray", "ccrab", "slamx"]),
   },
   {
     eyebrow: "agents & tools",
@@ -1507,7 +1566,7 @@ export const projectSections: ProjectSection[] = [
       eyebrow: "agents & tools",
       title: "Agent- und Entwickler-Tools",
     },
-    projects: orderedProjects(["dirhop", "claude-code-todo-fix", "agent-presence", "healthkit-mcp", "hermes-discord-voice", "openclaw-discord-voice"]),
+    projects: orderedProjects(["dirhop", "claude-code-todo-fix", "agent-presence", "hermes-discord-voice", "openclaw-discord-voice"]),
   },
   {
     eyebrow: "more",
