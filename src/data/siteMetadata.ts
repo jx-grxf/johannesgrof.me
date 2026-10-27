@@ -2,15 +2,16 @@ export const canonicalOrigin = "https://johannesgrof.me";
 
 // The branded link-preview cards, one per locale — both 1200×630, both built
 // from tools/brand/card.html. A project page with a usable screenshot passes
-// its own image instead; everything else falls back to these.
+// its own image instead; everything else falls back to these. The ?v= query is
+// bumped with every new card, otherwise LinkedIn and others keep the old one.
 export const socialCard = {
   en: {
-    src: "/og-card.png",
-    alt: "Johannes Grof, software developer in Styria, Austria",
+    src: "/og-card.png?v=2026-10-27",
+    alt: "Johannes Grof with his apps ÖffiGo, PortPirate, BriskEdit, dirhop, NotchTray, CSwap and Kontobuch",
   },
   de: {
-    src: "/og-card-de.png",
-    alt: "Johannes Grof, Softwareentwickler aus der Südost-Steiermark",
+    src: "/og-card-de.png?v=2026-10-27",
+    alt: "Johannes Grof mit seinen Apps ÖffiGo, PortPirate, BriskEdit, dirhop, NotchTray, CSwap und Kontobuch",
   },
 } as const;
 
