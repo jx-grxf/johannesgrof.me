@@ -3446,6 +3446,13 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   color: #ff6a4d;
 }
 
+/* Phosphor green, only for the sudo opsec cosplay. */
+.term-row--hack {
+  color: #3cff6e;
+  /* Geist Mono joins runs of # into one glyph and the bar shrinks. */
+  font-variant-ligatures: none;
+}
+
 .term-row .term-accent {
   color: #a8e22a;
 }
@@ -3896,6 +3903,12 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   display: block;
   width: 100%;
   height: auto;
+}
+
+/* Tall screenshots (menu bar panels) would fill the whole column at full width. */
+.pd-window.is-portrait {
+  max-width: 520px;
+  margin-inline: auto;
 }
 
 .pd-terminal {
@@ -5153,6 +5166,95 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   margin-top: clamp(40px, 5vw, 64px);
 }
 
+.dt-rain {
+  margin-top: clamp(40px, 5vw, 64px);
+}
+
+.dt-switches--rain {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dt-wet h3 + .dt-strip-head {
+  margin-top: 18px;
+}
+
+.dt-wet .dt-bar {
+  margin: 8px 0 14px;
+}
+
+/* BeamNG's own wet asphalt, shown for comparison only. */
+.dt-bar--quiet .dt-bar-fill {
+  background: var(--rule-2);
+}
+
+.dt-wet-caption {
+  margin: 0 0 28px;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+}
+
+.dt-wet p:not(.dt-wet-caption) {
+  max-width: 54ch;
+  margin: 6px 0 0;
+  color: var(--ink-2);
+  font-size: 0.94rem;
+  line-height: 1.55;
+}
+
+.dt-specs .dt-lead {
+  margin-bottom: 28px;
+}
+
+.dt-table--ratios {
+  margin-top: 36px;
+}
+
+.dt-table--ratios tbody th span {
+  display: block;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+}
+
+.dt-table--ratios {
+  width: auto;
+}
+
+.dt-table--ratios tbody th {
+  white-space: nowrap;
+}
+
+.dt-ratios {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+/* One ratio per span so a line never starts with a separator. */
+.dt-ratios span {
+  white-space: nowrap;
+}
+
+.dt-ratios span:not(:last-child)::after {
+  content: " · ";
+  white-space: pre;
+}
+
+/* Model names like 335d and 340i must keep their lower case. */
+.dt-table thead th.dt-ref {
+  text-transform: none;
+  letter-spacing: 0.04em;
+}
+
+/* Values sit on one line even when a label wraps. */
+.dt-facts > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .dt-spec-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -5256,6 +5358,7 @@ html[lang="de"] .error-page [data-error-lang="en"] {
 
 @media (max-width: 860px) {
   .dt-switches,
+  .dt-switches--rain,
   .dt-panels,
   .dt-strips,
   .dt-dsc,

@@ -104,7 +104,8 @@ try {
     // the comments above them, and a first-match swap would land there instead.
     const html = readFileSync(join(HERE, template), "utf8")
       .replaceAll("__FONTS__", fontFaces)
-      .replaceAll("__MARK__", mark[0]);
+      .replaceAll("__MARK__", mark[0])
+      .replaceAll("__PUBLIC__", `file://${PUBLIC}`);
 
     const slug = outputs[0][0];
     const page = join(work, `${slug}.html`);

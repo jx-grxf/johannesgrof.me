@@ -1,6 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "regions": ["fra1"],
+  "regions": [
+    "fra1"
+  ],
   "redirects": [
     {
       "source": "/:path*",
@@ -74,6 +76,16 @@
       "source": "/de/projects/claude-swap-bar/",
       "destination": "/de/projects/cswap/",
       "permanent": true
+    },
+    {
+      "source": "/projects/healthkit-mcp",
+      "destination": "/projects/",
+      "permanent": false
+    },
+    {
+      "source": "/de/projects/healthkit-mcp",
+      "destination": "/de/projects/",
+      "permanent": false
     }
   ],
   "headers": [

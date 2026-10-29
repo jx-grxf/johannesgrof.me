@@ -264,53 +264,57 @@ export const featuredProjects: Project[] = [
       width: 512,
       height: 512,
     },
-    tagline: "Test real Bluetooth devices through an emulator on your Mac.",
+    tagline: "Real Bluetooth LE devices in the Android emulator on your Mac.",
     description:
-      "MacPhone runs and controls many Android emulators and iOS simulators from one Mac, and bridges a real Bluetooth LE device straight into an emulator. It mirrors the full GATT tree onto the emulator's virtual controller so on-device apps see the real services, characteristics, and advertisement with no dongle.",
+      "MacPhone connects to a Bluetooth LE device over the Mac's built-in radio and publishes it inside the Android emulator. The app you are testing scans, connects, reads, writes and subscribes as it would on a phone, with no USB dongle and no change to its code. The same window runs your Android emulators and Xcode simulators.",
     caseStudy: {
-      problem: "The hard part of testing a hardware-talking mobile app isn't the app. It's getting a real BLE device in front of code running inside an emulator.",
-      built: "A SwiftUI app that manages AVDs and Xcode simulators, connects to a physical BLE device over CoreBluetooth, mirrors its full GATT tree, and re-broadcasts it on the Android emulator's netsim controller via a Bumble virtual peripheral, forwarding reads, writes, and notifications both ways.",
+      problem: "The Android emulator has a virtual Bluetooth controller but no way to reach real hardware. The usual workarounds are a USB dongle passed through to the emulator, or a library compiled into the app that only exists for testing.",
+      built: "A SwiftUI app that acts as a CoreBluetooth central, reads the device's GATT table and hands it over a token-protected localhost socket to a Bumble process. That process publishes the same services, name and manufacturer data on netsim, the emulator's controller, and forwards every read, write and notification to the real device.",
     },
     de: {
-      tagline: "Echte Bluetooth-Geräte in einem Emulator am Mac testen.",
+      tagline: "Echte Bluetooth-LE-Geräte im Android-Emulator auf dem Mac.",
       description:
-        "MacPhone startet und steuert viele Android-Emulatoren und iOS-Simulatoren von einem Mac aus und bridgt ein echtes Bluetooth-LE-Gerät direkt in einen Emulator. Es spiegelt den vollständigen GATT-Baum auf den virtuellen Controller des Emulators, sodass On-Device-Apps die echten Services, Characteristics und das Advertisement sehen, ganz ohne Dongle.",
+        "MacPhone verbindet sich über das eingebaute Bluetooth des Mac mit einem BLE-Gerät und stellt es im Android-Emulator bereit. Die App, die du testest, sucht, verbindet, liest, schreibt und abonniert wie auf einem Handy, ohne USB-Dongle und ohne Änderung am Code. Im selben Fenster laufen deine Android-Emulatoren und Xcode-Simulatoren.",
       caseStudy: {
-        problem: "Das Schwierige beim Testen einer hardwarenahen Mobile-App ist nicht die App, sondern ein echtes BLE-Gerät vor Code zu bringen, der in einem Emulator läuft.",
-        built: "Eine SwiftUI-App, die AVDs und Xcode-Simulatoren verwaltet, sich über CoreBluetooth mit einem physischen BLE-Gerät verbindet, dessen vollständigen GATT-Baum spiegelt und ihn über ein virtuelles Bumble-Peripheral auf dem netsim-Controller des Android-Emulators neu broadcastet. Lese-, Schreib- und Notify-Verkehr wird in beide Richtungen weitergeleitet.",
+        problem: "Der Android-Emulator hat einen virtuellen Bluetooth-Controller, kommt aber nicht an echte Hardware. Die üblichen Umwege sind ein USB-Dongle, der in den Emulator durchgereicht wird, oder eine Bibliothek in der App, die es nur zum Testen gibt.",
+        built: "Eine SwiftUI-App, die als CoreBluetooth-Central die GATT-Tabelle des Geräts liest und sie über einen per Token geschützten Localhost-Socket an einen Bumble-Prozess gibt. Der stellt dieselben Services, denselben Namen und dieselben Herstellerdaten auf netsim bereit, dem Controller des Emulators, und leitet jedes Lesen, Schreiben und jede Notification an das echte Gerät weiter.",
       },
       highlights: [
-        "Verwaltet Android-Emulatoren (AVDs) und Xcode-iOS-Simulatoren parallel in einer Oberfläche.",
-        "Bridgt ein echtes BLE-Gerät über CoreBluetooth in den Emulator und spiegelt den vollständigen GATT-Baum.",
-        "Leitet Lese-/Schreibzugriffe und Notifications in beide Richtungen weiter, die getestete App sieht die echte Hardware.",
-        "Baut Sessions sauber ab: trennt abgestandene Clients und räumt das Bridge mit dem Elternprozess auf.",
+        "Echte BLE-Geräte im Android-Emulator, über das Bluetooth des Mac, ohne Dongle.",
+        "Die getestete App nutzt die normale Android-Bluetooth-API. Keine zusätzliche Bibliothek.",
+        "Lesen, Schreiben und Notifications in beide Richtungen, Abos bleiben nach einem Reconnect bestehen.",
+        "Android-Emulatoren (Android 14 bis 17) und Xcode-Simulatoren aller Apple-Plattformen anlegen, starten und verwalten.",
+        "Apps per Drag-and-drop installieren, URLs öffnen, Screenshots, Hell- und Dunkelmodus.",
+        "Grenzen: nur Bluetooth LE, keine Geräte mit Bluetooth-Pairing, kein Bluetooth im iOS-Simulator.",
       ],
     },
-    stack: ["Swift", "SwiftUI", "Bluetooth LE"],
+    stack: ["Swift", "SwiftUI", "Bluetooth LE", "Android"],
     repo: "jx-grxf/MacPhone",
     githubUrl: "https://github.com/jx-grxf/MacPhone",
-    releaseUrl: "https://github.com/jx-grxf/MacPhone/releases/tag/v0.2.1",
-    fallbackVersion: "v0.2.1",
+    releaseUrl: "https://github.com/jx-grxf/MacPhone/releases/tag/v0.3.1",
+    fallbackVersion: "v0.3.1",
     platformLabels: ["macOS"],
     fallbackDownloads: [
       {
-        assetName: "MacPhone-0.2.1.dmg",
-        assetUrl: "https://github.com/jx-grxf/MacPhone/releases/download/v0.2.1/MacPhone-0.2.1.dmg",
-        size: 4243692,
+        assetName: "MacPhone-0.3.1.dmg",
+        assetUrl: "https://github.com/jx-grxf/MacPhone/releases/download/v0.3.1/MacPhone-0.3.1.dmg",
+        size: 4317436,
         kind: "macos",
       },
       {
-        assetName: "MacPhone-0.2.1.zip",
-        assetUrl: "https://github.com/jx-grxf/MacPhone/releases/download/v0.2.1/MacPhone-0.2.1.zip",
-        size: 4294532,
+        assetName: "MacPhone-0.3.1.zip",
+        assetUrl: "https://github.com/jx-grxf/MacPhone/releases/download/v0.3.1/MacPhone-0.3.1.zip",
+        size: 4350142,
         kind: "archive",
       },
     ],
     highlights: [
-      "Manages Android emulators (AVDs) and Xcode iOS simulators in parallel from one panel.",
-      "Bridges a real BLE device into the emulator over CoreBluetooth, mirroring the full GATT tree.",
-      "Forwards reads, writes, and notifications both ways, so the app under test sees the real hardware.",
-      "Keeps sessions clean: disconnects stale clients and tears the bridge down with its parent process.",
+      "Real BLE devices in the Android emulator, through the Mac's own Bluetooth, no dongle.",
+      "The app under test uses the normal Android Bluetooth API. No extra library.",
+      "Reads, writes and notifications both ways; subscriptions survive a reconnect.",
+      "Create, run and manage Android emulators (Android 14 to 17) and Xcode simulators for every Apple platform.",
+      "Install apps by drag and drop, open URLs, take screenshots, switch light and dark mode.",
+      "Limits: Bluetooth LE only, no devices that need Bluetooth pairing, no Bluetooth in the iOS Simulator.",
     ],
     showcase: [
       {
@@ -321,6 +325,14 @@ export const featuredProjects: Project[] = [
         fit: "cover",
         width: 2000,
         height: 1450,
+      },
+      {
+        src: "/projects/macphone/how-it-works.svg",
+        alt: "How the bridge works: BLE device, the Mac's radio, MacPhone, a local Bumble bridge, netsim, and the app in the Android emulator",
+        altDe: "So funktioniert die Bridge: BLE-Gerät, Bluetooth des Mac, MacPhone, lokale Bumble-Bridge, netsim und die App im Android-Emulator",
+        fit: "contain",
+        width: 960,
+        height: 300,
       },
     ],
     visibility: "public",
@@ -1040,6 +1052,65 @@ export const featuredProjects: Project[] = [
     visibility: "public",
   },
   {
+    name: "DysonBar",
+    slug: "dysonbar",
+    logo: { src: "/projects/dysonbar/logo.webp", fallbackSrc: "/projects/dysonbar/logo.png", alt: "DysonBar app icon", width: 256, height: 256 },
+    status: "beta",
+    tagline: "Air quality and controls for Dyson purifiers in the Mac menu bar, over your own Wi-Fi.",
+    description:
+      "A menu bar app for Dyson air purifiers. It shows PM2.5, PM10, VOC, NO₂, formaldehyde, temperature and humidity, keeps seven days of history and controls fan speed, auto mode, oscillation, night mode and the timer. After one MyDyson sign-in it talks to the purifier directly on your network. Not affiliated with Dyson.",
+    caseStudy: {
+      problem: "Checking the air in the room meant finding the phone and opening the MyDyson app, which goes through Dyson's cloud for every value.",
+      built: "A SwiftUI menu bar app on a small Swift package that speaks Dyson's local MQTT protocol. The sign-in only fetches each purifier's local Wi-Fi key, which goes into the Keychain. The controls come from what the device reports, so models I could not test still get the right set.",
+    },
+    de: {
+      tagline: "Luftqualität und Steuerung für Dyson-Luftreiniger in der Mac-Menüleiste, über dein eigenes WLAN.",
+      description:
+        "Eine Menüleisten-App für Dyson-Luftreiniger. Sie zeigt PM2.5, PM10, VOC, NO₂, Formaldehyd, Temperatur und Luftfeuchte, speichert sieben Tage Verlauf und steuert Lüfterstufe, Automatik, Schwenken, Nachtmodus und Timer. Nach einer Anmeldung bei MyDyson spricht sie direkt im Heimnetz mit dem Gerät. Nicht mit Dyson verbunden.",
+      caseStudy: {
+        problem: "Um zu sehen, wie die Luft im Zimmer ist, musste ich das Handy suchen und die MyDyson-App öffnen, die jeden Wert über die Dyson-Cloud holt.",
+        built: "Eine SwiftUI-Menüleisten-App auf einem kleinen Swift-Paket, das Dysons lokales MQTT-Protokoll spricht. Die Anmeldung holt nur den lokalen WLAN-Schlüssel jedes Geräts, der in den Schlüsselbund kommt. Die Bedienelemente richten sich danach, was das Gerät meldet, deshalb bekommen auch Modelle, die ich nicht testen konnte, die passenden.",
+      },
+      highlights: [
+        "Feinstaub, VOC, NO₂ und Formaldehyd in denselben sechs Stufen wie die MyDyson-App, alle 30 Sekunden aktualisiert.",
+        "Sieben Tage Verlauf pro Gerät, lokal gespeichert, mit 24-Stunden- und 7-Tage-Diagramm.",
+        "Mitteilungen, wenn die Luft fünf Minuten lang schlecht bleibt, der Filter auf 10 % fällt oder das Gerät einen Fehler meldet.",
+        "Das MyDyson-Passwort wird nie gespeichert, danach läuft alles lokal ohne Dyson-Cloud.",
+      ],
+    },
+    stack: ["Swift", "SwiftUI", "MQTT", "macOS"],
+    repo: "jx-grxf/DysonBar",
+    githubUrl: "https://github.com/jx-grxf/DysonBar",
+    releaseUrl: "https://github.com/jx-grxf/DysonBar/releases/tag/v0.1.0",
+    fallbackVersion: "v0.1.0",
+    installCommand: "brew tap jx-grxf/tap && brew trust --cask jx-grxf/tap/dysonbar && brew install --cask dysonbar",
+    platformLabels: ["macOS 15+"],
+    fallbackDownload: {
+      assetName: "DysonBar-0.1.0.dmg",
+      assetUrl: "https://github.com/jx-grxf/DysonBar/releases/download/v0.1.0/DysonBar-0.1.0.dmg",
+      size: 6666878,
+      kind: "macos",
+    },
+    highlights: [
+      "PM2.5, PM10, VOC, NO₂ and formaldehyde on the same six bands as the MyDyson app, refreshed every 30 seconds.",
+      "Seven days of history per device, stored locally, with a 24-hour and 7-day chart.",
+      "Notifications when the air stays bad for five minutes, a filter drops to 10 % or the device reports a fault.",
+      "The MyDyson password is never stored; after the first sign-in everything runs locally without Dyson's cloud.",
+    ],
+    showcase: [
+      {
+        src: "/projects/dysonbar/panel.webp",
+        fallbackSrc: "/projects/dysonbar/panel.png",
+        alt: "DysonBar panel with air quality, temperature, humidity and purifier controls",
+        altDe: "DysonBar-Panel mit Luftqualität, Temperatur, Luftfeuchte und Steuerung",
+        fit: "contain",
+        width: 728,
+        height: 1000,
+      },
+    ],
+    visibility: "public",
+  },
+  {
     name: "NotchTray",
     slug: "notchtray",
     logo: { src: "/projects/notchtray/logo.webp", fallbackSrc: "/projects/notchtray/logo.png", alt: "NotchTray app icon", width: 256, height: 256 },
@@ -1203,48 +1274,98 @@ export const featuredProjects: Project[] = [
     visibility: "public",
   },
   {
+    name: "BeamMac",
+    slug: "beammac",
+    status: "beta",
+    logo: { src: "/projects/beammac/logo.webp", fallbackSrc: "/projects/beammac/logo.png", alt: "BeamMac app icon: a yellow and black crash test marker", width: 256, height: 256 },
+    tagline: "A Mac app that installs and starts BeamNG.drive on Apple Silicon.",
+    description:
+      "BeamNG.drive only ships for Windows and Linux. BeamMac sets up Wine, the Metal graphics layers DXMT and D3DMetal and Steam for Windows on its own, then starts the game from a native Mac app. You log in to Steam and drive. A second button starts BeamMP for multiplayer servers. Not affiliated with BeamNG, Valve or Apple.",
+    caseStudy: {
+      problem: "Running BeamNG on a Mac meant building a Wine prefix, DLL overrides and Steam settings by hand, and fixing them again whenever the game or Steam changed.",
+      built: "A SwiftUI app on top of shell scripts that do the work, so the terminal and the app behave the same. Each graphics backend is an APFS clone of the Wine engine that shares one prefix and one Steam library. DXMT comes from my fork with a frame latency option, and the Wine and DXMT downloads are checked against pinned SHA-256 hashes.",
+    },
+    de: {
+      tagline: "Eine Mac-App, die BeamNG.drive auf Apple Silicon installiert und startet.",
+      description:
+        "BeamNG.drive gibt es nur für Windows und Linux. BeamMac richtet Wine, die Metal-Grafikschichten DXMT und D3DMetal und Steam für Windows selbst ein und startet das Spiel aus einer nativen Mac-App. Du meldest dich bei Steam an und fährst los. Ein zweiter Knopf startet BeamMP für Multiplayer-Server. Nicht mit BeamNG, Valve oder Apple verbunden.",
+      caseStudy: {
+        problem: "BeamNG auf dem Mac hieß: Wine-Prefix, DLL-Overrides und Steam-Einstellungen von Hand bauen und nach jedem Spiel- oder Steam-Update wieder reparieren.",
+        built: "Eine SwiftUI-App über Shell-Skripten, die die Arbeit machen, damit Terminal und App sich gleich verhalten. Jedes Grafik-Backend ist ein APFS-Klon der Wine-Engine mit gemeinsamem Prefix und gemeinsamer Steam-Bibliothek. DXMT kommt aus meinem Fork mit einer Option für die Frame-Latenz, und die Downloads von Wine und DXMT werden gegen festgelegte SHA-256-Hashes geprüft.",
+      },
+      highlights: [
+        "Einrichtung mit einem Klick: Wine 10, DXMT, Apples D3DMetal und Steam für Windows, rund 265 MB, alles in Application Support.",
+        "Steam startet versteckt im Hintergrund, das Spiel läuft nach etwa 25 Sekunden.",
+        "Profile für Bildrate, Details und Verkehr; Ausgewogen hält 40 fps, ein Drittel eines 120-Hz-Displays.",
+        "PlayStation- und Xbox-Controller als XInput-Gamepads, mit Akkustand, Lichtleiste und Live-Test.",
+      ],
+    },
+    stack: ["Swift", "SwiftUI", "Wine", "Metal"],
+    repo: "jx-grxf/BeamMac",
+    githubUrl: "https://github.com/jx-grxf/BeamMac",
+    releaseUrl: "https://github.com/jx-grxf/BeamMac/releases/tag/v0.1.0",
+    fallbackVersion: "v0.1.0",
+    platformLabels: ["macOS 14+", "Apple Silicon"],
+    fallbackDownload: {
+      assetName: "BeamMac-0.1.0.dmg",
+      assetUrl: "https://github.com/jx-grxf/BeamMac/releases/download/v0.1.0/BeamMac-0.1.0.dmg",
+      size: 865455,
+      kind: "macos",
+    },
+    highlights: [
+      "One-click setup: Wine 10, DXMT, Apple's D3DMetal and Steam for Windows, about 265 MB, all in Application Support.",
+      "Steam starts hidden in the background, so the game is up in about 25 seconds.",
+      "Profiles for frame limit, details and traffic; Balanced holds 40 fps, a third of a 120 Hz display.",
+      "PlayStation and Xbox controllers as XInput gamepads, with battery, light bar and a live input test.",
+    ],
+    showcase: [],
+    visibility: "public",
+  },
+  {
     name: "DriveTech",
     slug: "beamng-drivetech",
     status: "active",
     logo: { src: "/projects/beamng-drivetech/logo.svg", alt: "DriveTech icon: a pixel rev counter with the needle near the red line", width: 512, height: 512 },
     tagline: "BMW-style driving electronics for BeamNG.drive.",
     description:
-      "A BeamNG.drive mod that loads into every car and adds what a current BMW does on the road: drive profiles from ECO PRO to SPORT+, DSC, DTC and DSC OFF, xDrive, launch control, auto start-stop, auto hold and coasting. Each feature checks whether the car has the hardware for it and stays off otherwise. For the ETK 800 it adds a 330d xDrive and a 320d Touring tuned to the real cars' figures. A fan project, not affiliated with BMW or BeamNG.",
+      "A BeamNG.drive mod that loads into every car and adds what a current BMW does on the road: drive profiles from ECO PRO to SPORT+, DSC, DTC and DSC OFF, xDrive, launch control, auto start-stop, auto hold and coasting. Each feature checks whether the car has the hardware for it and stays off otherwise. On top come rain with wet roads on any map and optional aquaplaning per tyre. For the ETK 800 it adds eight Touring setups, the 320d, 330d, 340d and 340i each with rear-wheel drive and xDrive, tuned to the real cars' figures, plus an F31-style instrument cluster in beta. A fan project, not affiliated with BMW or BeamNG.",
     caseStudy: {
       problem: "BeamNG simulates the drivetrain in great detail, but the stock cars drive without the electronics around it: automatics hang in gear after you lift off, there is no launch control and no proper DSC modes.",
-      built: "Lua on BeamNG's vehicle extension system, one file per feature. Every feature runs isolated: if one throws, it is logged, switched off and its changes are undone while the rest keeps running. Nothing runs on AI or traffic cars, no stock file is overwritten, and 29 scenario tests run against BeamNG mocks under LuaJIT.",
+      built: "Lua on BeamNG's vehicle extension system, one file per feature. Every feature runs isolated: if one throws, it is logged, switched off and its changes are undone while the rest keeps running. Nothing runs on AI or traffic cars, no stock file is overwritten, and 34 scenario tests run against BeamNG mocks under LuaJIT.",
     },
     de: {
       tagline: "Fahrelektronik wie bei BMW für BeamNG.drive.",
       description:
-        "Eine Mod für BeamNG.drive, die sich in jedes Auto lädt und nachrüstet, was ein aktueller BMW auf der Straße macht: Fahrprofile von ECO PRO bis SPORT+, DSC, DTC und DSC OFF, xDrive, Launch Control, Start-Stopp, Auto Hold und Segeln. Jede Funktion prüft, ob das Auto die Hardware dafür hat, und bleibt sonst aus. Für den ETK 800 kommen ein 330d xDrive und ein 320d Touring dazu, abgestimmt auf die Werte der echten Autos. Ein Fanprojekt, nicht mit BMW oder BeamNG verbunden.",
+        "Eine Mod für BeamNG.drive, die sich in jedes Auto lädt und nachrüstet, was ein aktueller BMW auf der Straße macht: Fahrprofile von ECO PRO bis SPORT+, DSC, DTC und DSC OFF, xDrive, Launch Control, Start-Stopp, Auto Hold und Segeln. Jede Funktion prüft, ob das Auto die Hardware dafür hat, und bleibt sonst aus. Dazu kommen Regen mit nassen Straßen auf jeder Karte und optional Aquaplaning für jeden Reifen einzeln. Für den ETK 800 gibt es acht Touring-Setups, 320d, 330d, 340d und 340i jeweils mit Hinterradantrieb und xDrive, abgestimmt auf die Werte der echten Autos, und ein Kombiinstrument im Stil des F31 als Beta. Ein Fanprojekt, nicht mit BMW oder BeamNG verbunden.",
       caseStudy: {
         problem: "BeamNG simuliert den Antrieb sehr genau, die Serienautos fahren aber ohne die Elektronik drumherum: Automatikgetriebe bleiben nach dem Gaswegnehmen im Gang hängen, es gibt keine Launch Control und keine richtigen DSC-Modi.",
-        built: "Lua auf BeamNGs Vehicle-Extension-System, eine Datei pro Funktion. Jede Funktion läuft isoliert: Wirft eine einen Fehler, wird sie geloggt, abgeschaltet und ihre Änderungen werden zurückgenommen, der Rest läuft weiter. Auf KI- und Verkehrsautos läuft nichts, keine Originaldatei wird überschrieben, und 29 Szenario-Tests laufen gegen BeamNG-Mocks unter LuaJIT.",
+        built: "Lua auf BeamNGs Vehicle-Extension-System, eine Datei pro Funktion. Jede Funktion läuft isoliert: Wirft eine einen Fehler, wird sie geloggt, abgeschaltet und ihre Änderungen werden zurückgenommen, der Rest läuft weiter. Auf KI- und Verkehrsautos läuft nichts, keine Originaldatei wird überschrieben, und 34 Szenario-Tests laufen gegen BeamNG-Mocks unter LuaJIT.",
       },
       highlights: [
         "Schaltlogik, die in D nach dem Gaswegnehmen hochschaltet, in SPORT den Gang hält und in der Kurve nie hochschaltet.",
         "Launch Control für Automatik, Doppelkupplung und Handschalter; beim Wandlerautomaten wird der Wandler entlastet, damit der Motor die Startdrehzahl erreicht.",
-        "ETK-800-Setups mit den Übersetzungen der ZF 8HP, die Werte abgeglichen mit BMW-Pressemappe und ADAC-Katalog.",
+        "Acht ETK-800-Setups vom 320d bis zum 340i mit ZF 8HP50 oder 8HP70 und den Achsübersetzungen aus BMWs technischen Daten.",
+        "Aquaplaning pro Reifen nach Tempo, Wassertiefe, Profiltiefe, Luftdruck und Breite; neue Reifen schwimmen bei 8 mm Wasser ab etwa 85 km/h auf, abgefahrene schon ab etwa 60.",
         "Zeitmessung für 0-100, 0-200, 100-200 km/h und die Viertelmeile als UI-App im Spiel.",
       ],
     },
     stack: ["Lua", "LuaJIT", "BeamNG.drive"],
     repo: "jx-grxf/beamng-drivetech",
     githubUrl: "https://github.com/jx-grxf/beamng-drivetech",
-    releaseUrl: "https://github.com/jx-grxf/beamng-drivetech/releases/tag/v1.0.0",
-    fallbackVersion: "v1.0.0",
+    releaseUrl: "https://github.com/jx-grxf/beamng-drivetech/releases/tag/v1.2.0",
+    fallbackVersion: "v1.2.0",
     fallbackDownload: {
       assetName: "DriveTech.zip",
-      assetUrl: "https://github.com/jx-grxf/beamng-drivetech/releases/download/v1.0.0/DriveTech.zip",
-      size: 27512,
+      assetUrl: "https://github.com/jx-grxf/beamng-drivetech/releases/download/v1.2.0/DriveTech.zip",
+      size: 1181574,
       kind: "archive",
     },
     platformLabels: ["BeamNG.drive 0.39"],
     highlights: [
       "Shift logic that upshifts after you lift off in D, holds the gear in SPORT and never upshifts mid-corner.",
       "Launch control for automatic, DCT and manual; on torque converter automatics the converter is unloaded so the engine reaches launch rpm.",
-      "ETK 800 setups with the ZF 8HP ratios, figures checked against the BMW press kit and the ADAC catalogue.",
+      "Eight ETK 800 setups from the 320d to the 340i with the ZF 8HP50 or 8HP70 and the final drives from BMW's technical data.",
+      "Aquaplaning per tyre from speed, water depth, tread depth, pressure and width; new tyres in 8 mm of water float from about 85 km/h, worn ones from about 60.",
       "0-100, 0-200, 100-200 km/h and quarter-mile timer as an in-game UI app.",
     ],
     showcase: [],
@@ -1426,7 +1547,7 @@ const orderedProjects = (slugs: string[]) =>
 // appears here OR in a section below, never both.
 export const featuredShowcaseProjects = orderedProjects(["portpirate", "patchpilot", "briskedit", "macphone"]);
 
-export const homepageProjects = orderedProjects(["portpirate", "briskedit", "dirhop", "cswap", "notchtray", "claude-code-todo-fix", "agent-presence", "beamng-drivetech"]);
+export const homepageProjects = orderedProjects(["portpirate", "briskedit", "dirhop", "cswap", "dysonbar", "notchtray", "claude-code-todo-fix", "agent-presence", "beammac", "beamng-drivetech"]);
 
 export const projectSections: ProjectSection[] = [
   {
@@ -1436,7 +1557,7 @@ export const projectSections: ProjectSection[] = [
       eyebrow: "mac-apps",
       title: "Mac-Apps",
     },
-    projects: orderedProjects(["bottlelite", "poise", "cswap", "notchtray", "ccrab", "slamx"]),
+    projects: orderedProjects(["dysonbar", "bottlelite", "poise", "cswap", "notchtray", "ccrab", "slamx"]),
   },
   {
     eyebrow: "agents & tools",
@@ -1445,7 +1566,7 @@ export const projectSections: ProjectSection[] = [
       eyebrow: "agents & tools",
       title: "Agent- und Entwickler-Tools",
     },
-    projects: orderedProjects(["dirhop", "claude-code-todo-fix", "agent-presence", "healthkit-mcp", "hermes-discord-voice", "openclaw-discord-voice"]),
+    projects: orderedProjects(["dirhop", "claude-code-todo-fix", "agent-presence", "hermes-discord-voice", "openclaw-discord-voice"]),
   },
   {
     eyebrow: "more",
@@ -1454,7 +1575,7 @@ export const projectSections: ProjectSection[] = [
       eyebrow: "mehr",
       title: "Weitere Projekte",
     },
-    projects: orderedProjects(["beamng-drivetech", "caruso-reborn", "tools", "ip-multitool", "johannesgrof-me", "oeffigo-website", "docxtopdf"]),
+    projects: orderedProjects(["beammac", "beamng-drivetech", "caruso-reborn", "tools", "ip-multitool", "johannesgrof-me", "oeffigo-website", "docxtopdf"]),
   },
 ];
 

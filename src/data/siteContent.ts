@@ -107,7 +107,7 @@ const en: LocaleContent = {
     eyebrow: "Hi, I’m Johannes. Developer and HTL student.",
     title: "Software that does one thing, properly.",
     titleAccent: "one thing",
-    body: "I’m from south-east Styria and study at HTL Kaindorf. Most of my time goes into ÖffiGo and Kontobuch. I also build small tools for things I run into while working.",
+    body: "I’m from south-east Styria and study at HTL Kaindorf. Most of my time goes into ÖffiGo and my other tools, small ones for things I run into while working.",
     primaryAction: "See the projects",
     contactAction: "Contact",
     status: {
@@ -202,7 +202,7 @@ const de: LocaleContent = {
     eyebrow: "Servus, ich bin Johannes. Entwickler und HTL-Schüler.",
     title: "Software, die eine Sache richtig macht.",
     titleAccent: "eine Sache",
-    body: "Ich komme aus der Südost-Steiermark und besuche die HTL Kaindorf. Die meiste Zeit stecke ich in ÖffiGo und Kontobuch. Daneben baue ich kleine Tools für Dinge, die mir beim Arbeiten auffallen.",
+    body: "Ich komme aus der Südost-Steiermark und besuche die HTL Kaindorf. Die meiste Zeit stecke ich in ÖffiGo und in meine anderen Tools, kleine Helfer für Dinge, die mir beim Arbeiten auffallen.",
     primaryAction: "Projekte ansehen",
     contactAction: "Kontakt",
     status: {

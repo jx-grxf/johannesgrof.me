@@ -1,6 +1,7 @@
 ---
 import {
   aggressionAfterLiftOff,
+  criticalLabelFlipKmh,
   coastingRange,
   defaultProfile,
   defaultStability,
@@ -17,6 +18,16 @@ import {
   stabilityModes,
   xdriveLaunchLockBelowKmh,
   chartFrame,
+  aquaplaning,
+  aquaplaningMaxKmh,
+  criticalSpeed,
+  defaultRain,
+  defaultTread,
+  gearboxes,
+  gripPath,
+  rainLevels,
+  treadDepths,
+  wetGripLoss,
   type DriveProfile,
 } from "@/data/drivetech";
 import type { ProjectLang } from "@/data/projects";
@@ -80,7 +91,31 @@ const s = de
       launchReady: "Bremse halten, Vollgas, Bremse lösen.",
       launchLocked: "nur in SPORT+ oder mit DTC / DSC OFF",
       specsTitle: "Gegen die echten Autos",
+      specsLead: "Acht Konfigurationen des F31 LCI Touring im Fahrzeugmenü unter ETK 800: jeder Motor mit Hinterradantrieb und mit xDrive. Jede Tabelle stellt die Werte von DriveTech denen des echten Autos gegenüber.",
       specsMod: "DriveTech",
+      ratiosTitle: "Übersetzungen",
+      ratiosGearbox: "Getriebe",
+      ratiosGears: "Gang 1–8",
+      rainLabel: "Regen und Aquaplaning",
+      rainLead: "DriveTech lässt es auf jeder Karte regnen, die Straßen werden nass. Asphalt verliert dabei rund 25 % Haftung. Aquaplaning ist optional und rechnet jeden Reifen für sich: Tempo, Wassertiefe, Profiltiefe, Luftdruck und Reifenbreite.",
+      rainGroup: "Regen",
+      treadGroup: "Profiltiefe",
+      gripTitle: "Haftung bei Tempo",
+      gripText: "Wie viel Haftung ein 205er-Reifen mit 2,3 bar auf gleichmäßigem Wasserfilm noch hat. Ab 65 % der kritischen Geschwindigkeit schwimmt er teilweise auf, knapp darüber ganz.",
+      axisSpeed: "KM/H",
+      axisGrip: "HAFTUNG",
+      critical: "KRITISCH",
+      water: "Wasserfilm",
+      partial: "Schwimmt auf ab",
+      criticalSpeed: "Kritisch bei",
+      floating: "Haftung dann",
+      never: "nie",
+      wetTitle: "Nasser Asphalt",
+      wetDriveTech: "DriveTech",
+      wetStock: "BeamNG ab Werk",
+      lessGrip: "weniger Haftung",
+      puddleTitle: "Pfützen und Spurrillen",
+      puddleText: "Das Wasser baut sich auf, solange es regnet, und steht nicht überall gleich hoch. Spurrillen und Senken halten mehr, an manchen Stellen bilden sich Pfützen. Dort schwimmt ein Reifen früher auf, oft nur auf einer Seite.",
       matrixTitle: "Welche Autos",
       matrixLead: "DriveTech lädt sich in jedes Auto und nutzt nur, was das Auto mitbringt. Bei KI- und Verkehrsautos bleibt alles aus.",
       matrixHardware: "Im Auto",
@@ -136,7 +171,31 @@ const s = de
       launchReady: "Hold the brake, full throttle, release the brake.",
       launchLocked: "only in SPORT+ or with DTC / DSC OFF",
       specsTitle: "Against the real cars",
+      specsLead: "Eight F31 LCI Touring configurations in the vehicle selector under ETK 800: every engine with rear-wheel drive and with xDrive. Each table puts DriveTech's figures next to the real car's.",
       specsMod: "DriveTech",
+      ratiosTitle: "Gear ratios",
+      ratiosGearbox: "Gearbox",
+      ratiosGears: "Gears 1–8",
+      rainLabel: "Rain and aquaplaning",
+      rainLead: "DriveTech makes it rain on any map, with wet roads. Paved surfaces lose about 25 % grip. Aquaplaning is optional and works out each tyre on its own: speed, water depth, tread depth, tyre pressure and width.",
+      rainGroup: "Rain",
+      treadGroup: "Tread depth",
+      gripTitle: "Grip at speed",
+      gripText: "How much grip a 205 tyre at 2.3 bar has left on an even water film. From 65 % of the critical speed it starts to float, just above it it floats completely.",
+      axisSpeed: "KM/H",
+      axisGrip: "GRIP",
+      critical: "CRITICAL",
+      water: "Water film",
+      partial: "Starts to float at",
+      criticalSpeed: "Critical at",
+      floating: "Grip left",
+      never: "never",
+      wetTitle: "Wet asphalt",
+      wetDriveTech: "DriveTech",
+      wetStock: "Stock BeamNG",
+      lessGrip: "less grip",
+      puddleTitle: "Puddles and ruts",
+      puddleText: "The water builds up while it rains and does not sit evenly. Ruts and dips hold more, and some spots collect real puddles. There a tyre floats earlier, often on one side only.",
       matrixTitle: "Which cars",
       matrixLead: "DriveTech loads into every car and only uses what the car has. AI and traffic cars are left alone.",
       matrixHardware: "In the car",
@@ -204,6 +263,12 @@ const dscRows: { key: string; label: string; state: Record<"dsc" | "dtc" | "off"
   },
   { key: "abs", label: s.abs, state: { dsc: "stock", dtc: "stock", off: "stock" }, text: { dsc: s.on, dtc: s.on, off: s.on } },
 ];
+const startRain = rainLevels.find((r) => r.key === defaultRain)!;
+const startCritical = criticalSpeed(startRain.waterMm, defaultTread);
+const kmh = (value: number) => (Number.isFinite(value) ? `${Math.round(value)} km/h` : s.never);
+const speedTicks = [0, 50, 100, 150, 200];
+const treadLabel = (mm: number) => `${num(mm, 1)} mm`;
+const ratio = (value: number) => num(value, 3);
 const coastLeft = coastingRange.minKmh / 250;
 const coastWidth = (coastingRange.maxKmh - coastingRange.minKmh) / 250;
 ---
@@ -339,19 +404,94 @@ const coastWidth = (coastingRange.maxKmh - coastingRange.minKmh) / 250;
     </dl>
   </div>
 
+  <div class="dt-rain" data-rain-lab data-rain={defaultRain} data-tread={defaultTread}>
+    <h2 class="dt-label">{s.rainLabel}</h2>
+    <p class="dt-lead">{s.rainLead}</p>
+
+    <div class="dt-switches dt-switches--rain">
+      <div class="dt-rocker" role="group" aria-label={s.rainGroup}>
+        <span class="dt-rocker-label">{s.rainGroup}</span>
+        <div class="dt-rocker-cells">
+          {rainLevels.map((r) => <button type="button" data-set-rain={r.key} aria-pressed={r.key === defaultRain ? "true" : "false"}>{r.name[lang]}</button>)}
+        </div>
+      </div>
+      <div class="dt-rocker" role="group" aria-label={s.treadGroup}>
+        <span class="dt-rocker-label">{s.treadGroup}</span>
+        <div class="dt-rocker-cells">
+          {treadDepths.map((mm) => <button type="button" data-set-tread={mm} aria-pressed={mm === defaultTread ? "true" : "false"}>{treadLabel(mm)}</button>)}
+        </div>
+      </div>
+    </div>
+
+    <div class="dt-panels">
+      <figure class="dt-panel">
+        <figcaption>
+          <h3>{s.gripTitle}</h3>
+          <p>{s.gripText}</p>
+        </figcaption>
+        <svg class="dt-chart" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={s.gripTitle}>
+          {ticks.map((t) => <line class="dt-grid" x1={px(0)} x2={px(1)} y1={py(t)} y2={py(t)} />)}
+          {speedTicks.map((v) => <line class="dt-grid" x1={px(v / aquaplaningMaxKmh)} x2={px(v / aquaplaningMaxKmh)} y1={py(0)} y2={py(1)} />)}
+          {ticks.map((t) => <text class="dt-axis" x={pad.left - 6} y={py(t) + 3} text-anchor="end">{Math.round(t * 100)}</text>)}
+          {speedTicks.map((v) => <text class="dt-axis" x={px(v / aquaplaningMaxKmh)} y={H - pad.bottom + 14} text-anchor="middle">{v}</text>)}
+          <text class="dt-axis" x={px(0.5)} y={H - 4} text-anchor="middle">{s.axisSpeed}</text>
+          <text class="dt-axis dt-axis--side" x={px(0) + 4} y={py(0) - 6}>{s.axisGrip} %</text>
+          <line class="dt-cross" data-critical-line x1={px(startCritical / aquaplaningMaxKmh)} x2={px(startCritical / aquaplaningMaxKmh)} y1={py(0)} y2={py(1)} />
+          <text class="dt-axis dt-axis--kick" data-critical-label x={px(startCritical / aquaplaningMaxKmh) + (startCritical > criticalLabelFlipKmh ? -4 : 4)} y={pad.top + 10} text-anchor={startCritical > criticalLabelFlipKmh ? "end" : "start"}>{s.critical}</text>
+          {[...treadDepths].sort((a, b) => Number(a === defaultTread) - Number(b === defaultTread)).map((mm) => (
+            <path class:list={["dt-curve", mm === defaultTread && "is-active"]} data-grip-curve={mm} d={gripPath(startRain.waterMm, mm)} pathLength="1" />
+          ))}
+        </svg>
+        <dl class="dt-facts">
+          <div><dt>{s.water}</dt><dd data-water>{num(startRain.waterMm, 1)} mm</dd></div>
+          <div><dt>{s.partial}</dt><dd data-partial>{kmh(startCritical * aquaplaning.partialStart)}</dd></div>
+          <div><dt>{s.criticalSpeed}</dt><dd data-critical>{kmh(startCritical)}</dd></div>
+          <div><dt>{s.floating}</dt><dd>{pct(aquaplaning.minGrip)}</dd></div>
+        </dl>
+      </figure>
+
+      <div class="dt-panel dt-wet">
+        <h3>{s.wetTitle}</h3>
+        <div class="dt-strip-head"><span>{s.wetDriveTech}</span><strong>−{pct(wetGripLoss.driveTech)}</strong></div>
+        <div class="dt-bar" aria-hidden="true"><span class="dt-bar-fill" style={`--fill: ${wetGripLoss.driveTech}`}></span></div>
+        <div class="dt-strip-head"><span>{s.wetStock}</span><strong>−{pct(wetGripLoss.stock)}</strong></div>
+        <div class="dt-bar dt-bar--quiet" aria-hidden="true"><span class="dt-bar-fill" style={`--fill: ${wetGripLoss.stock}`}></span></div>
+        <p class="dt-wet-caption">{s.lessGrip}</p>
+        <h3>{s.puddleTitle}</h3>
+        <p>{s.puddleText}</p>
+      </div>
+    </div>
+  </div>
+
   <div class="dt-specs">
     <h2 class="dt-label">{s.specsTitle}</h2>
+    <p class="dt-lead">{s.specsLead}</p>
     <div class="dt-spec-grid">
       {specSheets.map((sheet) => (
-        <table class="dt-table">
-          <caption>{sheet.title[lang]}</caption>
-          <thead><tr><th scope="col"></th><th scope="col">{s.specsMod}</th><th scope="col">{sheet.reference}</th></tr></thead>
-          <tbody>
-            {sheet.rows.map((row) => <tr><th scope="row">{row.label[lang]}</th><td>{row.mod[lang]}</td><td>{row.car[lang]}</td></tr>)}
-          </tbody>
-        </table>
+        <div>
+          <table class="dt-table">
+            <caption>{sheet.title[lang]}</caption>
+            <thead><tr><th scope="col"></th><th scope="col">{s.specsMod}</th><th scope="col" class="dt-ref">{sheet.reference}</th></tr></thead>
+            <tbody>
+              {sheet.rows.map((row) => <tr><th scope="row">{row.label[lang]}</th><td>{row.mod[lang]}</td><td>{row.car[lang]}</td></tr>)}
+            </tbody>
+          </table>
+          {sheet.note && <p class="dt-note">{sheet.note[lang]}</p>}
+        </div>
       ))}
     </div>
+    <table class="dt-table dt-table--ratios">
+      <caption>{s.ratiosTitle}</caption>
+      <thead><tr><th scope="col">{s.ratiosGearbox}</th><th scope="col">{s.ratiosGears}</th></tr></thead>
+      <tbody>
+        {gearboxes.map((box) => (
+          <tr>
+            <th scope="row">{box.name}<span>{box.cars}</span></th>
+            <td class="dt-ratios">{box.ratios.map((r) => <span>{ratio(r)}</span>)}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
     <p class="dt-note">{specSources[lang]}</p>
   </div>
 
