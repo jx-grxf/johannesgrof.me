@@ -8,9 +8,9 @@ import PixelSprite from "@/components/PixelSprite.astro";
 import WorkRow from "@/components/WorkRow.astro";
 import { homepageProjects, projectsBySlug, publicProjects } from "@/data/projects";
 import { getProjectGitHubInfo } from "@/data/github";
-import { departureStops } from "@/lib/departures";
 import type { ProjectLang } from "@/data/projects";
 import { oeffigo } from "@/data/oeffigo";
+import { halloweenDrop } from "@/data/halloween";
 import { kontobuch } from "@/data/kontobuch";
 import type { LocaleContent } from "@/data/siteContent";
 import { personSameAs, toCanonicalUrl } from "@/data/siteMetadata";
@@ -165,7 +165,7 @@ const profileSchema = {
         </div>
         <div class="hero-edge hero-edge--right" aria-hidden="true">
           <span class="edge-block edge-step-3 edge-amber">
-            <span class="edge-sprite egg-swap" data-egg="pumpkin"><PixelSprite name="pumpkin" class="egg-a" /><PixelSprite name="oil" class="egg-b" /></span>
+            <span class="edge-sprite egg-swap" data-egg="pumpkin"><PixelSprite name="pumpkin" class="egg-a season-off" /><PixelSprite name="jackolantern" class="egg-a season-on" /><PixelSprite name="oil" class="egg-b" /></span>
           </span>
           <span class="edge-block edge-step-2 edge-ink"></span>
           <span class="edge-block edge-step-1 edge-signal edge-tall"></span>
@@ -181,8 +181,10 @@ const profileSchema = {
         {/* The hero's bottom rule is a track. */}
         <div class="hero-track">
           <a class="hero-train" href="#oeffigo" aria-label={isDe ? "Zu ÖffiGo" : "Go to ÖffiGo"}>
-            <span class="hero-train-sign" aria-hidden="true">ÖffiGo · {isDe ? "Beta" : "beta"}</span>
-            <PixelSprite name="train" />
+            <span class="hero-train-sign season-off" aria-hidden="true">ÖffiGo · {isDe ? "Beta" : "beta"}</span>
+            <span class="hero-train-sign season-on" aria-hidden="true">71 · Zentralfriedhof</span>
+            <PixelSprite name="train" class="season-off" />
+            <PixelSprite name="ghosttrain" class="season-on" />
           </a>
         </div>
       </section>
@@ -209,35 +211,17 @@ const profileSchema = {
                 <p>{isDe ? "ÖffiGo ist mein größtes Projekt: die Öffi-App für ganz Österreich. Sie zeigt Abfahrten, findet Verbindungen für Bus, Bahn und Bim und begleitet dich am iPhone und an der Apple Watch. Bei jeder Zeit steht, ob sie vom Verkehrsbetrieb kommt oder aus dem Fahrplan." : "ÖffiGo is my largest project: the transit app for all of Austria. It shows departures, plans journeys by bus, train and tram and follows your trip on iPhone and Apple Watch. Every time shows whether it comes from the operator or the timetable."}</p>
                 <p class="product-availability">{oeffigo.status[lang]}</p>
                 <div class="oeffigo-actions"><a class="button primary" href={`${localePrefix}/oeffigo/`}>{content.oeffigo.detailCta}</a><a class="button secondary" href={oeffigo.websiteUrl}>oeffigo.app ↗</a></div>
+                {halloweenDrop.testflightUrl && (
+                  <div class="season-drop season-on">
+                    <p class="eyebrow">{isDe ? `Halloween · ${halloweenDrop.places} Beta-Plätze` : `Halloween · ${halloweenDrop.places} beta places`}</p>
+                    <p>{isDe ? `Bis 1. November gibt es ${halloweenDrop.places} Plätze in der ÖffiGo-Beta, so viele wie die Nummer der Bim zum Zentralfriedhof. Ist der TestFlight-Link voll, zeigt TestFlight das an.` : `Until 1 November there are ${halloweenDrop.places} places in the ÖffiGo beta, as many as the number of the tram to the Central Cemetery. Once the TestFlight link is full, TestFlight shows it.`}</p>
+                    <a class="button primary" href={halloweenDrop.testflightUrl}>{isDe ? "In TestFlight öffnen" : "Open in TestFlight"} ↗</a>
+                  </div>
+                )}
                 <p class="product-footnote"><a href={oeffigo.newUrl[lang]}>{oeffigo.beta.newLabel[lang]} ↗</a><a href={oeffigo.liveUrl[lang]}>{isDe ? "Pünktlichkeit nachschauen" : "Explore punctuality"} ↗</a><a href={oeffigo.statusUrl}>{isDe ? "Systemstatus" : "System status"} ↗</a></p>
               </div>
               <figure class="product-phone-preview"><img src={oeffigo.shots[0].src} alt={oeffigo.shots[0].alt[lang]} width="675" height="1380" loading="lazy" decoding="async" /><figcaption>{isDe ? "Die Heute-Ansicht am iPhone. Screenshot aus der Beta." : "Today on iPhone. Screenshot from the beta."}</figcaption></figure>
             </div>
-
-            {/* Live departures from Wiener Linien open data, the way ÖffiGo
-                reads a station board. Filled by scripts/departures.ts. */}
-            <section class="dep-board" data-departures data-state="idle" aria-labelledby="dep-title">
-              <div class="dep-head">
-                <h3 id="dep-title"><span class="status-dot" aria-hidden="true"></span>{isDe ? "Gerade in Wien" : "Right now in Vienna"}</h3>
-                <div class="dep-stops" role="group" aria-label={isDe ? "Haltestelle wählen" : "Choose a stop"}>
-                  {departureStops.map((stop, i) => (
-                    <button type="button" data-stop={stop.slug} aria-pressed={i === 0 ? "true" : "false"}>{stop.name}</button>
-                  ))}
-                </div>
-              </div>
-              <div class="led-board dep-led">
-                <div class="led-top"><span>{isDe ? "Abfahrten" : "Departures"}</span><span data-departures-clock>--:--</span></div>
-                <ul class="dep-rows" data-departures-rows aria-live="polite"></ul>
-                <p class="dep-status" data-departures-status>{isDe ? "Lade Abfahrten …" : "Loading departures …"}</p>
-                <p class="led-ticker dep-ticker" data-guestbook-ticker hidden></p>
-              </div>
-              <p class="dep-note">
-                {isDe
-                  ? "Echtzeit heißt: Die Zeit kommt vom Betreiber. Fahrplan heißt: Für diese Fahrt liefert niemand Echtzeit. Datenquelle: Stadt Wien – data.wien.gv.at (CC BY 4.0)."
-                  : "Real time means the operator supplied the time. Timetable means nobody supplies real time for that trip. Data source: City of Vienna – data.wien.gv.at (CC BY 4.0)."}
-                {" "}<a href={oeffigo.websiteUrl}>{isDe ? "Mehr davon in ÖffiGo" : "More of this in ÖffiGo"} ↗</a>
-              </p>
-            </section>
           </div>
         </section>
         <section id="kontobuch" class="band section-shell" aria-labelledby="kontobuch-title">
@@ -333,7 +317,6 @@ const profileSchema = {
       import "@/scripts/clock";
       import "@/scripts/scene";
       import "@/scripts/trail";
-      import "@/scripts/departures";
     </script>
   </body>
 </html>

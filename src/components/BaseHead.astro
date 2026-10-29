@@ -1,5 +1,6 @@
 ---
 import { author, canonicalOrigin, personSameAs, socialCard, toCanonicalUrl } from "@/data/siteMetadata";
+import { HALLOWEEN } from "@/lib/season";
 import geistLatin from "@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url";
 import geistMonoLatin from "@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url";
 
@@ -104,6 +105,27 @@ const sourceNote = `<!--
   if (stored === "light") {
     document.documentElement.dataset.theme = "light";
     document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#f4f2ed");
+  }
+</script>
+{/* Halloween, decided before the first paint like the stock. ?season=halloween,
+    ?season=halloween-night and ?season=off preview it for the rest of the tab. */}
+<script is:inline define:vars={{ season: HALLOWEEN }}>
+  let forced = null;
+  try {
+    const query = new URLSearchParams(location.search).get("season");
+    if (query) sessionStorage.setItem("season", query);
+    forced = sessionStorage.getItem("season");
+  } catch {}
+  const clock = {};
+  for (const part of new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Vienna", month: "numeric", day: "numeric", hour: "numeric", hourCycle: "h23" }).formatToParts(new Date())) {
+    clock[part.type] = Number(part.value);
+  }
+  const monthDay = clock.month * 100 + clock.day;
+  const inWindow = monthDay >= season.from && monthDay <= season.to;
+  const night = (monthDay === season.night && clock.hour >= season.nightFromHour) || (monthDay === season.to && clock.hour < season.nightUntilHour);
+  if (forced !== "off" && (inWindow || forced === "halloween" || forced === "halloween-night")) {
+    document.documentElement.dataset.season = "halloween";
+    if (forced === "halloween-night" || (night && forced !== "halloween")) document.documentElement.dataset.seasonNight = "";
   }
 </script>
 {/* The home intro plays once per tab session, decided before the first paint

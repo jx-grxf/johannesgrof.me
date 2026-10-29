@@ -2,10 +2,13 @@
 // the dev console and the keys that open it. The terminal itself is only
 // downloaded the first time someone asks for it.
 
+import { seasonOn } from "@/lib/season";
 import { startPresence } from "./presence";
 
 const de = document.documentElement.lang.startsWith("de");
+const halloween = seasonOn();
 startPresence();
+if (halloween) void import("./halloween");
 
 const train = String.raw`
   ____________   ____________   ______________
@@ -14,14 +17,26 @@ const train = String.raw`
     o      o       o      o       o          o
 `;
 
-console.log(`%c${train}`, "color:#a8e22a;font-family:monospace;font-size:11px;line-height:1.2");
+// The pumpkin from the right margin, carved, for the Halloween weeks.
+const pumpkin = String.raw`
+         )
+     .-''|''-.
+   .'  /\   /\ '.
+  /    \/   \/   \
+ |   ._______.    |
+  \   \/\/\/\/   /
+   '.          .'
+     '-.____.-'
+`;
+
+console.log(`%c${halloween ? pumpkin : train}`, `color:${halloween ? "#ff8a2a" : "#a8e22a"};font-family:monospace;font-size:11px;line-height:1.2`);
 console.log(
   `%c$ johannes grof%c\n${
     de
-      ? "Du schaust in die Konsole, also bist du hier richtig.\nDrück ~ (am Mac Option+N) oder tipp einfach „terminal“, dann geht eins auf.\nIm echten Terminal: curl -sL johannesgrof.me/de/hi\nQuelltext: https://github.com/jx-grxf/johannesgrof.me"
-      : "You opened the console, so you are in the right place.\nPress ~ (Option+N on a German Mac) or just type \"terminal\" and one opens.\nIn a real terminal: curl -sL johannesgrof.me/hi\nSource: https://github.com/jx-grxf/johannesgrof.me"
+      ? `${halloween ? "Halloween hier. Tipp irgendwo „boo“, im Terminal gibt es trick und treat.\n" : ""}Du schaust in die Konsole, also bist du hier richtig.\nDrück ~ (am Mac Option+N) oder tipp einfach „terminal“, dann geht eins auf.\nIm echten Terminal: curl -sL johannesgrof.me/de/hi\nQuelltext: https://github.com/jx-grxf/johannesgrof.me`
+      : `${halloween ? "Halloween here. Type \"boo\" anywhere, the terminal knows trick and treat.\n" : ""}You opened the console, so you are in the right place.\nPress ~ (Option+N on a German Mac) or just type "terminal" and one opens.\nIn a real terminal: curl -sL johannesgrof.me/hi\nSource: https://github.com/jx-grxf/johannesgrof.me`
   }`,
-  "color:#ff6a4d;font-family:monospace;font-weight:700;font-size:13px",
+  `color:${halloween ? "#ff8a2a" : "#ff6a4d"};font-family:monospace;font-weight:700;font-size:13px`,
   "color:inherit;font-family:monospace;font-size:12px;line-height:1.6",
 );
 
@@ -31,7 +46,13 @@ const headerClock = document.querySelector<HTMLElement>("[data-header-clock]");
 const headerTime = headerClock?.querySelector("time");
 if (headerClock && headerTime) {
   const format = new Intl.DateTimeFormat(de ? "de-AT" : "en-GB", { weekday: "short", hour: "2-digit", minute: "2-digit", timeZone: "Europe/Vienna" });
-  const tick = () => (headerTime.textContent = format.format(new Date()).replace(",", ""));
+  const hour = new Intl.DateTimeFormat("en-GB", { hour: "numeric", hourCycle: "h23", timeZone: "Europe/Vienna" });
+  // During Halloween, midnight to one is the witching hour.
+  const tick = () => {
+    const now = new Date();
+    const text = format.format(now).replace(",", "");
+    headerTime.textContent = halloween && Number(hour.format(now)) === 0 ? `${de ? "Geisterstunde" : "Witching hour"} ${text.split(" ").pop()}` : text;
+  };
   tick();
   headerClock.hidden = false;
   window.setInterval(tick, 20_000);
