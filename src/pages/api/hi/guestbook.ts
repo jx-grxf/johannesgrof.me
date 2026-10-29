@@ -1,8 +1,7 @@
 import type { APIRoute } from "astro";
 import { listGuestbook } from "@/lib/live";
 
-// Approved guestbook entries for the ticker on the departures board and the
-// site terminal. The CDN holds the list for a minute.
+// Approved guestbook entries for /hi and the site terminal. The CDN holds the list for a minute.
 export const prerender = false;
 
 export const GET: APIRoute = async () => {

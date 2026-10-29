@@ -42,7 +42,7 @@ const s = de
       trainExpired: "Der Code ist abgelaufen. Hol dir einen neuen.",
       trainError: "Gerade gibt es keinen Code. Später nochmal.",
       guestbookTitle: "Gästebuch",
-      guestbookLead: "Unterschreiben geht nur aus dem Terminal. Jeder Eintrag landet erst bei mir und steht nach der Freigabe hier und auf der Abfahrtstafel der Startseite.",
+      guestbookLead: "Unterschreiben geht nur aus dem Terminal. Jeder Eintrag landet erst bei mir und steht nach der Freigabe hier.",
       guestbookEmpty: "Noch leer.",
       notes: [
         "Funktioniert mit curl, HTTPie und xh. Farben brauchen ein Terminal mit 24-Bit-Farbe, das haben fast alle.",
@@ -67,7 +67,7 @@ const s = de
       trainExpired: "The code expired. Get a new one.",
       trainError: "No code right now. Try again later.",
       guestbookTitle: "Guestbook",
-      guestbookLead: "Signing only works from a terminal. Every entry comes to me first and shows up here and on the home page departures board once I've read it.",
+      guestbookLead: "Signing only works from a terminal. Every entry comes to me first and shows up here once I've read it.",
       guestbookEmpty: "Still empty.",
       notes: [
         "Works with curl, HTTPie and xh. Colours need a terminal with 24-bit colour, which almost all have.",
@@ -105,7 +105,7 @@ const canonicalPath = `${de ? "/de" : ""}/hi/`;
     />
 
     <main id="main" class="curl-page section-shell">
-      <p class="eyebrow">~ $</p>
+      <p class="eyebrow eyebrow--code">~ $</p>
       <h1>{s.heading}</h1>
       <p class="curl-lead">{s.lead}</p>
       <div class="curl-command" data-curl-command>

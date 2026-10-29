@@ -2,7 +2,8 @@
 // (local dev) and the standalone _curl function the build adds for production
 // (see tools/curl-route.mjs). The language comes from the path: /hi or /de/hi.
 import { Resend } from "resend";
-import { HIDE_CURSOR, SHOW_CURSOR, card, helpCard, hereText, messageCard, stationCard, trainFrames, type BoardData, type CardData } from "@/lib/curlCard";
+import { HIDE_CURSOR, SHOW_CURSOR, card, helpCard, hereText, messageCard, pumpkinFrame, stationCard, trainFrames, type BoardData, type CardData } from "@/lib/curlCard";
+import { isHalloween } from "@/lib/season";
 import { parseMonitor } from "@/lib/departures";
 import { addPending, allow, cleanGuestbookText, clientIp, countHere, GUESTBOOK_MAX, listGuestbook, readEnv, ringZug, signReview } from "@/lib/live";
 import { findStop, type Stop } from "@/lib/stopSearch";
@@ -40,8 +41,12 @@ async function loadPraterstern(url: URL): Promise<CardData["board"]> {
 
 /** Streams the pixel train through the terminal, then the given text. */
 function withTrain(body: () => string): Response {
+  return animated(trainFrames(3, isHalloween()), FRAME_MS, body, true);
+}
+
+/** Plays frames in place, then prints the body; `clear` wipes the last frame first. */
+function animated(frames: string[][], frameMs: number, body: () => string, clear: boolean): Response {
   const encoder = new TextEncoder();
-  const frames = trainFrames();
   const stream = new ReadableStream<Uint8Array>({
     async start(controller) {
       const send = (chunk: string) => controller.enqueue(encoder.encode(chunk));
@@ -50,9 +55,9 @@ function withTrain(body: () => string): Response {
       for (const [index, frame] of frames.entries()) {
         // Redraw in place: jump back up over the previous frame first.
         send(`${index ? `\x1b[${height}A` : ""}${frame.map((line) => `\r\x1b[2K${line}`).join("\n")}\n`);
-        await new Promise((resolve) => setTimeout(resolve, FRAME_MS));
+        await new Promise((resolve) => setTimeout(resolve, frameMs));
       }
-      send(`\x1b[${height}A\x1b[J`);
+      if (clear) send(`\x1b[${height}A\x1b[J`);
       send(body());
       send(SHOW_CURSOR);
       controller.close();
@@ -97,6 +102,7 @@ async function cardResponse(request: Request, url: URL, lang: Lang): Promise<Res
     viennaTime: new Intl.DateTimeFormat("de-AT", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Vienna" }).format(new Date()),
     here,
     guestbook,
+    halloween: isHalloween(),
   };
   data.served.ms = Date.now() - started;
   const animate = /^curl\//i.test(request.headers.get("user-agent") ?? "") && !url.searchParams.has("static");
@@ -182,8 +188,30 @@ async function signResponse(request: Request, lang: Lang): Promise<Response> {
   return text(messageCard([
     { text: de ? "Danke, ist angekommen." : "Thanks, got it.", tone: "ok" },
     { text: `»${entry.text}«` },
-    { text: de ? "Sobald ich es gelesen habe, läuft es über die Abfahrtstafel auf johannesgrof.me." : "Once I've read it, it runs across the departures board on johannesgrof.me.", tone: "muted" },
+    { text: de ? "Sobald ich es gelesen habe, steht es auf johannesgrof.me/hi." : "Once I've read it, it shows up on johannesgrof.me/hi.", tone: "muted" },
   ]));
+}
+
+// The candle inside flickers for a couple of seconds, then the pumpkin stays lit.
+const CANDLE_ORDER = [0, 1, 0, 2, 0, 3, 1, 0, 4, 0, 0, 3, 0, 1, 2, 0, 0, 0, 3, 4, 0, 1, 0, 0];
+
+function booResponse(request: Request, url: URL, lang: Lang): Response {
+  const de = lang === "de";
+  const base = `johannesgrof.me${de ? "/de" : ""}/hi`;
+  const body = () =>
+    messageCard([
+      { text: "boo.", tone: "ok" },
+      ...(isHalloween()
+        ? [
+            { text: de ? "Der 71er fährt zum Zentralfriedhof. Was dort gerade abfährt:" : "The 71 runs to the Central Cemetery. What leaves there right now:", tone: "plain" as const },
+            { text: `curl -sL ${base}/oeffi/zentralfriedhof-2-tor`, tone: "plain" as const },
+            { text: de ? "In Wien heißt „mit dem 71er fahren“ sterben." : "In Vienna, “taking the 71” means dying.", tone: "muted" as const },
+          ]
+        : [{ text: de ? "Halloween ist auf der Seite vom 24. Oktober bis 1. November. Der Kürbis bleibt das ganze Jahr." : "Halloween runs on the site from 24 October to 1 November. The pumpkin stays all year.", tone: "muted" as const }]),
+    ]);
+  const animate = /^curl\//i.test(request.headers.get("user-agent") ?? "") && !url.searchParams.has("static");
+  if (!animate) return text(`\n${pumpkinFrame().join("\n")}\n${body()}`);
+  return animated(CANDLE_ORDER.map((candle) => ["", ...pumpkinFrame(candle)]), 110, body, false);
 }
 
 async function whoResponse(lang: Lang): Promise<Response> {
@@ -244,9 +272,12 @@ export async function handleHi(request: Request): Promise<Response> {
     case "zug":
     case "train":
       return zugResponse(request, (args[0] ?? "").toLowerCase(), lang);
+    case "boo":
+    case "halloween":
+      return booResponse(request, url, lang);
     case "help":
-      return text(helpCard(lang));
+      return text(helpCard(lang, isHalloween()));
     default:
-      return text(helpCard(lang), 404);
+      return text(helpCard(lang, isHalloween()), 404);
   }
 }

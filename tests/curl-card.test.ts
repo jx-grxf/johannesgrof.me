@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { WIDTH, card, helpCard, messageCard, stationCard, trainFrames, visibleLength, type CardData } from "../src/lib/curlCard.ts";
+import { WIDTH, card, helpCard, messageCard, pumpkinFrame, stationCard, trainFrames, visibleLength, type CardData } from "../src/lib/curlCard.ts";
 
 const data = (overrides: Partial<CardData> = {}): CardData => ({
   lang: "de",
@@ -86,4 +86,20 @@ test("station board, help and messages stay inside the card width", () => {
 test("guestbook entries are cleaned before they reach a terminal", () => {
   const out = card(data({ guestbook: [{ text: "hi\x1b]0;pwned\x07 there", at: "2026-10-11T15:00:00.000Z" }] }));
   assert.ok(!out.includes("\x1b]0;"));
+});
+
+test("the ghost train has the same frames as the day train", () => {
+  const day = trainFrames(3);
+  const haunted = trainFrames(3, true);
+  assert.equal(haunted.length, day.length);
+  for (const frame of haunted) {
+    assert.equal(frame.length, day[0]!.length);
+    for (const line of frame) assert.ok(visibleLength(line) <= WIDTH);
+  }
+});
+
+test("every pumpkin frame has the same height and stays inside the card", () => {
+  const heights = new Set([0, 1, 2, 3, 4, 7].map((candle) => pumpkinFrame(candle).length));
+  assert.equal(heights.size, 1);
+  for (const line of pumpkinFrame()) assert.ok(visibleLength(line) <= WIDTH);
 });

@@ -2,6 +2,7 @@
 // headline), closed with Escape. Everything it prints is set as text, never as
 // HTML, so project data can't inject markup.
 
+import { seasonOn } from "@/lib/season";
 import { peopleHere } from "./presence";
 import { callTrain } from "./remoteTrain";
 import { expressTrain } from "./train";
@@ -35,7 +36,8 @@ const links: Record<string, string> = {
   source: "https://github.com/jx-grxf/johannesgrof.me",
 };
 
-const commands = ["help", "ls", "open", "stack", "about", "contact", "ping", "status", "traceroute", "who", "uses", "zug", "call", "guestbook", "gaestebuch", "curl", "cv", "train", "theme", "clear", "exit"];
+const halloween = seasonOn();
+const commands = ["help", "ls", "open", "stack", "about", "contact", "ping", "status", "traceroute", "who", "uses", "zug", "call", "guestbook", "gaestebuch", "curl", "cv", "train", "theme", "clear", "exit", ...(halloween ? ["boo", "trick", "treat"] : [])];
 
 let root: HTMLElement | undefined;
 let output: HTMLElement;
@@ -353,6 +355,68 @@ function neofetch() {
   });
 }
 
+// Halloween commands. Outside the season they say when to come back instead of
+// pretending not to exist, because someone may have read about them.
+function seasonClosed(): boolean {
+  if (halloween) return false;
+  line(t("Das gibt es nur vom 24. Oktober bis 1. November.", "That only works from 24 October to 1 November."), "dim");
+  return true;
+}
+
+function runBoo() {
+  if (seasonClosed()) return;
+  void import("./halloween").then(({ swoop }) => {
+    if (!swoop()) line(t("Der Geist bleibt heute sitzen (Bewegung reduziert).", "The ghost stays put today (reduced motion)."), "dim");
+  });
+  line("boo.", "accent");
+}
+
+function runTrick() {
+  if (seasonClosed()) return;
+  const tricks = [
+    () => {
+      line(t("Die Geisterbahn kommt durch.", "Here comes the ghost train."), "accent");
+      if (!expressTrain()) line(t("Sie fährt nur auf der Startseite. Probier: open home", "It only runs on the home page. Try: open home"), "dim");
+    },
+    () => {
+      line(t("Licht aus.", "Lights out."), "accent");
+      const dark = document.createElement("div");
+      dark.className = "blackout";
+      dark.setAttribute("aria-hidden", "true");
+      document.body.append(dark);
+      window.setTimeout(() => {
+        dark.remove();
+        line(t("… und wieder an. War da was?", "… and back on. Was something there?"), "dim");
+      }, 1200);
+    },
+    () => {
+      line("rm -rf ~/projects", "error");
+      window.setTimeout(() => line(t("… nur Spaß. Ist alles noch da: ls", "… kidding. It's all still there: ls"), "dim"), 900);
+    },
+  ];
+  tricks[Math.floor(Math.random() * tricks.length)]!();
+}
+
+function runTreat() {
+  if (seasonClosed()) return;
+  const treats: (() => void)[] = [
+    () => {
+      line(t("Für dein Terminal, mit Kürbis:", "For your terminal, with a pumpkin:"), "dim");
+      line(`curl -sL johannesgrof.me${de ? "/de" : ""}/hi/boo`, "accent");
+    },
+    () => {
+      line(t("PDFs zusammenfügen, ohne Upload, direkt im Browser:", "Merge PDFs without uploading them, right in the browser:"), "dim");
+      linkLine("tools.johannesgrof.me", "https://tools.johannesgrof.me/");
+    },
+    () => line(t("Klick fünfmal auf den Kürbis am rechten Rand. Es gibt Kernöl.", "Click the pumpkin in the right margin five times. There is pumpkin seed oil."), "accent"),
+    () => {
+      line(t("Was am Zentralfriedhof gerade abfährt:", "What leaves the Central Cemetery right now:"), "dim");
+      line(`curl -sL johannesgrof.me${de ? "/de" : ""}/hi/oeffi/zentralfriedhof-2-tor`, "accent");
+    },
+  ];
+  treats[Math.floor(Math.random() * treats.length)]!();
+}
+
 function run(raw: string) {
   const value = raw.trim();
   line(`~ $ ${value}`, "cmd");
@@ -382,6 +446,9 @@ function run(raw: string) {
       line(`  train            ${t("ruft den Zug", "calls the train")}`);
       line(`  theme light|dark ${t("Papier wechseln", "switch the paper")}`);
       line("  clear, exit");
+      if (halloween) {
+        line(`  ${"boo trick treat".padEnd(17)}${t("Halloween, bis 1. November", "Halloween, until 1 November")}`, "accent");
+      }
       line(t("Es gibt noch ein paar mehr. Viel Spaß beim Suchen.", "There are a few more. Have fun looking."), "dim");
       break;
     case "ls":
@@ -453,9 +520,17 @@ function run(raw: string) {
       close();
       break;
     case "sudo":
+      if (halloween && /\bghosts?\b/.test(arg)) {
+        line(t("rm: ghosts: Zugriff verweigert. Die waren zuerst da.", "rm: ghosts: Permission denied. They were here first."), "error");
+        break;
+      }
       line(t("Netter Versuch. Hier hast du keine Rechte, nur Lesezugriff.", "Nice try. You only get read access here."), "error");
       break;
     case "rm":
+      if (halloween && /\bghosts?\b/.test(arg)) {
+        line(t("rm: ghosts: Zugriff verweigert. Auch mit sudo nicht.", "rm: ghosts: Permission denied. Not even with sudo."), "error");
+        break;
+      }
       line(t("Nein.", "No."), "error");
       break;
     case "vim":
@@ -524,6 +599,15 @@ function run(raw: string) {
     case "traceroute":
     case "trace":
       void runTrace();
+      break;
+    case "boo":
+      runBoo();
+      break;
+    case "trick":
+      runTrick();
+      break;
+    case "treat":
+      runTreat();
       break;
     default:
       line(t(`Befehl nicht gefunden: ${cmd}. Tipp: help`, `command not found: ${cmd}. Try: help`), "error");

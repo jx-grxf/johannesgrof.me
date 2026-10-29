@@ -7,7 +7,7 @@ export interface DepartureStop {
   diva: number;
 }
 
-/** The stops the home page board can show. A closed list keeps upstream load bounded. */
+/** The stops /api/departures serves (the curl card asks for Praterstern). A closed list keeps upstream load bounded. */
 export const departureStops: DepartureStop[] = [
   { slug: "praterstern", name: "Praterstern", diva: 60201040 },
   { slug: "karlsplatz", name: "Karlsplatz", diva: 60200657 },

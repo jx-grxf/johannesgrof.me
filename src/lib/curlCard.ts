@@ -25,6 +25,8 @@ export interface CardData {
   /** Visitors on the site right now, null when unknown. */
   here: number | null;
   guestbook: { text: string; at: string }[];
+  /** Adds the Halloween command to the list while the season runs. */
+  halloween?: boolean;
 }
 
 export interface BoardData {
@@ -182,28 +184,32 @@ export function wordmark(text = "JOHANNES GROF"): string[] {
 }
 
 // The same train as the pixel sprite on the home page: one carriage and the green front.
+// During Halloween the same cars run dark, with ghosts behind some windows (N, n, G, g, y).
 const TRAIN_PALETTE: Record<string, string> = {
   W: "#ece8dc", w: "#bdb8aa", L: "#a8e22a", l: "#7fae16", Y: "#ffcc4d", D: "#2a2722",
+  N: "#4a443a", n: "#34302a", G: "#5b8c32", g: "#1f3b1a", y: "#8a6a24",
 };
-const car = (body: string, shade: string, front = false) => [
-  `.${body.repeat(front ? 22 : 24)}${front ? "...." : "."}`,
-  `${body.repeat(front ? 24 : 26)}${front ? ".." : ""}`,
-  `${body}${body}${"YYY".concat(body).repeat(5)}${front ? `${body}${body}${body}YY${body}.` : `${body}${body}${body}${body}`}`,
-  `${body}${body}${"YYY".concat(body).repeat(5)}${front ? `${body}${body}${body}YYY${body}` : `${body}${body}${body}${body}`}`,
-  `${body.repeat(front ? 27 : 26)}${front ? "Y" : ""}`,
-  `${shade.repeat(front ? 28 : 26)}`,
-  `.DD....DD.......DD....DD.${front ? "..." : "."}`,
-  "",
-];
-const TRAIN = (() => {
-  const cars = [car("W", "w"), car("L", "l", true)];
-  return cars[0]!.map((_, row) => cars.map((c) => c[row]).join(row === 7 ? "" : "."));
-})();
+const car = (body: string, shade: string, front = false, windows = "YYYYY") => {
+  const row = `${body}${body}${[...windows].map((w) => `${w}${w}${w}${body}`).join("")}`;
+  return [
+    `.${body.repeat(front ? 22 : 24)}${front ? "...." : "."}`,
+    `${body.repeat(front ? 24 : 26)}${front ? ".." : ""}`,
+    `${row}${front ? `${body}${body}${body}YY${body}.` : `${body}${body}${body}${body}`}`,
+    `${row}${front ? `${body}${body}${body}YYY${body}` : `${body}${body}${body}${body}`}`,
+    `${body.repeat(front ? 27 : 26)}${front ? "Y" : ""}`,
+    `${shade.repeat(front ? 28 : 26)}`,
+    `.DD....DD.......DD....DD.${front ? "..." : "."}`,
+    "",
+  ];
+};
+const couple = (cars: string[][]) => cars[0]!.map((_, row) => cars.map((c) => c[row]).join(row === 7 ? "" : "."));
+const TRAIN = couple([car("W", "w"), car("L", "l", true)]);
+const GHOST_TRAIN = couple([car("N", "n", false, "WDyDW"), car("G", "g", true, "yWDyD")]);
 const TRAIN_WIDTH = Math.max(...TRAIN.map((row) => row.length));
 
 /** One animation frame: the train with its nose at column `x`, cut to the card width, over the track. */
-export function trainFrame(x: number): string[] {
-  const grid: Pixel[][] = TRAIN.map((row) => {
+export function trainFrame(x: number, haunted = false): string[] {
+  const grid: Pixel[][] = (haunted ? GHOST_TRAIN : TRAIN).map((row) => {
     const line: Pixel[] = Array<Pixel>(WIDTH).fill(null);
     [...row].forEach((cell, i) => {
       const col = x - TRAIN_WIDTH + i;
@@ -215,11 +221,42 @@ export function trainFrame(x: number): string[] {
   return [...halfBlocks(grid), paint("#5c574d", track)];
 }
 
-export const trainFrames = (step = 3) => {
+export const trainFrames = (step = 3, haunted = false) => {
   const frames: string[][] = [];
-  for (let x = 0; x <= WIDTH + TRAIN_WIDTH; x += step) frames.push(trainFrame(x));
+  for (let x = 0; x <= WIDTH + TRAIN_WIDTH; x += step) frames.push(trainFrame(x, haunted));
   return frames;
 };
+
+// The jack-o'-lantern for curl johannesgrof.me/hi/boo, drawn at double size.
+const PUMPKIN = [
+  ".........gg.........",
+  "........gg..........",
+  "....OOOOOOOOOOOO....",
+  "..OOOOOoOOOOoOOOOO..",
+  ".OOOOOOoOOOOoOOOOOO.",
+  ".OOYYYOoOOOOoOYYYOO.",
+  "OOOOYYOoOOOOoOYYOOOO",
+  "OOOOOYOoOOOOoOYOOOOO",
+  "OOOOOOOoOYYOoOOOOOOO",
+  "OOOOOOOoOOOOoOOOOOOO",
+  "OOYYOYYYYYYYYYYOYYOO",
+  "OOOYYYYOYYYYOYYYYOOO",
+  ".OOOYYYYYYYYYYYYOOO.",
+  ".OOOOOOoOOOOoOOOOOO.",
+  "..OOOOOoOOOOoOOOOO..",
+  "....OOOOOOOOOOOO....",
+];
+const CANDLE = ["#ffcc4d", "#ffb21a", "#ffe08a", "#e09a1e", "#ffd66b"];
+
+/** One frame of the pumpkin; `candle` picks how bright the light inside burns. */
+export function pumpkinFrame(candle = 0): string[] {
+  const colors: Record<string, string> = { O: "#e0832a", o: "#b8621a", g: "#5b8c32", Y: CANDLE[candle % CANDLE.length]! };
+  const grid: Pixel[][] = PUMPKIN.flatMap((row) => {
+    const line = [...row].flatMap((cell) => [colors[cell] ?? null, colors[cell] ?? null]);
+    return [line, [...line]];
+  });
+  return halfBlocks(grid).map((line) => `${" ".repeat(Math.floor((WIDTH - 40) / 2))}${line}`);
+}
 
 const BOX = WIDTH - 2;
 const BOX_INNER = BOX - 4;
@@ -290,7 +327,7 @@ export function card(data: CardData): string {
     ...indent(data.links.map((l) => `${paint(MUTED, l.label.padEnd(9))}${link(l.url, l.url.replace(/^mailto:|^https:\/\//, ""))}`)),
     "",
     ...indent([`${BOLD}${paint(SIGNAL, de ? "BEFEHLE" : "COMMANDS")}${RESET}`]),
-    ...indent(commandLines(data.lang)),
+    ...indent(commandLines(data.lang, data.halloween)),
     "",
     ...indent([
       paint(
@@ -314,13 +351,14 @@ export const hereText = (count: number, lang: "en" | "de") =>
     ? count === 1 ? "1 Person ist gerade auf der Seite" : `${count} Leute sind gerade auf der Seite`
     : count === 1 ? "1 person is on the site right now" : `${count} people are on the site right now`;
 
-function commandLines(lang: "en" | "de"): string[] {
+function commandLines(lang: "en" | "de", halloween = false): string[] {
   const de = lang === "de";
   const rows: [string, string][] = [
     [`curl -sL ${base(lang)}/oeffi/schottentor`, de ? "Abfahrten jeder Wiener Station" : "departures for any stop in Vienna"],
     [`curl -sL ${base(lang)}/who`, de ? "wer gerade auf der Seite ist" : "who is on the site right now"],
     [`curl -d "servus" https://${base(lang)}/sign`, de ? "ins Gästebuch schreiben" : "sign the guestbook"],
     [`curl -sL ${base(lang)}/help`, de ? "alle Befehle, auch Zug rufen" : "every command, calling the train too"],
+    ...(halloween ? [[`curl -sL ${base(lang)}/boo`, de ? "Halloween, bis 1. November" : "Halloween, until 1 November"] as [string, string]] : []),
   ];
   return rows.flatMap(([command, what]) => [paint(INK, command), `  ${paint(MUTED, what)}`]);
 }
@@ -358,12 +396,12 @@ export function messageCard(lines: { text: string; tone?: "ok" | "muted" | "erro
   return `\n${lines.map((line) => `  ${paint(color[line.tone ?? "plain"], line.text)}`).join("\n")}\n\n${RESET}`;
 }
 
-export function helpCard(lang: "en" | "de"): string {
+export function helpCard(lang: "en" | "de", halloween = false): string {
   const de = lang === "de";
   return [
     "",
     `  ${BOLD}${paint(SIGNAL, de ? "BEFEHLE" : "COMMANDS")}${RESET}`,
-    ...commandLines(lang).map((line) => `  ${line}`),
+    ...commandLines(lang, halloween).map((line) => `  ${line}`),
     `  ${paint(INK, `curl -X POST https://${base(lang)}/zug/<code>`)}`,
     `    ${paint(MUTED, de ? "schickt den Pixel-Zug durch deinen Browser-Tab; den Code" : "sends the pixel train through your browser tab; the code")}`,
     `    ${paint(MUTED, de ? `zeigt dir johannesgrof.me${lang === "de" ? "/de" : ""}/hi/ oder das Terminal der Seite (zug)` : "is on johannesgrof.me/hi/ or in the site terminal (train call)")}`,

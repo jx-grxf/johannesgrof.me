@@ -1,0 +1,258 @@
+/* ---------------------------------------------------------------------------
+   Halloween, 24 October to 1 November (src/lib/season.ts).
+
+   Everything here hangs off data-season on <html>, which the head script in
+   BaseHead sets before the first paint. Outside the window none of it applies
+   and the site is exactly the paper it always is. The rules of the system
+   still hold: no glow, no gradients, hard pixel steps, motion off for anyone
+   who asked for less.
+   --------------------------------------------------------------------------- */
+
+:root:not([data-season="halloween"]) .season-on,
+:root[data-season="halloween"] .season-off {
+  display: none !important;
+}
+
+/* Pumpkin takes the place of signal red. 8.0:1 on dark paper. */
+:root[data-season="halloween"] {
+  --signal: #ff8a2a;
+  --signal-ink: #ffa552;
+  --signal-line: rgb(255 138 42 / 42%);
+}
+
+/* 5.0:1 on light paper; the brighter #b35400 lands at 4.49 and misses AA. */
+:root[data-season="halloween"][data-theme="light"] {
+  --signal: #a84f00;
+  --signal-ink: #8f4300;
+  --signal-line: rgb(168 79 0 / 40%);
+}
+
+/* Amber next to pumpkin would read as one colour; the middle step goes violet. */
+:root[data-season="halloween"] .edge-amber {
+  background: #5e3d7d;
+}
+
+/* The candle inside the jack-o'-lantern. Animations beat the inline fill. */
+.pixel-flicker {
+  animation: pixel-flicker 2.6s steps(1) infinite;
+}
+
+@keyframes pixel-flicker {
+  0% { fill: #ffcc4d; }
+  9% { fill: #ffb21a; }
+  14% { fill: #ffe08a; }
+  38% { fill: #ffcc4d; }
+  61% { fill: #e09a1e; }
+  66% { fill: #ffd66b; }
+  71% { fill: #ffcc4d; }
+}
+
+/* 404: behind the buffer stop, a grave for the page that isn't there. */
+.notfound-grave {
+  position: relative;
+  z-index: 1;
+  width: 34px;
+  margin-bottom: 4px;
+  margin-left: 18px;
+}
+
+.notfound-grave svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* A ghost crossing the screen when someone types "boo" (scripts/halloween.ts). */
+.ghost-swoop {
+  position: fixed;
+  z-index: 61;
+  width: 54px;
+  pointer-events: none;
+}
+
+.ghost-swoop svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The flashlight evening (31 October from 17:00). A low-resolution canvas,
+   scaled up without smoothing, so the edge of the light is a pixel staircase. */
+.flashlight {
+  position: fixed;
+  inset: 0;
+  z-index: 55;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+.lights-toggle {
+  position: fixed;
+  bottom: 18px;
+  left: 18px;
+  z-index: 56;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 1px solid #544d40;
+  background: #12110f;
+  color: #f1eee5;
+  font-family: var(--font-mono);
+  font-size: var(--label-size);
+  letter-spacing: var(--label-track);
+  text-transform: uppercase;
+}
+
+.lights-toggle:hover,
+.lights-toggle:focus-visible {
+  border-color: #ff8a2a;
+  color: #ffa552;
+}
+
+.lights-toggle-key {
+  padding: 1px 5px;
+  border: 1px solid currentColor;
+  font-size: 0.66rem;
+}
+
+/* The pointer over anything clickable goes pumpkin too (same path as cursors.css). */
+@media (hover: hover) and (pointer: fine) {
+  :root[data-season="halloween"] :is(a, button, summary, label[for], select, [role="button"], [data-egg], .hero-train) {
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='21' viewBox='0 0 16 22'%3E%3Cpath d='M2.2 1.6v15.9l3.9-3.7 2.6 5.8 2.7-1.2-2.6-5.7h5.4z' fill='%23ff8a2a' stroke='%2314130f' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E") 2 1, pointer;
+    cursor: image-set(url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='15' height='21' viewBox='0 0 16 22'%3E%3Cpath d='M2.2 1.6v15.9l3.9-3.7 2.6 5.8 2.7-1.2-2.6-5.7h5.4z' fill='%23ff8a2a' stroke='%2314130f' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E") 1x, url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='42' viewBox='0 0 16 22'%3E%3Cpath d='M2.2 1.6v15.9l3.9-3.7 2.6 5.8 2.7-1.2-2.6-5.7h5.4z' fill='%23ff8a2a' stroke='%2314130f' stroke-width='1.6' stroke-linejoin='round'/%3E%3C/svg%3E") 2x) 2 1, pointer;
+  }
+
+  :root[data-season="halloween"] button:disabled {
+    cursor: not-allowed;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-flicker,
+  .spider button {
+    animation: none;
+  }
+
+  .spider-thread,
+  .spider button {
+    transition: none;
+  }
+}
+
+@media print {
+  .flashlight,
+  .spider,
+  .lights-toggle,
+  .ghost-swoop {
+    display: none !important;
+  }
+}
+
+/* The spiders on the frame lines (scripts/halloween.ts). Under the sticky
+   header, so the thread seems to come out from behind it. */
+.spider {
+  position: fixed;
+  top: 0;
+  z-index: 45;
+  width: 0;
+}
+
+.spider-thread {
+  position: absolute;
+  top: 0;
+  left: -0.5px;
+  width: 1px;
+  height: var(--thread);
+  background: var(--rule-2);
+  transition: height 240ms steps(6);
+}
+
+/* The sprite is small; the button reaches a little further. */
+.spider button {
+  position: absolute;
+  top: calc(var(--thread) - 6px);
+  left: -17px;
+  padding: 6px;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transform-origin: 50% 0;
+  transition: top 240ms steps(6);
+  animation: spider-sway 5s steps(10) infinite alternate;
+}
+
+.spider.is-up .spider-thread {
+  height: 72px;
+}
+
+.spider.is-up button {
+  top: 66px;
+}
+
+.spider svg {
+  display: block;
+  width: 22px;
+  height: 16px;
+}
+
+@keyframes spider-sway {
+  from { transform: rotate(-3deg); }
+  to { transform: rotate(3deg); }
+}
+
+/* Margins under 32px leave no room; the spiders would hang over the text. */
+@media (max-width: 720px) {
+  .spider {
+    display: none;
+  }
+}
+
+/* The drop, inside the ÖffiGo band (data/halloween.ts). */
+.season-drop {
+  margin: 22px 0 6px;
+  padding: 16px 18px 18px;
+  border: 1px solid var(--signal-line);
+  border-left: 3px solid var(--signal);
+}
+
+.season-drop p:not(.eyebrow) {
+  margin: 6px 0 14px;
+}
+
+/* The commit grid turns into a pumpkin patch. */
+:root[data-season="halloween"] .contrib-grid rect:not(.lvl-0) {
+  fill: var(--signal);
+}
+
+:root[data-season="halloween"] .contrib-grid .is-selected {
+  fill: var(--ink);
+}
+
+:root[data-season="halloween"] ::selection {
+  background: var(--signal);
+  color: #12110f;
+}
+
+/* The footer heart is a jack-o'-lantern for two weeks, a little wider. */
+:root[data-season="halloween"] .footer-heart {
+  width: 16px;
+}
+
+/* trick in the terminal: the lights go out for a moment. Under the terminal. */
+.blackout {
+  position: fixed;
+  inset: 0;
+  z-index: 59;
+  background: #000;
+  pointer-events: none;
+}
+
+/* On light paper the ghost's pale outline nearly vanishes; give it a darker one.
+   The fills are inline styles from the sprite, hence the attribute match. */
+:root[data-theme="light"] .ghost-swoop rect[style*="#bdb8aa"] {
+  fill: #6e6a5f !important;
+}

@@ -3,6 +3,7 @@
 @import "@fontsource-variable/geist";
 @import "@fontsource-variable/geist-mono";
 @import "./cursors.css";
+@import "./halloween.css";
 
 /* ---------------------------------------------------------------------------
    Editorial design system.
@@ -172,19 +173,24 @@ body::after {
   pointer-events: none;
 }
 
-/* Every label on the site: eyebrows, section kickers, meta keys. */
+/* Kickers are set in plain sentence case. Mono caps on every label was the
+   look of a hundred portfolio templates (changed 2026-10-19); mono now only
+   marks things that really are terminal or data. */
 .eyebrow {
   margin: 0;
   color: var(--mute);
+  font-size: 0.92rem;
+  font-weight: 500;
+}
+
+/* A path or a prompt, not a kicker: /uses, ~ $, 404. */
+.eyebrow--code {
   font-family: var(--font-mono);
   font-size: var(--label-size);
   font-weight: 400;
-  letter-spacing: var(--label-track);
-  text-transform: uppercase;
 }
 
-/* The numbered print header: a set-in number block, the title, and a hairline
-   under the whole thing — the one device that repeats on every section. */
+/* Section header: the title over a hairline. */
 .section-head {
   display: flex;
   align-items: baseline;
@@ -194,22 +200,11 @@ body::after {
   border-bottom: 1px solid var(--rule-2);
 }
 
-.section-head .section-num {
-  flex: none;
-  padding: 2px 7px;
-  background: var(--ink);
-  color: var(--paper);
-  font-family: var(--font-mono);
-  font-size: var(--label-size);
-  letter-spacing: 0.1em;
-}
-
 .section-head h2 {
   margin: 0;
-  font-size: 0.86rem;
+  color: var(--ink-2);
+  font-size: 0.98rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
 }
 
 /* Sections are separated by a hairline, not by cards or shadows. */
@@ -299,10 +294,8 @@ body::after {
 .site-nav {
   display: flex;
   align-items: stretch;
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .site-nav a {
@@ -373,10 +366,8 @@ body::after {
   padding: 0;
   background: none;
   color: var(--mute);
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 500;
   line-height: 1;
   transition: color 160ms ease;
 }
@@ -429,10 +420,8 @@ body::after {
   padding: 13px 26px;
   background: transparent;
   color: var(--ink);
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
+  font-size: 0.94rem;
+  font-weight: 500;
   transition:
     background 160ms ease,
     color 160ms ease,
@@ -886,10 +875,8 @@ body::after {
 
 .contact-field label {
   color: var(--mute);
-  font-family: var(--font-mono);
-  font-size: var(--label-size);
-  letter-spacing: var(--label-track);
-  text-transform: uppercase;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .contact-field input,
@@ -949,10 +936,8 @@ body::after {
   padding: 13px 30px;
   background: var(--ink);
   color: var(--paper);
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
+  font-size: 0.94rem;
+  font-weight: 500;
   transition:
     background 160ms ease,
     border-color 160ms ease;
@@ -1133,10 +1118,8 @@ body::after {
   margin: 28px 0 0;
   padding: 20px 0 0;
   border-top: 1px solid var(--rule);
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.92rem;
+  font-weight: 500;
 }
 
 .social-row a {
@@ -1264,10 +1247,8 @@ body::after {
 .footer-col-title {
   margin-bottom: 14px !important;
   color: var(--faint);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: var(--label-track);
-  text-transform: uppercase;
+  font-size: 0.86rem;
+  font-weight: 500;
 }
 
 .footer-col ul {
@@ -2367,8 +2348,7 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   display: flex;
   flex-wrap: wrap;
   gap: 12px 24px;
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
+  font-size: 0.9rem;
 }
 .product-footnote a {
   padding-block: 6px;
@@ -2643,10 +2623,8 @@ html[lang="de"] .error-page [data-error-lang="en"] {
 
 .hero-status dt {
   color: var(--faint);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: var(--label-track);
-  text-transform: uppercase;
+  font-size: 0.86rem;
+  font-weight: 500;
 }
 
 .hero-status dd {
@@ -2978,10 +2956,8 @@ html[lang="de"] .error-page [data-error-lang="en"] {
 .stack-proof span {
   flex-basis: 100%;
   color: var(--faint);
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  letter-spacing: var(--label-track);
-  text-transform: uppercase;
+  font-size: 0.84rem;
+  font-weight: 500;
 }
 
 .stack-proof a {
@@ -3710,24 +3686,6 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   white-space: nowrap;
 }
 
-.dep-ticker {
-  margin: 0;
-  border-top: 2px solid #3a2a0c;
-  color: #ffd27a;
-}
-
-.dep-ticker[hidden] {
-  display: none;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .led-ticker.dep-ticker > span {
-    padding-left: 0;
-    white-space: normal;
-    animation: none;
-  }
-}
-
 .led-ticker > span {
   display: inline-block;
   padding-left: 100%;
@@ -4379,191 +4337,10 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   }
 }
 
-/* ---------------------------------------------------------------------------
-   Live departures board in the ÖffiGo band (reuses the LED board look)
-   --------------------------------------------------------------------------- */
-
-.dep-board {
-  margin-top: clamp(48px, 6vw, 72px);
-}
-
-.dep-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 14px 24px;
-  margin-bottom: 16px;
-}
-
-.dep-head h3 {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.dep-stops {
-  display: flex;
-  flex-wrap: wrap;
-  border: 1px solid var(--rule-2);
-}
-
-.dep-stops button {
-  border: 0;
-  border-right: 1px solid var(--rule-2);
-  padding: 8px 14px;
-  background: none;
-  color: var(--ink-2);
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.dep-stops button:last-child {
-  border-right: 0;
-}
-
-.dep-stops button:hover {
-  background: var(--paper-3);
-  color: var(--ink);
-}
-
-.dep-stops button[aria-pressed="true"] {
-  background: var(--ink);
-  color: var(--paper);
-}
-
-.dep-led {
-  margin-top: 0;
-  padding-bottom: 6px;
-}
-
-.dep-rows {
-  min-height: 120px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.dep-row {
-  display: grid;
-  grid-template-columns: 4.6ch minmax(0, 1fr) auto 6.5ch;
-  align-items: baseline;
-  gap: 0 clamp(10px, 2vw, 24px);
-  padding: 10px 0;
-  border-bottom: 2px solid #3a2a0c;
-  font-size: clamp(1rem, 2.2vw, 1.4rem);
-  font-weight: 700;
-}
-
-/* While a cell flips, a hairline across the middle shows the split between
-   the two flap halves, like on the station boards. */
-.dep-row .is-flipping {
-  background-image: linear-gradient(to bottom, transparent calc(50% - 1px), rgb(0 0 0 / 55%) calc(50% - 1px), rgb(0 0 0 / 55%) calc(50% + 1px), transparent calc(50% + 1px));
-  color: #ffd27a;
-}
-
-.dep-line.is-flipping {
-  background-color: #ffae1a;
-  color: #070706;
-}
-
-.dep-line {
-  padding: 3px 0 1px;
-  background: #ffae1a;
-  color: #070706;
-  font-size: 0.74em;
-  font-weight: 800;
-  text-align: center;
-  text-shadow: none;
-}
-
-.dep-dest {
-  min-width: 0;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.dep-kind {
-  color: #8a6512;
-  font-size: 0.52em;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.dep-kind--rt {
-  color: #ffd27a;
-}
-
-.dep-eta {
-  text-align: right;
-}
-
-.dep-eta--now {
-  animation: led-blink 1.2s steps(1) infinite;
-}
-
-.dep-status {
-  margin: 0;
-  padding: 10px 0 6px;
-  font-size: 0.9rem;
-}
-
-.dep-status:empty {
-  display: none;
-}
-
-.dep-board[data-state="error"] .dep-status {
-  color: #ff5a3c;
-}
-
-.dep-note {
-  max-width: 80ch;
-  margin: 12px 0 0;
-  color: var(--mute);
-  font-size: 0.84rem;
-  line-height: 1.6;
-}
-
-.dep-note a {
-  border-bottom: 1px solid var(--rule-2);
-  color: var(--ink-2);
-}
-
-.dep-note a:hover {
-  border-bottom-color: var(--signal);
-  color: var(--signal);
-}
-
-@media (max-width: 560px) {
-  .dep-row {
-    grid-template-columns: 4.2ch minmax(0, 1fr) 6ch;
-  }
-
-  .dep-kind {
-    display: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .dep-eta--now {
-    animation: none;
-  }
-}
-
 /* Touch targets on phones: at least 44px. Controls grow their box; underlined
    text links keep their look and get a larger invisible hit area instead, so
    the underline stays tight under the text. */
 @media (max-width: 860px) {
-  .dep-stops button {
-    min-height: 44px;
-  }
-
   .footer-socials a {
     display: inline-flex;
     align-items: center;
@@ -4587,7 +4364,6 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   .stack-proof a,
   .contact-email-alternative,
   .product-footnote a,
-  .dep-note a,
   .contact-privacy-note a,
   .contact-section .text-link {
     position: relative;
@@ -4596,7 +4372,6 @@ html[lang="de"] .error-page [data-error-lang="en"] {
   .stack-proof a::after,
   .contact-email-alternative::after,
   .product-footnote a::after,
-  .dep-note a::after,
   .contact-privacy-note a::after,
   .contact-section .text-link::after {
     content: "";

@@ -23,7 +23,7 @@ const navItems = [
     <SiteHeader navItems={navItems} ariaLabel="Site navigation" homeHref="/" lang="en" />
     <main id="main" class="notfound section-shell">
       <div class="notfound-topline">
-        <p class="eyebrow"><span data-error-lang="en">404 / page not found</span><span data-error-lang="de">404 / Seite nicht gefunden</span></p>
+        <p class="eyebrow eyebrow--code"><span data-error-lang="en">404 / page not found</span><span data-error-lang="de">404 / Seite nicht gefunden</span></p>
         <div class="error-language" role="group" aria-label="Language / Sprache">
           <button type="button" data-error-language="en" aria-pressed="true">EN</button>
           <span aria-hidden="true">/</span>
@@ -61,15 +61,18 @@ const navItems = [
         </ul>
         <div class="led-ticker" aria-hidden="true">
           <span>
-            <span data-error-lang="en">Reason: the page has moved or was never built. We apologise for the inconvenience.</span>
-            <span data-error-lang="de">Grund: Die Seite wurde verschoben oder nie gebaut. Wir bitten um Ihr Verständnis.</span>
+            <span class="season-off" data-error-lang="en">Reason: the page has moved or was never built. We apologise for the inconvenience.</span>
+            <span class="season-off" data-error-lang="de">Grund: Die Seite wurde verschoben oder nie gebaut. Wir bitten um Ihr Verständnis.</span>
+            <span class="season-on" data-error-lang="en">Reason: this page has passed away. It took the 71 to the Central Cemetery. We apologise for the inconvenience.</span>
+            <span class="season-on" data-error-lang="de">Grund: Diese Seite ist verstorben. Sie ist mit dem 71er gefahren. Wir bitten um Ihr Verständnis.</span>
           </span>
         </div>
       </section>
 
       <div class="notfound-track" aria-hidden="true">
-        <span class="notfound-train"><PixelSprite name="train" /></span>
+        <span class="notfound-train"><PixelSprite name="train" class="season-off" /><PixelSprite name="ghosttrain" class="season-on" /></span>
         <span class="notfound-buffer"><PixelSprite name="buffer" /></span>
+        <span class="notfound-grave season-on"><PixelSprite name="grave" /></span>
       </div>
 
       <div data-error-lang="en" lang="en">
