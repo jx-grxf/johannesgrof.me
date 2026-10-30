@@ -90,8 +90,6 @@ document.addEventListener("keydown", (event) => {
   }
 });
 
-document.querySelectorAll<HTMLElement>("[data-print-cv]").forEach((button) => button.addEventListener("click", () => window.print()));
-
 document.querySelectorAll<HTMLElement>("[data-terminal-open]").forEach((button) => {
   button.addEventListener("click", openLazily);
 });

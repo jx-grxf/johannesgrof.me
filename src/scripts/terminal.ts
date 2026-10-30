@@ -37,7 +37,7 @@ const links: Record<string, string> = {
 };
 
 const halloween = seasonOn();
-const commands = ["help", "ls", "open", "stack", "about", "contact", "ping", "status", "traceroute", "who", "uses", "zug", "call", "guestbook", "gaestebuch", "curl", "cv", "train", "theme", "clear", "exit", ...(halloween ? ["boo", "trick", "treat"] : [])];
+const commands = ["help", "ls", "open", "stack", "about", "contact", "ping", "status", "traceroute", "who", "uses", "zug", "call", "guestbook", "gaestebuch", "curl", "train", "theme", "clear", "exit", ...(halloween ? ["boo", "trick", "treat"] : [])];
 
 let root: HTMLElement | undefined;
 let output: HTMLElement;
@@ -501,7 +501,6 @@ function run(raw: string) {
       line(`  status           ${t("Verbindung im Detail: Edge, Protokoll, Timings", "connection details: edge, protocol, timings")}`);
       line(`  traceroute       ${t("Weg bis zum Server", "path to the server")}`);
       line(`  curl             ${t("die Seite im echten Terminal", "this site in a real terminal")}`);
-      line(`  cv               ${t("einseitiger Lebenslauf zum Drucken", "one-page CV to print")}`);
       line(`  who              ${t("wer gerade auf der Seite ist", "who is on the site right now")}`);
       line(`  uses             ${t("womit ich arbeite, das ganze Setup", "my whole setup")}`);
       line(`  ${t("zug             ", "call            ")} ${t("Zug per curl aus deinem Terminal rufen", "call the train with curl from your terminal")}`);
@@ -621,12 +620,6 @@ function run(raw: string) {
       line(t("MacBook Pro M5 Pro · Ghostty · Claude Code · Codex · Xcode · VS Code", "MacBook Pro M5 Pro · Ghostty · Claude Code · Codex · Xcode · VS Code"), "accent");
       line(t("Die ganze Liste:", "The whole list:"), "dim");
       linkLine(`${data.prefix}/uses/`, `${data.prefix}/uses/`);
-      break;
-    case "cv":
-    case "lebenslauf":
-    case "lpr":
-      line(t("Schicke den Lebenslauf an den Drucker …", "Sending the CV to the printer …"), "dim");
-      window.setTimeout(() => window.print(), 300);
       break;
     case "who":
     case "w":
