@@ -141,7 +141,7 @@ const en: LocaleContent = {
       {
         title: "Web",
         items: ["TypeScript", "Astro", "Vite", "Vercel", "Cloudflare"],
-        proof: ["kontobuch", "tools", "johannesgrof-me"],
+        proof: ["kontobuch", "typesilk", "tools", "johannesgrof-me"],
       },
       {
         title: "CLI and tools",
@@ -236,7 +236,7 @@ const de: LocaleContent = {
       {
         title: "Web",
         items: ["TypeScript", "Astro", "Vite", "Vercel", "Cloudflare"],
-        proof: ["kontobuch", "tools", "johannesgrof-me"],
+        proof: ["kontobuch", "typesilk", "tools", "johannesgrof-me"],
       },
       {
         title: "CLI und Tools",

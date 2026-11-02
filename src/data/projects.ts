@@ -475,22 +475,22 @@ export const featuredProjects: Project[] = [
     status: "experimental",
     tagline: "Read-only Apple Health context for MCP-capable agents.",
     description:
-      "A bridge that syncs Apple Health aggregates from an iPhone app into a scoped backend and exposes sleep, workouts, training load, and trends through a read-only Model Context Protocol server.",
+      "A bridge that syncs Apple Health aggregates from an iPhone app and exposes sleep, workouts, training load, and trends through a read-only Model Context Protocol server.",
     caseStudy: {
       problem: "Apple Health has rich personal context, but there is no normal server API an agent can read from safely.",
-      built: "A TypeScript MCP server, Supabase schema, and iOS HealthKit sync plan that move aggregate summaries instead of raw health samples.",
+      built: "A TypeScript MCP server and an iOS HealthKit sync that move aggregate summaries instead of raw health samples.",
     },
     de: {
       tagline: "Read-only Apple-Health-Kontext für MCP-fähige Agents.",
       description:
-        "Eine Brücke, die Apple-Health-Aggregate aus einer iPhone-App in ein abgegrenztes Backend synchronisiert und Schlaf, Workouts, Trainingslast und Trends über einen read-only Model-Context-Protocol-Server verfügbar macht.",
+        "Eine Brücke, die Apple-Health-Aggregate aus einer iPhone-App synchronisiert und Schlaf, Workouts, Trainingslast und Trends über einen read-only Model-Context-Protocol-Server verfügbar macht.",
       caseStudy: {
         problem: "Apple Health enthält wertvollen persönlichen Kontext, aber es gibt keine normale Server-API, aus der ein Agent sicher lesen kann.",
-        built: "Einen TypeScript-MCP-Server, ein Supabase-Schema und einen iOS-HealthKit-Sync-Plan, der Aggregate statt roher Health-Samples bewegt.",
+        built: "Einen TypeScript-MCP-Server und einen iOS-HealthKit-Sync, die Aggregate statt roher Health-Samples bewegen.",
       },
       highlights: [
         "Read-only MCP-Tools für tägliche Zusammenfassungen, Schlaf, Workouts, Trainingslast und Trends.",
-        "Demo-Modus läuft ohne Backend; Supabase-Pfad ist für echte Nutzertrennung vorbereitet.",
+        "Ein Demo-Modus läuft ohne Konto; getrennte Daten pro Person sind vorbereitet.",
         "iPhone liest HealthKit lokal und synchronisiert Aggregate statt Rohsamples.",
         "Für ChatGPT, Claude, Codex und Claude Code als MCP-Connector gedacht.",
       ],
@@ -500,10 +500,10 @@ export const featuredProjects: Project[] = [
     githubUrl: "https://github.com/jx-grxf/HealthKit-MCP",
     releaseUrl: "https://github.com/jx-grxf/HealthKit-MCP/releases",
     fallbackVersion: "unreleased",
-    platformLabels: ["MCP", "iOS", "Supabase"],
+    platformLabels: ["MCP", "iOS"],
     highlights: [
       "Read-only MCP tools for daily summaries, sleep, workouts, training load, and trends.",
-      "Demo mode runs without a backend; the Supabase path is prepared for real user isolation.",
+      "A demo mode runs without an account; separate data per person is prepared.",
       "The iPhone side reads HealthKit locally and syncs aggregates instead of raw samples.",
       "Built for ChatGPT, Claude, Codex, and Claude Code as MCP-capable clients.",
     ],
@@ -1027,13 +1027,13 @@ export const featuredProjects: Project[] = [
     repo: "jx-grxf/cswap",
     githubUrl: "https://github.com/jx-grxf/cswap",
     releaseUrl: "https://github.com/jx-grxf/cswap/releases/tag/v2.0.0",
-    fallbackVersion: "v2.0.0",
+    fallbackVersion: "v2.1.1",
     platformLabels: ["macOS"],
     fallbackDownloads: [
       {
-        assetName: "CSwap-2.0.0.zip",
-        assetUrl: "https://github.com/jx-grxf/cswap/releases/download/v2.0.0/CSwap-2.0.0.zip",
-        size: 8119437,
+        assetName: "CSwap-2.1.1.zip",
+        assetUrl: "https://github.com/jx-grxf/cswap/releases/download/v2.1.1/CSwap-2.1.1.zip",
+        size: 8200439,
         kind: "macos",
       },
     ],
@@ -1082,13 +1082,13 @@ export const featuredProjects: Project[] = [
     repo: "jx-grxf/DysonBar",
     githubUrl: "https://github.com/jx-grxf/DysonBar",
     releaseUrl: "https://github.com/jx-grxf/DysonBar/releases/tag/v0.1.0",
-    fallbackVersion: "v0.1.0",
+    fallbackVersion: "v0.1.1",
     installCommand: "brew tap jx-grxf/tap && brew trust --cask jx-grxf/tap/dysonbar && brew install --cask dysonbar",
     platformLabels: ["macOS 15+"],
     fallbackDownload: {
-      assetName: "DysonBar-0.1.0.dmg",
-      assetUrl: "https://github.com/jx-grxf/DysonBar/releases/download/v0.1.0/DysonBar-0.1.0.dmg",
-      size: 6666878,
+      assetName: "DysonBar-0.1.1.dmg",
+      assetUrl: "https://github.com/jx-grxf/DysonBar/releases/download/v0.1.1/DysonBar-0.1.1.dmg",
+      size: 6675993,
       kind: "macos",
     },
     highlights: [
@@ -1304,12 +1304,12 @@ export const featuredProjects: Project[] = [
     repo: "jx-grxf/BeamMac",
     githubUrl: "https://github.com/jx-grxf/BeamMac",
     releaseUrl: "https://github.com/jx-grxf/BeamMac/releases/tag/v0.1.0",
-    fallbackVersion: "v0.1.0",
+    fallbackVersion: "v0.1.1",
     platformLabels: ["macOS 14+", "Apple Silicon"],
     fallbackDownload: {
-      assetName: "BeamMac-0.1.0.dmg",
-      assetUrl: "https://github.com/jx-grxf/BeamMac/releases/download/v0.1.0/BeamMac-0.1.0.dmg",
-      size: 865455,
+      assetName: "BeamMac-0.1.1.dmg",
+      assetUrl: "https://github.com/jx-grxf/BeamMac/releases/download/v0.1.1/BeamMac-0.1.1.dmg",
+      size: 876071,
       kind: "macos",
     },
     highlights: [
@@ -1413,6 +1413,106 @@ export const featuredProjects: Project[] = [
     visibility: "public",
   },
   {
+    name: "typesilk",
+    slug: "typesilk",
+    status: "beta",
+    logo: {
+      src: "/projects/typesilk/logo.webp",
+      fallbackSrc: "/projects/typesilk/logo.png",
+      alt: "typesilk icon: an orange caret on black",
+      fit: "contain",
+      width: 256,
+      height: 256,
+    },
+    tagline: "A typing test where the words glide under a still caret.",
+    description:
+      "A typing test in the browser. The text moves on one continuous spring that keeps its speed between keystrokes, so it runs smoother the faster you type. Nine modes, four languages, sound packs cut from real keyboard recordings, and a coach that builds runs around your weakest keys. It works without an account; signing in with GitHub or Google adds the daily leaderboard and syncs your profile across devices.",
+    caseStudy: {
+      problem: "Most typing tests start a short animation for every key. When you type fast, each one gets cut off by the next and the motion keeps restarting.",
+      built: "TypeScript and Vite with no UI framework. Letter positions are measured once per word, and every frame after that only moves things with transforms: 1.6 layout passes per keypress against 11.7 for Monkeytype in the same headless Chrome run. Before a daily run goes on the leaderboard, its recorded keystrokes are replayed and checked.",
+    },
+    de: {
+      tagline: "Ein Tipptest, bei dem die Wörter unter einem ruhigen Cursor durchgleiten.",
+      description:
+        "Ein Tipptest im Browser. Der Text bewegt sich auf einer durchgehenden Feder, die ihr Tempo zwischen den Anschlägen hält, darum läuft er umso ruhiger, je schneller du tippst. Neun Modi, vier Sprachen, Sound-Packs aus echten Tastaturaufnahmen und ein Trainer, der Durchgänge um deine schwächsten Tasten baut. Ein Konto brauchst du nicht; mit GitHub oder Google angemeldet kommst du auf die Tages-Rangliste und dein Profil ist auf allen Geräten gleich.",
+      caseStudy: {
+        problem: "Die meisten Tipptests starten bei jeder Taste eine kurze Animation. Wer schnell tippt, bricht jede davon mit der nächsten ab, und die Bewegung fängt ständig neu an.",
+        built: "TypeScript und Vite ohne UI-Framework. Die Buchstabenpositionen werden einmal pro Wort gemessen, danach bewegt jedes Frame nur noch per Transform: 1,6 Layout-Durchläufe pro Tastendruck, Monkeytype braucht im selben Headless-Chrome-Lauf 11,7. Bevor ein Tageslauf in die Rangliste kommt, werden seine aufgezeichneten Anschläge nachgespielt und geprüft.",
+      },
+      highlights: [
+        "Neun Modi: Zeit, Wörter, Zitate, Zen, eigener Text, fehlerfrei, endlos, Training und ein Tageslauf mit denselben 40 Wörtern für alle.",
+        "Englisch, Deutsch, Spanisch und Französisch, auf Wunsch mit Satzzeichen und Zahlen.",
+        "Fehler und Tempo pro Buchstabe, eine Tastatur im Layout deiner Sprache, die deine Schwachstellen einfärbt, und ein Geister-Cursor deines besten Laufs zum Mitrennen.",
+        "Vier Themes, vier Sound-Packs, eine Befehlspalette für jede Einstellung. Reduzierte Bewegung wird respektiert.",
+        "Alles bleibt im Browser. Anmelden ist freiwillig und nur für die Rangliste und den Abgleich zwischen Geräten nötig.",
+      ],
+    },
+    stack: ["TypeScript", "Vite"],
+    repo: "jx-grxf/typesilk",
+    githubUrl: "https://github.com/jx-grxf/typesilk",
+    releaseUrl: "https://github.com/jx-grxf/typesilk/releases/latest",
+    liveUrl: "https://typesilk.com",
+    fallbackVersion: "v0.2.0",
+    platformLabels: ["Web"],
+    highlights: [
+      "Nine modes: time, words, quote, zen, custom, perfect, endless, train, and a daily run with the same 40 words for everyone.",
+      "English, German, Spanish and French, with optional punctuation and numbers.",
+      "Errors and speed per letter, a keyboard in your language's layout that shades your weak keys, and a ghost caret of your best run to race.",
+      "Four themes, four sound packs and a command palette that reaches every setting. Reduced motion is respected.",
+      "Everything stays in your browser. Signing in is optional and only needed for the leaderboard and syncing between devices.",
+    ],
+    showcase: [
+      {
+        src: "/projects/typesilk/typing.mp4",
+        kind: "video",
+        posterSrc: "/projects/typesilk/typing-poster.webp",
+        fallbackSrc: "/projects/typesilk/typing-poster.png",
+        alt: "Words in a large serif gliding under an orange caret while someone types",
+        altDe: "Wörter in großer Serifenschrift gleiten beim Tippen unter einem orangen Cursor durch",
+        fit: "contain",
+        width: 880,
+        height: 206,
+      },
+      {
+        src: "/projects/typesilk/results.webp",
+        fallbackSrc: "/projects/typesilk/results.png",
+        alt: "Results with a very large words-per-minute number, statistics and a speed chart",
+        altDe: "Ergebnis mit sehr großer Wörter-pro-Minute-Zahl, Statistik und Tempoverlauf",
+        fit: "contain",
+        width: 1600,
+        height: 900,
+      },
+      {
+        src: "/projects/typesilk/profile.webp",
+        fallbackSrc: "/projects/typesilk/profile.png",
+        alt: "Profile page with badges, key figures and a year of daily activity",
+        altDe: "Profilseite mit Abzeichen, Kennzahlen und einem Jahr Tagesaktivität",
+        fit: "contain",
+        width: 1600,
+        height: 900,
+      },
+      {
+        src: "/projects/typesilk/theme-klein.webp",
+        fallbackSrc: "/projects/typesilk/theme-klein.png",
+        alt: "The klein theme: cream type on saturated blue",
+        altDe: "Das Theme klein: cremefarbene Schrift auf kräftigem Blau",
+        fit: "contain",
+        width: 1600,
+        height: 900,
+      },
+      {
+        src: "/projects/typesilk/palette.webp",
+        fallbackSrc: "/projects/typesilk/palette.png",
+        alt: "Command palette listing themes, with one previewed behind it",
+        altDe: "Befehlspalette mit Themes, eines davon dahinter in der Vorschau",
+        fit: "contain",
+        width: 1600,
+        height: 900,
+      },
+    ],
+    visibility: "public",
+  },
+  {
     name: "Tools",
     slug: "tools",
     status: "active",
@@ -1435,7 +1535,6 @@ export const featuredProjects: Project[] = [
         "Zusammenführen, teilen, Seiten extrahieren und löschen, drehen, PDF zu Bildern, Bilder zu PDF, Bildformate konvertieren.",
         "Alles läuft im Browser: keine Datei wird hochgeladen, kein Konto, kein Größenlimit außer dem Arbeitsspeicher.",
         "Ergebnisse einzeln oder als ZIP; die Grenzen (kein OCR, keine verschlüsselten PDFs) stehen offen im README.",
-        "Deployment aus GitHub Actions über OIDC und SSM, ohne langlebigen AWS-Key im Repository.",
       ],
     },
     stack: ["TypeScript", "Vite", "pdf-lib"],
@@ -1449,7 +1548,6 @@ export const featuredProjects: Project[] = [
       "Merge, split, extract and delete pages, rotate, PDF to images, images to PDF, and image format conversion.",
       "Everything runs in the browser: no upload, no account, no size limit beyond your own memory.",
       "Results download individually or as a ZIP, and the limits (no OCR, no encrypted PDFs) are stated openly in the README.",
-      "Deployed from GitHub Actions over OIDC and SSM, with no long-lived AWS key in the repository.",
     ],
     showcase: [],
     visibility: "public",
@@ -1461,26 +1559,25 @@ export const featuredProjects: Project[] = [
     status: "active",
     tagline: "This site: a portfolio that reads its own release data from GitHub.",
     description:
-      "An Astro site with no client framework, where every project row pulls its version, release assets and download counts from the GitHub API at build time and a daily rebuild keeps them current. Bilingual EN/DE, static except for one contact function.",
+      "An Astro site with no client framework, where every project row pulls its version, release assets and download counts from the GitHub API at build time and a daily rebuild keeps them current. Bilingual EN/DE.",
     caseStudy: {
       problem: "A portfolio goes out of date the moment a release ships: versions, download counts and dates get typed in by hand and are quietly wrong a week later.",
-      built: "A static Astro site that resolves each repository once per build and renders the numbers it gets back, with verified fallbacks for the case where GitHub is unreachable. A scheduled deploy hook rebuilds it daily; the contact form is the only server-side surface.",
+      built: "A static Astro site that resolves each repository once per build and renders the numbers it gets back, with verified fallbacks for the case where GitHub is unreachable. It rebuilds once a day, so the numbers stay current.",
     },
     de: {
       tagline: "Diese Seite: ein Portfolio, das seine eigenen Release-Daten von GitHub liest.",
       description:
-        "Eine Astro-Seite ohne Client-Framework: Jede Projektzeile holt Version, Release-Assets und Download-Zahlen zur Build-Zeit aus der GitHub-API, ein täglicher Rebuild hält sie aktuell. Zweisprachig EN/DE, statisch bis auf eine Kontakt-Funktion.",
+        "Eine Astro-Seite ohne Client-Framework: Jede Projektzeile holt Version, Release-Assets und Download-Zahlen zur Build-Zeit aus der GitHub-API, ein täglicher Rebuild hält sie aktuell. Zweisprachig EN/DE.",
       caseStudy: {
         problem: "Ein Portfolio ist veraltet, sobald ein Release rausgeht: Versionen, Download-Zahlen und Daten werden von Hand eingetragen und stimmen eine Woche später nicht mehr.",
-        built: "Eine statische Astro-Seite, die jedes Repository einmal pro Build auflöst und die Zahlen rendert, die zurückkommen, mit geprüften Fallbacks, falls GitHub nicht erreichbar ist. Ein geplanter Deploy-Hook baut täglich neu; das Kontaktformular ist die einzige serverseitige Fläche.",
+        built: "Eine statische Astro-Seite, die jedes Repository einmal pro Build auflöst und die Zahlen rendert, die zurückkommen, mit geprüften Fallbacks, falls GitHub nicht erreichbar ist. Sie baut sich einmal am Tag neu, damit die Zahlen stimmen.",
       },
       highlights: [
         "GitHub-Daten zur Build-Zeit mit geprüften Fallbacks: ein gedrosselter Build degradiert, statt Falsches zu behaupten.",
         "Zweisprachig DE/EN mit hreflang auf jeder Route, inklusive aller Projektseiten.",
-        "Eine einzige Serverless-Funktion für das Kontaktformular: Origin-Prüfung, IP-Ratelimit, Honeypot.",
       ],
     },
-    stack: ["Astro", "TypeScript", "Vercel"],
+    stack: ["Astro", "TypeScript"],
     repo: "jx-grxf/johannesgrof.me",
     githubUrl: "https://github.com/jx-grxf/johannesgrof.me",
     releaseUrl: "https://github.com/jx-grxf/johannesgrof.me",
@@ -1489,7 +1586,6 @@ export const featuredProjects: Project[] = [
     highlights: [
       "Build-time GitHub data with verified fallbacks, so a rate-limited build degrades instead of lying.",
       "Bilingual EN/DE with hreflang alternates on every route, project pages included.",
-      "One serverless function for the contact form: origin check, per-IP rate limit, honeypot.",
     ],
     showcase: [],
     visibility: "public",
@@ -1517,10 +1613,10 @@ export const featuredProjects: Project[] = [
       highlights: [
         "Öffentliche Status-Seite für die Datenlage statt Marketing-Versprechen.",
         "Dasselbe Papier-System wie diese Seite, in ÖffiGos eigenen Farben.",
-        "Zweisprachig, statisch ausgeliefert, eigene Domain.",
+        "Zweisprachig Deutsch und Englisch.",
       ],
     },
-    stack: ["Astro", "TypeScript", "Cloudflare"],
+    stack: ["Astro", "TypeScript"],
     repo: "jx-grxf/oeffigo-website",
     githubUrl: "https://github.com/jx-grxf/oeffigo-website",
     releaseUrl: "https://github.com/jx-grxf/oeffigo-website",
@@ -1530,7 +1626,7 @@ export const featuredProjects: Project[] = [
     highlights: [
       "A public status page for the data situation instead of a marketing claim.",
       "The same paper system as this site, in ÖffiGo's own colours.",
-      "Bilingual, statically served, on its own domain.",
+      "Bilingual in German and English.",
     ],
     showcase: [],
     visibility: "private",
@@ -1545,7 +1641,7 @@ const orderedProjects = (slugs: string[]) =>
 // The "highlights" group that opens the project index — the flagship projects,
 // rendered as the same text rows as every other group, just first. Each project
 // appears here OR in a section below, never both.
-export const featuredShowcaseProjects = orderedProjects(["portpirate", "patchpilot", "briskedit", "macphone"]);
+export const featuredShowcaseProjects = orderedProjects(["portpirate", "typesilk", "patchpilot", "briskedit", "macphone"]);
 
 export const homepageProjects = orderedProjects(["portpirate", "briskedit", "dirhop", "cswap", "dysonbar", "notchtray", "claude-code-todo-fix", "agent-presence", "beammac", "beamng-drivetech"]);
 

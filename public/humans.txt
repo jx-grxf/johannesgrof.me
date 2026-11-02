@@ -12,7 +12,7 @@
   Last update: 2026-10-11
   Languages: English, German (Austria)
   Standards: HTML, CSS, TypeScript
-  Built with: Astro, hosted on Vercel, DNS at Cloudflare
+  Built with: Astro
   Fonts: Geist and Geist Mono, self-hosted
   Screenshots: real app interfaces, nothing generated
   Source: https://github.com/jx-grxf/johannesgrof.me

@@ -68,10 +68,10 @@ export const usesGroups: UsesGroup[] = [
     title: { en: "Shipping", de: "Ausliefern" },
     items: [
       { name: "GitHub and GitHub Actions", note: { en: "Code, releases and CI.", de: "Code, Releases und CI." } },
-      { name: "Vercel", note: { en: "Hosts this site, with Upstash Redis and Resend.", de: "Hostet diese Seite, mit Upstash Redis und Resend." } },
-      { name: "Cloudflare", note: { en: "DNS, oeffigo.app and Turnstile on the contact form.", de: "DNS, oeffigo.app und Turnstile am Kontaktformular." } },
+      { name: "Vercel", note: { en: "Hosting for websites.", de: "Hosting für Websites." } },
+      { name: "Cloudflare", note: { en: "DNS and bot protection.", de: "DNS und Bot-Schutz." } },
       { name: "Supabase", note: { en: "Postgres for app backends.", de: "Postgres für App-Backends." } },
-      { name: "AWS", note: { en: "Hosts tools.johannesgrof.me, deployed from GitHub Actions over OIDC and SSM.", de: "Hostet tools.johannesgrof.me, deployt aus GitHub Actions über OIDC und SSM." } },
+      { name: "AWS", note: { en: "Static sites and small services.", de: "Statische Seiten und kleine Dienste." } },
       { name: "Railway", note: { en: "Backends that need a running server.", de: "Backends mit dauerhaft laufendem Server." } },
       { name: "App Store Connect, TestFlight", note: { en: "Builds and the ÖffiGo beta.", de: "Builds und die ÖffiGo-Beta." } },
       { name: "Sparkle", note: { en: "Update feed for the Mac apps.", de: "Update-Feed für die Mac-Apps." } },
