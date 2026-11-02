@@ -475,22 +475,22 @@ export const featuredProjects: Project[] = [
     status: "experimental",
     tagline: "Read-only Apple Health context for MCP-capable agents.",
     description:
-      "A bridge that syncs Apple Health aggregates from an iPhone app into a scoped backend and exposes sleep, workouts, training load, and trends through a read-only Model Context Protocol server.",
+      "A bridge that syncs Apple Health aggregates from an iPhone app and exposes sleep, workouts, training load, and trends through a read-only Model Context Protocol server.",
     caseStudy: {
       problem: "Apple Health has rich personal context, but there is no normal server API an agent can read from safely.",
-      built: "A TypeScript MCP server, Supabase schema, and iOS HealthKit sync plan that move aggregate summaries instead of raw health samples.",
+      built: "A TypeScript MCP server and an iOS HealthKit sync that move aggregate summaries instead of raw health samples.",
     },
     de: {
       tagline: "Read-only Apple-Health-Kontext für MCP-fähige Agents.",
       description:
-        "Eine Brücke, die Apple-Health-Aggregate aus einer iPhone-App in ein abgegrenztes Backend synchronisiert und Schlaf, Workouts, Trainingslast und Trends über einen read-only Model-Context-Protocol-Server verfügbar macht.",
+        "Eine Brücke, die Apple-Health-Aggregate aus einer iPhone-App synchronisiert und Schlaf, Workouts, Trainingslast und Trends über einen read-only Model-Context-Protocol-Server verfügbar macht.",
       caseStudy: {
         problem: "Apple Health enthält wertvollen persönlichen Kontext, aber es gibt keine normale Server-API, aus der ein Agent sicher lesen kann.",
-        built: "Einen TypeScript-MCP-Server, ein Supabase-Schema und einen iOS-HealthKit-Sync-Plan, der Aggregate statt roher Health-Samples bewegt.",
+        built: "Einen TypeScript-MCP-Server und einen iOS-HealthKit-Sync, die Aggregate statt roher Health-Samples bewegen.",
       },
       highlights: [
         "Read-only MCP-Tools für tägliche Zusammenfassungen, Schlaf, Workouts, Trainingslast und Trends.",
-        "Demo-Modus läuft ohne Backend; Supabase-Pfad ist für echte Nutzertrennung vorbereitet.",
+        "Ein Demo-Modus läuft ohne Konto; getrennte Daten pro Person sind vorbereitet.",
         "iPhone liest HealthKit lokal und synchronisiert Aggregate statt Rohsamples.",
         "Für ChatGPT, Claude, Codex und Claude Code als MCP-Connector gedacht.",
       ],
@@ -500,10 +500,10 @@ export const featuredProjects: Project[] = [
     githubUrl: "https://github.com/jx-grxf/HealthKit-MCP",
     releaseUrl: "https://github.com/jx-grxf/HealthKit-MCP/releases",
     fallbackVersion: "unreleased",
-    platformLabels: ["MCP", "iOS", "Supabase"],
+    platformLabels: ["MCP", "iOS"],
     highlights: [
       "Read-only MCP tools for daily summaries, sleep, workouts, training load, and trends.",
-      "Demo mode runs without a backend; the Supabase path is prepared for real user isolation.",
+      "A demo mode runs without an account; separate data per person is prepared.",
       "The iPhone side reads HealthKit locally and syncs aggregates instead of raw samples.",
       "Built for ChatGPT, Claude, Codex, and Claude Code as MCP-capable clients.",
     ],
@@ -1535,7 +1535,6 @@ export const featuredProjects: Project[] = [
         "Zusammenführen, teilen, Seiten extrahieren und löschen, drehen, PDF zu Bildern, Bilder zu PDF, Bildformate konvertieren.",
         "Alles läuft im Browser: keine Datei wird hochgeladen, kein Konto, kein Größenlimit außer dem Arbeitsspeicher.",
         "Ergebnisse einzeln oder als ZIP; die Grenzen (kein OCR, keine verschlüsselten PDFs) stehen offen im README.",
-        "Deployment aus GitHub Actions über OIDC und SSM, ohne langlebigen AWS-Key im Repository.",
       ],
     },
     stack: ["TypeScript", "Vite", "pdf-lib"],
@@ -1549,7 +1548,6 @@ export const featuredProjects: Project[] = [
       "Merge, split, extract and delete pages, rotate, PDF to images, images to PDF, and image format conversion.",
       "Everything runs in the browser: no upload, no account, no size limit beyond your own memory.",
       "Results download individually or as a ZIP, and the limits (no OCR, no encrypted PDFs) are stated openly in the README.",
-      "Deployed from GitHub Actions over OIDC and SSM, with no long-lived AWS key in the repository.",
     ],
     showcase: [],
     visibility: "public",
@@ -1561,26 +1559,25 @@ export const featuredProjects: Project[] = [
     status: "active",
     tagline: "This site: a portfolio that reads its own release data from GitHub.",
     description:
-      "An Astro site with no client framework, where every project row pulls its version, release assets and download counts from the GitHub API at build time and a daily rebuild keeps them current. Bilingual EN/DE, static except for one contact function.",
+      "An Astro site with no client framework, where every project row pulls its version, release assets and download counts from the GitHub API at build time and a daily rebuild keeps them current. Bilingual EN/DE.",
     caseStudy: {
       problem: "A portfolio goes out of date the moment a release ships: versions, download counts and dates get typed in by hand and are quietly wrong a week later.",
-      built: "A static Astro site that resolves each repository once per build and renders the numbers it gets back, with verified fallbacks for the case where GitHub is unreachable. A scheduled deploy hook rebuilds it daily; the contact form is the only server-side surface.",
+      built: "A static Astro site that resolves each repository once per build and renders the numbers it gets back, with verified fallbacks for the case where GitHub is unreachable. It rebuilds once a day, so the numbers stay current.",
     },
     de: {
       tagline: "Diese Seite: ein Portfolio, das seine eigenen Release-Daten von GitHub liest.",
       description:
-        "Eine Astro-Seite ohne Client-Framework: Jede Projektzeile holt Version, Release-Assets und Download-Zahlen zur Build-Zeit aus der GitHub-API, ein täglicher Rebuild hält sie aktuell. Zweisprachig EN/DE, statisch bis auf eine Kontakt-Funktion.",
+        "Eine Astro-Seite ohne Client-Framework: Jede Projektzeile holt Version, Release-Assets und Download-Zahlen zur Build-Zeit aus der GitHub-API, ein täglicher Rebuild hält sie aktuell. Zweisprachig EN/DE.",
       caseStudy: {
         problem: "Ein Portfolio ist veraltet, sobald ein Release rausgeht: Versionen, Download-Zahlen und Daten werden von Hand eingetragen und stimmen eine Woche später nicht mehr.",
-        built: "Eine statische Astro-Seite, die jedes Repository einmal pro Build auflöst und die Zahlen rendert, die zurückkommen, mit geprüften Fallbacks, falls GitHub nicht erreichbar ist. Ein geplanter Deploy-Hook baut täglich neu; das Kontaktformular ist die einzige serverseitige Fläche.",
+        built: "Eine statische Astro-Seite, die jedes Repository einmal pro Build auflöst und die Zahlen rendert, die zurückkommen, mit geprüften Fallbacks, falls GitHub nicht erreichbar ist. Sie baut sich einmal am Tag neu, damit die Zahlen stimmen.",
       },
       highlights: [
         "GitHub-Daten zur Build-Zeit mit geprüften Fallbacks: ein gedrosselter Build degradiert, statt Falsches zu behaupten.",
         "Zweisprachig DE/EN mit hreflang auf jeder Route, inklusive aller Projektseiten.",
-        "Eine einzige Serverless-Funktion für das Kontaktformular: Origin-Prüfung, IP-Ratelimit, Honeypot.",
       ],
     },
-    stack: ["Astro", "TypeScript", "Vercel"],
+    stack: ["Astro", "TypeScript"],
     repo: "jx-grxf/johannesgrof.me",
     githubUrl: "https://github.com/jx-grxf/johannesgrof.me",
     releaseUrl: "https://github.com/jx-grxf/johannesgrof.me",
@@ -1589,7 +1586,6 @@ export const featuredProjects: Project[] = [
     highlights: [
       "Build-time GitHub data with verified fallbacks, so a rate-limited build degrades instead of lying.",
       "Bilingual EN/DE with hreflang alternates on every route, project pages included.",
-      "One serverless function for the contact form: origin check, per-IP rate limit, honeypot.",
     ],
     showcase: [],
     visibility: "public",
@@ -1617,10 +1613,10 @@ export const featuredProjects: Project[] = [
       highlights: [
         "Öffentliche Status-Seite für die Datenlage statt Marketing-Versprechen.",
         "Dasselbe Papier-System wie diese Seite, in ÖffiGos eigenen Farben.",
-        "Zweisprachig, statisch ausgeliefert, eigene Domain.",
+        "Zweisprachig Deutsch und Englisch.",
       ],
     },
-    stack: ["Astro", "TypeScript", "Cloudflare"],
+    stack: ["Astro", "TypeScript"],
     repo: "jx-grxf/oeffigo-website",
     githubUrl: "https://github.com/jx-grxf/oeffigo-website",
     releaseUrl: "https://github.com/jx-grxf/oeffigo-website",
@@ -1630,7 +1626,7 @@ export const featuredProjects: Project[] = [
     highlights: [
       "A public status page for the data situation instead of a marketing claim.",
       "The same paper system as this site, in ÖffiGo's own colours.",
-      "Bilingual, statically served, on its own domain.",
+      "Bilingual in German and English.",
     ],
     showcase: [],
     visibility: "private",
