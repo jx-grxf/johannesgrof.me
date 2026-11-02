@@ -1413,6 +1413,106 @@ export const featuredProjects: Project[] = [
     visibility: "public",
   },
   {
+    name: "typesilk",
+    slug: "typesilk",
+    status: "beta",
+    logo: {
+      src: "/projects/typesilk/logo.webp",
+      fallbackSrc: "/projects/typesilk/logo.png",
+      alt: "typesilk icon: an orange caret on black",
+      fit: "contain",
+      width: 256,
+      height: 256,
+    },
+    tagline: "A typing test where the words glide under a still caret.",
+    description:
+      "A typing test in the browser. The text moves on one continuous spring that keeps its speed between keystrokes, so it runs smoother the faster you type. Nine modes, four languages, sound packs cut from real keyboard recordings, and a coach that builds runs around your weakest keys. It works without an account; signing in with GitHub or Google adds the daily leaderboard and syncs your profile across devices.",
+    caseStudy: {
+      problem: "Most typing tests start a short animation for every key. When you type fast, each one gets cut off by the next and the motion keeps restarting.",
+      built: "TypeScript and Vite with no UI framework. Letter positions are measured once per word, and every frame after that only moves things with transforms: 1.6 layout passes per keypress against 11.7 for Monkeytype in the same headless Chrome run. Before a daily run goes on the leaderboard, its recorded keystrokes are replayed and checked.",
+    },
+    de: {
+      tagline: "Ein Tipptest, bei dem die Wörter unter einem ruhigen Cursor durchgleiten.",
+      description:
+        "Ein Tipptest im Browser. Der Text bewegt sich auf einer durchgehenden Feder, die ihr Tempo zwischen den Anschlägen hält, darum läuft er umso ruhiger, je schneller du tippst. Neun Modi, vier Sprachen, Sound-Packs aus echten Tastaturaufnahmen und ein Trainer, der Durchgänge um deine schwächsten Tasten baut. Ein Konto brauchst du nicht; mit GitHub oder Google angemeldet kommst du auf die Tages-Rangliste und dein Profil ist auf allen Geräten gleich.",
+      caseStudy: {
+        problem: "Die meisten Tipptests starten bei jeder Taste eine kurze Animation. Wer schnell tippt, bricht jede davon mit der nächsten ab, und die Bewegung fängt ständig neu an.",
+        built: "TypeScript und Vite ohne UI-Framework. Die Buchstabenpositionen werden einmal pro Wort gemessen, danach bewegt jedes Frame nur noch per Transform: 1,6 Layout-Durchläufe pro Tastendruck, Monkeytype braucht im selben Headless-Chrome-Lauf 11,7. Bevor ein Tageslauf in die Rangliste kommt, werden seine aufgezeichneten Anschläge nachgespielt und geprüft.",
+      },
+      highlights: [
+        "Neun Modi: Zeit, Wörter, Zitate, Zen, eigener Text, fehlerfrei, endlos, Training und ein Tageslauf mit denselben 40 Wörtern für alle.",
+        "Englisch, Deutsch, Spanisch und Französisch, auf Wunsch mit Satzzeichen und Zahlen.",
+        "Fehler und Tempo pro Buchstabe, eine Tastatur im Layout deiner Sprache, die deine Schwachstellen einfärbt, und ein Geister-Cursor deines besten Laufs zum Mitrennen.",
+        "Vier Themes, vier Sound-Packs, eine Befehlspalette für jede Einstellung. Reduzierte Bewegung wird respektiert.",
+        "Alles bleibt im Browser. Anmelden ist freiwillig und nur für die Rangliste und den Abgleich zwischen Geräten nötig.",
+      ],
+    },
+    stack: ["TypeScript", "Vite"],
+    repo: "jx-grxf/typesilk",
+    githubUrl: "https://github.com/jx-grxf/typesilk",
+    releaseUrl: "https://github.com/jx-grxf/typesilk/releases/latest",
+    liveUrl: "https://typesilk.com",
+    fallbackVersion: "v0.2.0",
+    platformLabels: ["Web"],
+    highlights: [
+      "Nine modes: time, words, quote, zen, custom, perfect, endless, train, and a daily run with the same 40 words for everyone.",
+      "English, German, Spanish and French, with optional punctuation and numbers.",
+      "Errors and speed per letter, a keyboard in your language's layout that shades your weak keys, and a ghost caret of your best run to race.",
+      "Four themes, four sound packs and a command palette that reaches every setting. Reduced motion is respected.",
+      "Everything stays in your browser. Signing in is optional and only needed for the leaderboard and syncing between devices.",
+    ],
+    showcase: [
+      {
+        src: "/projects/typesilk/typing.mp4",
+        kind: "video",
+        posterSrc: "/projects/typesilk/typing-poster.webp",
+        fallbackSrc: "/projects/typesilk/typing-poster.png",
+        alt: "Words in a large serif gliding under an orange caret while someone types",
+        altDe: "Wörter in großer Serifenschrift gleiten beim Tippen unter einem orangen Cursor durch",
+        fit: "contain",
+        width: 880,
+        height: 206,
+      },
+      {
+        src: "/projects/typesilk/results.webp",
+        fallbackSrc: "/projects/typesilk/results.png",
+        alt: "Results with a very large words-per-minute number, statistics and a speed chart",
+        altDe: "Ergebnis mit sehr großer Wörter-pro-Minute-Zahl, Statistik und Tempoverlauf",
+        fit: "contain",
+        width: 1600,
+        height: 900,
+      },
+      {
+        src: "/projects/typesilk/profile.webp",
+        fallbackSrc: "/projects/typesilk/profile.png",
+        alt: "Profile page with badges, key figures and a year of daily activity",
+        altDe: "Profilseite mit Abzeichen, Kennzahlen und einem Jahr Tagesaktivität",
+        fit: "contain",
+        width: 1600,
+        height: 900,
+      },
+      {
+        src: "/projects/typesilk/theme-klein.webp",
+        fallbackSrc: "/projects/typesilk/theme-klein.png",
+        alt: "The klein theme: cream type on saturated blue",
+        altDe: "Das Theme klein: cremefarbene Schrift auf kräftigem Blau",
+        fit: "contain",
+        width: 1600,
+        height: 900,
+      },
+      {
+        src: "/projects/typesilk/palette.webp",
+        fallbackSrc: "/projects/typesilk/palette.png",
+        alt: "Command palette listing themes, with one previewed behind it",
+        altDe: "Befehlspalette mit Themes, eines davon dahinter in der Vorschau",
+        fit: "contain",
+        width: 1600,
+        height: 900,
+      },
+    ],
+    visibility: "public",
+  },
+  {
     name: "Tools",
     slug: "tools",
     status: "active",
@@ -1545,7 +1645,7 @@ const orderedProjects = (slugs: string[]) =>
 // The "highlights" group that opens the project index — the flagship projects,
 // rendered as the same text rows as every other group, just first. Each project
 // appears here OR in a section below, never both.
-export const featuredShowcaseProjects = orderedProjects(["portpirate", "patchpilot", "briskedit", "macphone"]);
+export const featuredShowcaseProjects = orderedProjects(["portpirate", "typesilk", "patchpilot", "briskedit", "macphone"]);
 
 export const homepageProjects = orderedProjects(["portpirate", "briskedit", "dirhop", "cswap", "dysonbar", "notchtray", "claude-code-todo-fix", "agent-presence", "beammac", "beamng-drivetech"]);
 

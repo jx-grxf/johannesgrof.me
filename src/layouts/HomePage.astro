@@ -236,6 +236,20 @@ const profileSchema = {
             <figure class="product-notebook-preview"><a href={kontobuch.websiteUrl} aria-label={isDe ? "Kontobuch ansehen" : "Explore Kontobuch"}><span class="mac-window-bar" aria-hidden="true"><span class="tl"></span><span class="tl"></span><span class="tl"></span><strong>kontobuch.johannesgrof.me</strong></span><img src="/projects/kontobuch/notebook.jpg" alt={isDe ? "Kontobuch im Browser mit Heftseite, Beispielgeschäftsfall und Werkzeugen für T-Konten." : "Kontobuch in the browser, with a notebook page, an example transaction and T-account tools."} width="1280" height="850" loading="lazy" decoding="async" /></a><figcaption>{isDe ? "Eine Heftseite in der Web-App. Auf der Website kannst du selbst ausprobieren." : "A notebook page in the web app. Try it yourself on the website."}</figcaption></figure>
           </div>
         </section>
+        <section id="typesilk" class="band section-shell" aria-labelledby="typesilk-title">
+          <div class="section-head"><h2>{isDe ? "Neu" : "New"}</h2></div>
+          <div class="featured-product featured-product--notebook featured-product--compact">
+            <div class="featured-product-copy">
+              <div class="product-heading"><img src="/projects/typesilk/logo.png" alt="" width="44" height="44" loading="lazy" /><h3 id="typesilk-title">typesilk</h3></div>
+              <p class="product-tagline">{isDe ? "Ein Tipptest, bei dem die Wörter gleiten." : "A typing test where the words glide."}</p>
+              <p>{isDe ? "Mein neuestes Projekt: ein Tipptest im Browser. Der Text läuft auf einer durchgehenden Feder und wird umso ruhiger, je schneller du tippst. Neun Modi, vier Sprachen und ein Trainer für deine schwachen Tasten." : "My newest project: a typing test for the browser. The text runs on one continuous spring, so it gets smoother the faster you type. Nine modes, four languages and a coach for your weak keys."}</p>
+              <p class="product-availability">{isDe ? "Gratis · Ohne Konto · Im Browser, mit echter Tastatur" : "Free · No account needed · In the browser, with a physical keyboard"}</p>
+              <div class="oeffigo-actions"><a class="button primary" href="https://typesilk.com">{isDe ? "typesilk ausprobieren" : "Try typesilk"} ↗</a></div>
+              <p class="product-footnote"><a href={`${localePrefix}/projects/typesilk/`}>{isDe ? "Zur Projektseite" : "Project page"}</a><a href="https://github.com/jx-grxf/typesilk">{isDe ? "Quelltext auf GitHub" : "Source on GitHub"} ↗</a></p>
+            </div>
+            <figure class="product-notebook-preview product-typing-preview"><a href="https://typesilk.com" aria-label={isDe ? "typesilk ausprobieren" : "Try typesilk"}><span class="mac-window-bar" aria-hidden="true"><span class="tl"></span><span class="tl"></span><span class="tl"></span><strong>typesilk.com</strong></span><video src="/projects/typesilk/typing.mp4" poster="/projects/typesilk/typing-poster.webp" width="880" height="206" muted loop playsinline preload="none" aria-label={isDe ? "Wörter in großer Serifenschrift gleiten beim Tippen unter einem orangen Cursor durch." : "Words in a large serif glide under an orange caret while someone types."} data-autoplay></video></a><figcaption>{isDe ? "Tippen im Theme noir. Ein Fehler färbt sich orange und wird korrigiert, ohne dass der Text ruckelt." : "Typing in the noir theme. A wrong letter turns orange and gets fixed without the text jumping."}</figcaption></figure>
+          </div>
+        </section>
         <section class="band section-shell" aria-labelledby="selected-projects-title">
           <div class="section-head"><h2 id="selected-projects-title">{content.more.title}</h2></div>
           <ul class="work-index">
@@ -314,6 +328,7 @@ const profileSchema = {
       import "@/scripts/clock";
       import "@/scripts/scene";
       import "@/scripts/trail";
+      import "@/scripts/autoplay";
     </script>
   </body>
 </html>

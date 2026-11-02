@@ -2295,6 +2295,7 @@ html[lang="de"] .error-page [data-error-lang="en"] {
 #projects,
 #oeffigo,
 #kontobuch,
+#typesilk,
 #contact,
 #about,
 #services,
@@ -2312,6 +2313,34 @@ html[lang="de"] .error-page [data-error-lang="en"] {
 }
 .featured-product--notebook {
   grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.2fr);
+}
+/* Third in line after ÖffiGo and Kontobuch, so it reads smaller on purpose. */
+.featured-product--compact .product-heading {
+  gap: 14px;
+}
+.featured-product--compact .product-heading img {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px var(--rule-2);
+}
+.featured-product--compact .product-heading h3 {
+  margin: 0;
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+.featured-product--compact .featured-product-copy .product-tagline {
+  font-size: clamp(1.05rem, 1.6vw, 1.25rem);
+}
+.product-typing-preview a {
+  background: #0d0c0b;
+}
+.product-typing-preview video {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 880 / 206;
 }
 .featured-product-copy > p {
   max-width: 54ch;
