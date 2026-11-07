@@ -6,7 +6,7 @@ import { oeffigo } from "@/data/oeffigo";
 import type { ProjectLang } from "@/data/projects";
 import { toCanonicalUrl } from "@/data/siteMetadata";
 import "@/styles/global.css";
-import SpeedInsights from "@vercel/speed-insights/astro";
+import SiteAnalytics from "../components/SiteAnalytics.astro";
 
 interface Props {
   lang: ProjectLang;
@@ -243,6 +243,6 @@ const oeffigoSchema = {
     </main>
 
     <SiteFooter lang={isDe ? "de" : "en"} />
-    {import.meta.env.DEPLOY_TARGET === "vercel" && <SpeedInsights />}
+    <SiteAnalytics />
   </body>
 </html>
