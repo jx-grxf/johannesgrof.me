@@ -3,11 +3,10 @@ name: Refresh deployment
 # Rebuilds the site on a schedule so build-time GitHub data (releases,
 # download counts, repo metadata) stays current without a manual push.
 #
-# Setup (one-time):
-#   1. Vercel → Project → Settings → Git → Deploy Hooks → create a hook for
-#      the `main` branch and copy its URL.
-#   2. GitHub → repo → Settings → Secrets and variables → Actions → add a
-#      secret named VERCEL_DEPLOY_HOOK with that URL.
+# Calls the deploy hook of whichever host serves the site:
+#   CLOUDFLARE_DEPLOY_HOOK  Workers & Pages → johannesgrof-me → Settings → Builds → Deploy Hooks (branch main)
+#   VERCEL_DEPLOY_HOOK      Vercel → Project → Settings → Git → Deploy Hooks (branch main)
+# Both are repository secrets; the Cloudflare one wins when both are set.
 
 on:
   schedule:
@@ -17,13 +16,17 @@ on:
 
 jobs:
   redeploy:
-    name: Trigger Vercel rebuild
+    name: Trigger rebuild
     runs-on: ubuntu-latest
     steps:
-      - name: Call Vercel deploy hook
+      - name: Call deploy hook
+        env:
+          CLOUDFLARE_HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}
+          VERCEL_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
         run: |
-          if [ -z "${{ secrets.VERCEL_DEPLOY_HOOK }}" ]; then
-            echo "VERCEL_DEPLOY_HOOK secret is not set — skipping." >&2
+          hook="${CLOUDFLARE_HOOK:-$VERCEL_HOOK}"
+          if [ -z "$hook" ]; then
+            echo "No deploy hook secret is set — skipping." >&2
             exit 0
           fi
-          curl -fsSL -X POST "${{ secrets.VERCEL_DEPLOY_HOOK }}"
+          curl -fsSL -X POST "$hook"
