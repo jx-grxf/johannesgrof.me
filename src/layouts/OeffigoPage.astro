@@ -243,6 +243,6 @@ const oeffigoSchema = {
     </main>
 
     <SiteFooter lang={isDe ? "de" : "en"} />
-    <SpeedInsights />
+    {import.meta.env.DEPLOY_TARGET === "vercel" && <SpeedInsights />}
   </body>
 </html>

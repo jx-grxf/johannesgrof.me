@@ -1,12 +1,13 @@
 import type { APIRoute } from "astro";
 import { departureStops, parseMonitor, type Departure } from "@/lib/departures";
+import { sharesInFlight } from "#platform";
 
 // Live departures for the ÖffiGo board on the home page.
 //
 // Only Wiener Linien open data (CC BY 4.0, Stadt Wien) is used here, never the
 // VAO data ÖffiGo itself has under contract. Upstream load stays bounded by a
 // closed list of stops, a short per-stop cache inside the instance, and the
-// Vercel CDN cache on top.
+// CDN cache on top (Vercel, or the Worker cache on Cloudflare).
 export const prerender = false;
 
 const UPSTREAM = "https://www.wienerlinien.at/ogd_realtime/monitor";
@@ -52,10 +53,10 @@ export const GET: APIRoute = async ({ url }) => {
   const fresh = cached && Date.now() - cached.at < TTL_MS;
 
   if (!fresh) {
-    let pending = inFlight.get(stop.slug);
+    let pending = sharesInFlight ? inFlight.get(stop.slug) : undefined;
     if (!pending) {
       pending = load(stop.diva).finally(() => inFlight.delete(stop.slug));
-      inFlight.set(stop.slug, pending);
+      if (sharesInFlight) inFlight.set(stop.slug, pending);
     }
     try {
       cache.set(stop.slug, await pending);

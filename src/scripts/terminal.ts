@@ -89,7 +89,7 @@ function runTrain() {
 interface PingResult {
   ms: number;
   status: number;
-  /** Vercel edge PoP that answered, e.g. "fra1". */
+  /** Edge location that answered, e.g. "fra1" or "VIE". */
   edge: string | null;
   /** Region the function ran in, e.g. "fra1" or "iad1". */
   region: string | null;
@@ -109,7 +109,7 @@ async function measurePing(): Promise<PingResult> {
   const body = await response.arrayBuffer();
   const ms = performance.now() - started;
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
-  let payload: { at?: number; region?: string } = {};
+  let payload: { at?: number; edge?: string | null; region?: string | null } = {};
   try {
     payload = JSON.parse(new TextDecoder().decode(body));
   } catch {}
@@ -118,7 +118,7 @@ async function measurePing(): Promise<PingResult> {
   return {
     ms,
     status: response.status,
-    edge: hops.length > 1 ? hops[0]! : null,
+    edge: hops.length > 1 ? hops[0]! : (payload.edge ?? null),
     region: payload.region ?? (hops.length > 2 ? hops[1]! : null),
     bytes: body.byteLength,
     skew: typeof payload.at === "number" ? payload.at - (sentAt + ms / 2) : null,

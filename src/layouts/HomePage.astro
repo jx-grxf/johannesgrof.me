@@ -323,7 +323,7 @@ const profileSchema = {
 
     <SiteFooter lang={isDe ? "de" : "en"} />
 
-    <SpeedInsights />
+    {import.meta.env.DEPLOY_TARGET === "vercel" && <SpeedInsights />}
     <script>
       import "@/scripts/clock";
       import "@/scripts/scene";

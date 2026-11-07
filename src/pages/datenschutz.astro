@@ -1,5 +1,7 @@
 ---
 import LegalPage from "@/layouts/LegalPage.astro";
+
+const onCloudflare = import.meta.env.DEPLOY_TARGET === "cloudflare";
 ---
 
 <LegalPage
@@ -33,7 +35,7 @@ import LegalPage from "@/layouts/LegalPage.astro";
 
   <h2>Hosting</h2>
   <p>
-    Diese Website wird bei <strong>Vercel</strong> (Vercel Inc., USA) gehostet. Beim Aufruf der
+    Diese Website wird bei {onCloudflare ? <strong>Cloudflare</strong> : <strong>Vercel</strong>} ({onCloudflare ? "Cloudflare, Inc." : "Vercel Inc."}, USA) gehostet. Beim Aufruf der
     Website werden technisch notwendige Daten (z. B. IP-Adresse, Datum und Uhrzeit des Zugriffs,
     aufgerufene Seite, Browsertyp) in Server-Logs verarbeitet. Rechtsgrundlage ist Art. 6 Abs. 1
     lit. f DSGVO (sicherer und stabiler Betrieb der Website). Die Übermittlung in die USA erfolgt
@@ -96,7 +98,11 @@ import LegalPage from "@/layouts/LegalPage.astro";
 
   <h2>Reichweitenmessung</h2>
   <p>
-    Wir verwenden <strong>Vercel Web Analytics</strong> und <strong>Vercel Speed Insights</strong>
+    {onCloudflare ? (
+      <>Wir verwenden <strong>Cloudflare Web Analytics</strong> (Cloudflare, Inc., USA)</>
+    ) : (
+      <>Wir verwenden <strong>Vercel Speed Insights</strong></>
+    )}
     zur anonymisierten, aggregierten Auswertung der Websitenutzung und der Ladegeschwindigkeit.
     Dabei werden <strong>keine Cookies gesetzt</strong> und keine geräteübergreifenden Profile
     gebildet. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (Interesse an der Verbesserung des
