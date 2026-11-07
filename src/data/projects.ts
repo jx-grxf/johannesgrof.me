@@ -23,6 +23,10 @@ export interface ProjectCopy {
   };
   highlights: string[];
   releaseHighlights?: string[];
+  /** Search result title when the tagline makes a poor one; the brand suffix is added only if it fits. */
+  seoTitle?: string;
+  /** Meta description, about 160 characters. Without it the first sentences of the description are used. */
+  seoDescription?: string;
 }
 
 export interface Project {
@@ -32,6 +36,8 @@ export interface Project {
   logo?: ShowcaseImage;
   tagline: string;
   description: string;
+  seoTitle?: string;
+  seoDescription?: string;
   caseStudy: {
     problem: string;
     built: string;
@@ -112,6 +118,8 @@ export const getProjectCopy = (project: Project, lang: ProjectLang): ProjectCopy
     caseStudy: project.caseStudy,
     highlights: project.highlights,
     releaseHighlights: project.releaseHighlights,
+    seoTitle: project.seoTitle,
+    seoDescription: project.seoDescription,
   };
 };
 
@@ -265,6 +273,9 @@ export const featuredProjects: Project[] = [
       height: 512,
     },
     tagline: "Real Bluetooth LE devices in the Android emulator on your Mac.",
+    seoTitle: "MacPhone: real Bluetooth LE in the Android emulator",
+    seoDescription:
+      "Test Android apps against real BLE devices on your Mac. MacPhone bridges the Mac's built-in Bluetooth into the Android emulator, with no USB dongle and no code changes.",
     description:
       "MacPhone connects to a Bluetooth LE device over the Mac's built-in radio and publishes it inside the Android emulator. The app you are testing scans, connects, reads, writes and subscribes as it would on a phone, with no USB dongle and no change to its code. The same window runs your Android emulators and Xcode simulators.",
     caseStudy: {
@@ -273,6 +284,9 @@ export const featuredProjects: Project[] = [
     },
     de: {
       tagline: "Echte Bluetooth-LE-Geräte im Android-Emulator auf dem Mac.",
+      seoTitle: "MacPhone: echtes Bluetooth LE im Android-Emulator",
+      seoDescription:
+        "Android-Apps am Mac mit echten BLE-Geräten testen. MacPhone bringt das eingebaute Bluetooth des Mac in den Android-Emulator, ohne USB-Dongle und ohne Änderung am Code.",
       description:
         "MacPhone verbindet sich über das eingebaute Bluetooth des Mac mit einem BLE-Gerät und stellt es im Android-Emulator bereit. Die App, die du testest, sucht, verbindet, liest, schreibt und abonniert wie auf einem Handy, ohne USB-Dongle und ohne Änderung am Code. Im selben Fenster laufen deine Android-Emulatoren und Xcode-Simulatoren.",
       caseStudy: {
@@ -672,6 +686,9 @@ export const featuredProjects: Project[] = [
     slug: "patchpilot",
     status: "beta",
     tagline: "A terminal coding agent for local models, with configurable permissions.",
+    seoTitle: "PatchPilot: terminal coding agent for local models",
+    seoDescription:
+      "A coding agent in your terminal that runs on Ollama, LM Studio, MLX, llama.cpp or vLLM. Edits and shell commands show up first, risky ones wait for approval. No API keys.",
     description:
       "PatchPilot works inside a repository with a model you run yourself: Ollama, LM Studio, MLX, llama.cpp or vLLM. Every file edit and shell command shows up in the transcript first, and the risky ones wait for your approval. Since 2.0 there are no cloud providers and no API keys.",
     caseStudy: {
@@ -680,6 +697,9 @@ export const featuredProjects: Project[] = [
     },
     de: {
       tagline: "Ein Coding-Agent für lokale Modelle im Terminal, mit konfigurierbaren Berechtigungen.",
+      seoTitle: "PatchPilot: Coding-Agent im Terminal für lokale Modelle",
+      seoDescription:
+        "Ein Coding-Agent im Terminal, der mit Ollama, LM Studio, MLX, llama.cpp oder vLLM läuft. Änderungen und Befehle stehen zuerst im Transcript, riskante warten auf Freigabe. Keine API-Keys.",
       description:
         "PatchPilot arbeitet direkt im Repository, mit einem Modell, das du selbst betreibst: Ollama, LM Studio, MLX, llama.cpp oder vLLM. Jede Dateiänderung und jeder Shell-Befehl steht zuerst im Transcript, die riskanten warten auf deine Freigabe. Seit 2.0 gibt es keine Cloud-Anbieter und keine API-Keys mehr.",
       caseStudy: {
@@ -997,6 +1017,9 @@ export const featuredProjects: Project[] = [
     logo: { src: "/projects/cswap/logo.webp", fallbackSrc: "/projects/cswap/logo.png", alt: "CSwap app icon", width: 256, height: 256 },
     status: "active",
     tagline: "Run several Claude Code accounts side by side, and move a session to another account with /swap.",
+    seoTitle: "CSwap: switch Claude Code accounts on macOS",
+    seoDescription:
+      "Mac menu bar app and cswap command for several Claude Code accounts, each with live usage. /swap moves a running session to another account. Formerly Claude Swap Bar.",
     description:
       "A macOS menu bar app and the cswap command for people with more than one Claude Code account. Every account keeps its own login and shows its live usage. When one runs out, /swap continues the same conversation on another account in the same terminal tab.",
     caseStudy: {
@@ -1005,6 +1028,9 @@ export const featuredProjects: Project[] = [
     },
     de: {
       tagline: "Mehrere Claude-Code-Accounts nebeneinander nutzen und eine Session per /swap auf einen anderen Account schieben.",
+      seoTitle: "CSwap: Claude-Code-Accounts am Mac wechseln",
+      seoDescription:
+        "Menüleisten-App und Befehl cswap für mehrere Claude-Code-Accounts am Mac. /swap schiebt eine laufende Session auf einen anderen Account. Früher Claude Swap Bar.",
       description:
         "Eine macOS-Menüleisten-App mit dem Befehl cswap für alle mit mehr als einem Claude-Code-Account. Jeder Account bleibt angemeldet und zeigt seinen Verbrauch live. Ist einer leer, setzt /swap dieselbe Unterhaltung im selben Terminal-Tab mit einem anderen Account fort.",
       caseStudy: {
@@ -1165,6 +1191,9 @@ export const featuredProjects: Project[] = [
     slug: "agent-presence",
     status: "active",
     tagline: "Discord Rich Presence for Claude Code and Codex. One static binary, no bot token.",
+    seoTitle: "Claude Code & Codex Discord Rich Presence – agent-presence",
+    seoDescription:
+      "Show what Claude Code or Codex is working on in your Discord status. One static Rust binary, no bot token, and only what you allow is visible.",
     description:
       "A small Rust tool that shows what your coding agent is doing live in your Discord status. It ships as a single static binary, needs no bot token, and shows little by default, so you decide what is visible.",
     caseStudy: {
@@ -1173,6 +1202,9 @@ export const featuredProjects: Project[] = [
     },
     de: {
       tagline: "Discord Rich Presence für Claude Code und Codex. Ein statisches Binary, kein Bot-Token.",
+      seoTitle: "Discord Rich Presence für Claude Code und Codex – agent-presence",
+      seoDescription:
+        "Zeigt in deinem Discord-Status, woran Claude Code oder Codex gerade arbeitet. Ein statisches Rust-Binary, kein Bot-Token, sichtbar ist nur, was du freigibst.",
       description:
         "Ein kleines Rust-Tool, das live in deinem Discord-Status zeigt, was dein Coding-Agent gerade tut. Es kommt als einzelnes statisches Binary, braucht kein Bot-Token und zeigt standardmäßig nur wenig. Was sichtbar wird, entscheidest du.",
       caseStudy: {
@@ -1279,6 +1311,9 @@ export const featuredProjects: Project[] = [
     status: "beta",
     logo: { src: "/projects/beammac/logo.webp", fallbackSrc: "/projects/beammac/logo.png", alt: "BeamMac app icon: a yellow and black crash test marker", width: 256, height: 256 },
     tagline: "A Mac app that installs and starts BeamNG.drive on Apple Silicon.",
+    seoTitle: "BeamMac: BeamNG.drive on Mac with Apple Silicon",
+    seoDescription:
+      "Play BeamNG.drive on an Apple Silicon Mac. BeamMac sets up Wine, DXMT, D3DMetal and Steam for Windows, then starts the game and BeamMP from a native app.",
     description:
       "BeamNG.drive only ships for Windows and Linux. BeamMac sets up Wine, the Metal graphics layers DXMT and D3DMetal and Steam for Windows on its own, then starts the game from a native Mac app. You log in to Steam and drive. A second button starts BeamMP for multiplayer servers. Not affiliated with BeamNG, Valve or Apple.",
     caseStudy: {
@@ -1287,6 +1322,9 @@ export const featuredProjects: Project[] = [
     },
     de: {
       tagline: "Eine Mac-App, die BeamNG.drive auf Apple Silicon installiert und startet.",
+      seoTitle: "BeamMac: BeamNG.drive am Mac mit Apple Silicon",
+      seoDescription:
+        "BeamNG.drive auf einem Mac mit Apple Silicon spielen. BeamMac richtet Wine, DXMT, D3DMetal und Steam für Windows ein und startet Spiel und BeamMP aus einer Mac-App.",
       description:
         "BeamNG.drive gibt es nur für Windows und Linux. BeamMac richtet Wine, die Metal-Grafikschichten DXMT und D3DMetal und Steam für Windows selbst ein und startet das Spiel aus einer nativen Mac-App. Du meldest dich bei Steam an und fährst los. Ein zweiter Knopf startet BeamMP für Multiplayer-Server. Nicht mit BeamNG, Valve oder Apple verbunden.",
       caseStudy: {

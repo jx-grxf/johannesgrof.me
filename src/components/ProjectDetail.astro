@@ -12,6 +12,7 @@ import "@/styles/global.css";
 import PixelSprite from "@/components/PixelSprite.astro";
 import DriveTechLab from "@/components/DriveTechLab.astro";
 import { downloadLabel as releaseDownloadLabel, downloadPlatformLabel, downloadSize } from "@/lib/releases";
+import { leadSentences } from "@/lib/seo";
 
 interface Props {
   project: Project;
@@ -279,14 +280,20 @@ const hreflangAlternates = [
   { hreflang: "de-AT", href: toCanonicalUrl(`/de/projects/${project.slug}/`) },
   { hreflang: "x-default", href: toCanonicalUrl(`/projects/${project.slug}/`) },
 ];
+// Search results cut titles at about 60 characters, so the name suffix only goes on when it fits.
+const baseTitle = c.seoTitle ?? `${project.name} – ${c.tagline.replace(/\.$/, "")}`;
+const pageTitle = `${baseTitle} | Johannes Grof`.length <= 65 ? `${baseTitle} | Johannes Grof` : baseTitle;
+const lead = leadSentences(c.description, 160);
+const pageDescription = c.seoDescription ?? (lead.length >= c.tagline.length ? lead : c.tagline);
+
 ---
 
 <!doctype html>
 <html lang={isDe ? "de-AT" : "en"}>
   <head>
     <BaseHead
-      title={`${project.name} – ${c.tagline.replace(/\.$/, "")} | Johannes Grof`}
-      description={`${project.name}: ${c.tagline}`}
+      title={pageTitle}
+      description={pageDescription}
       canonicalPath={canonicalPath}
       image={socialImage}
       imageAlt={socialImageAlt}
