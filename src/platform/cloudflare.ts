@@ -9,3 +9,6 @@ export const edgeLocation = colo;
 
 // A Worker runs in the data centre that took the request; there is no separate function region.
 export const functionRegion = (): string | null => null;
+
+// Cloudflare sets CF-Connecting-IP on every request; x-forwarded-for may be missing or client-sent.
+export const clientAddress = (request: Request): string | null => request.headers.get("cf-connecting-ip");

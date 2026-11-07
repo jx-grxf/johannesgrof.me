@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 import { Resend } from "resend";
+import { clientAddress } from "#platform";
 import { MAX_TURNSTILE_TOKEN_LENGTH, verifyTurnstile } from "@/lib/turnstile";
 
 // Runs as an on-demand Vercel function rather than being prerendered.
@@ -39,13 +40,7 @@ const getRatelimit = () => {
   return ratelimit;
 };
 
-const getClientIp = (request: Request, fallback: string) => {
-  const forwarded = request.headers.get("x-forwarded-for");
-  if (forwarded) {
-    return forwarded.split(",")[0]!.trim();
-  }
-  return request.headers.get("x-real-ip") ?? fallback ?? "unknown";
-};
+const getClientIp = (request: Request, fallback: string) => clientAddress(request) ?? fallback ?? "unknown";
 
 const json = (status: number, body: Record<string, unknown>) =>
   new Response(JSON.stringify(body), {

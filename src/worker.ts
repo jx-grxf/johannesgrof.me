@@ -37,9 +37,20 @@ const fromCache = (hit: Response): Response => {
   return response;
 };
 
+type RateLimit = { limit(options: { key: string }): Promise<{ success: boolean }> };
+
+const tooMany = () =>
+  new Response("Too many requests, try again in a minute.\n", {
+    status: 429,
+    headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store", "Retry-After": "60" },
+  });
+
 export default {
   async fetch(request: Request, env: Parameters<Handle>[1], context: Context): Promise<Response> {
     const url = new URL(request.url);
+    const burst = (env as { POST_BURST?: RateLimit }).POST_BURST;
+    const ip = request.headers.get("cf-connecting-ip");
+    if (request.method === "POST" && burst && ip && !(await burst.limit({ key: ip })).success) return tooMany();
     const redirect = rules.redirect(request);
     const curl = !redirect && wantsCurlCard(request, url);
 
