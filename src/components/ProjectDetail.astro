@@ -2,7 +2,7 @@
 import BaseHead from "@/components/BaseHead.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
-import SpeedInsights from "@vercel/speed-insights/astro";
+import SiteAnalytics from "./SiteAnalytics.astro";
 import type { ProjectReleaseDownload } from "@/data/github";
 import { getProjectGitHubInfo } from "@/data/github";
 import type { Project, ProjectLang } from "@/data/projects";
@@ -548,6 +548,6 @@ const pageDescription = c.seoDescription ?? (lead.length >= c.tagline.length ? l
     </main>
     <SiteFooter lang={isDe ? "de" : "en"} />
     <script>import "@/scripts/project";</script>
-    {import.meta.env.DEPLOY_TARGET === "vercel" && <SpeedInsights />}
+    <SiteAnalytics />
   </body>
 </html>

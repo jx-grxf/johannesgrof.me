@@ -17,7 +17,7 @@ import { personSameAs, toCanonicalUrl } from "@/data/siteMetadata";
 import ContributionGrid from "@/components/ContributionGrid.astro";
 import { getContributionGrid } from "@/data/contributions";
 import "@/styles/global.css";
-import SpeedInsights from "@vercel/speed-insights/astro";
+import SiteAnalytics from "../components/SiteAnalytics.astro";
 
 interface Props {
   content: LocaleContent;
@@ -323,7 +323,7 @@ const profileSchema = {
 
     <SiteFooter lang={isDe ? "de" : "en"} />
 
-    {import.meta.env.DEPLOY_TARGET === "vercel" && <SpeedInsights />}
+    <SiteAnalytics />
     <script>
       import "@/scripts/clock";
       import "@/scripts/scene";

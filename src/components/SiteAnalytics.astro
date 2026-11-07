@@ -1,0 +1,13 @@
+---
+import SpeedInsights from "@vercel/speed-insights/astro";
+
+// The beacon token is public: it only identifies the site in Cloudflare Web Analytics.
+const beacon = JSON.stringify({ token: "984fd23dde664f7aafc791e1eb55d837" });
+---
+
+{import.meta.env.DEPLOY_TARGET === "vercel" && <SpeedInsights />}
+{
+  import.meta.env.DEPLOY_TARGET === "cloudflare" && (
+    <script is:inline defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon={beacon} />
+  )
+}
