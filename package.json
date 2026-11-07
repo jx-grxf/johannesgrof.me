@@ -14,19 +14,22 @@
     "brand": "node tools/brand/render.mjs",
     "cursors": "node tools/cursors/build.mjs",
     "dev": "astro dev",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build && node scripts/check-build-output.mjs",
+    "build:cloudflare": "DEPLOY_TARGET=cloudflare PUBLIC_TURNSTILE_SITE_KEY=${PUBLIC_TURNSTILE_SITE_KEY:-0x4AAAAAAEpew6ywQC3Hu27U} npm run build",
     "preview": "astro preview",
     "check": "astro check",
     "test": "node --test tests/*.test.ts"
   },
   "dependencies": {
-    "@astrojs/vercel": "11.0.5",
+    "@astrojs/cloudflare": "14.4.3",
+    "@astrojs/vercel": "11.0.16",
     "@fontsource-variable/geist": "5.2.9",
     "@fontsource-variable/geist-mono": "5.2.8",
     "@upstash/ratelimit": "2.0.8",
     "@upstash/redis": "1.38.0",
     "@vercel/speed-insights": "^2.0.0",
-    "astro": "7.3.4",
+    "astro": "7.4.2",
+    "path-to-regexp": "6.3.0",
     "resend": "6.12.4"
   },
   "overrides": {
@@ -41,6 +44,10 @@
     "@astrojs/check": "0.9.10",
     "@types/node": "25.9.2",
     "rolldown": "1.2.3",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "wrangler": "4.156.2"
+  },
+  "engines": {
+    "node": "24.x"
   }
 }

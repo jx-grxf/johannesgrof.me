@@ -541,6 +541,6 @@ const hreflangAlternates = [
     </main>
     <SiteFooter lang={isDe ? "de" : "en"} />
     <script>import "@/scripts/project";</script>
-    <SpeedInsights />
+    {import.meta.env.DEPLOY_TARGET === "vercel" && <SpeedInsights />}
   </body>
 </html>

@@ -13,6 +13,7 @@ import { getProjectCopy, homepageProjects, localizedStatusLabel } from "@/data/p
 import { siteContentByLocale } from "@/data/siteContent";
 import { author, canonicalOrigin, personSameAs } from "@/data/siteMetadata";
 import viennaStops from "@/data/viennaStops.json";
+import { edgeLocation, functionRegion } from "#platform";
 
 type Lang = "en" | "de";
 
@@ -95,8 +96,8 @@ async function cardResponse(request: Request, url: URL, lang: Lang): Promise<Res
       { label: lang === "de" ? "mail" : "email", url: `mailto:${author.email}` },
     ],
     served: {
-      edge: request.headers.get("x-vercel-id")?.split(":")[0] ?? null,
-      region: process.env.VERCEL_REGION ?? null,
+      edge: edgeLocation(request),
+      region: functionRegion(),
       ms: 0,
     },
     viennaTime: new Intl.DateTimeFormat("de-AT", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/Vienna" }).format(new Date()),
