@@ -4,6 +4,9 @@
   "description": "Personal website and project portfolio for Johannes Grof.",
   "private": true,
   "type": "module",
+  "imports": {
+    "#platform": "./src/platform/vercel.ts"
+  },
   "homepage": "https://johannesgrof.me",
   "repository": {
     "type": "git",

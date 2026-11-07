@@ -4,6 +4,7 @@
 // "unavailable" instead of throwing.
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { clientAddress } from "#platform";
 
 const env = (key: string): string | undefined => process.env[key] ?? (import.meta.env as Record<string, string | undefined> | undefined)?.[key];
 
@@ -29,8 +30,7 @@ export async function allow(kind: string, key: string, tokens: number, window: `
   return (await limiter.limit(key)).success;
 }
 
-export const clientIp = (request: Request) =>
-  request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? request.headers.get("x-real-ip") ?? "unknown";
+export const clientIp = (request: Request) => clientAddress(request) ?? "unknown";
 
 // The page asks for a short token and shows a curl command with it. Ringing
 // that token sets a flag the same tab polls for, so a train only ever drives

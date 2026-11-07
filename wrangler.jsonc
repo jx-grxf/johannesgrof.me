@@ -18,5 +18,8 @@
     // The account is on the free plan, where every Worker invocation counts.
     "run_worker_first": ["/*", "!/_astro/*"]
   },
+  // A per-IP brake for POSTs in front of the Upstash limits: floods stop at the edge
+  // before they cost a Redis call or a mail. Counted per Cloudflare location.
+  "ratelimits": [{ "name": "POST_BURST", "namespace_id": "1001", "simple": { "limit": 20, "period": 60 } }],
   "observability": { "enabled": true }
 }
