@@ -13,7 +13,10 @@
   "assets": {
     "binding": "ASSETS",
     "directory": "./dist/client",
-    "run_worker_first": true
+    // Hashed build files come straight from the asset store (immutable via _headers);
+    // everything else passes the Worker for the vercel.json redirects and headers.
+    // The account is on the free plan, where every Worker invocation counts.
+    "run_worker_first": ["/*", "!/_astro/*"]
   },
   "observability": { "enabled": true }
 }
