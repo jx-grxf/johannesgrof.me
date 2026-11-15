@@ -1187,6 +1187,56 @@ export const featuredProjects: Project[] = [
     visibility: "public",
   },
   {
+    name: "axbridge",
+    slug: "axbridge",
+    status: "beta",
+    tagline: "Coding agents use your iOS app in the Simulator as text: tap by name, type, scroll.",
+    seoTitle: "axbridge – iOS Simulator MCP for Claude Code, Codex & Cursor",
+    seoDescription:
+      "MCP server and Swift package that let coding agents read iOS Simulator screens as text from the accessibility tree, tap by name and type. Screenshots stay optional.",
+    description:
+      "An MCP server and a small Swift package. The app reports its visible screen as a few lines of text from the accessibility tree, and the agent taps by name, types, scrolls and goes back. Screenshots are still there when the look matters, cropped to one element if needed.",
+    caseStudy: {
+      problem: "Agents testing an iOS app in the Simulator take a screenshot after every tap and guess coordinates. On one SwiftUI app a single check ran to 300 to 450 tool calls and 80 to 150 screenshots.",
+      built: "A Swift package that serves the in-process accessibility tree over loopback, Debug and Simulator only, with a token per launch. Plus a TypeScript MCP server with 26 tools for devices, builds, app lifecycle, device state and screenshots. The same check took 13 tool calls and 30 seconds.",
+    },
+    de: {
+      tagline: "Coding-Agents bedienen deine iOS-App im Simulator als Text: tippen per Name, schreiben, scrollen.",
+      seoTitle: "axbridge – iOS-Simulator-MCP für Claude Code, Codex und Cursor",
+      seoDescription:
+        "MCP-Server und Swift Package: Coding-Agents lesen Bildschirme im iOS-Simulator als Text aus dem Accessibility-Baum, tippen per Name und schreiben Text. Screenshots bleiben optional.",
+      description:
+        "Ein MCP-Server und ein kleines Swift Package. Die App meldet ihren sichtbaren Bildschirm als ein paar Zeilen Text aus dem Accessibility-Baum, und der Agent tippt per Name, schreibt, scrollt und geht zurück. Screenshots gibt es weiterhin, wenn es um die Optik geht, auf Wunsch nur der Ausschnitt eines Elements.",
+      caseStudy: {
+        problem: "Agents, die eine iOS-App im Simulator prüfen, machen nach jedem Tipp einen Screenshot und raten Koordinaten. Bei einer SwiftUI-App brauchte eine einzelne Prüfung 300 bis 450 Werkzeugaufrufe und 80 bis 150 Screenshots.",
+        built: "Ein Swift Package, das den Accessibility-Baum der App über Loopback ausliefert, nur im Debug-Build im Simulator und mit einem Token pro Start. Dazu ein TypeScript-MCP-Server mit 26 Werkzeugen für Geräte, Builds, App-Lebenszyklus, Gerätezustand und Screenshots. Dieselbe Prüfung brauchte damit 13 Aufrufe und 30 Sekunden.",
+      },
+      highlights: [
+        "Bildschirm als Text: Art, Beschriftung, Wert, Bezeichner und Position jedes sichtbaren Elements.",
+        "Tippen per Name, Text ohne Tastatur (Umlaute gehen), Scrollen, Zurück und Deep Links über den eigenen Handler.",
+        "Mehrere Simulatoren parallel, build_and_run, frischer Start, Standort, Dark Mode, Textgröße und Berechtigungen.",
+        "Screenshots als 500-px-JPEG oder Ausschnitt eines Elements, dazu Video und Pixelvergleich.",
+      ],
+    },
+    stack: ["Swift", "TypeScript", "MCP"],
+    repo: "jx-grxf/axbridge",
+    githubUrl: "https://github.com/jx-grxf/axbridge",
+    releaseUrl: "https://github.com/jx-grxf/axbridge/releases/tag/v0.1.1",
+    npmPackage: "axbridge-mcp",
+    installCommand: "claude mcp add axbridge -- npx -y axbridge-mcp",
+    fallbackVersion: "v0.1.1",
+    downloadsDisabled: true,
+    platformLabels: ["iOS Simulator", "MCP", "Claude Code", "Codex", "Cursor"],
+    highlights: [
+      "Screen as text: kind, label, value, identifier and position of every visible element.",
+      "Tap by name, type without the keyboard, scroll, go back and open deep links through your own handler.",
+      "Several simulators side by side, build_and_run, fresh launches, location, dark mode, text size and permissions.",
+      "Screenshots as a 500 px JPEG or cropped to one element, plus video and pixel diffs.",
+    ],
+    showcase: [],
+    visibility: "public",
+  },
+  {
     name: "agent-presence",
     slug: "agent-presence",
     status: "active",
@@ -1700,7 +1750,7 @@ export const projectSections: ProjectSection[] = [
       eyebrow: "agents & tools",
       title: "Agent- und Entwickler-Tools",
     },
-    projects: orderedProjects(["dirhop", "claude-code-todo-fix", "agent-presence", "hermes-discord-voice", "openclaw-discord-voice"]),
+    projects: orderedProjects(["axbridge", "dirhop", "claude-code-todo-fix", "agent-presence", "hermes-discord-voice", "openclaw-discord-voice"]),
   },
   {
     eyebrow: "more",
