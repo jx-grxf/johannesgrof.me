@@ -1221,10 +1221,10 @@ export const featuredProjects: Project[] = [
     stack: ["Swift", "TypeScript", "MCP"],
     repo: "jx-grxf/axbridge",
     githubUrl: "https://github.com/jx-grxf/axbridge",
-    releaseUrl: "https://github.com/jx-grxf/axbridge/releases/tag/v0.1.0",
+    releaseUrl: "https://github.com/jx-grxf/axbridge/releases/tag/v0.1.1",
     npmPackage: "axbridge-mcp",
     installCommand: "claude mcp add axbridge -- npx -y axbridge-mcp",
-    fallbackVersion: "v0.1.0",
+    fallbackVersion: "v0.1.1",
     downloadsDisabled: true,
     platformLabels: ["iOS Simulator", "MCP", "Claude Code", "Codex", "Cursor"],
     highlights: [
