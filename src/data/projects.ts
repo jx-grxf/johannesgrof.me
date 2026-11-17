@@ -148,7 +148,7 @@ export const featuredProjects: Project[] = [
     },
     tagline: "Local dev servers on your Mac, run by you and your coding agents without collisions.",
     description:
-      "A macOS menu bar app for developers who work with Claude Code or Codex. It shows every local dev server, which agent session started it in which worktree, and what that session is doing right now. Agents get their own tools: one call starts a dev server on a free port and returns the URL, and they can read its logs, find the local database and stop only what is theirs. You see all of it in one panel.",
+      "A macOS menu bar app for developers who work with Claude Code or Codex. It shows every local dev server, which agent session started it in which worktree, and what that session is doing right now. Agents get their own tools: one call starts a dev server on a free port and returns the URL, and they can read its logs, find the local database and stop only what is theirs. You see all of it in one panel, start servers yourself from the Ports window and follow their log live.",
     caseStudy: {
       problem: "With several coding agents in parallel worktrees, dev servers pile up, two agents reach for port 3000, and nobody can tell which process belongs to which session. Agents fall back to sleep loops, curl polling and kill -9.",
       built: "A native Swift menu bar app that maps every listening TCP port to its process, repo, branch and agent session, with hooks for live session status. A bundled MCP server and the pp command give agents eleven tools. start_server reserves a port block per worktree, detects the package manager and framework, starts the server, waits until it answers and keeps its output in a log. wait_for_port, server_logs, list_services and project_context cover the rest. Every stop goes through one validated path in the app.",
@@ -156,7 +156,7 @@ export const featuredProjects: Project[] = [
     de: {
       tagline: "Lokale Dev-Server auf deinem Mac, gestartet von dir und deinen Coding-Agents, ohne Port-Kollisionen.",
       description:
-        "Eine macOS-Menüleisten-App für alle, die mit Claude Code oder Codex arbeiten. Sie zeigt jeden lokalen Dev-Server, welche Agent-Session ihn in welchem Worktree gestartet hat und was diese Session gerade tut. Agents bekommen eigene Werkzeuge: Ein Aufruf startet einen Dev-Server auf einem freien Port und liefert die URL zurück. Danach lesen sie seine Logs, finden die lokale Datenbank und stoppen nur, was ihnen gehört. Du siehst alles in einem Panel.",
+        "Eine macOS-Menüleisten-App für alle, die mit Claude Code oder Codex arbeiten. Sie zeigt jeden lokalen Dev-Server, welche Agent-Session ihn in welchem Worktree gestartet hat und was diese Session gerade tut. Agents bekommen eigene Werkzeuge: Ein Aufruf startet einen Dev-Server auf einem freien Port und liefert die URL zurück. Danach lesen sie seine Logs, finden die lokale Datenbank und stoppen nur, was ihnen gehört. Du siehst alles in einem Panel, startest Server selbst aus dem Ports-Fenster und liest ihr Log live mit.",
       caseStudy: {
         problem: "Arbeiten mehrere Coding-Agents parallel in Worktrees, stapeln sich die Dev-Server, zwei Agents greifen nach Port 3000, und niemand weiß, welcher Prozess zu welcher Session gehört. Die Agents behelfen sich mit sleep-Schleifen, curl-Polling und kill -9.",
         built: "Eine native Swift-Menüleisten-App, die jeden lauschenden TCP-Port seinem Prozess, Repo, Branch und seiner Agent-Session zuordnet, mit Hooks für den Live-Status der Sessions. Ein mitgelieferter MCP-Server und der Befehl pp geben Agents elf Werkzeuge. start_server reserviert pro Worktree einen Portblock, erkennt Paketmanager und Framework, startet den Server, wartet, bis er antwortet, und schreibt seine Ausgabe in ein Log. wait_for_port, server_logs, list_services und project_context decken den Rest ab. Jeder Stopp läuft über einen einzigen geprüften Pfad in der App.",
@@ -164,6 +164,8 @@ export const featuredProjects: Project[] = [
       highlights: [
         "Jede Claude-Code- und Codex-Session nach Projekt und Branch, mit Live-Status: arbeitet, wartet auf dich, braucht Freigabe.",
         "Agents starten Dev-Server mit einem MCP-Aufruf: freier Port pro Worktree, passender Paketmanager, --port für Vite, Astro, Next.js und Nuxt, zurück kommen URL und Log.",
+        "Im Ports-Fenster startet ▶ das dev-Script eines Projekts auf dessen reserviertem Port, der Inspector zeigt das Log live. Server, die PortPirate gestartet hat, behalten Log und Besitzer auch nach einem Neustart der App.",
+        "Ports, die zu einer installierten App gehören, etwa das Node-Backend von Raycast, stehen unter dem Namen der App und lassen sich nicht aus Versehen stoppen.",
         "Lokale Datenbanken und Dienste wie PostgreSQL, Redis oder MongoDB erscheinen mit ihrer Verbindungs-URL, für dich und für Agents.",
         "pp im Terminal: pp start, pp logs -f, pp who 3000, pp stop, eval \"$(pp env)\". pp setup richtet Hooks, MCP und einen kurzen Abschnitt in CLAUDE.md und AGENTS.md ein.",
         "Derselbe MCP-Server funktioniert auch in Cursor, Windsurf, VS Code, Zed und Claude Desktop.",
@@ -179,6 +181,8 @@ export const featuredProjects: Project[] = [
     highlights: [
       "Every Claude Code and Codex session by project and branch, with live status: working, waiting for you, needs approval.",
       "Agents start dev servers with one MCP call: a free port per worktree, the right package manager, --port for Vite, Astro, Next.js and Nuxt, and the URL and log come back.",
+      "In the Ports window, ▶ runs a project's dev script on its reserved port and the inspector follows the log live. Servers PortPirate started keep their log and owner across app restarts.",
+      "Ports that belong to an installed app, such as Raycast's Node backend, are listed under the app's name and can't be stopped by accident.",
       "Local databases and services such as PostgreSQL, Redis or MongoDB show up with their connection URL, for you and for agents.",
       "pp in the terminal: pp start, pp logs -f, pp who 3000, pp stop, eval \"$(pp env)\". pp setup installs hooks, MCP and a short section in CLAUDE.md and AGENTS.md.",
       "The same MCP server works in Cursor, Windsurf, VS Code, Zed and Claude Desktop.",
@@ -186,13 +190,22 @@ export const featuredProjects: Project[] = [
     ],
     showcase: [
       {
-        src: "/projects/portpirate/showcase.webp",
-        fallbackSrc: "/projects/portpirate/showcase.png",
-        alt: "PortPirate menu bar panel with four Claude Code sessions and two dev servers an agent started through PortPirate",
-        altDe: "PortPirate-Menüleistenpanel mit vier Claude-Code-Sessions und zwei Dev-Servern, die ein Agent über PortPirate gestartet hat",
+        src: "/projects/portpirate/ports.webp",
+        fallbackSrc: "/projects/portpirate/ports.png",
+        alt: "PortPirate's Ports window with three projects, the Claude Code session that started each dev server, and the live log of the selected server",
+        altDe: "Das Ports-Fenster von PortPirate mit drei Projekten, der Claude-Code-Session, die jeden Dev-Server gestartet hat, und dem Live-Log des gewählten Servers",
         fit: "contain",
-        width: 944,
-        height: 1166,
+        width: 1800,
+        height: 1038,
+      },
+      {
+        src: "/projects/portpirate/panel.webp",
+        fallbackSrc: "/projects/portpirate/panel.png",
+        alt: "PortPirate menu bar panel with three Claude Code sessions, one waiting for approval, and the ports they started",
+        altDe: "PortPirate-Menüleistenpanel mit drei Claude-Code-Sessions, eine wartet auf Freigabe, und den Ports, die sie gestartet haben",
+        fit: "contain",
+        width: 1800,
+        height: 1300,
       },
     ],
     visibility: "planned",
