@@ -27,7 +27,9 @@
   --paper-3: #221f1a;
   --ink: #f1eee5;
   --ink-2: #c6c0b2;
-  --mute: #948d7e;
+  /* Captions and meta lines are small mono text; 6:1 on --paper-3 keeps them
+     readable, not just AA-legal (was 5:1, raised 2026-11-18). */
+  --mute: #a39c8c;
   --faint: #948d7d;
   /* Clearly above the grid line below, or the printed rules and the paper
      texture read as the same thing and the page turns into noise. */
@@ -69,7 +71,8 @@
   --paper-3: #e6e2d9;
   --ink: #14130f;
   --ink-2: #3d3a31;
-  --mute: #6e6a5f;
+  /* 5.7:1 on light paper, same reason as the dark value. */
+  --mute: #635f54;
   --faint: #6d695c;
   --rule: #d5d1c6;
   --rule-2: #c3bfb2;
@@ -2639,7 +2642,8 @@ html[lang="de"] .error-page [data-error-lang="en"] {
 
 .hero-status {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
   gap: 18px 32px;
   margin: clamp(40px, 5vw, 56px) 0 0;
   padding: 20px 0 0;
@@ -2689,6 +2693,13 @@ html[lang="de"] .error-page [data-error-lang="en"] {
 
 .hero-status-clock[hidden] {
   display: none;
+}
+
+/* From 1101px the header shows the same time as a menu-bar clock. */
+@media (min-width: 1101px) {
+  .hero-status-clock {
+    display: none;
+  }
 }
 
 /* A small square that breathes: the one live element on the page. */
@@ -3064,6 +3075,7 @@ html[lang="de"] .error-page [data-error-lang="en"] {
 @media (max-width: 860px) {
   .hero-status {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: row;
   }
 
   .work-index a {
